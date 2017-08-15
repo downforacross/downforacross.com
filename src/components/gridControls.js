@@ -2,7 +2,7 @@ import './gridControls.css';
 
 import React, { Component } from 'react';
 
-import { isGridFilled, getNextCell, getNextEmptyCell, getNextEmptyCellAfter, hasEmptyCells, isFilled, getCellByNumber, getOppositeDirection, getParent, isInBounds, isWhite, isStartOfClue } from '../gameUtils';
+import * as gameUtils from '../gameUtils';
 
 function safe_while(condition, step, cap = 500) {
   while (condition() && cap >= 0) {
@@ -12,8 +12,9 @@ function safe_while(condition, step, cap = 500) {
 }
 
 export default class GridControls extends Component {
+
   getSelectedClueNumber() {
-    return getParent(this.props.grid, this.props.selected.r, this.props.selected.c, this.props.direction);
+    return gameUtils.getParent(this.props.grid, this.props.selected.r, this.props.selected.c, this.props.direction);
   }
 
   componentDidMount() {
@@ -21,8 +22,8 @@ export default class GridControls extends Component {
   }
 
   isWordFilled(direction, number) {
-    const clueRoot = getCellByNumber(this.props.grid, number);
-    return !hasEmptyCells(this.props.grid, clueRoot.r, clueRoot.c, direction);
+    const clueRoot = gameUtils.getCellByNumber(this.props.grid, number);
+    return !gameUtils.hasEmptyCells(this.props.grid, clueRoot.r, clueRoot.c, direction);
   }
 
   selectNextClue(backwards) {
@@ -34,7 +35,7 @@ export default class GridControls extends Component {
       if (clueNumber + add < this.props.clues[direction].length && clueNumber + add >= 0) {
         clueNumber += add;
       } else {
-        direction = getOppositeDirection(direction);
+        direction = gameUtils.getOppositeDirection(direction);
         clueNumber = start();
       }
     };
@@ -49,8 +50,8 @@ export default class GridControls extends Component {
 
   selectClue(direction, number) {
     this.setDirection(direction);
-    const clueRoot = getCellByNumber(this.props.grid, number);
-    const firstEmptyCell = getNextEmptyCell(this.props.grid, clueRoot.r, clueRoot.c, direction);
+    const clueRoot = gameUtils.getCellByNumber(this.props.grid, number);
+    const firstEmptyCell = gameUtils.getNextEmptyCell(this.props.grid, clueRoot.r, clueRoot.c, direction);
     this.setSelected(firstEmptyCell || clueRoot);
   }
 
@@ -60,7 +61,7 @@ export default class GridControls extends Component {
     }
     const moveSelectedBy = (dr, dc) => () => {
       const { grid } = this.props;
-      const { selected, direction } = this.props;
+      const { selected } = this.props;
       let { r, c } = selected;
       const step = () => {
         r += dr;
@@ -68,10 +69,10 @@ export default class GridControls extends Component {
       };
       step();
       safe_while(() => (
-        isInBounds(grid, r, c)
-        && !isWhite(grid, r, c)
+        gameUtils.isInBounds(grid, r, c)
+        && !gameUtils.isWhite(grid, r, c)
       ), step);
-      if (isInBounds(grid, r, c)) {
+      if (gameUtils.isInBounds(grid, r, c)) {
         this.setSelected({ r, c });
       }
     };
@@ -115,12 +116,12 @@ export default class GridControls extends Component {
 
   goToNextEmptyCell() {
     let { r, c } = this.props.selected;
-    const nextEmptyCell = getNextEmptyCellAfter(this.props.grid, r, c, this.props.direction);
+    const nextEmptyCell = gameUtils.getNextEmptyCellAfter(this.props.grid, r, c, this.props.direction);
     if (nextEmptyCell) {
       this.setSelected(nextEmptyCell);
       return nextEmptyCell;
     } else {
-      const nextCell = getNextCell(this.props.grid, r, c, this.props.direction);
+      const nextCell = gameUtils.getNextCell(this.props.grid, r, c, this.props.direction);
       if (nextCell) {
         this.setSelected(nextCell);
         return nextCell;
@@ -149,11 +150,11 @@ export default class GridControls extends Component {
       }
     };
     const ok = () => {
-      return isInBounds(grid, r, c) && isWhite(grid, r, c);
+      return gameUtils.isInBounds(grid, r, c) && gameUtils.isWhite(grid, r, c);
     };
     step();
     safe_while(() => (
-      isInBounds(grid, r, c) && !ok()
+      gameUtils.isInBounds(grid, r, c) && !ok()
     ), step);
     if (ok()) {
       this.setSelected({ r, c });
@@ -186,7 +187,7 @@ export default class GridControls extends Component {
   }
 
   isGridFilled() {
-    return isGridFilled(this.props.grid);
+    return gameUtils.isGridFilled(this.props.grid);
   }
 
   setDirection(direction) {

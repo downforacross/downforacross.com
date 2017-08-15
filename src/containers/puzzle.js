@@ -1,9 +1,10 @@
 import './puzzle.css';
-import {Helmet} from "react-helmet";
+import { Helmet } from 'react-helmet';
 import actions, { db } from '../actions';
 import React, { Component } from 'react';
 
 export default class Puzzle extends Component {
+
   constructor() {
     super();
     this.state = {
@@ -27,7 +28,7 @@ export default class Puzzle extends Component {
   }
 
   playGame() {
-    const gid = actions.createGame({
+    actions.createGame({
       name: this.state.name,
       pid: this.pid
     }, gid => {
@@ -57,7 +58,6 @@ export default class Puzzle extends Component {
   getPuzzleDims() {
     if (!this.state.puzzle) return '';
     const height = this.state.puzzle.grid.length;
-    const width = this.state.puzzle.grid[0].length;
     return `${height} x ${height}`;
   }
 

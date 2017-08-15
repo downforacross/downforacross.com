@@ -1,7 +1,7 @@
 import './grid.css';
 
 import React, { Component } from 'react';
-import { isInBounds, isWhite, getParent } from '../gameUtils';
+import { isWhite, getParent } from '../gameUtils';
 
 import Cell from './cell';
 
@@ -20,17 +20,14 @@ import Cell from './cell';
  **/
 
 export default class Grid extends Component {
-  constructor() {
-    super();
-  }
 
   isSelected(r, c) {
-    const { grid, selected, direction } = this.props;
+    const { selected } = this.props;
     return r === selected.r && c === selected.c;
   }
 
   isCircled(r, c) {
-    const { grid, selected, direction, circles } = this.props;
+    const { grid, circles } = this.props;
     const idx = c + r * grid[0].length;
     return (circles || []).indexOf(idx) !== -1;
   }

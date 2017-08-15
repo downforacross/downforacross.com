@@ -1,20 +1,16 @@
 import './solo.css';
 import Room from './room';
-import React, { Component } from 'react';
 import { db } from '../actions';
 import { makeGame } from '../gameUtils';
 import { lazy } from '../jsUtils';
 import me from '../localAuth';
 
 export default class Solo extends Room {
-  constructor() {
-    super();
-  }
 
   componentDidMount() {
     this.color = 'rgb(118, 226, 118)';
     this.id = 1;
-    this.pid = parseInt(this.props.match.params.pid);
+    this.pid = parseInt(this.props.match.params.pid, 10);
     this.loadGame(game => {
       this.setState({
         loaded: true,

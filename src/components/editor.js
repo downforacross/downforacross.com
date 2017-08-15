@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import EditableSpan from '../components/editableSpan';
 import Hints from '../components/hints';
 
-import { isGridFilled, getNextCell, getNextEmptyCell, getNextEmptyCellAfter, hasEmptyCells, isFilled, getCellByNumber, getOppositeDirection, getParent, isInBounds, isWhite, isStartOfClue, assignNumbers, makeGrid, fixSelect, alignClues } from '../gameUtils';
+import * as gameUtils from '../gameUtils';
 
 window.requestIdleCallback =
   window.requestIdleCallback ||
@@ -53,12 +53,13 @@ window.cancelIdleCallback =
 
 
 export default class Editor extends Component {
+
   constructor(props) {
     super();
-    const grid = makeGrid(props.grid, true);
-    const clues = alignClues(grid, props.clues);
+    const grid = gameUtils.makeGrid(props.grid, true);
+    const clues = gameUtils.alignClues(grid, props.clues);
     this.state = {
-      selected: fixSelect({
+      selected: gameUtils.fixSelect({
         r: 0,
         c: 0
       }, grid),
@@ -68,7 +69,9 @@ export default class Editor extends Component {
     };
 
     if (!this.isValidDirection(this.state.direction, this.state.selected)) {
-      this.state.direction = 'down';
+      this.state.setState({
+        direction: 'down'
+      });
     }
 
     // for deferring scroll-to-clue actions
@@ -97,10 +100,10 @@ export default class Editor extends Component {
   componentWillReceiveProps(props) {
     let grid, clues;
     if (props.pid !== this.props.pid || this.didChangePatternOrDims(this.state.grid, props.grid)) {
-      grid = makeGrid(props.grid, true);
-      clues = alignClues(grid, props.clues);
+      grid = gameUtils.makeGrid(props.grid, true);
+      clues = gameUtils.alignClues(grid, props.clues);
       this.setState({
-        selected: fixSelect(this.state.selected, grid)
+        selected: gameUtils.fixSelect(this.state.selected, grid)
       });
     } else {
       grid = this.state.grid;
@@ -127,7 +130,7 @@ export default class Editor extends Component {
   /* Callback fns, to be passed to child components */
 
   isValidDirection(direction, selected) {
-    return getParent(this.state.grid, selected.r, selected.c, direction) !== 0;
+    return gameUtils.getParent(this.state.grid, selected.r, selected.c, direction) !== 0;
   }
 
   canSetDirection(direction) {
@@ -147,17 +150,17 @@ export default class Editor extends Component {
           selected: selected,
         });
       }
-    } else if (this.isValidDirection(getOppositeDirection(this.state.direction), selected)) {
+    } else if (this.isValidDirection(gameUtils.getOppositeDirection(this.state.direction), selected)) {
       this.setState({
         selected: selected,
-        direction: getOppositeDirection(this.state.direction)
+        direction: gameUtils.getOppositeDirection(this.state.direction)
       });
     }
   }
 
   changeDirection() {
-    if (getParent(this.state.grid, this.state.selected.r, this.state.selected.c, getOppositeDirection(this.state.direction))) {
-      this.setDirection(getOppositeDirection(this.state.direction));
+    if (gameUtils.getParent(this.state.grid, this.state.selected.r, this.state.selected.c, gameUtils.getOppositeDirection(this.state.direction))) {
+      this.setDirection(gameUtils.getOppositeDirection(this.state.direction));
     }
   }
 
@@ -172,16 +175,16 @@ export default class Editor extends Component {
   }
 
   getSelectedClueNumber() {
-    return getParent(this.state.grid, this.state.selected.r, this.state.selected.c, this.state.direction);
+    return gameUtils.getParent(this.state.grid, this.state.selected.r, this.state.selected.c, this.state.direction);
   }
 
   getHalfSelectedClueNumber() {
-    return getParent(this.state.grid, this.state.selected.r, this.state.selected.c, getOppositeDirection(this.state.direction));
+    return gameUtils.getParent(this.state.grid, this.state.selected.r, this.state.selected.c, gameUtils.getOppositeDirection(this.state.direction));
   }
 
   isClueFilled(direction, number) {
-    const clueRoot = getCellByNumber(this.state.grid, number);
-    return !hasEmptyCells(this.state.grid, clueRoot.r, clueRoot.c, direction);
+    const clueRoot = gameUtils.getCellByNumber(this.state.grid, number);
+    return !gameUtils.hasEmptyCells(this.state.grid, clueRoot.r, clueRoot.c, direction);
   }
 
   isClueSelected(direction, number) {
@@ -194,14 +197,13 @@ export default class Editor extends Component {
 
   isHighlighted(r, c) {
     const { grid, selected, direction } = this.state;
-    return !this.isSelected(r, c) && isWhite(grid, r, c) && (
-      getParent(grid, selected.r, selected.c, direction)
-      === getParent(grid, r, c, direction));
-    if (!this.refs.grid) return false;
+    return !this.isSelected(r, c) && gameUtils.isWhite(grid, r, c) && (
+      gameUtils.getParent(grid, selected.r, selected.c, direction)
+      === gameUtils.getParent(grid, r, c, direction));
   }
 
   isSelected(r, c) {
-    const { grid, selected, direction } = this.state;
+    const { selected } = this.state;
     return r === selected.r && c === selected.c;
   }
 

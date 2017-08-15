@@ -1,5 +1,4 @@
 import './create.css';
-import actions, { db } from '../actions';
 import React, { Component } from 'react';
 
 export default class EditableSpan extends Component {

@@ -5,9 +5,6 @@ import Clock from '../components/clock';
 import ActionMenu from '../components/ActionMenu';
 
 export default class Toolbar extends Component {
-  constructor() {
-    super();
-  }
 
   renderCheckMenu() {
     return (

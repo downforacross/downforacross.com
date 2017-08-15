@@ -1,5 +1,4 @@
 import './create.css';
-import actions, { db } from '../actions';
 import React, { Component } from 'react';
 
 export default class Create extends Component {
@@ -91,7 +90,7 @@ export default class Create extends Component {
             <div className='create--options--label'>Height:</div>
             <input
               value={this.state.dims.r}
-              onChange={(e) => this.updateDims(parseInt(e.target.value) || this.state.dims.r, this.state.dims.c)}
+              onChange={(e) => this.updateDims(parseInt(e.target.value, 10) || this.state.dims.r, this.state.dims.c)}
             />
             <button onClick={this.updateDimsDelta.bind(this, +1, 0)}> + </button>
           </div>
@@ -100,7 +99,7 @@ export default class Create extends Component {
             <div className='create--options--label'>Width:</div>
             <input
               value={this.state.dims.c}
-              onChange={(e) => this.updateDims(this.state.dims.r, parseInt(e.target.value) || this.state.dims.c)}
+              onChange={(e) => this.updateDims(this.state.dims.r, parseInt(e.target.value, 10) || this.state.dims.c)}
             />
             <button onClick={this.updateDimsDelta.bind(this, 0, +1)}> + </button>
           </div>

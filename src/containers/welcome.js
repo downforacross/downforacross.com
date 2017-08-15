@@ -3,8 +3,6 @@ import Upload from '../components/upload'
 
 import React, { Component } from 'react';
 import {
-  BrowserRouter as Router,
-  Route,
   Link
 } from 'react-router-dom'
 
@@ -54,7 +52,7 @@ export default class Welcome extends Component {
 
   handleStartClick(ev) {
     if (!this.state.pid) return;
-    const gid = actions.createGame({
+    actions.createGame({
       name: this.state.name,
       pid: this.state.pid
     }, gid => {

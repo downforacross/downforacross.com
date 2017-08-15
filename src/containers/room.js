@@ -1,5 +1,5 @@
 import './room.css';
-import actions, { db } from '../actions';
+import { db } from '../actions';
 import Player from '../components/player';
 import Chat from '../components/chat';
 import Toolbar from '../components/toolbar';
@@ -73,8 +73,12 @@ export default class Room extends Component {
 
   cellTransaction(r, c, fn, cbk) {
     db.ref('game/' + this.props.match.params.gid + '/grid/' + r + '/' + c).transaction(fn, cbk);
-    this.state.game.grid[r][c] = fn(this.state.game.grid[r][c]);
-    //this.forceUpdate();
+    // TODO: hack to get around setting this.state, but mutates existing grid.
+    const grid = this.state.game.grid;
+    grid[r][c] = fn(grid[r][c])
+    this.setState({
+      game: { ...this.state.game, grid }
+    });
   }
 
   cursorTransaction(fn, cbk) {
@@ -154,18 +158,21 @@ export default class Room extends Component {
   }
 
   sendChatMessage(sender, text) {
-    this.transaction(game => (
-      Object.assign(game, {
-        chat: Object.assign(game && game.chat || {}, {
-          messages: (game.chat && game.chat.messages || []).concat([
-            {
-              sender: sender,
-              text: text
-            }
-          ])
-        })
-      })
-    ));
+    this.transaction(game => {
+      game = game || {};
+      game.chat = game.chat || {};
+      game.chat.messages = game.chat.messages || [];
+      return ({
+        ...game,
+        chat: {
+          ...game.chat,
+          messages: [
+            ...game.chat.messages,
+            { sender, text }
+          ]
+        }
+      });
+    });
   }
 
   startClock() {

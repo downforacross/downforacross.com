@@ -2,17 +2,6 @@ import nyt_words_long from './vendor/nyt_words_long';
 
 const reverseIndex = {};
 
-function match(word, pattern) {
-  if (word.length === pattern.length) {
-    for (let i = 0; i < word.length; i += 1) {
-      if (word[i] !== pattern[i] && pattern[i] !== '.') {
-        return false;
-      }
-    }
-    return true;
-  }
-}
-
 function apply(mask, word) {
   let result = '';
   for (let i = 0; i < word.length; i += 1) {

@@ -1,11 +1,11 @@
 import './fileUploader.css';
-import actions, { db } from '../actions';
 import request from 'superagent';
 
 import React, { Component } from 'react';
 import Dropzone from 'react-dropzone';
 
 export default class FileUploader extends Component {
+
   constructor() {
     super();
     this.state = {

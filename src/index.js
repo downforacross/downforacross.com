@@ -2,14 +2,13 @@ import {
   Welcome, Room, Puzzle, Compose, Solo, Upload
 } from './containers/index';
 
-import {Helmet} from "react-helmet";
+import { Helmet } from 'react-helmet';
 import ReactDOM from 'react-dom';
 import React from 'react';
 
 import {
   BrowserRouter as Router,
-  Route,
-  Link
+  Route
 } from 'react-router-dom'
 
 import './style.css';

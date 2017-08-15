@@ -5,7 +5,7 @@ import GridControls from './gridControls';
 import React, { Component } from 'react';
 import { lazy } from '../jsUtils';
 
-import { isGridFilled, getNextCell, getNextEmptyCell, getNextEmptyCellAfter, hasEmptyCells, isFilled, getCellByNumber, getOppositeDirection, getParent, isInBounds, isWhite, isStartOfClue, getReferencedClues } from '../gameUtils';
+import * as gameUtils from '../gameUtils';
 
 /*
  * Summary of Player component
@@ -49,8 +49,8 @@ export default class Player extends Component {
   componentWillReceiveProps(props) {
     this.props = props;
     let { r, c } = this.state.selected;
-    if (!isWhite(this.props.grid, r, c)) {
-      while (!isWhite(this.props.grid, r, c)) {
+    if (!gameUtils.isWhite(this.props.grid, r, c)) {
+      while (!gameUtils.isWhite(this.props.grid, r, c)) {
         if (c < this.props.grid[0].length) {
           c += 1;
         } else {
@@ -65,7 +65,7 @@ export default class Player extends Component {
   /* Callback fns, to be passed to child components */
 
   isValidDirection(direction, selected) {
-    return getParent(this.props.grid, selected.r, selected.c, direction) !== 0;
+    return gameUtils.getParent(this.props.grid, selected.r, selected.c, direction) !== 0;
   }
 
   canSetDirection(direction) {
@@ -92,10 +92,10 @@ export default class Player extends Component {
           });
         });
       }
-    } else if (this.isValidDirection(getOppositeDirection(this.state.direction), selected)) {
+    } else if (this.isValidDirection(gameUtils.getOppositeDirection(this.state.direction), selected)) {
       this.setState({
         selected: selected,
-        direction: getOppositeDirection(this.state.direction)
+        direction: gameUtils.getOppositeDirection(this.state.direction)
       }, () => {
         this.props.updateCursor({
           r: selected.r,
@@ -106,7 +106,7 @@ export default class Player extends Component {
   }
 
   changeDirection() {
-    this.setDirection(getOppositeDirection(this.state.direction));
+    this.setDirection(gameUtils.getOppositeDirection(this.state.direction));
   }
 
   selectClue(direction, number) {
@@ -124,16 +124,16 @@ export default class Player extends Component {
   }
 
   getSelectedClueNumber() {
-    return getParent(this.props.grid, this.state.selected.r, this.state.selected.c, this.state.direction);
+    return gameUtils.getParent(this.props.grid, this.state.selected.r, this.state.selected.c, this.state.direction);
   }
 
   getHalfSelectedClueNumber() {
-    return getParent(this.props.grid, this.state.selected.r, this.state.selected.c, getOppositeDirection(this.state.direction));
+    return gameUtils.getParent(this.props.grid, this.state.selected.r, this.state.selected.c, gameUtils.getOppositeDirection(this.state.direction));
   }
 
   isClueFilled(direction, number) {
-    const clueRoot = getCellByNumber(this.props.grid, number);
-    return !hasEmptyCells(this.props.grid, clueRoot.r, clueRoot.c, direction);
+    const clueRoot = gameUtils.getCellByNumber(this.props.grid, number);
+    return !gameUtils.hasEmptyCells(this.props.grid, clueRoot.r, clueRoot.c, direction);
   }
 
   isClueSelected(direction, number) {
@@ -175,7 +175,7 @@ export default class Player extends Component {
 
   getReferences() {
     const clueText = this.getClueBarText();
-    return getReferencedClues(clueText);
+    return gameUtils.getReferencedClues(clueText);
   }
   getReferencedSquares() {
     return this.getAllSquares().filter(({r, c}) => this.isReferenced(r, c));

@@ -1,6 +1,6 @@
 import './upload.css';
 
-import actions, { db } from '../actions';
+import actions from '../actions';
 import FileUploader from './fileUploader';
 
 import React, { Component } from 'react';
@@ -27,12 +27,7 @@ export default class Upload extends Component {
         puzzle = JSON.parse(this.state.textbox);
         this.setState({ puzzle: puzzle });
       } catch(e) {
-        try {
-          eval(this.state.textbox);
-          this.setState({ puzzle: puzzle });
-        } catch(e) {
-          this.setState({ puzzle: null });
-        }
+        this.setState({ puzzle: null });
       }
     });
   }

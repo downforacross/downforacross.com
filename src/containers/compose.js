@@ -4,7 +4,6 @@ import React, { Component } from 'react';
 import Editor from '../components/editor';
 import Create from '../components/create';
 import EditableSpan from '../components/editableSpan';
-import Hints from '../components/hints';
 
 import me from '../localAuth'
 
@@ -88,8 +87,6 @@ export default class Compose extends Component {
   }
 
   updateGrid(r, c, value) {
-    function takeLast(num, ar) {
-    }
     this.cellTransaction(r, c, cell => value);
   }
 

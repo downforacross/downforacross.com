@@ -1,7 +1,5 @@
 import './hints.css';
-import actions, { db } from '../actions';
 import React, { Component } from 'react';
-import EditableSpan from '../components/editableSpan';
 
 import { evaluate, findMatches, getPatterns, precompute } from '../hintUtils';
 

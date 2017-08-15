@@ -1,7 +1,4 @@
-import { toArr } from './jsUtils';
-
 function isSolved(grid, solution) {
-  let ans = 0;
   for (let r = 0; r < grid.length; r += 1) {
     for (let c = 0; c < grid[r].length; c += 1) {
       if (solution[r][c] !== '.' && grid[r][c].value !== solution[r][c]) {
@@ -239,7 +236,7 @@ function makeGame(gid, name, puzzle) {
 
 function allNums(str) {
   let pattern = /\d+/g;
-  return (str.match(pattern) || []).map(x => parseInt(x));
+  return (str.match(pattern) || []).map(x => parseInt(x, 10));
 }
 
 function getReferencedClues(str) {
