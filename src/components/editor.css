@@ -1,0 +1,151 @@
+/* editor Styles */
+.editor--main {
+  margin-top: 20px;
+  display: flex;
+}
+
+.editor--main--clue-bar {
+  background-color: #DCEFFF;
+  padding: 10px 20px 10px 20px;
+  display: flex;
+  font-size: 15px;
+  height: 70px;
+  align-items: center;
+}
+
+.editor--main--clue-bar {
+  opacity: 2;
+}
+
+.editor--main--clue-bar--number {
+  font-weight: bold;
+  display: inline-block;
+}
+
+.editor--main--clue-bar--text {
+  display: flex;
+  overflow: scroll;
+  max-width: 389px;
+  align-items: center;
+}
+
+.editor--main--clue-bar--text .editable-span {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.editor--main--clue-bar--text .on input {
+  flex: 1;
+  margin-left: 19px;
+  display: inline-block;
+  overflow-y: scroll;
+  font-size: 15px;
+  padding: 1px;
+  font-family: avenir, "helvetica neue", "Helvetica", "arial", sans-serif;
+  border: none;
+  resize: none;
+}
+
+.editor--main--clue-bar--text .on i {
+  margin-left: 20px;
+}
+
+.editor--main--clue-bar--text .off span {
+  flex: 1;
+  margin-left: 20px;
+  display: inline-block;
+  overflow-y: scroll;
+  max-height: 100%;
+  height: 100%;
+}
+
+.editor--main--clue-bar--text .off i {
+  margin-left: 20px;
+}
+
+.editor--main--left {
+  display: flex;
+  flex-direction: column;
+  align-items: auto;
+}
+
+.editor--main--left--grid {
+  margin-top: 10px;
+  position: relative;
+  border: 4px solid black;
+  color: #444;
+}
+
+.editor--right {
+  display: flex;
+  flex-direction: column;
+}
+
+.editor--main--clues {
+  flex: 1;
+  display: flex;
+  padding: 0px 20px 0px 20px;
+}
+
+.editor--main--clues--list {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  margin-left: 5px;
+  padding-right: 10px;
+}
+
+.editor--main--clues--list--title {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.editor--main--clues--list--scroll {
+  position: relative;
+  height: 95px;
+  overflow-y: scroll;
+  border-top: 1px solid #e2e2e2;
+  margin-top: 5px;
+  padding-right: 10px;
+}
+
+.editor--main--clues--list--scroll--clue {
+  display: flex;
+  flex-direction: row;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-left: 5px solid transparent;
+  cursor: pointer;
+}
+
+.editor--main--clues--list--scroll--clue.complete {
+  color: #888;
+}
+
+.editor--main--clues--list--scroll--clue.selected {
+  background-color: #A7D8FF;
+}
+
+.editor--main--clues--list--scroll--clue.half-selected {
+  border-left: 5px solid #A7D8FF;
+}
+
+
+.editor--main--clues--list--scroll--clue--number {
+  margin-left: 5px;
+  font-weight: 400;
+  line-height: 19px;
+  font-weight: bold;
+}
+
+.editor--main--clues--list--scroll--clue--text {
+  margin-left: 10px;
+}
+
+.editor--right--hints {
+  flex: 3;
+  padding: 20px;
+
+  max-height: 500px;
+}

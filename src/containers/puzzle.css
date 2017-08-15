@@ -1,0 +1,40 @@
+.puzzle {
+  width: 100%;
+  padding: 5px 5px 5px 5px;
+}
+
+.puzzle--info {
+  border: 2px solid #333;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 20px 20px 20px;
+}
+
+.puzzle--info--title {
+  font-size: 30px;
+}
+
+.puzzle--info--author {
+  font-size: 20px;
+}
+
+.puzzle--play {
+  display: flex;
+  flex-direction: row;
+  padding: 20px 0px 20px 0px;
+}
+
+.puzzle--play--btn {
+  color: black;
+  background-color: white;
+  font-size: 30px;
+  border: 2px solid #333;
+  cursor: pointer;
+  width: 100%;
+  padding: 10px 10px 10px 10px;
+}
+
+
+.puzzle--play--btn.with-friends {
+  margin-left: 10px;
+}

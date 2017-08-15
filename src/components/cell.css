@@ -1,0 +1,133 @@
+.cell {
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  transition: background-color .12s ease;
+  border: 2px solid transparent;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+  background-color: white;
+}
+
+.cell.black {
+  background-color: black;
+  color: black;
+}
+
+.frozen .cell.selected {
+  background-color: #1FFF3D;
+}
+
+.frozen .cell.highlighted {
+  background-color: #1FFF3D;
+}
+
+.cell.highlighted {
+  background-color: #6ec6ff;
+}
+
+.cell.selected {
+  background-color: #4aeba1;
+  /*background-color: #98ee99;*/
+}
+
+.cell.referenced {
+  background-color: #b3ff00;
+}
+
+
+.cell--value {
+  background-color: transparent;
+}
+
+.cell.bad .cell--value {
+  color: red;
+}
+
+.cell.good .cell--value {
+  color: blue;
+}
+
+.cell.revealed .cell--value {
+  color: green;
+}
+
+.cell--number {
+  display: inline-block;
+  font-size: 150%;
+  margin-top: 5%;
+  margin-left: 5%;
+  margin-right: auto;
+  flex: 3;
+  line-height: 98%;
+  padding: 1%;
+  background-color: transparent;
+  z-index: 11;
+}
+
+.cell--number.nonempty {
+  background-color: inherit;
+}
+
+.cell--flip {
+  position: absolute;
+  right: 1px;
+  top: 1px;
+  color: #333;
+  font-size: 10px;
+  cursor: pointer;
+  z-index: 11;
+}
+
+.black .cell--flip {
+  color: #CCC;
+}
+
+.cell--value {
+  flex: 7;
+  padding: 0 5% 5% 5%;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 350%;
+  z-index: 11;
+}
+
+.cell--cursors {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2; /* may go up to 9*/
+}
+
+.cell--cursor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border-style: solid;
+  /* The below styles will be overwritten in code */
+  border-color: blue;
+  border-width: 1px;
+}
+
+.cell--circle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border: 1px solid #666;
+  border-radius: 50%;
+  z-index: 10;
+}

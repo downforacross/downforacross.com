@@ -1,0 +1,135 @@
+.compose {
+  height: 100%;
+  width: 100%;
+  font-family: avenir, "helvetica neue", "Helvetica", "arial", sans-serif;
+  display: flex;
+  flex-direction: row;
+  min-height: 760px;
+}
+
+/* Left panel styles */
+.compose--left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+  border: 1px solid #E2E2E2;
+}
+
+.compose--left--top {
+  padding: 20px;
+}
+
+.compose--left--list {
+  padding: 10px;
+  overflow-y: scroll;
+  max-height: 70%;
+  flex: 2;
+}
+
+.compose--left--list--entry {
+  display: block;
+  font-family: avenir, "helvetica neue", "Helvetica", "arial", sans-serif;
+  font-size: 16px;
+  background-color: #EEE;
+  box-shadow: 2px 2px silver;
+  margin-top: 10px;
+  padding: 5px 5px 5px 5px;
+  cursor: pointer;
+}
+
+.compose--left--new {
+  border-top: 1px solid #E2E2E2;
+  margin-top: 30px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 5;
+}
+
+/* Main panel styles */
+.compose--main {
+  position: relative;
+  flex: 3;
+  padding: 20px;
+  border: 1px solid #E2E2E2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.compose--main--select-a-puzzle {
+  font-size: 30px;
+  align-self: center;
+  text-align: center;
+}
+
+.compose--main--info {
+}
+
+.compose--main--info--title .editable-span {
+  display: flex;
+  align-items: center;
+  justify-items: flex-start;
+}
+
+.compose--main--info--title .text {
+  display: inline-block;
+  padding: 1px;
+  font-family: avenir, "helvetica neue", "Helvetica", "arial", sans-serif;
+  font-size: 30px;
+  font-weight: 300;
+  color: #333;
+  text-decoration: none;
+}
+
+.compose--main--info--title i {
+  margin-left: 2px;
+}
+
+.compose--main--info--title .on .text {
+  min-width: 20px;
+  width: auto;
+}
+
+.compose--main--info--title .off .text {
+  padding: 3px;
+  margin-right: 2px;
+}
+
+.compose--main--info--subtitle .text {
+  padding: 1px;
+  font-family: avenir, "helvetica neue", "Helvetica", "arial", sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+  color: #333;
+  text-decoration: none;
+}
+
+.compose--main--info--subtitle .off .text {
+  padding: 3px;
+  font-family: avenir, "helvetica neue", "Helvetica", "arial", sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+  color: #333;
+  text-decoration: none;
+}
+
+
+.compose--main--editor {
+}
+
+.compose--main--options {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+}
+
+/* Right panel styles */
+.compose--right {
+  flex: 1;
+  padding: 20px;
+  border: 1px solid #E2E2E2;
+}

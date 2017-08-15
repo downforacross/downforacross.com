@@ -1,0 +1,59 @@
+.action-menu {
+  color: #666;
+  font-size: 14px;
+}
+
+.room--toolbar button {
+  color: #666;
+  font-size: 14px;
+  padding: 7px 10px 7px 10px;
+  border-radius: 5px;
+  background-color: white;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.room--toolbar button:hover {
+  background-color: #F2F2F2;
+}
+
+.active .action-menu--button {
+  background-color: #F2F2F2;
+  color: #111;
+}
+
+.action-menu--list {
+  position: absolute;
+  top: 100%;
+  background-color: #F2F2F2;
+  display: none;
+  z-index: 10;
+}
+
+.active .action-menu--list {
+  display: block;
+}
+
+.action-menu--list:hover {
+  display: block;
+}
+
+.action-menu--list--action:first-child {
+  border-top: 1px solid #CCC;
+}
+
+
+.action-menu--list--action {
+  text-align: left;
+  padding: 15px 15px 15px 15px;
+  border-left: 1px solid #CCC;
+  border-bottom: 1px solid #CCC;
+  border-right: 1px solid #CCC;
+  cursor: pointer;
+}
+
+.action-menu--list--action:hover {
+  color: #111;
+  background-color: #DDDDDD;
+}

@@ -1,0 +1,69 @@
+.upload {
+  width: 99%;
+  padding: 5px 5px 5px 5px;
+}
+
+.upload--create {
+  display: flex;
+  flex-direction: column;
+}
+
+.upload--create--main {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: middle;
+}
+
+.upload--create--main--upload {
+  width: 50%;
+  padding: 30px 30px 30px 30px;
+  border-top: 2px solid #666;
+  border-left: 2px solid #666;
+  border-right: 1px solid #666;
+  border-bottom: 2px solid #666;
+  display: flex;
+  flex-direction: column;
+}
+
+.upload--create--main--upload--title {
+  font-size: 30px;
+}
+
+.upload--create--main--paste {
+  width: 50%;
+  padding: 30px 30px 30px 30px;
+  border-top: 2px solid #666;
+  border-left: 1px solid #666;
+  border-right: 2px solid #666;
+  border-bottom: 2px solid #666;
+  display: flex;
+  flex-direction: column;
+}
+
+.upload--create--main--paste--title {
+  font-size: 30px;
+  text-align: right;
+}
+
+.upload--create--main--paste--textbox {
+  border: 10px solid #EEE;
+  margin-top: 10px;
+  font-family: Andale Mono;
+  height: 228px;
+  resize: none;
+  font-color: black;
+  outline: none;
+}
+
+.upload--create--go {
+  margin-top: 25px;
+  margin-left: 25px;
+  margin-right: 25px;
+  font-size: 25px;
+}
+
+.upload--create--preview {
+  height: 40px;
+  padding: 15px 15px 15px 15px;
+}

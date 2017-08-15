@@ -1,0 +1,24 @@
+.file-uploader {
+  margin-top: 10px;
+}
+
+.file-uploader--wrapper {
+  background-color: #EEE;
+  outline: 2px dashed #AAA;
+  outline-offset: -10px;
+  padding: 80px 20px 80px 20px;
+}
+
+.file-uploader--box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.file-uploader--box--icon {
+  fill: #AAA;
+  cursor: pointer;
+  text-align: center;
+  margin-bottom: 30px;
+}
