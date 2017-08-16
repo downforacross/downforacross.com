@@ -97,7 +97,7 @@ export default class Grid {
     } else {
       r += 1;
     }
-    return this.getNextEmptyCell(r, c);
+    return this.getNextEmptyCell(r, c, direction);
   }
 
   hasEmptyCells(r, c, direction) {
