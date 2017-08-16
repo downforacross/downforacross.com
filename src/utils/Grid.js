@@ -43,10 +43,10 @@ export default class Grid {
   }
 
   isSolved(solution) {
-    for (const [r, c] of this.keys()) {
+    for (const [r, c, cell] of this.items()) {
       if (
         solution[r][c] !== '.' &&
-        solution[r][c] !== this.grid[r][c]
+        solution[r][c] !== cell.value
       ) {
         return false;
       }
