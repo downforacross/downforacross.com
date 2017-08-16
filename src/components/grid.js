@@ -1,8 +1,7 @@
 import './grid.css';
 
 import React, { Component } from 'react';
-import { isWhite, getParent } from '../gameUtils';
-
+import GridObject from '../utils/Grid';
 import Cell from './cell';
 
 /*
@@ -21,6 +20,10 @@ import Cell from './cell';
 
 export default class Grid extends Component {
 
+  get grid() {
+    return new GridObject(this.props.grid);
+  }
+
   isSelected(r, c) {
     const { selected } = this.props;
     return r === selected.r && c === selected.c;
@@ -33,10 +36,13 @@ export default class Grid extends Component {
   }
 
   isHighlighted(r, c) {
-    const { grid, selected, direction } = this.props;
-    return !this.isSelected(r, c) && isWhite(grid, r, c) && (
-      getParent(grid, selected.r, selected.c, direction)
-      === getParent(grid, r, c, direction));
+    const { selected, direction } = this.props;
+    const selectedParent = this.grid.getParent(selected.r, selected.c, direction);
+    return (
+      !this.isSelected(r, c) &&
+      this.grid.isWhite(r, c) &&
+      this.grid.getParent(r, c, direction) === selectedParent
+    );
   }
 
   isReferenced(r, c) {
@@ -54,20 +60,14 @@ export default class Grid extends Component {
   }
 
   getAllSquares() {
-    let result = [];
-    this.props.grid.forEach((row, r) => {
-      result = result.concat(row.map((cell, c) => ({
-        r: r,
-        c: c
-      })));
-    });
-    return result;
+    return this.grid.keys().map(([r, c]) => ({ r, c }));
   }
 
   clueContainsSquare({ ori, num }, r, c) {
-    const { grid } = this.props;
-    return isWhite(grid, r, c) &&
-      getParent(grid, r, c, ori) === num;
+    return (
+      this.grid.isWhite(r, c) &&
+      this.grid.getParent(r, c, ori) === num
+    );
   }
 
   render() {

@@ -2,6 +2,7 @@ import './gridControls.css';
 
 import React, { Component } from 'react';
 
+import GridObject from '../utils/Grid';
 import * as gameUtils from '../gameUtils';
 
 function safe_while(condition, step, cap = 500) {
@@ -13,8 +14,12 @@ function safe_while(condition, step, cap = 500) {
 
 export default class GridControls extends Component {
 
+  get grid() {
+    return new GridObject(this.props.grid);
+  }
+
   getSelectedClueNumber() {
-    return gameUtils.getParent(this.props.grid, this.props.selected.r, this.props.selected.c, this.props.direction);
+    return this.grid.getParent(this.props.selected.r, this.props.selected.c, this.props.direction);
   }
 
   componentDidMount() {
@@ -22,8 +27,8 @@ export default class GridControls extends Component {
   }
 
   isWordFilled(direction, number) {
-    const clueRoot = gameUtils.getCellByNumber(this.props.grid, number);
-    return !gameUtils.hasEmptyCells(this.props.grid, clueRoot.r, clueRoot.c, direction);
+    const clueRoot = this.grid.getCellByNumber(number);
+    return !this.grid.hasEmptyCells(clueRoot.r, clueRoot.c, direction);
   }
 
   selectNextClue(backwards) {
@@ -50,8 +55,8 @@ export default class GridControls extends Component {
 
   selectClue(direction, number) {
     this.setDirection(direction);
-    const clueRoot = gameUtils.getCellByNumber(this.props.grid, number);
-    const firstEmptyCell = gameUtils.getNextEmptyCell(this.props.grid, clueRoot.r, clueRoot.c, direction);
+    const clueRoot = this.grid.getCellByNumber(number);
+    const firstEmptyCell = this.grid.getNextEmptyCell(clueRoot.r, clueRoot.c, direction);
     this.setSelected(firstEmptyCell || clueRoot);
   }
 
@@ -60,7 +65,6 @@ export default class GridControls extends Component {
       return;
     }
     const moveSelectedBy = (dr, dc) => () => {
-      const { grid } = this.props;
       const { selected } = this.props;
       let { r, c } = selected;
       const step = () => {
@@ -69,10 +73,10 @@ export default class GridControls extends Component {
       };
       step();
       safe_while(() => (
-        gameUtils.isInBounds(grid, r, c)
-        && !gameUtils.isWhite(grid, r, c)
+        this.grid.isInBounds(r, c)
+        && !this.grid.isWhite(r, c)
       ), step);
-      if (gameUtils.isInBounds(grid, r, c)) {
+      if (this.grid.isInBounds(r, c)) {
         this.setSelected({ r, c });
       }
     };
@@ -116,12 +120,12 @@ export default class GridControls extends Component {
 
   goToNextEmptyCell() {
     let { r, c } = this.props.selected;
-    const nextEmptyCell = gameUtils.getNextEmptyCellAfter(this.props.grid, r, c, this.props.direction);
+    const nextEmptyCell = this.grid.getNextEmptyCellAfter(r, c, this.props.direction);
     if (nextEmptyCell) {
       this.setSelected(nextEmptyCell);
       return nextEmptyCell;
     } else {
-      const nextCell = gameUtils.getNextCell(this.props.grid, r, c, this.props.direction);
+      const nextCell = this.grid.getNextCell(r, c, this.props.direction);
       if (nextCell) {
         this.setSelected(nextCell);
         return nextCell;
@@ -150,11 +154,11 @@ export default class GridControls extends Component {
       }
     };
     const ok = () => {
-      return gameUtils.isInBounds(grid, r, c) && gameUtils.isWhite(grid, r, c);
+      return this.grid.isInBounds(r, c) && this.grid.isWhite(r, c);
     };
     step();
     safe_while(() => (
-      gameUtils.isInBounds(grid, r, c) && !ok()
+      this.grid.isInBounds(r, c) && !ok()
     ), step);
     if (ok()) {
       this.setSelected({ r, c });
@@ -187,7 +191,7 @@ export default class GridControls extends Component {
   }
 
   isGridFilled() {
-    return gameUtils.isGridFilled(this.props.grid);
+    return this.grid.isGridFilled();
   }
 
   setDirection(direction) {

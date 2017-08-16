@@ -3,45 +3,26 @@ import { db } from '../actions';
 import Player from '../components/player';
 import Chat from '../components/chat';
 import Toolbar from '../components/toolbar';
-import { isSolved } from '../gameUtils';
+import GridObject from '../utils/Grid';
+import { makeEmptyGame } from '../gameUtils';
 import { toArr, lazy, rand_int, rand_color } from '../jsUtils';
 
 import React, { Component } from 'react';
 
 const CURSOR_EXPIRE = 1000 * 60; // 20 seconds
+
 export default class Room extends Component {
+
   constructor() {
     super();
     this.state = {
       uid: 0,
-      game: {
-        gid: undefined,
-        name: undefined,
-        info: undefined,
-        clues: {
-          across: [],
-          down: [],
-        },
-        solution: [['']],
-        grid: [[{
-          black: false,
-          number: 1,
-          edits: [],
-          value: '',
-          parents: {
-            across: 1,
-            down: 1
-          }
-        }]],
-        createTime: undefined,
-        startTime: undefined,
-        chat: {
-          users: [],
-          messages: [],
-        },
-        circles: []
-      }
+      game: makeEmptyGame()
     };
+  }
+
+  get grid() {
+    return new GridObject(this.state.game.grid);
   }
 
   componentDidMount() {
@@ -86,7 +67,7 @@ export default class Room extends Component {
   }
 
   checkIsSolved() {
-    if (isSolved(this.state.game.grid, this.state.game.solution)) {
+    if (this.grid.isSolved(this.state.game.solution)) {
       this.transaction(game => (
         Object.assign(game, {
           solved: true,

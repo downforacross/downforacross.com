@@ -8,6 +8,7 @@ import EditableSpan from '../components/editableSpan';
 import me from '../localAuth'
 
 export default class Compose extends Component {
+
   constructor() {
     super();
     this.state = {

@@ -5,6 +5,7 @@ import GridControls from './gridControls';
 import React, { Component } from 'react';
 import { lazy } from '../jsUtils';
 
+import GridObject from '../utils/Grid';
 import * as gameUtils from '../gameUtils';
 
 /*
@@ -31,6 +32,7 @@ import * as gameUtils from '../gameUtils';
  **/
 
 export default class Player extends Component {
+
   constructor(props) {
     super();
     this.state = {
@@ -46,17 +48,19 @@ export default class Player extends Component {
     this.prvIdleID = {};
   }
 
+  get grid() {
+    return new GridObject(this.props.grid);
+  }
+
   componentWillReceiveProps(props) {
     this.props = props;
     let { r, c } = this.state.selected;
-    if (!gameUtils.isWhite(this.props.grid, r, c)) {
-      while (!gameUtils.isWhite(this.props.grid, r, c)) {
-        if (c < this.props.grid[0].length) {
-          c += 1;
-        } else {
-          r += 1;
-          c = 0;
-        }
+    while (!this.grid.isWhite(r, c)) {
+      if (c < this.props.grid[0].length) {
+        c += 1;
+      } else {
+        r += 1;
+        c = 0;
       }
     }
     this.setSelected({r, c});
@@ -65,7 +69,7 @@ export default class Player extends Component {
   /* Callback fns, to be passed to child components */
 
   isValidDirection(direction, selected) {
-    return gameUtils.getParent(this.props.grid, selected.r, selected.c, direction) !== 0;
+    return this.grid.getParent(selected.r, selected.c, direction) !== 0;
   }
 
   canSetDirection(direction) {
@@ -124,16 +128,16 @@ export default class Player extends Component {
   }
 
   getSelectedClueNumber() {
-    return gameUtils.getParent(this.props.grid, this.state.selected.r, this.state.selected.c, this.state.direction);
+    return this.grid.getParent(this.state.selected.r, this.state.selected.c, this.state.direction);
   }
 
   getHalfSelectedClueNumber() {
-    return gameUtils.getParent(this.props.grid, this.state.selected.r, this.state.selected.c, gameUtils.getOppositeDirection(this.state.direction));
+    return this.grid.getParent(this.state.selected.r, this.state.selected.c, gameUtils.getOppositeDirection(this.state.direction));
   }
 
   isClueFilled(direction, number) {
-    const clueRoot = gameUtils.getCellByNumber(this.props.grid, number);
-    return !gameUtils.hasEmptyCells(this.props.grid, clueRoot.r, clueRoot.c, direction);
+    const clueRoot = this.grid.getCellByNumber(number);
+    return !this.grid.hasEmptyCells(clueRoot.r, clueRoot.c, direction);
   }
 
   isClueSelected(direction, number) {
@@ -155,14 +159,7 @@ export default class Player extends Component {
   /* Public functions, called by parent components */
 
   getAllSquares() {
-    let result = [];
-    this.props.grid.forEach((row, r) => {
-      result = result.concat(row.map((cell, c) => ({
-        r: r,
-        c: c
-      })));
-    });
-    return result;
+    return this.grid.keys().map(([r, c]) => ({ r, c }));
   }
 
   getSelectedAndHighlightedSquares() {
@@ -177,6 +174,7 @@ export default class Player extends Component {
     const clueText = this.getClueBarText();
     return gameUtils.getReferencedClues(clueText);
   }
+
   getReferencedSquares() {
     return this.getAllSquares().filter(({r, c}) => this.isReferenced(r, c));
   }

@@ -2,9 +2,7 @@ import './welcome.css';
 import Upload from '../components/upload'
 
 import React, { Component } from 'react';
-import {
-  Link
-} from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 import actions, { db } from '../actions';
 
@@ -13,6 +11,7 @@ function values(obj) {
 }
 
 export default class Welcome extends Component {
+
   constructor() {
     super();
     this.state = {
