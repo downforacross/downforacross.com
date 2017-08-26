@@ -1,6 +1,7 @@
 import './player.css';
 
 import Grid from './grid';
+import Clues from './clues';
 import GridControls from './gridControls';
 import React, { Component } from 'react';
 import { lazy } from '../jsUtils';
@@ -46,6 +47,15 @@ export default class Player extends Component {
     // for deferring scroll-to-clue actions
     this.prvNum = {};
     this.prvIdleID = {};
+    this._isClueSelected = this.isClueSelected.bind(this);
+    this._isClueHalfSelected = this.isClueSelected.bind(this);
+    this._isClueFilled = this.isClueFilled.bind(this);
+    this._selectClue = this.selectClue.bind(this);
+    this._scrollToClue = this.scrollToClue.bind(this);
+    this._setDirection = this.setDirection.bind(this);
+    this._canSetDirection = this.canSetDirection.bind(this);
+    this._setSelected = this.setSelected.bind(this);
+    this._changeDirection = this.changeDirection.bind(this);
   }
 
   get grid() {
@@ -203,9 +213,9 @@ export default class Player extends Component {
           ref='gridControls'
           selected={this.state.selected}
           direction={this.state.direction}
-          onSetDirection={this.setDirection.bind(this)}
-          canSetDirection={this.canSetDirection.bind(this)}
-          onSetSelected={this.setSelected.bind(this)}
+          onSetDirection={this._setDirection}
+          canSetDirection={this._canSetDirection}
+          onSetSelected={this._setSelected}
           updateGrid={this.props.updateGrid}
           grid={this.props.grid}
           clues={this.props.clues}
@@ -233,57 +243,21 @@ export default class Player extends Component {
                   references={this.getReferences()}
                   direction={this.state.direction}
                   cursors={this.props.cursors}
-                  onSetSelected={this.setSelected.bind(this)}
+                  onSetSelected={this._setSelected}
                   myColor={this.props.myColor}
-                  onChangeDirection={this.changeDirection.bind(this)}/>
+                  onChangeDirection={this._changeDirection}/>
               </div>
             </div>
 
             <div className='player--main--clues'>
-              {
-                // Clues component
-                ['across', 'down'].map((dir, i) => (
-                  <div key={i} className='player--main--clues--list'>
-                    <div className='player--main--clues--list--title'>
-                      {dir.toUpperCase()}
-                    </div>
-
-                    <div
-                      className={'player--main--clues--list--scroll ' + dir}
-                      ref={'clues--list--'+dir}>
-                      {
-                        this.props.clues[dir].map((clue, i) => clue && (
-                          <div key={i}
-                            className={
-                              (this.isClueSelected(dir, i)
-                                ?  'selected '
-                                : ' ')
-                                + (this.isClueHalfSelected(dir, i) ?
-                                  'half-selected '
-                                  : ' ')
-                                + (this.isClueFilled(dir, i)
-                                  ? 'complete '
-                                  : ' ')
-                                + 'player--main--clues--list--scroll--clue'}
-                                ref={
-                                  (this.isClueSelected(dir, i) ||
-                                    this.isClueHalfSelected(dir, i))
-                                    ? this.scrollToClue.bind(this, dir, i)
-                                    : null}
-                                    onClick={this.selectClue.bind(this, dir, i)}>
-                                    <div className='player--main--clues--list--scroll--clue--number'>
-                                      {i}
-                                    </div>
-                                    <div className='player--main--clues--list--scroll--clue--text'>
-                                      {clue}
-                                    </div>
-                                  </div>
-                        ))
-                      }
-                    </div>
-                  </div>
-                ))
-              }
+              <Clues
+                clues={this.props.clues}
+                isClueSelected={this._isClueSelected}
+                isClueHalfSelected={this._isClueHalfSelected}
+                isClueFilled={this._isClueFilled}
+                scrollToClue={this._scrollToClue}
+                selectClue={this._selectClue}
+              />
             </div>
           </div>
         </GridControls>
