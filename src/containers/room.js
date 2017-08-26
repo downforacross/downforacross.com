@@ -19,6 +19,16 @@ export default class Room extends Component {
       uid: 0,
       game: makeEmptyGame()
     };
+
+    this._sendChatMessage = this.sendChatMessage.bind(this);
+    this._updateCursor = this.updateCursor.bind(this);
+    this._updateGrid = this.updateGrid.bind(this);
+    this._resetClock = this.resetClock.bind(this);
+    this._reset = this.reset.bind(this);
+    this._reveal = this.reveal.bind(this);
+    this._check = this.check.bind(this);
+    this._startClock = this.startClock.bind(this);
+    this._pauseClock = this.pauseClock.bind(this);
   }
 
   get grid() {
@@ -261,15 +271,6 @@ export default class Room extends Component {
     });
   }
 
-  renderChat() {
-    return (
-      <Chat
-        chat={this.state.game.chat || {messages: [], users: []}}
-        onSendChatMessage={this.sendChatMessage.bind(this)} />
-    );
-  }
-
-
   render() {
     const size = 35 * 15 / this.state.game.grid[0].length;
     return (
@@ -307,12 +308,12 @@ export default class Room extends Component {
             stopTime={this.state.game.stopTime}
             pausedTime={this.state.game.pausedTime}
             solved={this.state.game.solved}
-            onPauseClock={this.pauseClock.bind(this)}
-            onStartClock={this.startClock.bind(this)}
-            onCheck={this.check.bind(this)}
-            onReveal={this.reveal.bind(this)}
-            onReset={this.reset.bind(this)}
-            onResetClock={this.resetClock.bind(this)}
+            onPauseClock={this._pauseClock}
+            onStartClock={this._startClock}
+            onCheck={this._check}
+            onReveal={this._reveal}
+            onReset={this._reset}
+            onResetClock={this._resetClock}
           />
         </div>
 
@@ -329,12 +330,16 @@ export default class Room extends Component {
             cursors={(this.state.cursors || []).filter(({id}) => id !== this.id)}
             frozen={this.state.game.solved}
             myColor={this.color}
-            updateGrid={this.updateGrid.bind(this)}
-            updateCursor={this.updateCursor.bind(this)} />
+            updateGrid={this._updateGrid}
+            updateCursor={this._updateCursor}
+          />
 
-          {this.renderChat()}
-        </div>
+        <Chat
+          chat={this.state.game.chat || {messages: [], users: []}}
+          onSendChatMessage={this._sendChatMessage}
+        />
       </div>
+    </div>
     );
   }
 };
