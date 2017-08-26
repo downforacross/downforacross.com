@@ -1,3 +1,4 @@
+import './chat.css';
 import nameGenerator from '../nameGenerator';
 
 import React, { Component } from 'react';
