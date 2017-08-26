@@ -3,17 +3,37 @@ import './clues.css';
 import React, { Component } from 'react';
 
 export default class Clues extends Component{
+  constructor() {
+    super();
+    this.state = {
+      showClueLengths: false,
+    };
+    this._toggleShowClueLengths = this.toggleShowClueLengths.bind(this);
+  }
+
+  toggleShowClueLengths() {
+    const { showClueLengths} = this.state;
+    this.setState({ showClueLengths: !showClueLengths });
+  }
+
   render() {
     const {
       clues,
+      clueLengths,
       isClueSelected,
       isClueHalfSelected,
       isClueFilled,
       scrollToClue,
       selectClue,
     } = this.props;
+    const { showClueLengths } = this.state;
+
     return (
       <div className='clues'>
+        <div
+          className='clues--secret'
+          onClick={this._toggleShowClueLengths}
+        />
         {
           // Clues component
           ['across', 'down'].map((dir, i) => (
@@ -50,6 +70,13 @@ export default class Clues extends Component{
                               </div>
                               <div className='clues--list--scroll--clue--text'>
                                 {clue}
+                                {
+                                  showClueLengths
+                                    ?  <span className='clues--list--scroll--clue--hint'>
+                                      {'  '}({clueLengths[dir][i]})
+                                    </span>
+                                    : null
+                                }
                               </div>
                             </div>
                   ))

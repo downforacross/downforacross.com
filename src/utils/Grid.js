@@ -12,6 +12,21 @@ export default class Grid {
     }
   }
 
+  get clueLengths() {
+    const result = {
+      across: [],
+      down: [],
+    };
+    this.values().forEach(cell => {
+      if (cell && !cell.black) {
+        ['across', 'down'].forEach(dir => {
+          result[dir][cell.parents[dir]] = (result[dir][cell.parents[dir]] || 0) + 1;
+        });
+      }
+    });
+    return result;
+  }
+
   keys() {
     const keys = [];
     for (const r of _.range(0, this.grid.length)) {

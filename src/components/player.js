@@ -252,6 +252,7 @@ export default class Player extends Component {
             <div className='player--main--clues'>
               <Clues
                 clues={this.props.clues}
+                clueLengths={this.grid.clueLengths}
                 isClueSelected={this._isClueSelected}
                 isClueHalfSelected={this._isClueHalfSelected}
                 isClueFilled={this._isClueFilled}

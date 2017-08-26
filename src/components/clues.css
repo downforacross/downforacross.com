@@ -1,6 +1,18 @@
 .clues {
+  position: relative;
   display: flex;
   padding: 0px 20px 0px 20px;
+}
+
+.clues--secret {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  opacity: 0;
+  cursor: pointer;
+  height: 19px;
+  width: 100%;
 }
 
 .clues--list {
@@ -56,4 +68,9 @@
 
 .clues--list--scroll--clue--text {
   margin-left: 10px;
+}
+
+.clues--list--scroll--clue--hint {
+  font-size: 80%;
+  vertical-align: middle;
 }
