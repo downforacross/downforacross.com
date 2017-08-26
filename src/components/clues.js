@@ -33,7 +33,9 @@ export default class Clues extends Component{
         <div
           className='clues--secret'
           onClick={this._toggleShowClueLengths}
-        />
+          title={showClueLengths ? '' : 'Show lengths'}
+        >
+        </div>
         {
           // Clues component
           ['across', 'down'].map((dir, i) => (
