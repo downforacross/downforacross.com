@@ -93,6 +93,7 @@ export default class GridControls extends Component {
       }
     }
 
+    const { onPressEnter } = this.props;
     const movement = {
       'ArrowLeft': setDirection('across', moveSelectedBy(0, -1)),
       'ArrowUp': setDirection('down', moveSelectedBy(-1, 0)),
@@ -107,7 +108,7 @@ export default class GridControls extends Component {
       ev.stopPropagation();
       movement[ev.key](ev.shiftKey);
     } else if (ev.key === 'Enter') {
-      this.props.onEnter && this.props.onEnter();
+      onPressEnter && onPressEnter();
     } else {
       const letter = ev.key.toUpperCase();
       if (!ev.metaKey && !ev.ctrlKey && letter.match(/^[A-Z0-9]$/)) {

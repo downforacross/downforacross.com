@@ -76,6 +76,10 @@ export default class Player extends Component {
     this.setSelected({r, c});
   }
 
+  focus() {
+    this.refs.gridControls && this.refs.gridControls.focus();
+  }
+
   /* Callback fns, to be passed to child components */
 
   isValidDirection(direction, selected) {
@@ -207,10 +211,15 @@ export default class Player extends Component {
   /* Render */
 
   render() {
+    const {
+      onPressEnter,
+    } = this.props;
+
     return (
       <div className='player--main--wrapper'>
         <GridControls
           ref='gridControls'
+          onPressEnter={onPressEnter}
           selected={this.state.selected}
           direction={this.state.direction}
           onSetDirection={this._setDirection}

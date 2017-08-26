@@ -30,11 +30,25 @@ export default class Chat extends Component {
   }
 
   onKeyPress(ev) {
+    const {
+      onSendChatMessage,
+      onPressEnter,
+    } = this.props;
+    const {
+      message,
+      username,
+    } = this.state;
+
     if (ev.key === 'Enter') {
       ev.stopPropagation();
       ev.preventDefault();
-      this.props.onSendChatMessage(this.state.username, this.state.message);
+      if (message.length > 0) {
+        onSendChatMessage(username, message);
+      }
       this.setState({message: ''});
+      if (!ev.shiftKey) {
+        onPressEnter();
+      }
     }
   }
 
@@ -44,6 +58,10 @@ export default class Chat extends Component {
 
   onChangeUsername(ev) {
     this.setState({username: ev.target.value});
+  }
+
+  focus() {
+    this.refs.input && this.refs.input.focus();
   }
 
   render() {
@@ -84,8 +102,9 @@ export default class Chat extends Component {
 
         <div className='chat--bar'>
           <input
+            ref='input'
             className='chat--bar--input'
-            placeholder='Send a message'
+            placeholder='[Enter] to chat'
             value={this.state.message}
             onChange={this.onChange.bind(this)}
             onKeyPress={this.onKeyPress.bind(this)}

@@ -21,6 +21,8 @@ export default class Room extends Component {
     };
 
     this._sendChatMessage = this.sendChatMessage.bind(this);
+    this._focusChat = this.focusChat.bind(this);
+    this._focusGame = this.focusGame.bind(this);
     this._updateCursor = this.updateCursor.bind(this);
     this._updateGrid = this.updateGrid.bind(this);
     this._resetClock = this.resetClock.bind(this);
@@ -271,6 +273,14 @@ export default class Room extends Component {
     });
   }
 
+  focusChat() {
+    this.refs.chat && this.refs.chat.focus();
+  }
+
+  focusGame() {
+    this.refs.game && this.refs.game.focus();
+  }
+
   render() {
     const size = 35 * 15 / this.state.game.grid[0].length;
     return (
@@ -332,11 +342,14 @@ export default class Room extends Component {
             myColor={this.color}
             updateGrid={this._updateGrid}
             updateCursor={this._updateCursor}
+            onPressEnter={this._focusChat}
           />
 
         <Chat
+          ref='chat'
           chat={this.state.game.chat || {messages: [], users: []}}
           onSendChatMessage={this._sendChatMessage}
+          onPressEnter={this._focusGame}
         />
       </div>
     </div>
