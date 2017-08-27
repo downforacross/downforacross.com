@@ -80,7 +80,7 @@ export default class Solo extends Room {
     }, cbk);
   }
 
-  renderChat() { // solo games don't have chat
-    return null;
+  shouldRenderChat() { // solo games don't have chat
+    return false;
   }
 };

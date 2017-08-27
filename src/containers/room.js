@@ -281,6 +281,11 @@ export default class Room extends Component {
     this.refs.game && this.refs.game.focus();
   }
 
+  // overrided in the Solo component, which extends Room
+  shouldRenderChat() {
+    return true;
+  }
+
   render() {
     const size = 35 * 15 / this.state.game.grid[0].length;
     return (
@@ -345,12 +350,15 @@ export default class Room extends Component {
             onPressEnter={this._focusChat}
           />
 
-        <Chat
-          ref='chat'
-          chat={this.state.game.chat || {messages: [], users: []}}
-          onSendChatMessage={this._sendChatMessage}
-          onPressEnter={this._focusGame}
-        />
+        { this.shouldRenderChat()
+            ? <Chat
+              ref='chat'
+              chat={this.state.game.chat || {messages: [], users: []}}
+              onSendChatMessage={this._sendChatMessage}
+              onPressEnter={this._focusGame}
+            />
+            : null
+        }
       </div>
     </div>
     );
