@@ -108,6 +108,8 @@ export default class GridControls extends Component {
       ev.stopPropagation();
       movement[ev.key](ev.shiftKey);
     } else if (ev.key === 'Enter') {
+      ev.preventDefault();
+      ev.stopPropagation();
       onPressEnter && onPressEnter();
     } else {
       const letter = ev.key.toUpperCase();

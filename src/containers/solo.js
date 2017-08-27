@@ -14,7 +14,7 @@ export default class Solo extends Room {
     this.loadGame(game => {
       this.setState({
         loaded: true,
-        game: game
+        game: game,
       });
     }, () => {
       db.ref('puzzle/' + this.pid).on('value', puzzle => {
@@ -36,13 +36,13 @@ export default class Solo extends Room {
   }
 
   loadGame(success, fail) {
-    console.log('loading game');
     const id = me();
+
+    // this is such a hack
     if (id !== 'public') {
       db.ref('solo/' + id).once('value', game => {
         game = game.val();
         if (game && game.pid === this.pid) {
-          console.log('success', game);
           success(game);
         } else {
           fail();
