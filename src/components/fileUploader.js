@@ -1,32 +1,74 @@
 import './fileUploader.css';
 import request from 'superagent';
 
+import { hasShape } from '../jsUtils';
 import React, { Component } from 'react';
 import Dropzone from 'react-dropzone';
+import PUZtoJSON from '../vendor/PUZtoJSON';
 
 export default class FileUploader extends Component {
 
   constructor() {
     super();
-    this.state = {
-      file: undefined
+  }
+
+  validPuzzle(puzzle) {
+    let shape = {
+      info: {
+        title: '',
+        type: '',
+        author: '',
+      },
+      grid: [ [ '' ] ],
+      // circles: {} is optional
+      clues: {
+        across: {
+        },
+        down: {
+        },
+      },
+    };
+
+    return hasShape(puzzle, shape);
+  }
+
+  convertPUZ(file) {
+    const raw = PUZtoJSON(file);
+    console.log(raw);
+    const grid = raw.grid.map(row =>
+      row.map(({solution}) => solution || '.')
+    );
+    const type = grid.length > 10 ? 'Daily Puzzle' : 'Mini Puzzle';
+
+    return {
+      info: {
+        title: raw.metadata.title,
+        type: type,
+        author: raw.metadata.creator,
+      },
+      grid: grid,
+      circles: [],
+      clues: {
+        across: raw.across,
+        down: raw.down,
+      },
     };
   }
 
   onDrop(acceptedFiles) {
-    this.setState({
-      file: acceptedFiles[0]
-    });
-    const req = request.post('/upload');
-    req.attach('puz', acceptedFiles[0]);
-    req.end((err, res) => {
-      if (res.body.error) {
-        this.props.failUpload();
+    let file = acceptedFiles[0];
+    var reader = new FileReader();
+    reader.addEventListener("loadend", () => {
+      let puzzle = this.convertPUZ(reader.result);
+      if (this.validPuzzle(puzzle)) {
+        this.props.setPuzzle(puzzle);
       } else {
-        this.props.setPuzzle(res.body.puzzle);
+        this.props.failUpload();
       }
       window.URL.revokeObjectURL(acceptedFiles[0].preview);
+      debugger;
     });
+    reader.readAsArrayBuffer(file);
   }
 
   render() {

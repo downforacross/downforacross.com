@@ -7,6 +7,24 @@ function toArr(a) {
   return ret;
 }
 
+function hasShape(obj, shape) {
+  if (typeof obj !== typeof shape) {
+    console.log('hasShape type fail: ', obj, typeof shape);
+    return false;
+  }
+  if (typeof obj === 'object') {
+    return Object.keys(shape).every(key => {
+      if (obj[key] === undefined) {
+        console.log('hasShape key fail', obj, key);
+        return false;
+      }
+      return hasShape(obj[key], shape[key])
+    });
+  } else {
+    return true;
+  }
+}
+
 window.requestIdleCallback =
   window.requestIdleCallback ||
   function (cb) {
@@ -53,4 +71,4 @@ function rand_color() {
   return 'hsl(' + h + ',' + s + '%,' + l + '%)';
 }
 
-export { toArr, lazy, rand_int, rand_color };
+export { hasShape, toArr, lazy, rand_int, rand_color };
