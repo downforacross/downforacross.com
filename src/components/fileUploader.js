@@ -40,19 +40,21 @@ export default class FileUploader extends Component {
     );
     const type = grid.length > 10 ? 'Daily Puzzle' : 'Mini Puzzle';
 
-    return {
+    console.log(result);
+    const result = {
       info: {
         title: raw.metadata.title,
         type: type,
         author: raw.metadata.creator,
       },
       grid: grid,
-      circles: [],
+      circles: raw.circles,
       clues: {
         across: raw.across,
         down: raw.down,
       },
     };
+    return result;
   }
 
   onDrop(acceptedFiles) {

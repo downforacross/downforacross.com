@@ -1,3 +1,28 @@
+function getRebus() {
+}
+
+function getCircles(bytes) {
+  const circles = [];
+  const gext = 'GEXT';
+  let i = 0, j = 0;
+  for(i = 0; i < bytes.length; i += 1) {
+    if (j == gext.length) break;
+    if (bytes[i] == gext.charCodeAt(j)) {
+      j += 1;
+    }
+  }
+  if (j == gext.length) { // we found circles!
+    const length = bytes[i] * 256 + bytes[i + 1];
+    i += 4; // skip the H H
+    for (let k = 0; k < length; k += 1) {
+      if (bytes[i + k] & 128) {
+        circles.push(k);
+      }
+    }
+  }
+  return circles;
+  // format is 4S H H
+}
 
 export default function PUZtoJSON(buffer) {
   var retval = {
@@ -73,6 +98,14 @@ export default function PUZtoJSON(buffer) {
   }
 
   retval.metadata["description"] = readString();
+
+  const rebus = getRebus();
+  const circles = getCircles(bytes);
+  if (rebus) {
+    // todo
+  }
+  retval.circles = circles;
+
   return retval;
 }
 
