@@ -1,27 +1,75 @@
-function getRebus() {
+function getExtension(bytes, code) {
+  // struct byte format is 4S H H
+  let i = 0, j = 0;
+  for(i = 0; i < bytes.length; i += 1) {
+    if (j == code.length) break;
+    if (bytes[i] == code.charCodeAt(j)) {
+      j += 1;
+    } else {
+      j = 0;
+    }
+  }
+  if (j == code.length) { // we found the code
+    const length = bytes[i] * 256 + bytes[i + 1];
+    i += 4; // skip the H H
+    return Array.from(bytes).slice(i, i + length);
+  }
+}
+
+function getRebus(bytes) {
+  const grbs = 'GRBS';
+  const rtbl = 'RTBL';
+
+  const table = getExtension(bytes, grbs);
+  if (!table) {
+    return;
+  }
+  const solbytes = getExtension(bytes, rtbl);
+  var enc = new TextDecoder( 'ISO-8859-1');
+  const solstring = enc.decode(new Uint8Array(solbytes));
+  if (!solstring) {
+    return;
+  }
+  const sols = {};
+  solstring.split(';').forEach(s => {
+    let tokens = s.split(':');
+    if (tokens.length == 2) {
+      let [key, val] = tokens;
+      sols[parseInt(key.trim())] = val;
+    }
+  });
+  // dict string format is k1:v1;k2:v2;...;kn:vn;
+
+  return { table, sols };
 }
 
 function getCircles(bytes) {
   const circles = [];
   const gext = 'GEXT';
-  let i = 0, j = 0;
-  for(i = 0; i < bytes.length; i += 1) {
-    if (j == gext.length) break;
-    if (bytes[i] == gext.charCodeAt(j)) {
-      j += 1;
-    }
-  }
-  if (j == gext.length) { // we found circles!
-    const length = bytes[i] * 256 + bytes[i + 1];
-    i += 4; // skip the H H
-    for (let k = 0; k < length; k += 1) {
-      if (bytes[i + k] & 128) {
-        circles.push(k);
+  const markups = getExtension(bytes, gext);
+  if (markups) {
+    markups.forEach((byte, i) => {
+      if (byte & 128) {
+        circles.push(i);
       }
-    }
+    });
   }
   return circles;
-  // format is 4S H H
+}
+
+function addRebusToGrid(grid, rebus) {
+  return grid.map((row, i) =>
+    row.map((cell, j) => {
+      let idx = i * row.length + j;
+      if (rebus.table[idx]) {
+        return {
+          ...cell,
+          solution: rebus.sols[rebus.table[idx] - 1]
+        }
+      }
+      return cell;
+    })
+  );
 }
 
 export default function PUZtoJSON(buffer) {
@@ -99,10 +147,12 @@ export default function PUZtoJSON(buffer) {
 
   retval.metadata["description"] = readString();
 
-  const rebus = getRebus();
+  const rebus = getRebus(bytes);
   const circles = getCircles(bytes);
+  console.log('rebus', rebus);
+  console.log('circles', circles);
   if (rebus) {
-    // todo
+    retval.grid = addRebusToGrid(retval.grid, rebus);
   }
   retval.circles = circles;
 
