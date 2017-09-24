@@ -66,6 +66,13 @@ export default class Welcome extends Component {
   render() {
     return (
       <div className='welcome'>
+        <div className='welcome--nav'>
+          <div className='welcome--nav--left'>
+            <Link to='/puzzles'>
+              DownForACross
+            </Link>
+          </div>
+        </div>
         <div className='welcome--browse'>
           <div className='welcome--browse--puzzlelist--wrapper'>
             <div className='welcome--browse--puzzlelist minis'>

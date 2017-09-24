@@ -1,9 +1,29 @@
 .welcome {
-  height: 99%;
-  width: 99%;
-  padding: 5px 5px 5px 5px;
+  height: 100%;
+  width: 100%;
   background-color: #FAFAFA;
+  font-family: "Avenir Next", "Avenir", "sans serif";
   color: #333;
+}
+
+.welcome--nav {
+  padding: 20px 30px 20px 30px;
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  background-color: #6AA9F4;
+}
+
+.welcome--nav--left {
+  padding-right: 40px;
+  font-weight: bold;
+  font-size: 17px;
+}
+
+.welcome--nav--left a {
+  color: white;
+  text-decoration: none;
+  font-size: 17px;
 }
 
 .welcome--browse {
