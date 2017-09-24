@@ -1,16 +1,12 @@
 import './fileUploader.css';
-import request from 'superagent';
 
-import { hasShape } from '../jsUtils';
 import React, { Component } from 'react';
 import Dropzone from 'react-dropzone';
+
+import { hasShape } from '../jsUtils';
 import PUZtoJSON from '../vendor/PUZtoJSON';
 
 export default class FileUploader extends Component {
-
-  constructor() {
-    super();
-  }
 
   validPuzzle(puzzle) {
     let shape = {
@@ -34,13 +30,11 @@ export default class FileUploader extends Component {
 
   convertPUZ(file) {
     const raw = PUZtoJSON(file);
-    console.log(raw);
     const grid = raw.grid.map(row =>
       row.map(({solution}) => solution || '.')
     );
     const type = grid.length > 10 ? 'Daily Puzzle' : 'Mini Puzzle';
 
-    console.log(result);
     const result = {
       info: {
         title: raw.metadata.title,

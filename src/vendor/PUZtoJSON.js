@@ -2,14 +2,14 @@ function getExtension(bytes, code) {
   // struct byte format is 4S H H
   let i = 0, j = 0;
   for(i = 0; i < bytes.length; i += 1) {
-    if (j == code.length) break;
-    if (bytes[i] == code.charCodeAt(j)) {
+    if (j === code.length) break;
+    if (bytes[i] === code.charCodeAt(j)) {
       j += 1;
     } else {
       j = 0;
     }
   }
-  if (j == code.length) { // we found the code
+  if (j === code.length) { // we found the code
     const length = bytes[i] * 256 + bytes[i + 1];
     i += 4; // skip the H H
     return Array.from(bytes).slice(i, i + length);
@@ -25,7 +25,7 @@ function getRebus(bytes) {
     return;
   }
   const solbytes = getExtension(bytes, rtbl);
-  var enc = new TextDecoder( 'ISO-8859-1');
+  var enc = new TextDecoder('ISO-8859-1');
   const solstring = enc.decode(new Uint8Array(solbytes));
   if (!solstring) {
     return;
@@ -33,9 +33,9 @@ function getRebus(bytes) {
   const sols = {};
   solstring.split(';').forEach(s => {
     let tokens = s.split(':');
-    if (tokens.length == 2) {
+    if (tokens.length === 2) {
       let [key, val] = tokens;
-      sols[parseInt(key.trim())] = val;
+      sols[parseInt(key.trim(), 10)] = val;
     }
   });
   // dict string format is k1:v1;k2:v2;...;kn:vn;
@@ -149,8 +149,6 @@ export default function PUZtoJSON(buffer) {
 
   const rebus = getRebus(bytes);
   const circles = getCircles(bytes);
-  console.log('rebus', rebus);
-  console.log('circles', circles);
   if (rebus) {
     retval.grid = addRebusToGrid(retval.grid, rebus);
   }
