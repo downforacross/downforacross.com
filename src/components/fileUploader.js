@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import Dropzone from 'react-dropzone';
 
 import { hasShape } from '../jsUtils';
-import PUZtoJSON from '../vendor/PUZtoJSON';
+import PUZtoJSON from '../converter/PUZtoJSON';
 
 export default class FileUploader extends Component {
 
