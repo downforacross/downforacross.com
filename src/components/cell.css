@@ -28,6 +28,10 @@
   background-color: #1FFF3D;
 }
 
+.cell.referenced {
+  background-color: #b3ff00;
+}
+
 .cell.highlighted {
   background-color: #6ec6ff;
 }
@@ -36,11 +40,6 @@
   background-color: #4aeba1;
   /*background-color: #98ee99;*/
 }
-
-.cell.referenced {
-  background-color: #b3ff00;
-}
-
 
 .cell--value {
   background-color: transparent;
