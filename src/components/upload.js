@@ -69,43 +69,30 @@ export default class Upload extends Component {
   render() {
     return (
       <div className='upload'>
-        <div className='upload--create'>
-          <div className='upload--create--main'>
-            <div className='upload--create--main--upload'>
-              <div className='upload--create--main--upload--title'>
-                Upload a .puz file here...
-              </div>
-              <FileUploader
-                failUpload={this.failUpload.bind(this)}
-                setPuzzle={this.setPuzzle.bind(this)}
-              />
+        <div className='upload--main'>
+          <div className='upload--main--upload'>
+            <div className='upload--main--upload--title'>
+              Upload
             </div>
-            <div className='upload--create--main--paste'>
-              <div className='upload--create--main--paste--title'>
-                ... or paste a JSON here
-              </div>
-              <textarea
-                placeholder='Type Here'
-                className='upload--create--main--paste--textbox'
-                onInput={this.handleTextboxInput.bind(this)}
-                value={this.state.textbox}
-              />
-            </div>
+            <FileUploader
+              failUpload={this.failUpload.bind(this)}
+              setPuzzle={this.setPuzzle.bind(this)}
+            />
           </div>
-
-          {
-            (this.state.textbox || this.state.uploaded)
-              ? (<div className='upload--create--preview'>
-                Uploaded puzzle is <b>{this.puzzleIsValid() ? 'valid!' : 'invalid'}</b>
-              </div>)
-              : null
-          }
-          <button
-            className='upload--create--go'
-            onClick={this.handleGoClick.bind(this)}>
-            Create Puzzle
-          </button>
         </div>
+
+        {
+          (this.state.textbox || this.state.uploaded)
+            ? (<div className='upload--preview'>
+              Uploaded puzzle is <b>{this.puzzleIsValid() ? 'valid!' : 'invalid'}</b>
+            </div>)
+            : null
+        }
+        <button
+          className='upload--go'
+          onClick={this.handleGoClick.bind(this)}>
+          Create Puzzle
+        </button>
       </div>
     );
   }

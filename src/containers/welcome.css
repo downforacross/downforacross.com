@@ -1,17 +1,57 @@
 .welcome {
-  height: 99%;
-  width: 99%;
-  padding: 5px 5px 5px 5px;
-  background-color: #FAFAFA;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #FCFCFC;
+  font-family: "Avenir Next", "Avenir", "sans serif";
   color: #333;
 }
 
+.welcome--nav {
+  padding: 20px 30px 30px 30px;
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  background-color: #6AA9F4;
+}
+
+.welcome--nav--left {
+  font-size: 17px;
+  font-weight: bold;
+  line-height: 100%;
+}
+
+.welcome--nav--left a {
+  color: white;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.welcome--main {
+  display: flex;
+  flex-direction: row;
+}
+
 .welcome--browse {
-  border: 2px solid #333;
+  flex: 2;
   padding: 15px 15px 15px 15px;
   display: flex;
-  height: 70%;
+  flex-direction: row;
+}
+
+.welcome--browse--filter {
+  flex: 1;
+  padding: 15px 15px 15px 15px;
+  border-right: 1px solid #9B9B9B;
+  display: flex;
   flex-direction: column;
+  display: none;
+}
+
+.welcome--browse--filter--header {
+  font-size: 20px;
+  margin-left: 3px;
 }
 
 .welcome--browse--title {
@@ -20,6 +60,7 @@
 }
 
 .welcome--browse--puzzlelist--wrapper {
+  flex: 6;
   height: 100%;
   display: flex;
   flex-direction: row;
@@ -27,22 +68,33 @@
 
 .welcome--browse--puzzlelist {
   overflow-y: scroll;
-  margin-top: 10px;
   max-height: 100%;
   width: 50%;
   padding: 10px 30px 10px 30px;
   font-size: 20px;
 }
 
-.welcome--browse--puzzlelist--entry {
+.entry {
   display: block;
   font-family: nyt-franklin;
-  font-size: 20px;
-  background-color: #EEE;
-  box-shadow: 2px 2px silver;
+  border: 1px solid silver;
+  border-radius: 3px;
   margin-top: 10px;
-  padding: 20px 20px 20px 20px;
+  height: 50px;
+  padding: 15px;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.entry--title {
+  font-size: 15px;
+}
+
+.entry--author {
+  margin-top: 10px;
+  font-size: 12px;
 }
 
 .welcome--browse--puzzlelist--entry:hover {
@@ -50,8 +102,7 @@
 }
 
 .welcome--upload {
-  margin-top: 10px;
-  border: 2px solid #333;
+  flex: 1;
   padding: 15px 15px 15px 15px;
   display: flex;
   flex-direction: column;

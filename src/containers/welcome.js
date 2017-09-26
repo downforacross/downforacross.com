@@ -10,6 +10,13 @@ function values(obj) {
   return Object.keys(obj).map(key => obj[key]);
 }
 
+function Entry(entry) {
+  return <div className='entry'>
+    <div className='entry--title'>{entry.title}</div>
+    <div className='entry--author'>{entry.author}</div>
+  </div>
+}
+
 export default class Welcome extends Component {
 
   constructor() {
@@ -66,55 +73,83 @@ export default class Welcome extends Component {
   render() {
     return (
       <div className='welcome'>
-        <div className='welcome--browse'>
-          <div className='welcome--browse--puzzlelist--wrapper'>
-            <div className='welcome--browse--puzzlelist minis'>
-              <div className='welcome--browse--title'>
-                Mini Puzzles
-              </div>
-              {
-                this.state.puzzleList.slice().reverse()
-                  .filter(entry => (
-                    entry.info && entry.info.type === 'Mini Puzzle'
-                  ))
-                  .map((entry, i) =>
-                    <Link key={i} to={'/puzzle/' + entry.pid} style={{ textDecoration: 'none', color: 'black' }}>
-                      <div className='welcome--browse--puzzlelist--entry'>
-                        <div>
-                          {entry.info.title + (entry.info.author ? (' by ' + entry.info.author) : '') }
-                        </div>
-                      </div>
-                    </Link>
-                  )
-              }
-            </div>
-            <div className='welcome--browse--puzzlelist dailies'>
-              <div className='welcome--browse--title'>
-                Daily Puzzles
-              </div>
-              {
-                this.state.puzzleList.slice().reverse()
-                  .filter(entry => (
-                    !entry.info || entry.info.type === 'Daily Puzzle'
-                  ))
-                  .map((entry, i) =>
-                    <Link key={i} to={'/puzzle/' + entry.pid} style={{ textDecoration: 'none', color: 'black' }}>
-                      <div className='welcome--browse--puzzlelist--entry'>
-                        <div>
-                          {entry.title + (entry.author ? (' by ' + entry.author) : '') }
-                        </div>
-                      </div>
-                    </Link>
-                  )
-              }
-            </div>
+        <div className='welcome--nav'>
+          <div className='welcome--nav--left'>
+            <Link to='/'>
+              Down for a Cross
+            </Link>
           </div>
         </div>
-        <div className='welcome--upload'>
-          <div className='welcome--upload--title'>
-            Upload Puzzles
+        <div className='welcome--main'>
+          <div className='welcome--browse'>
+            <div className='welcome--browse--filter'>
+              <div className='welcome--browse--filter--header'>
+                Difficulty
+              </div>
+              {
+                ['Monday',
+                  'Tuesday',
+                  'Wednesday',
+                  'Thursday',
+                  'Friday',
+                  'Saturday',
+                  'Sunday',
+                  'All',
+                ].map(day =>
+                  <div className='welcome--browse--filter--option'>
+                    <input type="checkbox"/>
+                    <label>{day}</label>
+                  </div>
+                )
+              }
+            </div>
+            <div className='welcome--browse--puzzlelist--wrapper'>
+              <div className='welcome--browse--puzzlelist dailies'>
+                <div className='welcome--browse--title'>
+                  Daily Puzzles
+                </div>
+                {
+                  this.state.puzzleList.slice().reverse()
+                    .filter(entry => (
+                      !entry.info || entry.info.type === 'Daily Puzzle'
+                    ))
+                    .map((entry, i) =>
+                      <Link key={i} to={'/puzzle/' + entry.pid} style={{ textDecoration: 'none', color: 'black' }}>
+                        <div className='welcome--browse--puzzlelist--entry'>
+                          <div>
+                            {Entry(entry)}
+                          </div>
+                        </div>
+                      </Link>
+                    )
+                }
+              </div>
+
+              <div className='welcome--browse--puzzlelist minis'>
+                <div className='welcome--browse--title'>
+                  Mini Puzzles
+                </div>
+                {
+                  this.state.puzzleList.slice().reverse()
+                    .filter(entry => (
+                      entry.info && entry.info.type === 'Mini Puzzle'
+                    ))
+                    .map((entry, i) =>
+                      <Link key={i} to={'/puzzle/' + entry.pid} style={{ textDecoration: 'none', color: 'black' }}>
+                        <div className='welcome--browse--puzzlelist--entry'>
+                          <div>
+                            {Entry(entry)}
+                          </div>
+                        </div>
+                      </Link>
+                    )
+                }
+              </div>
+            </div>
           </div>
-          <Upload history={this.props.history}/>
+          <div className='welcome--upload'>
+            <Upload history={this.props.history}/>
+          </div>
         </div>
       </div>
     );
