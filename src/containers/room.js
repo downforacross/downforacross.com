@@ -7,6 +7,7 @@ import GridObject from '../utils/Grid';
 import { makeEmptyGame } from '../gameUtils';
 import { toArr, lazy, rand_int, rand_color } from '../jsUtils';
 
+import { Helmet } from 'react-helmet';
 import React, { Component } from 'react';
 
 const CURSOR_EXPIRE = 1000 * 60; // 20 seconds
@@ -287,10 +288,18 @@ export default class Room extends Component {
     return true;
   }
 
+  getPuzzleTitle() {
+    if (!this.state.game || !this.state.game.info) return '';
+    return this.state.game.info.title;
+  }
+
   render() {
     const size = 35 * 15 / this.state.game.grid[0].length;
     return (
       <div className='room'>
+        <Helmet>
+          <title>{this.getPuzzleTitle()}</title>
+        </Helmet>
         <div className='room--info'>
           {
             this.state.game.pid

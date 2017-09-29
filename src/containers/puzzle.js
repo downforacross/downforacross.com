@@ -1,6 +1,6 @@
 import './puzzle.css';
-import { Helmet } from 'react-helmet';
 import actions, { db } from '../actions';
+import { Helmet } from 'react-helmet';
 import React, { Component } from 'react';
 
 export default class Puzzle extends Component {
@@ -70,9 +70,6 @@ export default class Puzzle extends Component {
       <div className='puzzle'>
         <Helmet>
           <title>{this.getPuzzleTitle()}</title>
-          <meta property="og:title" content={this.getPuzzleTitle()} />
-          <meta property="og:url" content={this.getPuzzleURL()} />
-          <meta property="og:type" content='restaurant.menu' />
         </Helmet>
         <div className='puzzle--info'>
           <div className='puzzle--info--title'>

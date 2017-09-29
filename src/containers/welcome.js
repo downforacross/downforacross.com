@@ -3,6 +3,7 @@ import Upload from '../components/upload'
 
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 import actions, { db } from '../actions';
 
@@ -73,6 +74,9 @@ export default class Welcome extends Component {
   render() {
     return (
       <div className='welcome'>
+        <Helmet>
+          <title>Down for a Cross</title>
+        </Helmet>
         <div className='welcome--nav'>
           <div className='welcome--nav--left'>
             <Link to='/'>
