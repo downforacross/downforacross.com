@@ -75,8 +75,9 @@
 }
 
 .entry {
+  overflow: hidden;
   display: block;
-  font-family: nyt-franklin;
+  font-family: sans-serif;
   border: 1px solid silver;
   border-radius: 3px;
   margin-top: 18px;
