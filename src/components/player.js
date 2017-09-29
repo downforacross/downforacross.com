@@ -48,7 +48,7 @@ export default class Player extends Component {
     this.prvNum = {};
     this.prvIdleID = {};
     this._isClueSelected = this.isClueSelected.bind(this);
-    this._isClueHalfSelected = this.isClueSelected.bind(this);
+    this._isClueHalfSelected = this.isClueHalfSelected.bind(this);
     this._isClueFilled = this.isClueFilled.bind(this);
     this._selectClue = this.selectClue.bind(this);
     this._scrollToClue = this.scrollToClue.bind(this);
