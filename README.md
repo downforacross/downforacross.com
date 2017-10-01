@@ -5,7 +5,7 @@ This is under active development!
 - `npm install`
 - `npm install -g create-react-app`
 - `npm start`
-- Go to `http://localhost:4000/`
+- Go to `http://localhost:3000/`
 
 # Routes
 - `/`: welcome page. create games
