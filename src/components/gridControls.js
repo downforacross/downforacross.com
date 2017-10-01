@@ -92,6 +92,17 @@ export default class GridControls extends Component {
         cbk();
       }
     }
+    const flipDirection = () => {
+      if (this.props.direction === 'across') {
+        if(this.canSetDirection('down')) {
+            this.setDirection('down');
+        }
+      } else {
+        if(this.canSetDirection('across')) {
+            this.setDirection('across');
+        }
+      }
+    }
 
     const { onPressEnter } = this.props;
     const movement = {
@@ -101,6 +112,7 @@ export default class GridControls extends Component {
       'ArrowRight': setDirection('across', moveSelectedBy(0, 1)),
       'Backspace': this.backspace.bind(this),
       'Tab': this.selectNextClue.bind(this),
+      ' ': flipDirection,
     };
 
     if (ev.key in movement) {
