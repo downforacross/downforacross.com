@@ -83,6 +83,11 @@ export default class Welcome extends Component {
               Down for a Cross
             </Link>
           </div>
+          <div className='welcome--nav--right'>
+            <a href='http://www.downfiveacross.com'>
+              Old site
+            </a>
+          </div>
         </div>
         <div className='welcome--main'>
           <div className='welcome--browse'>

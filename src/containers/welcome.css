@@ -22,6 +22,19 @@
   line-height: 100%;
 }
 
+.welcome--nav--right {
+  margin-top: -15px;
+  margin-right: -10px;
+  align-self: flex-begin;
+}
+
+.welcome--nav--right a {
+  font-family: inherit;
+  font-size: 10px;
+  color: white;
+  text-decoration: none;
+}
+
 .welcome--nav--left a {
   color: white;
   text-decoration: none;
