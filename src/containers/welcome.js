@@ -104,8 +104,11 @@ export default class Welcome extends Component {
                   'Saturday',
                   'Sunday',
                   'All',
-                ].map(day =>
-                  <div className='welcome--browse--filter--option'>
+                ].map((day, i) =>
+                  <div
+                    key={i}
+                    className='welcome--browse--filter--option'
+                  >
                     <input type="checkbox"/>
                     <label>{day}</label>
                   </div>
