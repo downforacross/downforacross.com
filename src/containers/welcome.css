@@ -167,3 +167,11 @@
   font-weight: bold;
 }
 
+::-webkit-scrollbar {
+    width: 2px;  /* remove scrollbar space */
+    background: transparent;  /* optional: just make scrollbar invisible */
+}
+/* optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+    background: #F0F0F0;
+}
