@@ -6,23 +6,3 @@ html, body, #root, .router-wrapper {
   margin: 0;
 }
 
-@font-face{
-  font-family: nyt-franklin;
-  src: url(/assets/nyt-franklin-300-normal.woff) format("woff");
-  font-style: normal;
-  font-weight: 300
-}
-
-@font-face{
-  font-family: nyt-franklin;
-  src: url(/assets/nyt-franklin-500-normal.woff) format("woff");
-  font-style: normal;
-  font-weight: 500
-}
-
-@font-face{
-  font-family: nyt-franklin;
-  src: url(/assets/nyt-franklin-700-normal.woff) format("woff");
-  font-style: normal;
-  font-weight: 700
-}
