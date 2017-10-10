@@ -11,11 +11,74 @@ function values(obj) {
   return Object.keys(obj).map(key => obj[key]);
 }
 
-function Entry(entry) {
-  return <div className='entry'>
-    <div className='entry--title'>{entry.title}</div>
-    <div className='entry--author'>{entry.author}</div>
-  </div>
+class Entry extends Component {
+  constructor() {
+    super();
+    this.state = {
+      flipped: false
+    }
+  }
+
+  playGame() {
+    const { pid } = this.props;
+    actions.createGame({
+      name: 'Public Game',
+      pid: pid
+    }, gid => {
+      this.props.history.push(`/game/${gid}`);
+    });
+  }
+
+  playGameSolo() {
+    const { pid } = this.props;
+    this.props.history.push(`/game/solo/${pid}`);
+  }
+
+  render() {
+    const { title, author } = this.props;
+    const { flipped } = this.state;
+
+    const front = (
+      <div style={{ textDecoration: 'none', color: 'black' }} className='entry--front'>
+        <div className='entry--front--title'>{title}</div>
+        <div className='entry--front--author'>{author}</div>
+      </div>
+    );
+
+    const back = (
+      <div className='entry--back'>
+        <div className='entry--back--btns'>
+          <div
+            className='entry--back--btn play-solo'
+            onClick={()=>{
+              this.playGameSolo();
+            }} >
+            Play Solo
+          </div>
+          <div
+            className='entry--back--btn play-friends'
+            onClick={() => {
+              this.playGame();
+            }} >
+            Play With Friends
+          </div>
+        </div>
+      </div>
+    );
+    return (
+      <div onClick={e => {
+        e.preventDefault();
+        this.setState({ flipped: !flipped });
+      }}
+      onMouseLeave={e => {
+        this.setState({ flipped: false });
+      }}
+      className={'entry' + (flipped ? ' flipped' : '')}>
+      { front }
+      { back }
+    </div>
+    );
+  }
 }
 
 export default class Welcome extends Component {
@@ -72,6 +135,7 @@ export default class Welcome extends Component {
   }
 
   render() {
+    const { history } = this.props;
     return (
       <div className='welcome'>
         <Helmet>
@@ -126,13 +190,9 @@ export default class Welcome extends Component {
                       !entry.info || entry.info.type === 'Daily Puzzle'
                     ))
                     .map((entry, i) =>
-                      <Link key={i} to={'/puzzle/' + entry.pid} style={{ textDecoration: 'none', color: 'black' }}>
-                        <div className='welcome--browse--puzzlelist--entry'>
-                          <div>
-                            {Entry(entry)}
-                          </div>
-                        </div>
-                      </Link>
+                      <div key={i} className='welcome--browse--puzzlelist--entry'>
+                        <Entry { ...entry } history={history}/>
+                      </div>
                     )
                 }
               </div>
@@ -147,13 +207,9 @@ export default class Welcome extends Component {
                       entry.info && entry.info.type === 'Mini Puzzle'
                     ))
                     .map((entry, i) =>
-                      <Link key={i} to={'/puzzle/' + entry.pid} style={{ textDecoration: 'none', color: 'black' }}>
-                        <div className='welcome--browse--puzzlelist--entry'>
-                          <div>
-                            {Entry(entry)}
-                          </div>
-                        </div>
-                      </Link>
+                      <div key={i} className='welcome--browse--puzzlelist--entry'>
+                        <Entry { ...entry }/>
+                      </div>
                     )
                 }
               </div>

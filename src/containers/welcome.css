@@ -3,7 +3,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #FCFCFC;
+  background-color: #FAFAFA;
   font-family: "Avenir Next", "Avenir", "sans serif";
   color: #333;
 }
@@ -88,27 +88,80 @@
 }
 
 .entry {
+  position: relative;
   overflow: hidden;
   display: block;
   font-family: sans-serif;
   border: 1px solid silver;
   border-radius: 3px;
   margin-top: 18px;
-  height: 50px;
-  padding: 15px;
-  cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-.entry--title {
-  font-size: 15px;
+.entry--back {
+  opacity: 0;
+  transition: opacity .2s ease-in;
 }
 
-.entry--author {
+.entry.flipped .entry--back {
+  opacity: 1;
+}
+
+.entry--front {
+  flex: 1;
+  height: 50px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.entry--front--title {
+  font-size: 15px;
+  text-align: center;
+}
+
+.entry--front--author {
   margin-top: 8px;
   font-size: 12px;
+  text-align: center;
+}
+
+.entry--back {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: rgba(40, 69, 94, .95);
+}
+
+.entry--back--btns {
+  display: flex;
+  justify-content: space-around;
+}
+
+.entry--back--btn {
+  padding: 10px;
+  font-size: 15px;
+  font-weight: bold;
+  color: white;
+  background-color: rgba(106, 169, 254, .95);
+  border-radius: 5px;
+}
+
+.entry--back--btn:hover {
+  color: white;
+  background-color: rgb(76, 109, 184);
+}
+
+.entry--back--btn.play-solo {
+
 }
 
 .welcome--browse--puzzlelist--entry:hover {
