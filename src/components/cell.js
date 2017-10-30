@@ -116,24 +116,27 @@ export default class Cell extends Component {
             : null
         }
         onClick={this.props.onClick}>
-        <div className={'cell--number' + (this.props.number
-              ?  ' nonempty'
-              : ''
-            )}>
-            { this.props.number }
-          </div>
-          { this.renderFlipButton() }
-          { this.renderCursors() }
-          { this.renderCircle() }
-          <div className='cell--value'
-            style={{
-              fontSize: 350 / Math.sqrt(l) + '%',
-              lineHeight: Math.sqrt(l) * 98 + '%'
-            }}
-          >
-            { val }
-          </div>
+        <div className='cell--wrapper'>
+
+          <div className={'cell--number' + (this.props.number
+            ?  ' nonempty'
+            : ''
+          )}>
+          { this.props.number }
         </div>
+        { this.renderFlipButton() }
+        { this.renderCursors() }
+        { this.renderCircle() }
+        <div className='cell--value'
+          style={{
+            fontSize: 350 / Math.sqrt(l) + '%',
+            lineHeight: Math.sqrt(l) * 98 + '%'
+          }}
+        >
+          { val }
+        </div>
+      </div>
+    </div>
     );
   }
 }
