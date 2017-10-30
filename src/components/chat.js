@@ -44,9 +44,8 @@ export default class Chat extends Component {
       ev.preventDefault();
       if (message.length > 0) {
         onSendChatMessage(username, message);
-      }
-      this.setState({message: ''});
-      if (!ev.shiftKey) {
+        this.setState({message: ''});
+      } else {
         onPressEnter();
       }
     }

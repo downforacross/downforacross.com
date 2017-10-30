@@ -275,7 +275,6 @@ export default class Room extends Component {
   }
 
   focusChat() {
-    console.log('focus chat');
     this.refs.chat && this.refs.chat.focus();
   }
 
