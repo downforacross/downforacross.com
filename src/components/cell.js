@@ -36,7 +36,7 @@ export default class Cell extends Component {
           <div key={i} className='cell--cursor' style={{
             borderColor: color,
             zIndex: Math.min(2 + this.props.cursors.length - i, 9),
-            borderWidth: Math.min(1 + 2 * (i + 1), 16)
+            borderWidth: Math.min(1 + 2 * (i + 1), 12)
           }}>
         </div>
         ))}
@@ -115,7 +115,23 @@ export default class Cell extends Component {
             ? { backgroundColor: this.props.myColor }
             : null
         }
-        onClick={this.props.onClick}>
+        onClick={this.props.onClick}
+        onTouchMove={e => {
+          if (e.touches.length >= 1) {
+            window.lastZoomed = new Date().getTime();
+          } else {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        }}
+        onTouchEnd={e => {
+          e.preventDefault();
+          const now = new Date().getTime();
+          const disablePeriod = 200;
+          if (!window.lastZoomed || window.lastZoomed + disablePeriod < now) {
+            this.props.onClick(e);
+          }
+        }}>
         <div className='cell--wrapper'>
 
           <div className={'cell--number' + (this.props.number
@@ -125,7 +141,6 @@ export default class Cell extends Component {
           { this.props.number }
         </div>
         { this.renderFlipButton() }
-        { this.renderCursors() }
         { this.renderCircle() }
         <div className='cell--value'
           style={{
@@ -136,6 +151,7 @@ export default class Cell extends Component {
           { val }
         </div>
       </div>
+      { this.renderCursors() }
     </div>
     );
   }

@@ -44,3 +44,35 @@
 
 .player--main--clues {
 }
+
+
+.player--mobile {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+}
+
+.player--mobile--grid {
+}
+
+.player--mobile--clue-bar {
+  margin-top: 10px;
+  background-color: #DCEFFF;
+  padding: 10px 20px 10px 20px;
+  display: flex;
+  font-size: 15px;
+  height: 40px;
+  align-items: center;
+}
+
+.player--mobile--clue-bar--number {
+  font-weight: bold;
+  display: inline-block;
+}
+
+.player--mobile--clue-bar--text {
+  margin-left: 20px;
+  display: inline-block;
+  overflow-y: scroll;
+  max-height: 100%;
+}

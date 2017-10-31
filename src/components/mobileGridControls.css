@@ -1,0 +1,35 @@
+.movement-arrow {
+  display: inline-block;
+  padding: 5px;
+  /* border-radius 5px; */
+  border: 1px solid black;
+  text-transform: uppercase;
+  outline: none;
+}
+
+.mobile-grid-controls {
+  outline: none;
+  position: relative;
+}
+
+.mobile-grid-controls--textarea--wrapper {
+  position: absolute;
+  top: 115px;
+}
+
+.mobile-grid-controls--textarea {
+  font-size: 30px;
+  transform: scale(0);
+}
+
+.mobile-grid-controls--focus-button {
+  width: 100%;
+  background-color: #FFF;
+  color: black;
+  text-transform: uppercase;
+  font-family: Avenir;
+  padding: 10px;
+  font-size: 20px;
+  border-radius: 3px;
+  border: 1px solid black;
+}
