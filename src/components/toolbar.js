@@ -63,36 +63,96 @@ export default class Toolbar extends Component {
   }
 
   render() {
+    const {
+      mobile,
+      startTime,
+      stopTime,
+      pausedTime,
+      onStartClock,
+      onPauseClock,
+      solved,
+    } = this.props;
+
+    if (mobile) {
+      return (
+        <div className='toolbar--mobile'>
+          <div className='toolbar--mobile--top'>
+            {
+              solved
+                ? null
+                : this.renderCheckMenu()
+            }
+            {
+              solved
+                ? null
+                : this.renderRevealMenu()
+            }
+            <div className='toolbar--menu reset'>
+              {
+                this.renderResetMenu()
+              }
+            </div>
+          </div>
+          <div className='toolbar--mobile--bottom'>
+            <div className='toolbar--mobile--timer'>
+              <Clock
+                startTime={startTime}
+                stopTime={stopTime}
+                pausedTime={pausedTime}
+              />
+            </div>
+            {
+              solved
+                ? null
+                : ( startTime
+                  ? ( <button className='toolbar--mobile--btn pause'
+                    onClick={onPauseClock} >
+                    Pause Clock
+                  </button>)
+                  : ( <button className='toolbar--mobile--btn start'
+                    onClick={onStartClock} >
+                    Start Clock
+                  </button>)
+                )
+            }
+
+          </div>
+        </div>
+      );
+
+
+    }
+
     return (
       <div className='toolbar'>
         <div className='toolbar--timer'>
           <Clock
-            startTime={this.props.startTime}
-            stopTime={this.props.stopTime}
-            pausedTime={this.props.pausedTime}
+            startTime={startTime}
+            stopTime={stopTime}
+            pausedTime={pausedTime}
           />
         </div>
         {
-          this.props.solved
+          solved
             ? null
-            : ( this.props.startTime
+            : ( startTime
               ? ( <button className='toolbar--btn pause'
-                onClick={this.props.onPauseClock} >
+                onClick={onPauseClock} >
                 Pause Clock
               </button>)
               : ( <button className='toolbar--btn start'
-                onClick={this.props.onStartClock} >
+                onClick={onStartClock} >
                 Start Clock
               </button>)
             )
         }
         {
-          this.props.solved
+          solved
             ? null
             : this.renderCheckMenu()
         }
         {
-          this.props.solved
+          solved
             ? null
             : this.renderRevealMenu()
         }
@@ -103,5 +163,6 @@ export default class Toolbar extends Component {
         </div>
       </div>
     );
+
   }
 };

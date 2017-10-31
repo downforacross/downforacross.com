@@ -60,10 +60,8 @@ export default class GridControls extends Component {
     this.setSelected(firstEmptyCell || clueRoot);
   }
 
-  handleKeyDown(ev) {
-    if (ev.target.tagName === 'INPUT') {
-      return;
-    }
+  // factored out handleAction for mobileGridControls
+  handleAction(action, shiftKey) {
     const moveSelectedBy = (dr, dc) => () => {
       const { selected } = this.props;
       let { r, c } = selected;
@@ -92,33 +90,56 @@ export default class GridControls extends Component {
         cbk();
       }
     }
+
     const flipDirection = () => {
       if (this.props.direction === 'across') {
-        if(this.canSetDirection('down')) {
+        if (this.canSetDirection('down')) {
             this.setDirection('down');
         }
       } else {
-        if(this.canSetDirection('across')) {
+        if (this.canSetDirection('across')) {
             this.setDirection('across');
         }
       }
     }
 
-    const { onPressEnter } = this.props;
-    const movement = {
-      'ArrowLeft': setDirection('across', moveSelectedBy(0, -1)),
-      'ArrowUp': setDirection('down', moveSelectedBy(-1, 0)),
-      'ArrowDown': setDirection('down', moveSelectedBy(1, 0)),
-      'ArrowRight': setDirection('across', moveSelectedBy(0, 1)),
-      'Backspace': this.backspace.bind(this),
-      'Tab': this.selectNextClue.bind(this),
-      ' ': flipDirection,
+    const actions = {
+      'left': setDirection('across', moveSelectedBy(0, -1)),
+      'up': setDirection('down', moveSelectedBy(-1, 0)),
+      'down': setDirection('down', moveSelectedBy(1, 0)),
+      'right': setDirection('across', moveSelectedBy(0, 1)),
+      'backspace': this.backspace.bind(this),
+      'tab': this.selectNextClue.bind(this),
+      'space': flipDirection,
     };
 
-    if (ev.key in movement) {
+    if (!(action in actions)) {
+      console.error('illegal action', action);
+      return; // weird!
+    }
+    actions[action](shiftKey);
+  }
+
+  handleKeyDown(ev) {
+    if (ev.target.tagName === 'INPUT') {
+      return;
+    }
+
+    const actionKeys = {
+      'ArrowLeft': 'left',
+      'ArrowUp': 'up',
+      'ArrowDown': 'down',
+      'ArrowRight': 'right',
+      'Backspace': 'backspace',
+      'Tab': 'tab',
+      ' ': 'space',
+    };
+
+    const { onPressEnter } = this.props;
+    if (ev.key in actionKeys) {
       ev.preventDefault();
       ev.stopPropagation();
-      movement[ev.key](ev.shiftKey);
+      this.handleAction(actionKeys[ev.key], ev.shiftKey);
     } else if (ev.key === 'Enter') {
       ev.preventDefault();
       ev.stopPropagation();

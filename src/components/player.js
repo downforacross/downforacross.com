@@ -3,6 +3,7 @@ import './player.css';
 import Grid from './grid';
 import Clues from './clues';
 import GridControls from './gridControls';
+import MobileGridControls from './mobileGridControls';
 import React, { Component } from 'react';
 import { lazy } from '../jsUtils';
 
@@ -14,7 +15,7 @@ import * as gameUtils from '../gameUtils';
  *
  * Props: { grid, clues, updateGrid }
  *
- * State: { selected, direction }
+ * State: { selected, direction, mobileMode }
  *
  * Children: [ GridControls, Grid, Clues ]
  * - GridControls.props:
@@ -42,6 +43,7 @@ export default class Player extends Component {
         c: 0
       },
       direction: 'across',
+      mobile: false,
     };
 
     // for deferring scroll-to-clue actions
@@ -202,32 +204,95 @@ export default class Player extends Component {
       this.prvNum[dir] = num;
       lazy('scrollToClue' + dir, () => {
         const parent = el.offsetParent;
-        parent.scrollTop = el.offsetTop - (parent.offsetHeight * .4);
+        if (parent) {
+          parent.scrollTop = el.offsetTop - (parent.offsetHeight * .4);
+        }
       });
     }
   }
 
-
   /* Render */
-
   render() {
     const {
+      mobile,
       onPressEnter,
+      size,
+      grid,
+      clues,
+      circles,
+      cursors,
+      updateGrid,
+      frozen,
+      myColor,
     } = this.props;
+
+    const {
+      selected,
+      direction,
+    } = this.state;
+
+    if (mobile) {
+      return (
+        <div className='player--mobile--wrapper mobile'>
+
+          <MobileGridControls
+            ref='mobileGridControls'
+            onPressEnter={onPressEnter}
+            selected={selected}
+            direction={direction}
+            onSetDirection={this._setDirection}
+            canSetDirection={this._canSetDirection}
+            onSetSelected={this._setSelected}
+            updateGrid={updateGrid}
+            grid={grid}
+            clues={clues}
+          >
+            <div className='player--mobile'>
+              <div
+                className={'player--mobile--grid' + (frozen ? ' frozen' : '')}
+              >
+
+              <Grid
+                ref='grid'
+                size={size}
+                grid={grid}
+                circles={circles}
+                selected={selected}
+                references={this.getReferences()}
+                direction={direction}
+                cursors={cursors}
+                onSetSelected={this._setSelected}
+                myColor={myColor}
+                onChangeDirection={this._changeDirection}/>
+            </div>
+
+            <div className='player--mobile--clue-bar'>
+              <div className='player--mobile--clue-bar--number'>
+                { this.getClueBarAbbreviation() }
+              </div>
+              <div className='player--mobile--clue-bar--text'>
+                { this.getClueBarText() }
+              </div>
+            </div>
+          </div>
+        </MobileGridControls>
+      </div>
+      );
+    }
 
     return (
       <div className='player--main--wrapper'>
         <GridControls
           ref='gridControls'
           onPressEnter={onPressEnter}
-          selected={this.state.selected}
-          direction={this.state.direction}
+          selected={selected}
+          direction={direction}
           onSetDirection={this._setDirection}
           canSetDirection={this._canSetDirection}
           onSetSelected={this._setSelected}
-          updateGrid={this.props.updateGrid}
-          grid={this.props.grid}
-          clues={this.props.clues}
+          updateGrid={updateGrid}
+          grid={grid}
+          clues={clues}
         >
           <div className='player--main'>
             <div className='player--main--left'>
@@ -241,19 +306,19 @@ export default class Player extends Component {
               </div>
 
               <div
-                className={'player--main--left--grid' + (this.props.frozen ? ' frozen' : '') + ' blurable'}
+                className={'player--main--left--grid' + (frozen ? ' frozen' : '') + ' blurable'}
               >
                 <Grid
                   ref='grid'
-                  size={this.props.size}
-                  grid={this.props.grid}
-                  circles={this.props.circles}
-                  selected={this.state.selected}
+                  size={size}
+                  grid={grid}
+                  circles={circles}
+                  selected={selected}
                   references={this.getReferences()}
-                  direction={this.state.direction}
-                  cursors={this.props.cursors}
+                  direction={direction}
+                  cursors={cursors}
                   onSetSelected={this._setSelected}
-                  myColor={this.props.myColor}
+                  myColor={myColor}
                   onChangeDirection={this._changeDirection}/>
               </div>
             </div>

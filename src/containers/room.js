@@ -12,13 +12,83 @@ import React, { Component } from 'react';
 
 const CURSOR_EXPIRE = 1000 * 60; // 20 seconds
 
+function ToggleMobile({ mobile, onClick }) {
+  return (
+    <a
+      className='toggle-mobile'
+      onClick={e => {
+        e.preventDefault();
+        onClick();
+      }}
+    >
+      Mobile: { mobile ? 'ON' : 'OFF' }
+    </a>
+  );
+}
+
+function Header({ mobile, info, href }) {
+  const { title, author, type } = info || {};
+  if (mobile) {
+    return (
+      <div className='header'>
+      </div>
+    );
+  }
+  return (
+    <div className='header'>
+      { href
+          ? (
+            <a href={href} className='header--title'>
+              {  title }
+            </a>
+          )
+          : (
+            <div className='header--title'>
+              { title }
+            </div>
+          )
+      }
+
+      <div className='header--subtitle'>
+        {
+          type && (
+            type + ' | '
+            + 'By ' + author
+          )
+        }
+      </div>
+    </div>
+  );
+}
+
+function isMobile() {
+  if (navigator.userAgent.match(/Tablet|iPad/i))
+  {
+    // do tablet stuff
+    return true;
+  } else if(navigator.userAgent.match(/Mobile|Windows Phone|Lumia|Android|webOS|iPhone|iPod|Blackberry|PlayBook|BB10|Opera Mini|\bCrMo\/|Opera Mobi/i) )
+  {
+    // do mobile stuff
+    return true;
+  } else {
+    // do desktop stuff
+    return false;
+  }
+}
+
+
 export default class Room extends Component {
 
   constructor() {
     super();
+    // window.innerWidth changes when pinch-zooming on mobile.
+    // compute it here so the grid doesn't go crazy
+    this.screenWidth = window.innerWidth;
+
     this.state = {
       uid: 0,
-      game: makeEmptyGame()
+      game: makeEmptyGame(),
+      mobile: isMobile(),
     };
 
     this._sendChatMessage = this.sendChatMessage.bind(this);
@@ -32,6 +102,7 @@ export default class Room extends Component {
     this._check = this.check.bind(this);
     this._startClock = this.startClock.bind(this);
     this._pauseClock = this.pauseClock.bind(this);
+    this._toggleMobile = this.toggleMobile.bind(this);
   }
 
   get grid() {
@@ -284,6 +355,10 @@ export default class Room extends Component {
 
   // overrided in the Solo component, which extends Room
   shouldRenderChat() {
+    const { mobile } = this.state;
+    if (mobile) {
+      return false;
+    }
     return true;
   }
 
@@ -292,42 +367,41 @@ export default class Room extends Component {
     return this.state.game.info.title;
   }
 
+  toggleMobile() {
+    const { mobile } = this.state;
+    this.setState({
+      mobile: !mobile,
+    });
+  }
+
   render() {
-    const size = 35 * 15 / this.state.game.grid[0].length;
+
+    const {
+      game,
+      mobile,
+    } = this.state;
+    const { grid } = game;
+    const screenWidth = this.screenWidth;
+    const width = Math.min(35 * 15, screenWidth);
+    let size = width / grid[0].length;
+
     return (
-      <div className='room'>
+      <div className={'room ' + (mobile ? 'mobile' : '')}>
         <Helmet>
           <title>{this.getPuzzleTitle()}</title>
         </Helmet>
-        <div className='room--info'>
-          {
-            this.state.game.pid
-              ? (
-                <a
-                  href={`/puzzle/${this.state.game.pid}`}
-                  className='room--info--title'>
-                  { this.state.game.info && this.state.game.info.title }
-                </a>
-              )
-              : (
-                <div
-                  className='room--info--title'>
-                  { this.state.game.info && this.state.game.info.title }
-                </div>
-              )
-          }
-          <div className='room--info--subtitle'>
-            {
-              this.state.game.info && (
-                this.state.game.info.type + ' | '
-                + 'By ' + this.state.game.info.author
-              )
-            }
-          </div>
+        <div className='room--header'>
+          <Header
+            mobile={mobile}
+            href={game.pid && `/puzzle/${game.pid}`}
+            info={game.info}
+
+          />
         </div>
 
         <div className='room--toolbar'>
           <Toolbar
+            mobile={mobile}
             startTime={this.state.game.startTime}
             stopTime={this.state.game.stopTime}
             pausedTime={this.state.game.pausedTime}
@@ -357,6 +431,7 @@ export default class Room extends Component {
             updateGrid={this._updateGrid}
             updateCursor={this._updateCursor}
             onPressEnter={this._focusChat}
+            mobile={mobile}
           />
 
         { this.shouldRenderChat()
@@ -368,8 +443,14 @@ export default class Room extends Component {
             />
             : null
         }
-      </div>
+
+        <ToggleMobile
+          mobile={mobile}
+          onClick={this._toggleMobile}
+        />
+
     </div>
+  </div>
     );
   }
 };

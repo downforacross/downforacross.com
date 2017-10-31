@@ -3,20 +3,27 @@
   height: 100%;
 }
 
-.room--info {
+.room--header {
   border: 1px solid #E2E2E2;
   padding: 20px 20px 20px 20px;
   color: #333;
 }
 
-.room--info--title {
+.room.mobile .room--header {
+  display: none;
+}
+
+.header {
+}
+
+.header--title {
   font-size: 30px;
   font-weight: 300;
   color: #333;
   text-decoration: none;
 }
 
-.room--info--subtitle {
+.header--subtitle {
   margin-top: 10px;
   font-size: 14px;
   font-weight: 300;
@@ -27,7 +34,20 @@
 
 .room--game-and-chat-wrapper {
   border: 1px solid #E2E2E2;
-  padding: 15px 15px 15px 15px;
+  padding: 15px;
   display: flex;
   flex-direction: row;
+}
+
+.room.mobile .room--game-and-chat-wrapper {
+  padding: 0px;
+}
+
+
+.toggle-mobile {
+  display: block;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 10px;
 }

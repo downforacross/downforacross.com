@@ -70,15 +70,28 @@ export default class Grid extends Component {
     );
   }
 
+  getSizeClass(size) {
+    if (size < 20) {
+      return 'tiny';
+    } else if (size < 25) {
+      return 'small';
+    } else if (size < 40) {
+      return 'medium';
+    } else {
+      return 'big';
+    }
+  }
+
   render() {
     const size = this.props.size;
+    const sizeClass = this.getSizeClass(size);
     return (
       <table
         style={{
           width: this.props.grid[0].length * this.props.size,
           height: this.props.grid.length * this.props.size
         }}
-        className='grid'>
+        className={'grid ' + sizeClass}>
         <tbody>
           {
             this.props.grid.map((row, r) => (
