@@ -34,14 +34,6 @@ class Entry extends Component {
     this.props.history.push(`/game/solo/${pid}`);
   }
 
-  clickExpired() {
-    const { lastClickTime } = this.state;
-    const clickExpiration = 0;
-    const time = new Date().getTime();
-    debugger;
-    return time > lastClickTime + clickExpiration;
-  }
-
   render() {
     const { title, author } = this.props;
     const { flipped } = this.state;
@@ -59,19 +51,14 @@ class Entry extends Component {
           <div
             className='entry--back--btn play-solo'
             onClick={()=>{
-              console.log('click play-solo', new Date().getTime());
-              if (this.clickExpired()) {
-                this.playGameSolo();
-              }
+              this.playGameSolo();
             }} >
             Play Solo
           </div>
           <div
             className='entry--back--btn play-friends'
             onClick={() => {
-              if (this.clickExpired()) {
-                this.playGame();
-              }
+              this.playGame();
             }} >
             Play With Friends
           </div>
@@ -82,19 +69,16 @@ class Entry extends Component {
       <div onClick={e => {
         e.preventDefault();
         e.stopPropagation();
-        const time = new Date().getTime();
-        setTimeout(() => {
         this.setState({
           flipped: !flipped,
         });
-        }, 100);
       }}
       onMouseLeave={e => {
         this.setState({ flipped: false });
       }}
       className={'entry' + (flipped ? ' flipped' : '')}>
       { front }
-      { back }
+      { flipped ? back : <div className='entry--back'/> }
     </div>
     );
   }

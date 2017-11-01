@@ -107,6 +107,7 @@
 
 .entry.flipped .entry--back {
   opacity: 1;
+  transition: opacity .2s ease-in;
 }
 
 .entry--front {
