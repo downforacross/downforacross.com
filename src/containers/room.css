@@ -37,6 +37,7 @@
   padding: 15px;
   display: flex;
   flex-direction: row;
+  /* width: min-content; */
 }
 
 .room.mobile .room--game-and-chat-wrapper {

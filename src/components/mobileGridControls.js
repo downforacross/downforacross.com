@@ -31,7 +31,7 @@ export default class MobileGridControls extends GridControls {
         className='mobile-grid-controls'
         onKeyDown={this.handleKeyDown.bind(this)}
       >
-          <div className='grid--content'>
+          <div className='mobile-grid-controls--grid-content'>
             {this.props.children}
           </div>
         <div className='mobile-grid-controls--buttons'>
