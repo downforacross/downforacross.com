@@ -77,6 +77,11 @@ export default class Toolbar extends Component {
       return (
         <div className='toolbar--mobile'>
           <div className='toolbar--mobile--top'>
+            <Clock
+              startTime={startTime}
+              stopTime={stopTime}
+              pausedTime={pausedTime}
+            />
             {
               solved
                 ? null
@@ -92,30 +97,6 @@ export default class Toolbar extends Component {
                 this.renderResetMenu()
               }
             </div>
-          </div>
-          <div className='toolbar--mobile--bottom'>
-            <div className='toolbar--mobile--timer'>
-              <Clock
-                startTime={startTime}
-                stopTime={stopTime}
-                pausedTime={pausedTime}
-              />
-            </div>
-            {
-              solved
-                ? null
-                : ( startTime
-                  ? ( <button className='toolbar--mobile--btn pause'
-                    onClick={onPauseClock} >
-                    Pause Clock
-                  </button>)
-                  : ( <button className='toolbar--mobile--btn start'
-                    onClick={onStartClock} >
-                    Start Clock
-                  </button>)
-                )
-            }
-
           </div>
         </div>
       );
