@@ -61,7 +61,8 @@
   padding: 10px 20px 10px 20px;
   display: flex;
   font-size: 15px;
-  height: 40px;
+  flex: 1;
+  min-height: 20px;
   align-items: center;
 }
 

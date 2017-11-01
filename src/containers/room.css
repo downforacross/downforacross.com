@@ -3,6 +3,11 @@
   height: 100%;
 }
 
+.room.mobile {
+  display: flex;
+  flex-direction: column;
+}
+
 .room--header {
   border: 1px solid #E2E2E2;
   padding: 20px 20px 20px 20px;
@@ -42,6 +47,7 @@
 
 .room.mobile .room--game-and-chat-wrapper {
   padding: 0px;
+  flex: 1;
 }
 
 

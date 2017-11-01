@@ -21,7 +21,10 @@ function ToggleMobile({ mobile, onClick }) {
         onClick();
       }}
     >
-      Mobile: { mobile ? 'ON' : 'OFF' }
+      { mobile
+          ? <i className="fa fa-mobile fa-lg" aria-hidden="true"/>
+          : <i className="fa fa-desktop" aria-hidden="true"/>
+      }
     </a>
   );
 }

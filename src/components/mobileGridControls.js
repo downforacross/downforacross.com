@@ -30,23 +30,13 @@ export default class MobileGridControls extends GridControls {
         ref='gridControls'
         className='mobile-grid-controls'
         onKeyDown={this.handleKeyDown.bind(this)}
+        onTouchEnd={e=> {
+          e.preventDefault();
+          this.refs.textarea.focus();
+        }}
       >
-          <div className='mobile-grid-controls--grid-content'>
-            {this.props.children}
-          </div>
-        <div className='mobile-grid-controls--buttons'>
-          {
-            // ['left', 'right', 'up', 'down'].map((dir, i) => (
-            [].map((dir, i) => (
-              <MovementArrow
-                key={i}
-                dir={dir}
-                onClick={() => {
-                  this.handleAction(dir)
-                }}
-              />
-            ))
-          }
+        <div className='mobile-grid-controls--grid-content'>
+          {this.props.children}
         </div>
         <div className='mobile-grid-controls--textarea--wrapper'>
           <textarea
@@ -59,18 +49,7 @@ export default class MobileGridControls extends GridControls {
             spellCheck="false"
           />
         </div>
-        <button
-          className='mobile-grid-controls--focus-button'
-          onTouchStart={(e) => {
-          this.refs.textarea.focus();
-        }}
-        onTouchEnd={e=> {
-          e.preventDefault();
-        }}
-      >
-        Type
-      </button>
-    </div>
+      </div>
     );
   }
 }

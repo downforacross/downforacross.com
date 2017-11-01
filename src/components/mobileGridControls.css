@@ -8,6 +8,7 @@
 }
 
 .mobile-grid-controls {
+  height: 100%;
   outline: none;
   position: relative;
 }
@@ -37,4 +38,5 @@
 .mobile-grid-controls--grid-content {
   display: flex;
   width: min-content;
+  height: 100%;
 }

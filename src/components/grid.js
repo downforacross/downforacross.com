@@ -91,6 +91,7 @@ export default class Grid extends Component {
           width: this.props.grid[0].length * this.props.size,
           height: this.props.grid.length * this.props.size
         }}
+        onTouchEnd={e => e.stopPropagation()}
         className={'grid ' + sizeClass}>
         <tbody>
           {
