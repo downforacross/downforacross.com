@@ -62,7 +62,6 @@ export default class FileUploader extends Component {
         this.props.failUpload();
       }
       window.URL.revokeObjectURL(acceptedFiles[0].preview);
-      debugger;
     });
     reader.readAsArrayBuffer(file);
   }
