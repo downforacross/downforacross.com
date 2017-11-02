@@ -30,23 +30,31 @@ export default class FileUploader extends Component {
 
   convertPUZ(file) {
     const raw = PUZtoJSON(file);
-    const grid = raw.grid.map(row =>
-      row.map(({solution}) => solution || '.')
+
+    const {
+      grid: rawGrid,
+      info,
+      circles,
+      across,
+      down,
+    } = raw;
+
+    const {
+      title,
+      author,
+      description,
+    } = info;
+
+    const grid = rawGrid.map(row =>
+      row.map(({ solution }) => solution || '.')
     );
     const type = grid.length > 10 ? 'Daily Puzzle' : 'Mini Puzzle';
 
     const result = {
-      info: {
-        title: raw.metadata.title,
-        type: type,
-        author: raw.metadata.creator,
-      },
-      grid: grid,
-      circles: raw.circles,
-      clues: {
-        across: raw.across,
-        down: raw.down,
-      },
+      grid,
+      circles,
+      info: { type, title, author, description },
+      clues: { across, down },
     };
     return result;
   }

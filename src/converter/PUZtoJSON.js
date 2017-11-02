@@ -14,6 +14,7 @@ function getExtension(bytes, code) {
     i += 4; // skip the H H
     return Array.from(bytes).slice(i, i + length);
   }
+  return null; // could not find
 }
 
 function getRebus(bytes) {
@@ -22,7 +23,7 @@ function getRebus(bytes) {
 
   const table = getExtension(bytes, grbs);
   if (!table) {
-    return;
+    return; // no rebus
   }
   const solbytes = getExtension(bytes, rtbl);
   var enc = new TextDecoder('ISO-8859-1');
@@ -64,7 +65,7 @@ function addRebusToGrid(grid, rebus) {
       if (rebus.table[idx]) {
         return {
           ...cell,
-          solution: rebus.sols[rebus.table[idx] - 1]
+          solution: rebus.sols[rebus.table[idx] - 1],
         }
       }
       return cell;
@@ -73,87 +74,102 @@ function addRebusToGrid(grid, rebus) {
 }
 
 export default function PUZtoJSON(buffer) {
-  var retval = {
-    metadata: {},
-    grid: [],
-    across: [],
-    down: [],
-    ncells: 0
-  };
-  var bytes = new Uint8Array(buffer);
+  let grid = [];
+  const info = {}
+  const across = [];
+  const down = [];
+  const bytes = new Uint8Array(buffer);
 
-  retval.ncol = bytes[44];
-  retval.nrow = bytes[45];
-  if (!(bytes[50] === 0 && bytes[51] === 0))
-    return "Cannot open scrambled PUZ file";
+  const ncol = bytes[44];
+  const nrow = bytes[45];
+  if (!(bytes[50] === 0 && bytes[51] === 0)) {
+    throw new Error('Scrambled PUZ file');
+  }
 
-  var n = 1;
-  var acrossN = [];
-  var downN = [];
-  var i;
-  for (i=0; i<retval.nrow; i++) {
-    retval.grid[i] = [];
-    for (var j=0; j<retval.ncol; j++) {
-      var letter = String.fromCharCode(bytes[52 + i*retval.ncol + j]);
+
+  for (let i = 0; i < nrow; i++) {
+    grid[i] = [];
+
+    for (let j = 0; j < ncol; j++) {
+      const letter = String.fromCharCode(bytes[52 + i * ncol + j]);
       if (letter !== ".") {
-        retval.ncells += 1;
-        retval.grid[i][j] = { solution: letter };
-        if (j === 0 || retval.grid[i][j-1].type === "block") {
-          retval.grid[i][j].number = n++;
-          retval.grid[i][j].across = retval.grid[i][j].number;
-          acrossN.push(retval.grid[i][j].number);
-        } else {
-          retval.grid[i][j].across = retval.grid[i][j-1].across;
-        }
-        if (i===0 || retval.grid[i-1][j].type === "block") {
-          if (!retval.grid[i][j].number)
-            retval.grid[i][j].number = n++;
-          retval.grid[i][j].down = retval.grid[i][j].number;
-          downN.push(retval.grid[i][j].number);
-        } else {
-          retval.grid[i][j].down = retval.grid[i-1][j].down;
-        }
+        grid[i][j] = {
+          type: 'white',
+          solution: letter,
+        };
       } else {
-        retval.grid[i][j] = { type: "block" };
+        grid[i][j] = {
+          type: 'black',
+        };
       }
     }
   }
 
-  var ibyte = 52 + retval.ncol * retval.nrow * 2 - 1;
+  function isBlack(i, j) {
+    return (i < 0
+      || j < 0
+      || i >= nrow
+      || j >= ncol
+      || grid[i][j].type === 'black'
+    );
+  }
+
+  const isAcross = [];
+  const isDown = [];
+  let n = 0;
+  for (let i = 0; i < nrow; i++) {
+    for (let j = 0; j < ncol; j++) {
+      if (grid[i][j].type === 'white') {
+        const isAcrossStart = (
+          isBlack(i, j - 1)
+          && !isBlack(i, j + 1)
+        );
+        const isDownStart = (
+          isBlack(i - 1, j)
+          && !isBlack(i + 1, j)
+        );
+
+        if (isAcrossStart || isDownStart) {
+          n += 1;
+          isAcross[n] = isAcrossStart;
+          isDown[n] = isDownStart;
+        }
+      }
+    }
+  }
+
+  let ibyte = 52 + ncol * nrow * 2;
   function readString() {
-    var retval = "";
-    var b = bytes[++ibyte];
-    while (b !== 0 && ibyte < bytes.length) {
-      retval += String.fromCharCode(b);
-      b = bytes[++ibyte];
+    let result = "";
+    let b = bytes[ibyte++];
+    while (b !== 0) {
+      result += String.fromCharCode(b);
+      b = bytes[ibyte++];
     }
-    return retval;
+    return result;
   }
 
-  retval.metadata["title"] = readString();
-  retval.metadata["creator"] = readString();
-  retval.metadata["copyright"] = readString();
+  info.title = readString();
+  info.author = readString();
+  info.copyright = readString();
 
-  for (i=1; i<n; i++) {
-    if (acrossN[0] === i) {
-      retval.across[i] = readString();
-      acrossN.splice(0, 1);
+  for (let i = 1; i <= n; i++) {
+    if (isAcross[i]) {
+      across[i] = readString();
     }
-    if (downN[0] === i) {
-      retval.down[i] = readString();
-      downN.splice(0, 1);
+    if (isDown[i]) {
+      down[i] = readString();
     }
   }
 
-  retval.metadata["description"] = readString();
+  info.description = readString();
 
   const rebus = getRebus(bytes);
   const circles = getCircles(bytes);
   if (rebus) {
-    retval.grid = addRebusToGrid(retval.grid, rebus);
+    grid = addRebusToGrid(grid, rebus);
   }
-  retval.circles = circles;
 
-  return retval;
+  return { grid, info, circles, across, down };
 }
 

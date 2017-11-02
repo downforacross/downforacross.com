@@ -20,18 +20,6 @@ export default class Upload extends Component {
     ev.stopPropagation();
   }
 
-  handleTextboxInput(ev) {
-    this.setState({ textbox: ev.target.value }, () => {
-      let puzzle;
-      try {
-        puzzle = JSON.parse(this.state.textbox);
-        this.setState({ puzzle: puzzle });
-      } catch(e) {
-        this.setState({ puzzle: null });
-      }
-    });
-  }
-
   puzzleIsValid() {
     if (!this.state.puzzle) return false;
     // TODO more validation
