@@ -28,7 +28,8 @@ const actions = {
         info: puzzle.info,
         title: title,
         private: puzzle.private || false,
-        author: author
+        author: author,
+        importedTime: getTime(),
       });
       db.ref('puzzle/' + pid).set(puzzle);
       return {...counters, pid: pid}

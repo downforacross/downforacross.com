@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 
-import actions, { db } from '../actions';
+import actions, { db, getTime } from '../actions';
 
 function values(obj) {
   return Object.keys(obj).map(key => obj[key]);
@@ -15,7 +15,7 @@ class Entry extends Component {
   constructor() {
     super();
     this.state = {
-      flipped: false
+      flipped: false,
     }
   }
 
@@ -34,8 +34,13 @@ class Entry extends Component {
     this.props.history.push(`/game/solo/${pid}`);
   }
 
+  isNew() {
+    const { importedTime, lastUpdateTime } = this.props;
+    return importedTime && lastUpdateTime && importedTime > lastUpdateTime;
+  }
+
   render() {
-    const { title, author } = this.props;
+    const { title, author, pid } = this.props;
     const { flipped } = this.state;
 
     const front = (
@@ -66,7 +71,7 @@ class Entry extends Component {
       </div>
     );
     return (
-      <div onClick={e => {
+      <div key={pid} onClick={e => {
         e.preventDefault();
         e.stopPropagation();
         this.setState({
@@ -76,7 +81,7 @@ class Entry extends Component {
       onMouseLeave={e => {
         this.setState({ flipped: false });
       }}
-      className={'entry' + (flipped ? ' flipped' : '')}>
+      className={'entry' + (flipped ? ' flipped' : '') + (this.isNew() ? '  new' : '')}>
       { front }
       { flipped ? back : <div className='entry--back'/> }
     </div>
@@ -111,10 +116,9 @@ export default class Welcome extends Component {
   }
 
   updatePuzzleList(puzzleList) {
+    const { puzzleList: oldPuzzleList } = this.state;
     this.setState({ puzzleList: values(puzzleList.val() || {}).filter(puzzle => !puzzle.private) }, () => {
-      if (!this.state.pid && this.state.puzzleList.length > 0) {
-        this.setState({ pid: this.state.puzzleList[0].pid });
-      }
+      this.lastUpdateTime = getTime();
     });
   }
 
@@ -123,22 +127,26 @@ export default class Welcome extends Component {
     ev.stopPropagation();
   }
 
-  handleStartClick(ev) {
-    if (!this.state.pid) return;
-    actions.createGame({
-      name: this.state.name,
-      pid: this.state.pid
-    }, gid => {
-      this.props.history.push(`/game/${gid}`);
-    });
-  }
-
-  handleSelectChange(ev) {
-    this.setState({ pid: ev.target.value });
+  renderPuzzleList(type) {
+    const { history } = this.props;
+    const lastUpdateTime = this.lastUpdateTime;
+    return (
+      <div className='puzzlelist'>
+        { this.state.puzzleList.slice().reverse()
+            .filter(entry => (
+              entry.info && entry.info.type === type
+            ))
+            .map((entry, i) =>
+              <div key={i} className='welcome--browse--puzzlelist--entry'>
+                <Entry { ...entry } history={history} lastUpdateTime={lastUpdateTime}/>
+              </div>
+            )
+        }
+      </div>
+    );
   }
 
   render() {
-    const { history } = this.props;
     return (
       <div className='welcome'>
         <Helmet>
@@ -187,34 +195,14 @@ export default class Welcome extends Component {
                 <div className='welcome--browse--title'>
                   Daily Puzzles
                 </div>
-                {
-                  this.state.puzzleList.slice().reverse()
-                    .filter(entry => (
-                      !entry.info || entry.info.type === 'Daily Puzzle'
-                    ))
-                    .map((entry, i) =>
-                      <div key={i} className='welcome--browse--puzzlelist--entry'>
-                        <Entry { ...entry } history={history}/>
-                      </div>
-                    )
-                }
+                { this.renderPuzzleList('Daily Puzzle') }
               </div>
 
               <div className='welcome--browse--puzzlelist minis'>
                 <div className='welcome--browse--title'>
                   Mini Puzzles
                 </div>
-                {
-                  this.state.puzzleList.slice().reverse()
-                    .filter(entry => (
-                      entry.info && entry.info.type === 'Mini Puzzle'
-                    ))
-                    .map((entry, i) =>
-                      <div key={i} className='welcome--browse--puzzlelist--entry'>
-                        <Entry { ...entry }/>
-                      </div>
-                    )
-                }
+                { this.renderPuzzleList('Mini Puzzle') }
               </div>
             </div>
           </div>
