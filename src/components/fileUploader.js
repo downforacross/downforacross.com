@@ -28,8 +28,8 @@ export default class FileUploader extends Component {
     return hasShape(puzzle, shape);
   }
 
-  convertPUZ(file) {
-    const raw = PUZtoJSON(file);
+  convertPUZ(buffer) {
+    const raw = PUZtoJSON(buffer);
 
     const {
       grid: rawGrid,
@@ -60,14 +60,15 @@ export default class FileUploader extends Component {
   }
 
   onDrop(acceptedFiles) {
-    let file = acceptedFiles[0];
-    var reader = new FileReader();
+    const file = acceptedFiles[0];
+    const reader = new FileReader();
+    const { success, fail } = this.props;
     reader.addEventListener("loadend", () => {
       let puzzle = this.convertPUZ(reader.result);
       if (this.validPuzzle(puzzle)) {
-        this.props.setPuzzle(puzzle);
+        success(puzzle);
       } else {
-        this.props.failUpload();
+        fail();
       }
       window.URL.revokeObjectURL(acceptedFiles[0].preview);
     });

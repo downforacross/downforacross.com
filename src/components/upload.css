@@ -33,3 +33,19 @@
   height: 40px;
   padding: 15px 15px 15px 15px;
 }
+
+.upload--success {
+  font-size: 12px;
+  text-align: center;
+}
+
+.upload--success--title {
+  /* font-family: Courier; */
+  font-weight: bold;
+}
+
+.upload--button {
+  margin-top: 12px;
+  font-size: 15px;
+  background-color: #FAFAFA;
+}

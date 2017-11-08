@@ -9,48 +9,61 @@ export default class Upload extends Component {
   constructor() {
     super();
     this.state = {
-      uploaded: false,
-      textbox: '',
-      puzzle: null
+      puzzle: null,
+      convertedPuzzle: null,
     };
+    this._success = this.success.bind(this);
+    this._fail = this.fail.bind(this);
+    this._create = this.create.bind(this);
   }
 
-  prevent(ev) {
-    ev.preventDefault();
-    ev.stopPropagation();
-  }
-
-  puzzleIsValid() {
-    if (!this.state.puzzle) return false;
-    // TODO more validation
-    return true;
-  }
-
-  getPuzzle() {
-    return this.state.puzzle;
-  }
-
-  setPuzzle(puzzle) {
+  success(convertedPuzzle) {
     this.setState({
-      puzzle: puzzle,
-      uploaded: true
+      puzzle: null,
+      convertedPuzzle,
     });
   }
 
-  failUpload() {
-    this.setState({
-      uploaded: true
-    });
-  }
-
-  handleGoClick(ev) {
-    ev.preventDefault();
-    ev.stopPropagation();
-
-    if (this.puzzleIsValid()) {
-      actions.createPuzzle(this.getPuzzle(), pid => {
-        //this.props.history.push(`/puzzle/${pid}`);
+  create() {
+    const { convertedPuzzle } = this.state;
+    actions.createPuzzle(convertedPuzzle, puzzle => {
+      this.setState({
+        convertedPuzzle: null,
+        puzzle,
       });
+    });
+  }
+
+  fail() {
+    this.setState({ puzzle: null });
+  }
+
+  renderSuccessMessage() {
+    const { info } = this.state.convertedPuzzle || {};
+    const { title, type } = info || {};
+    if (title) {
+      return (
+        <div className='upload--success'>
+          <span className='upload--success--title'>
+            {title}
+          </span>
+        </div>
+      );
+    }
+  }
+
+  renderButton() {
+    const { info } = this.state.convertedPuzzle || {};
+    const { title, type } = info || {};
+    if (type) {
+      return (
+        <button
+          className='upload--button'
+          onClick={this._create}
+        >
+          {`Add to the ${type} repository`}
+        </button>
+      );
     }
   }
 
@@ -60,27 +73,16 @@ export default class Upload extends Component {
         <div className='upload--main'>
           <div className='upload--main--upload'>
             <div className='upload--main--upload--title'>
-              Upload
+              Import
             </div>
             <FileUploader
-              failUpload={this.failUpload.bind(this)}
-              setPuzzle={this.setPuzzle.bind(this)}
+              success={this._success}
+              fail={this._fail}
             />
+            {this.renderSuccessMessage()}
+            {this.renderButton()}
           </div>
         </div>
-
-        {
-          (this.state.textbox || this.state.uploaded)
-            ? (<div className='upload--preview'>
-              Uploaded puzzle is <b>{this.puzzleIsValid() ? 'valid!' : 'invalid'}</b>
-            </div>)
-            : null
-        }
-        <button
-          className='upload--go'
-          onClick={this.handleGoClick.bind(this)}>
-          Create Puzzle
-        </button>
       </div>
     );
   }

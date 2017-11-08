@@ -33,7 +33,7 @@ const actions = {
       db.ref('puzzle/' + pid).set(puzzle);
       return {...counters, pid: pid}
     }, (err, success, snapshot) => {
-      cbk && cbk(snapshot.val().pid);
+      cbk && cbk(snapshot.val());
     });
   },
 
