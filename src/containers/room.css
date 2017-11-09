@@ -50,6 +50,9 @@
   flex: 1;
 }
 
+.room.mobile .room--chat {
+  display: none;
+}
 
 .toggle-mobile {
   display: block;

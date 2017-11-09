@@ -358,10 +358,6 @@ export default class Room extends Component {
 
   // overrided in the Solo component, which extends Room
   shouldRenderChat() {
-    const { mobile } = this.state;
-    if (mobile) {
-      return false;
-    }
     return true;
   }
 
@@ -436,24 +432,25 @@ export default class Room extends Component {
             onPressEnter={this._focusChat}
             mobile={mobile}
           />
+          <div className='room--chat'>
+            { this.shouldRenderChat()
+                ? <Chat
+                  ref='chat'
+                  chat={this.state.game.chat || {messages: [], users: []}}
+                  onSendChatMessage={this._sendChatMessage}
+                  onPressEnter={this._focusGame}
+                />
+                : null
+            }
+          </div>
 
-        { this.shouldRenderChat()
-            ? <Chat
-              ref='chat'
-              chat={this.state.game.chat || {messages: [], users: []}}
-              onSendChatMessage={this._sendChatMessage}
-              onPressEnter={this._focusGame}
-            />
-            : null
-        }
+          <ToggleMobile
+            mobile={mobile}
+            onClick={this._toggleMobile}
+          />
 
-        <ToggleMobile
-          mobile={mobile}
-          onClick={this._toggleMobile}
-        />
-
+      </div>
     </div>
-  </div>
     );
   }
 };
