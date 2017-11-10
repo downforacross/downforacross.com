@@ -1,5 +1,5 @@
+import './css/ActionMenu.css';
 import React, { Component } from 'react';
-import './ActionMenu.css';
 
 /*
  * Summary of ActionMenu component

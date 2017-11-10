@@ -1,4 +1,4 @@
-import './clues.css';
+import './css/clues.css';
 
 import React, { Component } from 'react';
 

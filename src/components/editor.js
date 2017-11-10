@@ -1,4 +1,4 @@
-import './editor.css';
+import './css/editor.css';
 
 import Grid from './grid';
 import GridControls from './gridControls';

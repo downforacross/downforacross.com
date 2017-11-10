@@ -1,4 +1,4 @@
-import './grid.css';
+import './css/grid.css';
 
 import React, { Component } from 'react';
 import GridObject from '../utils/Grid';

@@ -1,4 +1,4 @@
-import './mobileGridControls.css';
+import './css/mobileGridControls.css';
 
 import React from 'react';
 import GridControls from './gridControls';

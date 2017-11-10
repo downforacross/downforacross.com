@@ -1,5 +1,5 @@
+import './css/toolbar.css';
 import React, { Component } from 'react';
-import './toolbar.css';
 
 import Clock from '../components/clock';
 import ActionMenu from '../components/ActionMenu';

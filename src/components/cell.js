@@ -1,4 +1,4 @@
-import './cell.css';
+import './css/cell.css';
 import { getTime } from '../actions';
 
 import React, { Component } from 'react';

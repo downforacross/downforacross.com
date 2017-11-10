@@ -1,4 +1,4 @@
-import './gridControls.css';
+import './css/gridControls.css';
 
 import React, { Component } from 'react';
 

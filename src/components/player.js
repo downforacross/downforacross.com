@@ -1,4 +1,4 @@
-import './player.css';
+import './css/player.css';
 
 import Grid from './grid';
 import Clues from './clues';

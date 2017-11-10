@@ -1,4 +1,4 @@
-import './hints.css';
+import './css/hints.css';
 import React, { Component } from 'react';
 
 import { evaluate, findMatches, getPatterns, precompute } from '../hintUtils';
