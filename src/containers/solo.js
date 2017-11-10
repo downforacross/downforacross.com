@@ -1,4 +1,4 @@
-import './solo.css';
+import './css/solo.css';
 import Room from './room';
 import { db } from '../actions';
 import { makeGame } from '../gameUtils';

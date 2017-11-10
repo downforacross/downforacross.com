@@ -1,4 +1,4 @@
-import './welcome.css';
+import './css/welcome.css';
 import Upload from '../components/upload'
 
 import React, { Component } from 'react';

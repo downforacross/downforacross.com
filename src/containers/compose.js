@@ -1,4 +1,4 @@
-import './compose.css';
+import './css/compose.css';
 import actions, { db } from '../actions';
 import React, { Component } from 'react';
 import Editor from '../components/editor';

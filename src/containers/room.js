@@ -1,4 +1,4 @@
-import './room.css';
+import './css/room.css';
 import { db, getTime } from '../actions';
 import Player from '../components/player';
 import Chat from '../components/chat';
