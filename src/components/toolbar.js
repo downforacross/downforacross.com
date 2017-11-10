@@ -6,6 +6,25 @@ import ActionMenu from '../components/ActionMenu';
 
 export default class Toolbar extends Component {
 
+  renderClockControl() {
+    const {
+      startTime,
+      onStartClock,
+      onPauseClock,
+    } = this.props;
+    return ( 
+      startTime
+        ? <button className='toolbar--btn pause'
+            onClick={onPauseClock} >
+            Pause Clock
+          </button>
+        : <button className='toolbar--btn start'
+            onClick={onStartClock} >
+            Start Clock
+          </button>
+    );
+  }
+
   renderCheckMenu() {
     return (
       <div className='toolbar--menu check'>
@@ -113,20 +132,6 @@ export default class Toolbar extends Component {
             pausedTime={pausedTime}
           />
         </div>
-        {
-          solved
-            ? null
-            : ( startTime
-              ? ( <button className='toolbar--btn pause'
-                onClick={onPauseClock} >
-                Pause Clock
-              </button>)
-              : ( <button className='toolbar--btn start'
-                onClick={onStartClock} >
-                Start Clock
-              </button>)
-            )
-        }
         {
           solved
             ? null
