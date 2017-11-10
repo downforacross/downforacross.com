@@ -29,7 +29,7 @@ function ToggleMobile({ mobile, onClick }) {
   );
 }
 
-function Header({ mobile, info, href }) {
+function Header({ mobile, info }) {
   const { title, author, type } = info || {};
   if (mobile) {
     return (
@@ -39,18 +39,9 @@ function Header({ mobile, info, href }) {
   }
   return (
     <div className='header'>
-      { href
-          ? (
-            <a href={href} className='header--title'>
-              {  title }
-            </a>
-          )
-          : (
-            <div className='header--title'>
-              { title }
-            </div>
-          )
-      }
+      <div className='header--title'>
+        { title }
+      </div>
 
       <div className='header--subtitle'>
         {
@@ -392,9 +383,7 @@ export default class Room extends Component {
         <div className='room--header'>
           <Header
             mobile={mobile}
-            href={game.pid && `/puzzle/${game.pid}`}
             info={game.info}
-
           />
         </div>
 
