@@ -1,3 +1,4 @@
+import './css/clock.css';
 import React, { Component } from 'react';
 import { getTime } from '../actions';
 
@@ -7,6 +8,7 @@ export default class Clock extends Component {
     this.state = {
       clock: '00:00'
     };
+    this._togglePause = this.togglePause.bind(this);
   }
 
   componentDidMount() {
@@ -53,9 +55,26 @@ export default class Clock extends Component {
     });
   }
 
+  togglePause() {
+    const { isPaused, onPause, onStart } = this.props;
+    if (isPaused) {
+      onStart();
+    } else {
+      onPause();
+    }
+  }
+
   render() {
-    return <div className='clock'>
-      {this.state.clock}
+    const { clock } = this.state;
+    const { isPaused } = this.props;
+    const clockStr = isPaused
+      ? '(' + clock + ')'
+      : clock;
+    const titleStr = isPaused
+      ? 'Click to unpause'
+      : 'Click to pause';
+    return <div className='clock' onClick={this._togglePause} title={titleStr}>
+      {clockStr}
     </div>
   }
 };

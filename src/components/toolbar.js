@@ -12,7 +12,7 @@ export default class Toolbar extends Component {
       onStartClock,
       onPauseClock,
     } = this.props;
-    return ( 
+    return (
       startTime
         ? <button className='toolbar--btn pause'
             onClick={onPauseClock} >
@@ -100,6 +100,9 @@ export default class Toolbar extends Component {
               startTime={startTime}
               stopTime={stopTime}
               pausedTime={pausedTime}
+              isPaused={!startTime}
+              onStart={onStartClock}
+              onPause={onPauseClock}
             />
             {
               solved
@@ -130,6 +133,9 @@ export default class Toolbar extends Component {
             startTime={startTime}
             stopTime={stopTime}
             pausedTime={pausedTime}
+            isPaused={!startTime}
+            onStart={onStartClock}
+            onPause={onPauseClock}
           />
         </div>
         {
