@@ -40,7 +40,7 @@ export default class Upload extends Component {
 
   renderSuccessMessage() {
     const { info } = this.state.convertedPuzzle || {};
-    const { title, type } = info || {};
+    const { title } = info || {};
     if (title) {
       return (
         <div className='upload--success'>
@@ -54,7 +54,7 @@ export default class Upload extends Component {
 
   renderButton() {
     const { info } = this.state.convertedPuzzle || {};
-    const { title, type } = info || {};
+    const { type } = info || {};
     if (type) {
       return (
         <button

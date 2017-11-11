@@ -3,26 +3,6 @@ import './css/mobileGridControls.css';
 import React from 'react';
 import GridControls from './gridControls';
 
-function MovementArrow({ dir, onClick }) {
-  return (
-    <div
-      className={'movement-arrow ' + dir}
-      tabIndex={-1}
-      autoComplete="off"
-      autoCorrect="off"
-      autoCapitalize="off"
-      spellCheck="false"
-      onTouchStart={function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        onClick();
-      }}
-    >
-      { dir }
-    </div>
-  );
-}
-
 export default class MobileGridControls extends GridControls {
   render() {
     return (

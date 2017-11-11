@@ -116,7 +116,6 @@ export default class Welcome extends Component {
   }
 
   updatePuzzleList(puzzleList) {
-    const { puzzleList: oldPuzzleList } = this.state;
     this.setState({ puzzleList: values(puzzleList.val() || {}).filter(puzzle => !puzzle.private) }, () => {
       this.lastUpdateTime = getTime();
     });
