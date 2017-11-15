@@ -1,4 +1,5 @@
 import Grid from './utils/Grid'
+import { getTime } from './actions';
 
 export const getOppositeDirection = (direction) => {
   return {
@@ -63,7 +64,7 @@ export const makeGame = (gid, name, puzzle) => {
     solution: puzzle.grid,
     pid: puzzle.pid || null,
     grid: grid.toArray(),
-    createTime: new Date().getTime(),
+    createTime: getTime(),
     startTime: null,
     chat: {
       users: [],

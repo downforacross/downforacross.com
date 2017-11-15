@@ -1,4 +1,5 @@
 import './cell.css';
+import { getTime } from '../actions';
 
 import React, { Component } from 'react';
 
@@ -118,7 +119,7 @@ export default class Cell extends Component {
         onClick={this.props.onClick}
         onTouchMove={e => {
           if (e.touches.length >= 1) {
-            window.lastZoomed = new Date().getTime();
+            window.lastZoomed = getTime();
           } else {
             e.preventDefault();
             e.stopPropagation();
@@ -126,7 +127,7 @@ export default class Cell extends Component {
         }}
         onTouchEnd={e => {
           e.preventDefault();
-          const now = new Date().getTime();
+          const now = getTime();
           const disablePeriod = 200;
           if (!window.lastZoomed || window.lastZoomed + disablePeriod < now) {
             this.props.onClick(e);

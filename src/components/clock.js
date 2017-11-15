@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { getTime } from '../actions';
 
 export default class Clock extends Component {
   constructor() {
@@ -27,7 +28,7 @@ export default class Clock extends Component {
     const pausedTime = this.props.pausedTime;
     const start = this.props.startTime;
     const stop = this.props.stopTime;
-    const now = new Date().getTime();
+    const now = getTime();
 
     let clock = 0; // start with pausedTime
     if (pausedTime) {

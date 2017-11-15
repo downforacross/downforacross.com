@@ -1,5 +1,5 @@
 import './room.css';
-import { db } from '../actions';
+import { db, getTime } from '../actions';
 import Player from '../components/player';
 import Chat from '../components/chat';
 import Toolbar from '../components/toolbar';
@@ -158,7 +158,7 @@ export default class Room extends Component {
       this.transaction(game => (
         Object.assign(game, {
           solved: true,
-          stopTime: game.stopTime || new Date().getTime()
+          stopTime: game.stopTime || getTime(),
         })
       ));
       return true;
@@ -177,7 +177,7 @@ export default class Room extends Component {
   updateCursor({r, c}) {
     if (!this.color || !this.id) return;
     let updateFn = cursors => {
-      let updatedAt = new Date().getTime();
+      let updatedAt = getTime();
       cursors = cursors || [];
       cursors = cursors.filter(({id}) => id !== this.id);
       cursors.push({
@@ -187,7 +187,7 @@ export default class Room extends Component {
         c: c,
         updatedAt: updatedAt
       });
-      cursors = cursors.filter(({updatedAt}) => updatedAt >= new Date().getTime() - CURSOR_EXPIRE);
+      cursors = cursors.filter(({updatedAt}) => updatedAt >= getTime() - CURSOR_EXPIRE);
       return cursors;
     };
     this.setState({
@@ -211,7 +211,7 @@ export default class Room extends Component {
     this.cellTransaction(r, c, cell => (
       Object.assign(cell, {
         edits: takeLast(10, [...(cell.edits || []), {
-          time: new Date().getTime(),
+          time: getTime(),
           value: value
         }]),
         value: value,
@@ -248,7 +248,7 @@ export default class Room extends Component {
     this.transaction(game => (
       Object.assign(game, {
         startTime: Math.max(game.startTime || 0,
-          new Date().getTime())
+          getTime())
       }))
     );
   }
@@ -258,7 +258,7 @@ export default class Room extends Component {
     this.transaction(game => (
       Object.assign(game, {
         startTime: null,
-        pausedTime: (game.pausedTime || 0) + new Date().getTime() - (game.startTime || 0)
+        pausedTime: (game.pausedTime || 0) + getTime() - (game.startTime || 0)
       }))
     );
   }
@@ -266,7 +266,7 @@ export default class Room extends Component {
   stopClock() {
     this.transaction(game => (
       Object.assign(game, {
-        stopTime: new Date().getTime()
+        stopTime: getTime()
       })
     ));
   }

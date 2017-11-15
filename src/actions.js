@@ -4,6 +4,16 @@ import firebase from './store/firebase';
 // for interfacing with firebase
 
 const db = firebase.database();
+const offsetRef = firebase.database().ref(".info/serverTimeOffset");
+let offset = 0;
+offsetRef.once('value', result => {
+  offset = result.val();
+});
+
+function getTime() {
+  return new Date().getTime() + offset;
+}
+
 const actions = {
 
   // puzzle: { title, type, grid, clues }
@@ -50,5 +60,5 @@ const actions = {
   }
 };
 
-export { db };
+export { db, getTime };
 export default actions;
