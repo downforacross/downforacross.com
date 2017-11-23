@@ -1,4 +1,6 @@
 function getExtension(bytes, code) {
+  console.log('getExtension', code);
+  console.log('=', code.charCodeAt(0), code.charCodeAt(1), code.charCodeAt(2), code.charCodeAt(3));
   // struct byte format is 4S H H
   let i = 0, j = 0;
   for(i = 0; i < bytes.length; i += 1) {
@@ -51,11 +53,27 @@ function getCircles(bytes) {
   if (markups) {
     markups.forEach((byte, i) => {
       if (byte & 128) {
+        console.log(byte, i);
         circles.push(i);
       }
     });
   }
   return circles;
+}
+
+function getShades(bytes) {
+  const shades = [];
+  const gext = 'GEXT';
+  const markups = getExtension(bytes, gext);
+  if (markups) {
+    markups.forEach((byte, i) => {
+      if (byte & 8) {
+        shades.push(i);
+      }
+    });
+  }
+  console.log('shades',shades);
+  return shades;
 }
 
 function addRebusToGrid(grid, rebus) {
@@ -166,10 +184,11 @@ export default function PUZtoJSON(buffer) {
 
   const rebus = getRebus(bytes);
   const circles = getCircles(bytes);
+  const shades = getShades(bytes);
   if (rebus) {
     grid = addRebusToGrid(grid, rebus);
   }
 
-  return { grid, info, circles, across, down };
+  return { grid, info, circles, shades, across, down };
 }
 

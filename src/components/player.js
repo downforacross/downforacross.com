@@ -220,6 +220,7 @@ export default class Player extends Component {
       grid,
       clues,
       circles,
+      shades,
       cursors,
       updateGrid,
       frozen,
@@ -322,6 +323,7 @@ export default class Player extends Component {
                   size={size}
                   grid={grid}
                   circles={circles}
+                  shades={shades}
                   selected={selected}
                   references={this.getReferences()}
                   direction={direction}

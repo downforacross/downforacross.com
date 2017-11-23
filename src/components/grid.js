@@ -35,6 +35,12 @@ export default class Grid extends Component {
     return (circles || []).indexOf(idx) !== -1;
   }
 
+  isShaded(r, c) {
+    const { grid, shades } = this.props;
+    const idx = c + r * grid[0].length;
+    return (shades || []).indexOf(idx) !== -1;
+  }
+
   isHighlighted(r, c) {
     const { selected, direction } = this.props;
     const selectedParent = this.grid.getParent(selected.r, selected.c, direction);
@@ -118,6 +124,7 @@ export default class Grid extends Component {
                         selected={this.isSelected(r, c)}
                         referenced={this.isReferenced(r, c)}
                         circled={this.isCircled(r, c)}
+                        shaded={this.isShaded(r, c)}
                         cursors={(this.props.cursors || []).filter(cursor => cursor.r === r && cursor.c === c)}
                         highlighted={this.isHighlighted(r, c)}
                         myColor={this.props.myColor}

@@ -409,6 +409,7 @@ export default class Room extends Component {
             size={size}
             grid={this.state.game.grid}
             circles={this.state.game.circles}
+            shades={this.state.game.shades}
             clues={{
               across: toArr(this.state.game.clues.across),
               down: toArr(this.state.game.clues.down)

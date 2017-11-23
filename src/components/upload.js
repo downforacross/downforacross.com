@@ -18,6 +18,7 @@ export default class Upload extends Component {
   }
 
   success(convertedPuzzle) {
+    console.log(convertedPuzzle);
     this.setState({
       puzzle: null,
       convertedPuzzle,

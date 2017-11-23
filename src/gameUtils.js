@@ -60,6 +60,7 @@ export const makeGame = (gid, name, puzzle) => {
     name: name,
     info: puzzle.info,
     circles: puzzle.circles || [],
+    shades: puzzle.shades || [],
     clues: clues,
     solution: puzzle.grid,
     pid: puzzle.pid || null,

@@ -35,6 +35,7 @@ export default class FileUploader extends Component {
       grid: rawGrid,
       info,
       circles,
+      shades,
       across,
       down,
     } = raw;
@@ -53,6 +54,7 @@ export default class FileUploader extends Component {
     const result = {
       grid,
       circles,
+      shades,
       info: { type, title, author, description },
       clues: { across, down },
     };

@@ -69,6 +69,15 @@ export default class Cell extends Component {
     return null;
   }
 
+  renderShade() {
+    if (this.props.shaded) {
+      return (
+        <div className='cell--shade' />
+      );
+    }
+    return null;
+  }
+
   render() {
     if (this.props.black) {
       return (
@@ -100,6 +109,9 @@ export default class Cell extends Component {
             : ''
           ) + (this.props.referenced
             ? 'referenced '
+            : ''
+          ) + (this.props.shaded
+            ? 'shaded '
             : ''
           ) + (this.props.bad
             ? 'bad '
@@ -143,6 +155,7 @@ export default class Cell extends Component {
         </div>
         { this.renderFlipButton() }
         { this.renderCircle() }
+        { this.renderShade() }
         <div className='cell--value'
           style={{
             fontSize: 350 / Math.sqrt(l) + '%',
