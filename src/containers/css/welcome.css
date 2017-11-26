@@ -30,9 +30,14 @@
 
 .welcome--nav--right a {
   font-family: inherit;
-  font-size: 10px;
+  font-size: 8px;
   color: white;
+  opacity: 0;
   text-decoration: none;
+}
+
+.welcome--nav--right a:hover {
+  opacity: 1;
 }
 
 .welcome--nav--left a {
