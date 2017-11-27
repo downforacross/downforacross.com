@@ -1,0 +1,25 @@
+.news {
+}
+.news--title {
+  font-size: 22px;
+  text-align: center;
+  margin-bottom: 15px;
+}
+.news--item {
+  padding: 5px;
+  display: flex;
+  color: #222;
+  background-color: #E5E5E5;
+}
+.news--item:nth-child(even) {
+  color: #333;
+  background-color: #F5F5F5;
+}
+.news--item--date {
+  font-weight: bold;
+  width: 100px;
+}
+.news--item--message {
+  padding-left: 10px;
+  min-width: 100px;
+}

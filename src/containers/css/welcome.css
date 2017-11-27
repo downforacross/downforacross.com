@@ -189,11 +189,21 @@
   background-color: #FFF;
 }
 
-.welcome--upload {
+.welcome--right {
   flex: 1;
   padding: 15px 15px 15px 15px;
   display: flex;
   flex-direction: column;
+}
+
+.welcome--upload {
+  padding: 10px;
+  flex: 1;
+}
+
+.welcome--news {
+  padding: 10px;
+  flex: 1;
 }
 
 .welcome--upload--title {

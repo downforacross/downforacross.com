@@ -1,5 +1,6 @@
 import './css/welcome.css';
-import Upload from '../components/upload'
+import Upload from '../components/upload';
+import News from '../components/news';
 
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
@@ -205,8 +206,13 @@ export default class Welcome extends Component {
               </div>
             </div>
           </div>
-          <div className='welcome--upload'>
-            <Upload history={this.props.history}/>
+          <div className='welcome--right'>
+            <div className='welcome--upload'>
+              <Upload history={this.props.history}/>
+            </div>
+            <div className='welcome--news'>
+              <News />
+            </div>
           </div>
         </div>
       </div>
