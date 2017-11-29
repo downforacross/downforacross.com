@@ -35,10 +35,6 @@
   display: block;
 }
 
-.action-menu--list:hover {
-  display: block;
-}
-
 .action-menu--list--action:first-child {
   border-top: 1px solid #CCC;
 }

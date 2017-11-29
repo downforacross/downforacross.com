@@ -55,8 +55,10 @@ export default class ActionMenu extends Component {
               <div
                 key={i}
                 className='action-menu--list--action'
-                onClick={
-                  this.props.actions[key]
+                onClick={()=>{
+                  this.setState({active: false});
+                  this.props.actions[key]();
+                }
                 } >
                 <span> {key} </span>
               </div>
