@@ -198,12 +198,12 @@
 
 .welcome--upload {
   padding: 10px;
-  flex: 1;
+  flex: 3;
 }
 
 .welcome--news {
   padding: 10px;
-  flex: 1;
+  flex: 2;
 }
 
 .welcome--upload--title {
