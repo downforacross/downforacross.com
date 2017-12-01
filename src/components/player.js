@@ -187,12 +187,9 @@ export default class Player extends Component {
   }
 
   getReferences() {
+    const { clues } = this.props;
     const clueText = this.getClueBarText();
-    return gameUtils.getReferencedClues(clueText);
-  }
-
-  getReferencedSquares() {
-    return this.getAllSquares().filter(({r, c}) => this.isReferenced(r, c));
+    return gameUtils.getReferencedClues(clueText, clues);
   }
 
   /* Misc functions */

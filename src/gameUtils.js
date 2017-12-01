@@ -80,7 +80,7 @@ export const allNums = (str) => {
   return (str.match(pattern) || []).map(x => parseInt(x, 10));
 };
 
-export const getReferencedClues = (str) => {
+export const getReferencedClues = (str, clues) => {
   if (!str) return [];
   str = str.toLowerCase();
   console.log('getReferencedClues', str);
@@ -92,17 +92,29 @@ export const getReferencedClues = (str) => {
       let nums = allNums(str.substring(0, a));
       res = res.concat(nums.map(num => ({
         ori: 'across',
-        num: num
+        num: num,
       })));
       str = str.substr(a + 'across'.length);
     } else {
       let nums = allNums(str.substring(0, b));
       res = res.concat(nums.map(num => ({
         ori: 'down',
-        num: num
+        num: num,
       })));
       str = str.substr(b + 'down'.length);
     }
+  }
+  if (str.indexOf('starred clues') !== -1) {
+    ['down', 'across'].forEach(dir => {
+      clues[dir].forEach((clueText, i) => {
+        if (clueText.startsWith('*')) {
+          res.push({
+            ori: dir,
+            num: i,
+          });
+        }
+      });
+    });
   }
   return res;
 };
