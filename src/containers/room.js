@@ -167,6 +167,7 @@ export default class Room extends Component {
 
   updateCursor({r, c}) {
     if (!this.color || !this.id) return;
+    const { game } = this.state;
     let updateFn = cursors => {
       let updatedAt = getTime();
       cursors = cursors || [];
@@ -178,7 +179,10 @@ export default class Room extends Component {
         c: c,
         updatedAt: updatedAt
       });
-      cursors = cursors.filter(({updatedAt}) => updatedAt >= getTime() - CURSOR_EXPIRE);
+      if (!game.solved) {
+        // don't expire anyone's cursors after game over
+        cursors = cursors.filter(({updatedAt}) => updatedAt >= getTime() - CURSOR_EXPIRE);
+      }
       return cursors;
     };
     this.setState({
