@@ -55,11 +55,15 @@ export default class ActionMenu extends Component {
               <div
                 key={i}
                 className='action-menu--list--action'
-                onClick={()=>{
-                  this.setState({active: false});
+                onMouseDown={(ev)=>{
                   this.props.actions[key]();
-                }
-                } >
+                  this.setState({active: false});
+                }}
+                onTouchStart={(ev)=>{
+                  ev.preventDefault();
+                  this.props.actions[key]();
+                  this.setState({active: false});
+                }} >
                 <span> {key} </span>
               </div>
           ))}
