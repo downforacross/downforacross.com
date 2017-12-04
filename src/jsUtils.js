@@ -47,32 +47,12 @@ window.cancelIdleCallback =
 
 
 const idleCallbacks = {};
-let lastAction1 = 0;
-let lastAction2 = 0;
 function lazy(id, cbk) {
   if (idleCallbacks[id]) {
     cancelIdleCallback(idleCallbacks[id]);
   }
+  idleCallbacks[id] = requestIdleCallback(({didTimeout}) => {if (didTimeout) return; cbk();});
 
-  // allow some instant actions, if at least 1 sec apart
-  // may be bad...
-  var now = new Date().getTime();
-  var thres = now - 1000;
-  if (lastAction1 < thres) {
-    cbk();
-    lastAction1 = now;
-    return;
-  }
-  if (lastAction2 < thres) {
-    cbk();
-    lastAction2 = now;
-    return;
-  }
-  idleCallbacks[id] = requestIdleCallback(({didTimeout}) => {
-    console.log('idleCallback', id);
-    if (didTimeout) return;
-    cbk();
-  });
 }
 
 function rand_int(min, max) {
