@@ -1,4 +1,4 @@
-import nyt_words_long from './vendor/nyt_words_long';
+const nyt_words_long = window.nyt_words_long || [];
 
 const reverseIndex = {};
 
