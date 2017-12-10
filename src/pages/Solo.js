@@ -1,5 +1,5 @@
 import './css/solo.css';
-import Game from './game';
+import Game from './Game';
 import { db } from '../actions';
 import { makeGame } from '../gameUtils';
 import { lazy } from '../jsUtils';

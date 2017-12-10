@@ -1,6 +1,6 @@
-import Welcome from './welcome';
-import Game from './game';
-import Compose from './compose';
-import Solo from './solo';
+import Welcome from './Welcome';
+import Game from './Game';
+import Compose from './Compose';
+import Solo from './Solo';
 
 export { Welcome, Game, Compose, Solo };
