@@ -1,10 +1,11 @@
 import './css/welcome.css';
-import Upload from '../components/Upload';
-import News from '../components/News';
 
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+
+import Upload from '../components/Upload';
+import News from '../components/News';
+import Nav from '../components/Nav';
 
 import actions, { db, getTime } from '../actions';
 
@@ -152,17 +153,8 @@ export default class Welcome extends Component {
         <Helmet>
           <title>Down for a Cross</title>
         </Helmet>
-        <div className='welcome--nav'>
-          <div className='welcome--nav--left'>
-            <Link to='/'>
-              Down for a Cross
-            </Link>
-          </div>
-          <div className='welcome--nav--right'>
-            <a href='http://www.downfiveacross.com'>
-              Old site
-            </a>
-          </div>
+        <div class='welcome--nav'>
+          <Nav/>
         </div>
         <div className='welcome--main'>
           <div className='welcome--browse'>

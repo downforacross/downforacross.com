@@ -8,46 +8,6 @@
   color: #333;
 }
 
-.welcome--nav {
-  padding: 20px 30px 20px 30px;
-  min-height: 17px;
-  display: flex;
-  height: max-content;
-  align-content: center;
-  justify-content: space-between;
-  background-color: #6AA9F4;
-}
-
-.welcome--nav--left {
-  font-size: 17px;
-  font-weight: bold;
-  line-height: 100%;
-}
-
-.welcome--nav--right {
-  margin-top: -15px;
-  margin-right: -10px;
-  align-self: flex-begin;
-}
-
-.welcome--nav--right a {
-  font-family: inherit;
-  font-size: 8px;
-  color: white;
-  opacity: 0;
-  text-decoration: none;
-}
-
-.welcome--nav--right a:hover {
-  opacity: 1;
-}
-
-.welcome--nav--left a {
-  color: white;
-  text-decoration: none;
-  font-size: 17px;
-}
-
 .welcome--main {
   display: flex;
   flex-direction: row;
