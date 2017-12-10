@@ -26,7 +26,7 @@
 
 .header--title {
   font-size: 30px;
-  font-weight: 300;
+  font-weight: 500;
   color: #333;
   text-decoration: none;
 }
@@ -34,7 +34,7 @@
 .header--subtitle {
   margin-top: 10px;
   font-size: 14px;
-  font-weight: 300;
+  font-weight: 500;
 }
 
 .room--toolbar {
