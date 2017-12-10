@@ -18,7 +18,6 @@ export default class Compose extends Component {
     };
     this.pid = undefined;
     this.me = me();
-    console.log('your dfac-id is', this.me);
     this.myPuzzlesRef = db.ref('myPuzzles/' + this.me);
     this.myPuzzlesRef.on('value', lst => {
       this.setState({

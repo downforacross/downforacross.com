@@ -4,7 +4,7 @@ function genId() {
   return (Math.floor(Math.random() * 1000000000)).toString(16);
 }
 
-function me() {
+function getId() {
   if (localStorage) {
     if (localStorage.getItem(meKey)) {
       return localStorage.getItem(meKey);
@@ -14,8 +14,16 @@ function me() {
       return id;
     }
   } else {
-    return 'public';
+    console.log('local storage not detected , unable to assign dfac-id');
+    return genId();
   }
+}
+
+let result = null;
+function me() {
+  if (result) return result;
+  result = getId();
+  return result;
 }
 
 console.log('your dfac-id is:', me());

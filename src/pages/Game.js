@@ -1,5 +1,6 @@
 import './css/game.css';
 
+import me from '../localAuth'
 import { Helmet } from 'react-helmet';
 import React, { Component } from 'react';
 
@@ -117,7 +118,7 @@ export default class Game extends Component {
 
   componentDidMount() {
     this.color = rand_color();
-    this.id = rand_int(1, 1000000000);
+    this.id = me();
     db.ref('game/' + this.props.match.params.gid).on('value', game => {
       lazy('updateGame', () => {
         this.setState({
