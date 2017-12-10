@@ -1,6 +1,6 @@
 import {
   Welcome, Room, Compose, Solo, Upload
-} from './containers/index';
+} from './pages/index';
 
 import ReactDOM from 'react-dom';
 import React from 'react';
