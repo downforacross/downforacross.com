@@ -1,10 +1,10 @@
 import './css/news.css';
-import React, { Component } from 'react';
+import React from 'react';
 
 const NEWS_ITEMS = [
   {
     date: '11/27/2017',
-    message: <span>Check out our new companion Chrome Extension, <span style={{fontWeight: 300}}>Download a Cross</span>! Available on the <a target="_blank" href="https://chrome.google.com/webstore/detail/download-a-cross/idbdbedhgabnbjfjecpflfomnklpllen?hl=en">Chrome Web Store</a>.</span>,
+    message: <span>Check out our new companion Chrome Extension, <span style={{fontWeight: 600}}>Download a Cross</span>! Available on the <a target="_blank" rel="noopener noreferrer" href="https://chrome.google.com/webstore/detail/download-a-cross/idbdbedhgabnbjfjecpflfomnklpllen?hl=en">Chrome Web Store</a>.</span>,
     hidden: false,
   },
   {
