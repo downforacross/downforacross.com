@@ -9,8 +9,10 @@
 }
 
 .welcome--nav {
-  padding: 20px 30px 35px 30px;
+  padding: 20px 30px 20px 30px;
+  min-height: 17px;
   display: flex;
+  height: max-content;
   align-content: center;
   justify-content: space-between;
   background-color: #6AA9F4;
