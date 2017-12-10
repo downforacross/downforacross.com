@@ -1,4 +1,4 @@
-import './css/room.css';
+import './css/game.css';
 import { db, getTime } from '../actions';
 import Player from '../components/player';
 import Chat from '../components/chat';
@@ -71,7 +71,7 @@ function isMobile() {
 }
 
 
-export default class Room extends Component {
+export default class Game extends Component {
 
   constructor() {
     super();

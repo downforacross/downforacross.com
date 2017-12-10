@@ -1,11 +1,11 @@
 import './css/solo.css';
-import Room from './room';
+import Game from './game';
 import { db } from '../actions';
 import { makeGame } from '../gameUtils';
 import { lazy } from '../jsUtils';
 import me from '../localAuth';
 
-export default class Solo extends Room {
+export default class Solo extends Game {
 
   componentDidMount() {
     this.color = 'rgb(118, 226, 118)';
