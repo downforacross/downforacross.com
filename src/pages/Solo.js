@@ -3,7 +3,7 @@ import Game from './Game';
 import { db } from '../actions';
 import { makeGame } from '../gameUtils';
 import { lazy } from '../jsUtils';
-import me from '../localAuth';
+import { getId } from '../localAuth';
 
 export default class Solo extends Game {
 
@@ -36,7 +36,7 @@ export default class Solo extends Game {
   }
 
   loadGame(success, fail) {
-    const id = me();
+    const id = getId();
 
     // this is such a hack
     if (id !== 'public') {
@@ -54,7 +54,7 @@ export default class Solo extends Game {
   }
 
   saveGame(game) {
-    const id = me();
+    const id = getId();
     if (id !== 'public') {
       db.ref('solo/' + id).set(game);
     }

@@ -1,6 +1,6 @@
 import './css/game.css';
 
-import me from '../localAuth'
+import { getId } from '../localAuth'
 import { Helmet } from 'react-helmet';
 import React, { Component } from 'react';
 
@@ -11,7 +11,7 @@ import Toolbar from '../components/Toolbar';
 import { db, getTime } from '../actions';
 import GridObject from '../utils/Grid';
 import { makeEmptyGame } from '../gameUtils';
-import { toArr, lazy, rand_int, rand_color } from '../jsUtils';
+import { toArr, lazy, rand_color } from '../jsUtils';
 
 
 const CURSOR_EXPIRE = 1000 * 60; // 60 seconds
@@ -118,7 +118,7 @@ export default class Game extends Component {
 
   componentDidMount() {
     this.color = rand_color();
-    this.id = me();
+    this.id = getId();
     db.ref('game/' + this.props.match.params.gid).on('value', game => {
       lazy('updateGame', () => {
         this.setState({

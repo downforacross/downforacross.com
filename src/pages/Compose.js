@@ -6,7 +6,7 @@ import Editor from '../components/Editor';
 import Create from '../components/Create';
 import EditableSpan from '../components/EditableSpan';
 
-import me from '../localAuth'
+import { getId } from '../localAuth'
 
 export default class Compose extends Component {
 
@@ -17,7 +17,7 @@ export default class Compose extends Component {
       myPuzzles: []
     };
     this.pid = undefined;
-    this.me = me();
+    this.me = getId();
     this.myPuzzlesRef = db.ref('myPuzzles/' + this.me);
     this.myPuzzlesRef.on('value', lst => {
       this.setState({
