@@ -1,5 +1,5 @@
 import {
-  Welcome, Game, Compose, Solo, Upload
+  Welcome, Game, Compose, Solo,
 } from './pages/index';
 
 import ReactDOM from 'react-dom';
@@ -19,7 +19,6 @@ ReactDOM.render(
       <Route exact path="/game/:gid" component={Game}/>
       <Route exact path="/game/solo/:pid" component={Solo}/>
       <Route path="/puzzle/:pid" component={Solo}/>
-      <Route exact path="/upload" component={Upload}/>
       <Route exact path="/compose" component={Compose}/>
     </div>
   </Router>,

@@ -1,7 +1,6 @@
 import Welcome from './welcome';
-import Room from './room';
+import Game from './game';
 import Compose from './compose';
-import Upload from './upload';
 import Solo from './solo';
 
-export { Welcome, Room, Compose, Solo, Upload };
+export { Welcome, Game, Compose, Solo };
