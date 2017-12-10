@@ -61,3 +61,20 @@
   left: 10px;
   font-size: 10px;
 }
+
+.toggle-mobile .fa:first-child {
+  transform: translateY(-1px);
+}
+
+.toggle-mobile .separator {
+  margin-left: 2px;
+  margin-right: 2px;
+}
+
+.toggle-mobile .fa {
+  color: #888;
+}
+
+.toggle-mobile .fa.toggle-mobile--on {
+  color: #000;
+}

@@ -13,7 +13,7 @@ import { makeEmptyGame } from '../gameUtils';
 import { toArr, lazy, rand_int, rand_color } from '../jsUtils';
 
 
-const CURSOR_EXPIRE = 1000 * 60; // 20 seconds
+const CURSOR_EXPIRE = 1000 * 60; // 60 seconds
 
 function ToggleMobile({ mobile, onClick }) {
   return (
@@ -24,10 +24,19 @@ function ToggleMobile({ mobile, onClick }) {
         onClick();
       }}
     >
-      { mobile
-          ? <i className="fa fa-mobile fa-lg" aria-hidden="true"/>
-          : <i className="fa fa-desktop" aria-hidden="true"/>
-      }
+      <i className={"fa fa-mobile fa-lg" + (mobile
+        ? ' toggle-mobile--on'
+        : '') }
+        aria-hidden="true"
+      />
+      <span className='separator'>
+        |
+      </span>
+      <i className={"fa fa-desktop" + (!mobile
+        ? ' toggle-mobile--on'
+        : '') }
+        aria-hidden="true"
+      />
     </a>
   );
 }
@@ -368,6 +377,8 @@ export default class Game extends Component {
     const { mobile } = this.state;
     this.setState({
       mobile: !mobile,
+    }, () => {
+      window.scrollTo(0, 0);
     });
   }
 
