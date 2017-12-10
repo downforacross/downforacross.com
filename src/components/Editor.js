@@ -1,10 +1,10 @@
 import './css/editor.css';
 
-import Grid from './grid';
-import GridControls from './gridControls';
 import React, { Component } from 'react';
-import EditableSpan from '../components/editableSpan';
-import Hints from '../components/hints';
+import Grid from './Grid';
+import GridControls from './GridControls';
+import EditableSpan from './EditableSpan';
+import Hints from './Hints';
 
 import GridObject from '../utils/Grid';
 import * as gameUtils from '../gameUtils';

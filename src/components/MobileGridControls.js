@@ -1,7 +1,7 @@
 import './css/mobileGridControls.css';
 
 import React from 'react';
-import GridControls from './gridControls';
+import GridControls from './GridControls';
 
 export default class MobileGridControls extends GridControls {
   constructor() {

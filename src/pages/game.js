@@ -1,14 +1,17 @@
 import './css/game.css';
+
+import { Helmet } from 'react-helmet';
+import React, { Component } from 'react';
+
+import Player from '../components/Player';
+import Chat from '../components/Chat';
+import Toolbar from '../components/Toolbar';
+
 import { db, getTime } from '../actions';
-import Player from '../components/player';
-import Chat from '../components/chat';
-import Toolbar from '../components/toolbar';
 import GridObject from '../utils/Grid';
 import { makeEmptyGame } from '../gameUtils';
 import { toArr, lazy, rand_int, rand_color } from '../jsUtils';
 
-import { Helmet } from 'react-helmet';
-import React, { Component } from 'react';
 
 const CURSOR_EXPIRE = 1000 * 60; // 20 seconds
 

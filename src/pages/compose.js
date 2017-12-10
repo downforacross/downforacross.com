@@ -1,9 +1,10 @@
 import './css/compose.css';
 import actions, { db } from '../actions';
+
 import React, { Component } from 'react';
-import Editor from '../components/editor';
-import Create from '../components/create';
-import EditableSpan from '../components/editableSpan';
+import Editor from '../components/Editor';
+import Create from '../components/Create';
+import EditableSpan from '../components/EditableSpan';
 
 import me from '../localAuth'
 

@@ -1,13 +1,16 @@
 import './css/player.css';
 
-import Grid from './grid';
-import Clues from './clues';
-import GridControls from './gridControls';
-import MobileGridControls from './mobileGridControls';
 import React, { Component } from 'react';
+
 import { lazy } from '../jsUtils';
 
 import GridObject from '../utils/Grid';
+
+import Grid from './Grid';
+import Clues from './Clues';
+import GridControls from './GridControls';
+import MobileGridControls from './MobileGridControls';
+
 import * as gameUtils from '../gameUtils';
 
 /*

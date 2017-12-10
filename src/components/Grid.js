@@ -2,7 +2,7 @@ import './css/grid.css';
 
 import React, { Component } from 'react';
 import GridObject from '../utils/Grid';
-import Cell from './cell';
+import Cell from './Cell';
 
 /*
  * Summary of Grid component

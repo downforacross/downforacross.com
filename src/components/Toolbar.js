@@ -1,8 +1,8 @@
 import './css/toolbar.css';
 import React, { Component } from 'react';
 
-import Clock from '../components/clock';
-import ActionMenu from '../components/ActionMenu';
+import Clock from './Clock';
+import ActionMenu from './ActionMenu';
 
 export default class Toolbar extends Component {
 

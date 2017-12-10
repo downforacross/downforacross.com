@@ -1,7 +1,7 @@
 import './css/upload.css';
 
 import actions from '../actions';
-import FileUploader from './fileUploader';
+import FileUploader from './FileUploader';
 
 import React, { Component } from 'react';
 

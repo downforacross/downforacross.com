@@ -1,6 +1,6 @@
 import './css/welcome.css';
-import Upload from '../components/upload';
-import News from '../components/news';
+import Upload from '../components/Upload';
+import News from '../components/News';
 
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
