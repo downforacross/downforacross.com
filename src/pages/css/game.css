@@ -1,9 +1,12 @@
 .room {
-  font-family: avenir, "helvetica neue", "Helvetica", "arial", sans-serif;
+  font-family: "Avenir Next", "Avenir", "sans serif";
   height: 100%;
+  width: 100%;
+  position: relative;
 }
 
 .room.mobile {
+  width: min-content;
   display: flex;
   flex-direction: column;
 }
@@ -42,7 +45,6 @@
   padding: 15px;
   display: flex;
   flex-direction: row;
-  /* width: min-content; */
 }
 
 .room.mobile .room--game-and-chat-wrapper {
@@ -58,7 +60,7 @@
   display: block;
   position: absolute;
   top: 10px;
-  left: 10px;
+  right: 10px;
   font-size: 10px;
 }
 

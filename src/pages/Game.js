@@ -7,6 +7,7 @@ import React, { Component } from 'react';
 import Player from '../components/Player';
 import Chat from '../components/Chat';
 import Toolbar from '../components/Toolbar';
+import Nav from '../components/Nav';
 
 import { db, getTime } from '../actions';
 import GridObject from '../utils/Grid';
@@ -396,6 +397,9 @@ export default class Game extends Component {
 
     return (
       <div className={'room ' + (mobile ? 'mobile' : '')}>
+        <Nav
+          mobile={mobile}
+        />
         <Helmet>
           <title>{this.getPuzzleTitle()}</title>
         </Helmet>

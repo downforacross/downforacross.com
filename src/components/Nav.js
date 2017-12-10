@@ -4,7 +4,9 @@ import { Link } from 'react-router-dom';
 
 import React  from 'react';
 
-export default function Nav() {
+export default function Nav(props) {
+  if (props.mobile) return null; // no nav for mobile
+
   return (
     <div className='nav'>
       <div className='nav--left'>
