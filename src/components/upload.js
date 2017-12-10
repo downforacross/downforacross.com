@@ -8,39 +8,25 @@ import React, { Component } from 'react';
 export default class Upload extends Component {
   constructor() {
     super();
-    this.state = {
-      puzzle: null,
-      convertedPuzzle: null,
-    };
-    this._success = this.success.bind(this);
-    this._fail = this.fail.bind(this);
-    this._create = this.create.bind(this);
+    this.state = { puzzle: null };
   }
 
-  success(convertedPuzzle) {
-    console.log(convertedPuzzle);
-    this.setState({
-      puzzle: null,
-      convertedPuzzle,
+  success = (puzzle) => {
+    this.setState({ puzzle });
+  }
+
+  create = () => {
+    const { puzzle } = this.state;
+    actions.createPuzzle(puzzle, puzzle => {
+      this.setState({ puzzle: null });
     });
   }
 
-  create() {
-    const { convertedPuzzle } = this.state;
-    actions.createPuzzle(convertedPuzzle, puzzle => {
-      this.setState({
-        convertedPuzzle: null,
-        puzzle,
-      });
-    });
-  }
-
-  fail() {
-    this.setState({ puzzle: null });
+  fail = () => {
   }
 
   renderSuccessMessage() {
-    const { info } = this.state.convertedPuzzle || {};
+    const { info } = this.state.puzzle || {};
     const { title } = info || {};
     if (title) {
       return (
@@ -54,13 +40,13 @@ export default class Upload extends Component {
   }
 
   renderButton() {
-    const { info } = this.state.convertedPuzzle || {};
+    const { info } = this.state.puzzle || {};
     const { type } = info || {};
     if (type) {
       return (
         <button
           className='upload--button'
-          onClick={this._create}
+          onClick={this.create}
         >
           {`Add to the ${type} repository`}
         </button>
@@ -77,8 +63,8 @@ export default class Upload extends Component {
               Import
             </div>
             <FileUploader
-              success={this._success}
-              fail={this._fail}
+              success={this.success}
+              fail={this.fail}
             />
             {this.renderSuccessMessage()}
             {this.renderButton()}
