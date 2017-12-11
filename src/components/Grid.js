@@ -91,6 +91,7 @@ export default class Grid extends Component {
   render() {
     const size = this.props.size;
     const sizeClass = this.getSizeClass(size);
+    const key = size + '-';
     return (
       <table
         style={{
@@ -102,7 +103,7 @@ export default class Grid extends Component {
         <tbody>
           {
             this.props.grid.map((row, r) => (
-              <tr key={r}>
+              <tr key={key+r}>
                 {
                   row.map((cell, c) => (
                     <td
