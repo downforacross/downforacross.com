@@ -1,4 +1,5 @@
 import nameGenerator from './nameGenerator';
+import { db } from './actions';
 
 const idKey = 'dfac-id';
 const usernameKey = 'dfac-username';
@@ -52,6 +53,8 @@ function setUsername(username) {
   if (localStorage) {
     localStorage.setItem(usernameKey, username);
   }
+  const id = getId();
+  db.ref(`user/${id}/name`).set(username);
 }
 
 console.log('your dfac-id is:', getId());

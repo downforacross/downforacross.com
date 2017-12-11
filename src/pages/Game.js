@@ -10,6 +10,7 @@ import Toolbar from '../components/Toolbar';
 import Nav from '../components/Nav';
 
 import { db, getTime } from '../actions';
+import userActions from '../userActions';
 import GridObject from '../utils/Grid';
 import { makeEmptyGame } from '../gameUtils';
 import { toArr, lazy, rand_color } from '../jsUtils';
@@ -207,6 +208,7 @@ export default class Game extends Component {
       return ar.length > num ? ar.slice(ar.length - num) : ar;
     }
 
+    userActions.joinGame(this.props.match.params.gid);
     this.cellTransaction(r, c, cell => (
       Object.assign(cell, {
         edits: takeLast(10, [...(cell.edits || []), {
