@@ -15,9 +15,8 @@ function getTime() {
 }
 
 const actions = {
-
   // puzzle: { title, type, grid, clues }
-  createPuzzle: function createPuzzle(puzzle, cbk) {
+  createPuzzle: (puzzle, cbk) => {
     db.ref('counters').transaction(counters => {
       const pid = ((counters && counters.pid) || 0) + 1;
       const title = puzzle.info.title;
@@ -38,7 +37,7 @@ const actions = {
     });
   },
 
-  createGame({ name, pid }, cbk) {
+  createGame: ({ name, pid }, cbk) => {
     db.ref('counters').transaction(counters => {
       const gid = ((counters && counters.gid) || 0) + 1;
       return {...counters, gid: gid}
