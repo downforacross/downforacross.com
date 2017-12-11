@@ -114,11 +114,11 @@ export default class Toolbar extends Component {
                 ? null
                 : this.renderRevealMenu()
             }
-            <div className='toolbar--menu reset'>
-              {
-                this.renderResetMenu()
-              }
-            </div>
+            {
+              solved
+              ? this.renderResetMenu()
+              : null
+            }
           </div>
         </div>
       );
