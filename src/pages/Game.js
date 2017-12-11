@@ -27,16 +27,16 @@ function ToggleMobile({ mobile, onClick }) {
       }}
     >
       <i className={"fa fa-mobile fa-lg" + (mobile
-        ? ' toggle-mobile--on'
-        : '') }
+        ? ''
+        : ' toggle-mobile--off') }
         aria-hidden="true"
       />
       <span className='separator'>
         |
       </span>
       <i className={"fa fa-desktop" + (!mobile
-        ? ' toggle-mobile--on'
-        : '') }
+        ? ''
+        : ' toggle-mobile--off') }
         aria-hidden="true"
       />
     </a>

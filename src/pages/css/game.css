@@ -2,6 +2,7 @@
   font-family: "Avenir Next", "Avenir", "sans serif";
   height: 100%;
   width: 100%;
+  min-width: max-content;
   position: relative;
 }
 
@@ -13,7 +14,7 @@
 
 .room--header {
   border: 1px solid #E2E2E2;
-  padding: 20px 20px 20px 20px;
+  padding: 20px 20px 20px 30px;
   color: #333;
 }
 
@@ -45,6 +46,7 @@
   padding: 15px;
   display: flex;
   flex-direction: row;
+  width: max-content;
 }
 
 .room.mobile .room--game-and-chat-wrapper {
@@ -73,10 +75,14 @@
   margin-right: 2px;
 }
 
-.toggle-mobile .fa {
-  color: #888;
+.toggle-mobile {
+  color: #FFF;
 }
 
-.toggle-mobile .fa.toggle-mobile--on {
+.mobile .toggle-mobile {
   color: #000;
+}
+
+.toggle-mobile .fa.toggle-mobile--off {
+  opacity: .3;
 }
