@@ -14,8 +14,8 @@ import GridObject from '../utils/Grid';
 import { makeEmptyGame } from '../gameUtils';
 import { toArr, lazy, rand_color } from '../jsUtils';
 
-
 const CURSOR_EXPIRE = 1000 * 60; // 60 seconds
+
 
 function ToggleMobile({ mobile, onClick }) {
   return (
@@ -97,6 +97,7 @@ export default class Game extends Component {
       uid: 0,
       game: makeEmptyGame(),
       mobile: isMobile(),
+      cursors: {},
     };
 
     this._sendChatMessage = this.sendChatMessage.bind(this);
@@ -130,7 +131,7 @@ export default class Game extends Component {
     db.ref('cursors/' + this.props.match.params.gid).on('value', cursors => {
       lazy('updateCursors', () => {
         this.setState({
-          cursors: cursors.val()
+          cursors: cursors.val() || {}
         });
       });
     });
@@ -154,8 +155,7 @@ export default class Game extends Component {
     });
   }
 
-  cursorTransaction(fn, cbk) {
-    db.ref('cursors/' + this.props.match.params.gid).transaction(fn, cbk);
+  cursorTransaction(fn, cbk, ) {
   }
 
   checkIsSolved() {
@@ -181,32 +181,22 @@ export default class Game extends Component {
 
   updateCursor({r, c}) {
     if (!this.color || !this.id) return;
-    const { game } = this.state;
-    let updateFn = cursors => {
-      let updatedAt = getTime();
-      cursors = cursors || [];
-      cursors = cursors.filter(({id}) => id !== this.id);
-      cursors.push({
-        id: this.id,
-        color: this.color,
-        r: r,
-        c: c,
-        updatedAt: updatedAt
-      });
-      if (!game.solved) {
-        // don't expire anyone's cursors after game over
-        cursors = cursors.filter(({updatedAt}) => updatedAt >= getTime() - CURSOR_EXPIRE);
-      }
-      return cursors;
-    };
-    this.setState({
-      cursors: updateFn(this.state.cursors)
-    });
-    this.cursorTransaction(updateFn);
+    const id = this.id;
+    const { game, cursors } = this.state;
+    const color = this.color;
+    const postGame = game.solved ? true : false;
+    let updatedAt = getTime();
+    if (game.solved) {
+      updatedAt = cursors[id] && cursors[id].updatedAt;
+    }
+    console.log({color, r, c, updatedAt, postGame});
+    if (cursors[id] || !game.solved) {
+      db.ref(`cursors/${this.props.match.params.gid}/${this.id}`).set({ color, r, c, updatedAt, postGame });
+    }
   }
 
   updateGrid(r, c, value) {
-    if (this.checkIsSolved()) {
+    if (this.state.game.solved) {
       return;
     }
     if (this.state.game.grid[r][c].good) {
@@ -229,6 +219,9 @@ export default class Game extends Component {
       })
     ), () => {
       this.checkIsSolved();
+      setTimeout(() => {
+        this.checkIsSolved();
+      }, 200);
     });
 
     this.startClock();
@@ -333,7 +326,9 @@ export default class Game extends Component {
       });
       return game;
     }, () => {
-      this.checkIsSolved();
+      setTimeout(() => {
+        this.checkIsSolved();
+      }, 200);
     });
   }
 
@@ -353,7 +348,9 @@ export default class Game extends Component {
       });
       return game;
     }, () => {
-      this.checkIsSolved();
+      setTimeout(() => {
+        this.checkIsSolved();
+      }, 200);
     });
   }
 
@@ -383,6 +380,25 @@ export default class Game extends Component {
       window.scrollTo(0, 0);
     });
   }
+
+  getCursors() {
+    const { cursors } = this.state;
+    if (Array.isArray(cursors)) return [];
+    let cursorArray = Object.keys(cursors || {})
+      .map(id => ({
+        ...cursors[id],
+        id,
+      }));
+    if (cursorArray.length > 0) {
+      const lastTime = Math.max(...cursorArray.map(({updatedAt = 0}) => updatedAt));
+      cursorArray = cursorArray.filter(({ updatedAt, postGame }) => (
+        postGame || updatedAt > lastTime - CURSOR_EXPIRE
+      ));
+    }
+    cursorArray = cursorArray.filter(({id}) => id !== this.id);
+    return cursorArray;
+  }
+
 
   render() {
 
@@ -437,7 +453,7 @@ export default class Game extends Component {
               across: toArr(this.state.game.clues.across),
               down: toArr(this.state.game.clues.down)
             }}
-            cursors={(this.state.cursors || []).filter(({id}) => id !== this.id)}
+            cursors={this.getCursors()}
             frozen={this.state.game.solved}
             myColor={this.color}
             updateGrid={this._updateGrid}
