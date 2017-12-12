@@ -47,10 +47,6 @@ const actions = {
         return;
       }
       const gid = snapshot.child('gid').val();
-      db.ref('gamelist/' + gid).set({
-        gid: gid,
-        name: name
-      });
       db.ref('puzzle/' + pid).once('value', puzzle => {
         const game = makeGame(gid, name, puzzle.val());
         db.ref('game/' + gid).set(game);

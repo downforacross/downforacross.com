@@ -96,25 +96,17 @@ export default class Welcome extends Component {
   constructor() {
     super();
     this.state = {
-      gameList: [],
       puzzleList: [],
     };
-    this.gameListRef = db.ref('gamelist');
     this.puzzleListRef = db.ref('puzzlelist');
   }
 
   componentDidMount() {
-    this.gameListRef.on('value', this.updateGameList.bind(this));
     this.puzzleListRef.on('value', this.updatePuzzleList.bind(this));
   }
 
   componentWillUnmount() {
-    this.gameListRef.off();
     this.puzzleListRef.off();
-  }
-
-  updateGameList(gameList) {
-    this.setState({ gameList: values(gameList.val() || {} )});
   }
 
   updatePuzzleList(puzzleList) {
@@ -153,7 +145,7 @@ export default class Welcome extends Component {
         <Helmet>
           <title>Down for a Cross</title>
         </Helmet>
-        <div class='welcome--nav'>
+        <div className='welcome--nav'>
           <Nav/>
         </div>
         <div className='welcome--main'>
