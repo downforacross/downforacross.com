@@ -10,7 +10,7 @@ export default class Solo extends Game {
     actions.createGame({
       name: 'Public Game',
       pid: pid,
-      gid: `solo-${getId()}-${pid}`,
+      gid: this.computeGid(),
     }, gid => {
       cbk && cbk();
     });
@@ -18,7 +18,7 @@ export default class Solo extends Game {
 
   computeGid() {
     const pid = this.props.match.params.pid;
-    return `solo-${getId()}-${pid}`;
+    return `solo/${getId()}/${pid}`;
   }
 
   computeColor() {

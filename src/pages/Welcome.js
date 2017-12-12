@@ -37,7 +37,7 @@ class Entry extends Component {
     actions.createGame({
       name: 'Public Game',
       pid: pid,
-      gid: `solo-${getId()}-${pid}`,
+      gid: `solo/${getId()}/${pid}`,
     }, gid => {
       this.props.history.push(`/game/solo/${pid}`);
     });

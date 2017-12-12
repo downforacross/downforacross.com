@@ -39,14 +39,23 @@ const actions = {
 
   createGame: ({ name, pid, gid }, cbk) => {
     db.ref('counters').transaction(counters => {
-      gid = gid || ((counters && counters.gid) || 0) + 1;
-      return {...counters, gid: gid}
+      let nextGid = ((counters && counters.gid) || 0);
+      if (!gid) { // then auto-assign the next one by incrementing
+        nextGid += 1; // if this isn't an int we are fucked lol
+      }
+      return {
+        ...counters,
+        gid: nextGid
+      };
     }, (error, committed, snapshot) => {
       if (error || !committed) {
         console.error('could not create game');
         return;
       }
-      const gid = snapshot.child('gid').val();
+      if (!gid) { // auto assign the result of our increment
+        // should be atomic or something
+        gid = snapshot.child('gid').val();
+      }
       db.ref('puzzle/' + pid).once('value', puzzle => {
         const game = makeGame(gid, name, puzzle.val());
         db.ref('game/' + gid).set(game);
