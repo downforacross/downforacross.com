@@ -1,86 +1,32 @@
 import './css/solo.css';
 import Game from './Game';
-import { db } from '../actions';
-import { makeGame } from '../gameUtils';
-import { lazy } from '../jsUtils';
 import { getId } from '../localAuth';
+import actions from '../actions';
 
 export default class Solo extends Game {
 
-  componentDidMount() {
-    this.color = 'rgb(118, 226, 118)';
-    this.id = 1;
-    this.pid = parseInt(this.props.match.params.pid, 10);
-    this.loadGame(game => {
-      this.setState({
-        loaded: true,
-        game: game,
-      });
-    }, () => {
-      db.ref('puzzle/' + this.pid).on('value', puzzle => {
-        if (!this.state.loaded) {
-          const game = makeGame(-1, '', puzzle.val());
-          this.setState({
-            loaded: true,
-            game: game
-          });
-        } else {
-          // TODO play while puzzle is being edited?
-        }
-      });
+  gameDoesNotExist(cbk) {
+    const pid = this.props.match.params.pid;
+    actions.createGame({
+      name: 'Public Game',
+      pid: pid,
+      gid: `solo-${getId()}-${pid}`,
+    }, gid => {
+      cbk && cbk();
     });
   }
 
-  componentWillUnmount() {
-    db.ref('puzzle/' + this.pid).off();
+  computeGid() {
+    const pid = this.props.match.params.pid;
+    return `solo-${getId()}-${pid}`;
   }
 
-  loadGame(success, fail) {
-    const id = getId();
-
-    // this is such a hack
-    if (id !== 'public') {
-      db.ref('solo/' + id).once('value', game => {
-        game = game.val();
-        if (game && game.pid === this.pid) {
-          success(game);
-        } else {
-          fail();
-        }
-      });
-    } else {
-      fail();
-    }
-  }
-
-  saveGame(game) {
-    const id = getId();
-    if (id !== 'public') {
-      db.ref('solo/' + id).set(game);
-    }
-  }
-
-  transaction(fn, cbk) {
-    this.setState({
-      game: fn(this.state.game)
-    }, () => {
-      lazy('saveGame', () => {
-        this.saveGame(this.state.game);
-      });
-      if (cbk) cbk();
-    });
-  }
-
-  cellTransaction(r, c, fn, cbk) {
-    this.transaction(game => {
-      if (game && game.grid && game.grid[r] && game.grid[r][c]) {
-        game.grid[r][c] = fn(game.grid[r][c]);
-      }
-      return game;
-    }, cbk);
+  computeColor() {
+    return 'rgb(118, 226, 118)';
   }
 
   shouldRenderChat() { // solo games don't have chat
     return false;
   }
+
 };

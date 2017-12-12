@@ -119,17 +119,26 @@ export default class Game extends Component {
     return new GridObject(this.state.game.grid);
   }
 
+  computeGid() {
+    return this.props.match.params.gid;
+  }
+
+  computeColor() {
+    return rand_color();
+  }
+
   componentDidMount() {
-    this.color = rand_color();
+    this.gid = this.computeGid();
+    this.color = this.computeColor();
     this.id = getId();
-    db.ref('game/' + this.props.match.params.gid).on('value', game => {
+    db.ref('game/' + this.gid).on('value', game => {
       lazy('updateGame', () => {
         this.setState({
           game: game.val()
         });
       });
     });
-    db.ref('cursors/' + this.props.match.params.gid).on('value', cursors => {
+    db.ref('cursors/' + this.gid).on('value', cursors => {
       lazy('updateCursors', () => {
         this.setState({
           cursors: cursors.val() || {}
@@ -139,15 +148,15 @@ export default class Game extends Component {
   }
 
   componentWillUnmount() {
-    db.ref('game/' + this.props.match.params.gid).off();
+    db.ref('game/' + this.gid).off();
   }
 
   transaction(fn, cbk) {
-    db.ref('game/' + this.props.match.params.gid).transaction(fn, cbk);
+    db.ref('game/' + this.gid).transaction(fn, cbk);
   }
 
   cellTransaction(r, c, fn, cbk) {
-    db.ref('game/' + this.props.match.params.gid + '/grid/' + r + '/' + c).transaction(fn, cbk);
+    db.ref('game/' + this.gid + '/grid/' + r + '/' + c).transaction(fn, cbk);
     // TODO: hack to get around setting this.state, but mutates existing grid.
     const grid = this.state.game.grid;
     grid[r][c] = fn(grid[r][c])
@@ -192,7 +201,7 @@ export default class Game extends Component {
     }
     console.log({color, r, c, updatedAt, postGame});
     if (cursors[id] || !game.solved) {
-      db.ref(`cursors/${this.props.match.params.gid}/${this.id}`).set({ color, r, c, updatedAt, postGame });
+      db.ref(`cursors/${this.gid}/${this.id}`).set({ color, r, c, updatedAt, postGame });
     }
   }
 
@@ -208,7 +217,7 @@ export default class Game extends Component {
       return ar.length > num ? ar.slice(ar.length - num) : ar;
     }
 
-    userActions.joinGame(this.props.match.params.gid);
+    userActions.joinGame(this.gid);
     this.cellTransaction(r, c, cell => (
       Object.assign(cell, {
         edits: takeLast(10, [...(cell.edits || []), {
@@ -403,11 +412,16 @@ export default class Game extends Component {
 
 
   render() {
-
     const {
       game,
       mobile,
     } = this.state;
+
+    if (!game) {
+      this.gameDoesNotExist();
+      return <div>Loading...</div>
+    }
+
     const { grid } = game;
     const screenWidth = this.screenWidth;
     const width = Math.min(35 * 15, screenWidth);

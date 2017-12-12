@@ -8,6 +8,7 @@ import News from '../components/News';
 import Nav from '../components/Nav';
 
 import actions, { db, getTime } from '../actions';
+import { getId } from '../localAuth';
 
 function values(obj) {
   return Object.keys(obj).map(key => obj[key]);
@@ -33,7 +34,13 @@ class Entry extends Component {
 
   playGameSolo() {
     const { pid } = this.props;
-    this.props.history.push(`/game/solo/${pid}`);
+    actions.createGame({
+      name: 'Public Game',
+      pid: pid,
+      gid: `solo-${getId()}-${pid}`,
+    }, gid => {
+      this.props.history.push(`/game/solo/${pid}`);
+    });
   }
 
   isNew() {

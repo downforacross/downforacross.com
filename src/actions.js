@@ -37,9 +37,9 @@ const actions = {
     });
   },
 
-  createGame: ({ name, pid }, cbk) => {
+  createGame: ({ name, pid, gid }, cbk) => {
     db.ref('counters').transaction(counters => {
-      const gid = ((counters && counters.gid) || 0) + 1;
+      gid = gid || ((counters && counters.gid) || 0) + 1;
       return {...counters, gid: gid}
     }, (error, committed, snapshot) => {
       if (error || !committed) {
