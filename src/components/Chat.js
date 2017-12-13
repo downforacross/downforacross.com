@@ -2,7 +2,7 @@ import './css/chat.css';
 
 import React, { Component } from 'react';
 
-import { getUsername, setUsername } from '../localAuth';
+import nameGenerator from '../nameGenerator';
 
 /*
  * Summary of Chat component
@@ -22,7 +22,7 @@ export default class Chat extends Component {
     super();
     this.state = {
       message: '',
-      username: getUsername(),
+      username: nameGenerator(),
     };
   }
 
@@ -59,7 +59,6 @@ export default class Chat extends Component {
   onChangeUsername(ev) {
     const username = ev.target.value;
     this.setState({ username });
-    setUsername(username);
   }
 
   focus() {

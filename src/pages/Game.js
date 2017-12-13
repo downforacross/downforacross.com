@@ -1,6 +1,6 @@
 import './css/game.css';
 
-import { getId } from '../localAuth'
+import { getId, recordUsername } from '../localAuth'
 import { Helmet } from 'react-helmet';
 import React, { Component } from 'react';
 
@@ -238,7 +238,8 @@ export default class Game extends Component {
     this.startClock();
   }
 
-  sendChatMessage(sender, text) {
+  sendChatMessage(username, text) {
+    recordUsername(username);
     this.transaction(game => {
       game = game || {};
       game.chat = game.chat || {};
@@ -249,7 +250,11 @@ export default class Game extends Component {
           ...game.chat,
           messages: [
             ...game.chat.messages,
-            { sender, text }
+            {
+              senderId: getId(),
+              sender: username,
+              text,
+            }
           ]
         }
       });

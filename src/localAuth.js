@@ -1,8 +1,6 @@
-import nameGenerator from './nameGenerator';
 import { db } from './actions';
 
 const idKey = 'dfac-id';
-const usernameKey = 'dfac-username';
 
 function genId() {
   return (Math.floor(Math.random() * 1000000000)).toString(16);
@@ -34,29 +32,11 @@ function getId() {
   return cachedId;
 }
 
-function getUsername() {
-  if (localStorage) {
-    const result = localStorage.getItem(usernameKey);
-    if (!result) {
-      const username = nameGenerator();
-      localStorage.setItem(usernameKey, username);
-      return username;
-    } else {
-      return result;
-    }
-  } else {
-    return nameGenerator();
-  }
-}
-
-function setUsername(username) {
-  if (localStorage) {
-    localStorage.setItem(usernameKey, username);
-  }
+function recordUsername(username) {
+  console.log('recordUsername', username);
   const id = getId();
-  db.ref(`user/${id}/name`).set(username);
+  db.ref(`user/${id}/names/${username}`).transaction((count = 0) => count + 1);
 }
 
 console.log('your dfac-id is:', getId());
-console.log('your dfac-username is:', getUsername());
-export { getId, getUsername, setUsername };
+export { getId, recordUsername };
