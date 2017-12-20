@@ -14,6 +14,15 @@ function values(obj) {
   return Object.keys(obj).map(key => obj[key]);
 }
 
+function EntryTitle({title}) {
+  if (title.length > 60) {
+    title = title.substring(0, 55) + ' ...';
+  }
+  return <span>
+    {title}
+  </span>;
+}
+
 class Entry extends Component {
   constructor() {
     super();
@@ -54,7 +63,7 @@ class Entry extends Component {
 
     const front = (
       <div style={{ textDecoration: 'none', color: 'black' }} className='entry--front'>
-        <div className='entry--front--title'>{title}</div>
+        <div className='entry--front--title'><EntryTitle title={title}/></div>
         <div className='entry--front--author'>{author}</div>
       </div>
     );
