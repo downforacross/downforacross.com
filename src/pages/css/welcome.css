@@ -83,6 +83,7 @@
 .entry--back {
   opacity: 0;
   transition: opacity .2s ease-in;
+  -moz-user-select: none;
 }
 
 .entry.flipped .entry--back {
