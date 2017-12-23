@@ -217,7 +217,7 @@ export default class Game extends Component {
       return ar.length > num ? ar.slice(ar.length - num) : ar;
     }
 
-    userActions.joinGame(this.gid);
+    userActions.joinGame(this.gid, this.state.game);
     this.cellTransaction(r, c, cell => (
       Object.assign(cell, {
         edits: takeLast(10, [...(cell.edits || []), {
