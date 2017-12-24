@@ -1,9 +1,13 @@
 import { makeGame } from './gameUtils';
-import firebase from './store/firebase';
+import firebase, { app } from './store/firebase';
 
 // for interfacing with firebase
 
 const db = firebase.database();
+function disconnect() {
+  app.delete();
+}
+
 const offsetRef = firebase.database().ref(".info/serverTimeOffset");
 let offset = 0;
 offsetRef.once('value', result => {
@@ -65,5 +69,5 @@ const actions = {
   }
 };
 
-export { db, getTime };
+export { db, getTime, disconnect };
 export default actions;
