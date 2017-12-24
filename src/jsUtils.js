@@ -51,7 +51,21 @@ function lazy(id, cbk) {
   if (idleCallbacks[id]) {
     cancelIdleCallback(idleCallbacks[id]);
   }
-  idleCallbacks[id] = requestIdleCallback(({didTimeout}) => {if (didTimeout) return; cbk();});
+  let idleCallback = requestIdleCallback(
+    ({didTimeout}) => {
+      if (didTimeout) return;
+      setTimeout(() => {
+        if (idleCallbacks[id] === idleCallback) {
+          cbk();
+        } else {
+          // then this was overriden
+        }
+      }, 200);
+      // ensure the callback happens at least 200 ms after
+      // somehow this makes the rendering look less weird
+      // ok this whole thing needs to be redone soon cause it's really hacky and still kinda laggy
+    });
+  idleCallbacks[id] = idleCallback;
 
 }
 

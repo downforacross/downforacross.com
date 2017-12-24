@@ -93,12 +93,13 @@ export default class Game extends Component {
     // window.innerWidth changes when pinch-zooming on mobile.
     // compute it here so the grid doesn't go crazy
     this.screenWidth = window.innerWidth;
+    this.game = makeEmptyGame();
 
     this.state = {
       uid: 0,
-      game: makeEmptyGame(),
       mobile: isMobile(),
       cursors: {},
+      game: this.game,
     };
 
     this._sendChatMessage = this.sendChatMessage.bind(this);
@@ -116,7 +117,7 @@ export default class Game extends Component {
   }
 
   get grid() {
-    return new GridObject(this.state.game.grid);
+    return new GridObject(this.game.grid);
   }
 
   computeGid() {
@@ -131,18 +132,17 @@ export default class Game extends Component {
     this.gid = this.computeGid();
     this.color = this.computeColor();
     this.id = getId();
-    db.ref('game/' + this.gid).on('value', game => {
+    db.ref('game/' + this.gid).on('value', _game => {
       lazy('updateGame', () => {
-        this.setState({
-          game: game.val()
-        });
+        const game = _game.val() || {};
+        this.game = game;
+        this.setState({ game: this.game });
       });
     });
-    db.ref('cursors/' + this.gid).on('value', cursors => {
+    db.ref('cursors/' + this.gid).on('value', _cursors => {
+      const cursors = _cursors.val() || {};
       lazy('updateCursors', () => {
-        this.setState({
-          cursors: cursors.val() || {}
-        });
+        this.setState({ cursors });
       });
     });
   }
@@ -151,34 +151,35 @@ export default class Game extends Component {
     db.ref('game/' + this.gid).off();
   }
 
-  transaction(fn, cbk) {
-    db.ref('game/' + this.gid).transaction(fn, cbk);
+  transaction(fn) {
+    db.ref('game/' + this.gid).transaction(fn);
+    this.game = fn(this.game);
+    // do this whenever game changes
+    this.setState({ game: this.game });
+    userActions.joinGame(this.gid, this.game);
   }
 
-  cellTransaction(r, c, fn, cbk) {
-    db.ref('game/' + this.gid + '/grid/' + r + '/' + c).transaction(fn, cbk);
-    // TODO: hack to get around setting this.state, but mutates existing grid.
-    const grid = this.state.game.grid;
-    grid[r][c] = fn(grid[r][c])
-    this.setState({
-      game: { ...this.state.game, grid }
-    });
-  }
-
-  cursorTransaction(fn, cbk, ) {
+  cellTransaction(r, c, fn) {
+    db.ref('game/' + this.gid + '/grid/' + r + '/' + c).transaction(fn);
+    this.game.grid[r][c] = fn(this.game.grid[r][c])
+    // do this whenever game changes
+    this.setState({ game: this.game });
+    userActions.joinGame(this.gid, this.game);
   }
 
   checkIsSolved() {
-    if (this.grid.isSolved(this.state.game.solution)) {
+    console.log('checkIsSolved', this.game);
+    if (this.grid.isSolved(this.game.solution)) {
       this.transaction(game => (
         Object.assign(game, {
+          grid: this.game.grid,
           solved: true,
           stopTime: game.stopTime || getTime(),
         })
       ));
       return true;
     } else {
-      if (this.state.game.solved) {
+      if (this.game.solved) {
         this.transaction(game => (
           Object.assign(game, {
             solved: false
@@ -192,24 +193,24 @@ export default class Game extends Component {
   updateCursor({r, c}) {
     if (!this.color || !this.id) return;
     const id = this.id;
-    const { game, cursors } = this.state;
+    const { cursors } = this.state;
     const color = this.color;
-    const postGame = game.solved ? true : false;
+    const postGame = this.game.solved ? true : false;
     let updatedAt = getTime();
-    if (game.solved) {
+    if (this.game.solved) {
       updatedAt = cursors[id] && cursors[id].updatedAt;
     }
     console.log({color, r, c, updatedAt, postGame});
-    if (cursors[id] || !game.solved) {
+    if (cursors[id] || !this.game.solved) {
       db.ref(`cursors/${this.gid}/${this.id}`).set({ color, r, c, updatedAt, postGame });
     }
   }
 
   updateGrid(r, c, value) {
-    if (this.state.game.solved) {
+    if (this.game.solved) {
       return;
     }
-    if (this.state.game.grid[r][c].good) {
+    if (this.game.grid[r][c].good) {
       return; // good squares are locked
     }
 
@@ -217,7 +218,6 @@ export default class Game extends Component {
       return ar.length > num ? ar.slice(ar.length - num) : ar;
     }
 
-    userActions.joinGame(this.gid, this.state.game);
     this.cellTransaction(r, c, cell => (
       Object.assign(cell, {
         edits: takeLast(10, [...(cell.edits || []), {
@@ -228,13 +228,8 @@ export default class Game extends Component {
         bad: false,
         good: false,
       })
-    ), () => {
-      this.checkIsSolved();
-      setTimeout(() => {
-        this.checkIsSolved();
-      }, 200);
-    });
-
+    ));
+    this.checkIsSolved();
     this.startClock();
   }
 
@@ -262,7 +257,7 @@ export default class Game extends Component {
   }
 
   startClock() {
-    if (this.state.game.startTime || this.state.game.stopTime) return;
+    if (this.game.startTime || this.game.stopTime) return;
     this.transaction(game => (
       Object.assign(game, {
         startTime: Math.max(game.startTime || 0,
@@ -272,7 +267,7 @@ export default class Game extends Component {
   }
 
   pauseClock() {
-    if (this.state.game.stopTime) return;
+    if (this.game.stopTime) return;
     this.transaction(game => (
       Object.assign(game, {
         startTime: null,
@@ -323,7 +318,6 @@ export default class Game extends Component {
         game.grid[r][c] = this._checkSquare(game.grid[r][c], game.solution[r][c]);
       });
       return game;
-    }, () => {
     });
   }
 
@@ -341,11 +335,8 @@ export default class Game extends Component {
         game.grid[r][c] = this._revealSquare(game.grid[r][c], game.solution[r][c]);
       });
       return game;
-    }, () => {
-      setTimeout(() => {
-        this.checkIsSolved();
-      }, 200);
     });
+    this.checkIsSolved();
   }
 
   _resetSquare(cell) {
@@ -363,11 +354,8 @@ export default class Game extends Component {
         game.grid[r][c] = this._resetSquare(game.grid[r][c], game.solution[r][c]);
       });
       return game;
-    }, () => {
-      setTimeout(() => {
-        this.checkIsSolved();
-      }, 200);
     });
+    this.checkIsSolved();
   }
 
   focusChat() {
@@ -384,8 +372,8 @@ export default class Game extends Component {
   }
 
   getPuzzleTitle() {
-    if (!this.state.game || !this.state.game.info) return '';
-    return this.state.game.info.title;
+    if (!this.game || !this.game.info) return '';
+    return this.game.info.title;
   }
 
   toggleMobile() {
@@ -450,10 +438,10 @@ export default class Game extends Component {
         <div className='room--toolbar'>
           <Toolbar
             mobile={mobile}
-            startTime={this.state.game.startTime}
-            stopTime={this.state.game.stopTime}
-            pausedTime={this.state.game.pausedTime}
-            solved={this.state.game.solved}
+            startTime={this.game.startTime}
+            stopTime={this.game.stopTime}
+            pausedTime={this.game.pausedTime}
+            solved={this.game.solved}
             onPauseClock={this._pauseClock}
             onStartClock={this._startClock}
             onCheck={this._check}
@@ -467,15 +455,15 @@ export default class Game extends Component {
           <Player
             ref='game'
             size={size}
-            grid={this.state.game.grid}
-            circles={this.state.game.circles}
-            shades={this.state.game.shades}
+            grid={this.game.grid}
+            circles={this.game.circles}
+            shades={this.game.shades}
             clues={{
-              across: toArr(this.state.game.clues.across),
-              down: toArr(this.state.game.clues.down)
+              across: toArr(this.game.clues.across),
+              down: toArr(this.game.clues.down)
             }}
             cursors={this.getCursors()}
-            frozen={this.state.game.solved}
+            frozen={this.game.solved}
             myColor={this.color}
             updateGrid={this._updateGrid}
             updateCursor={this._updateCursor}
@@ -486,7 +474,7 @@ export default class Game extends Component {
             { this.shouldRenderChat()
                 ? <Chat
                   ref='chat'
-                  chat={this.state.game.chat || {messages: [], users: []}}
+                  chat={this.game.chat || {messages: [], users: []}}
                   onSendChatMessage={this._sendChatMessage}
                   onPressEnter={this._focusGame}
                 />
