@@ -63,12 +63,20 @@
   overflow: hidden;
   display: block;
   font-family: sans-serif;
-  border: 1px solid silver;
+  border: 2px solid silver;
   border-radius: 3px;
   margin-top: 18px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+.entry.started {
+  border-color: #a0d9fc;
+}
+
+.entry.solved {
+  border-color: #8df79d;
 }
 
 @keyframes slidein {

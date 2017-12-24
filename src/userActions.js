@@ -3,6 +3,7 @@ import { getId } from './localAuth';
 
 const userActions = {
   joinGame: (gid, game) => { // safe to call this multiple times
+    console.log('joinGame');
     const id = getId();
     db.ref(`user/${id}/history/${gid}`).set({
       pid: game.pid,

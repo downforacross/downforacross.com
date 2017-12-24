@@ -58,8 +58,11 @@ class Entry extends Component {
   }
 
   render() {
-    const { title, author, pid } = this.props;
+    const { title, author, pid, status } = this.props;
     const { flipped } = this.state;
+
+    const solved = status === 'solved';
+    const started = status === 'started';
 
     const front = (
       <div style={{ textDecoration: 'none', color: 'black' }} className='entry--front'>
@@ -99,7 +102,7 @@ class Entry extends Component {
       onMouseLeave={e => {
         this.setState({ flipped: false });
       }}
-      className={'entry' + (flipped ? ' flipped' : '') + (this.isNew() ? '  new' : '')}>
+      className={'entry' + (flipped ? ' flipped' : '') + (this.isNew() ? '  new' : '')  + (solved ? ' solved' : '') + (started ? ' started' : '')}>
       { front }
       { flipped ? back : <div className='entry--back'/> }
     </div>
@@ -113,20 +116,31 @@ export default class Welcome extends Component {
     super();
     this.state = {
       puzzleList: [],
+      userHistory: {},
     };
     this.puzzleListRef = db.ref('puzzlelist');
+    this.userHistoryRef = db.ref(`user/${getId()}/history`);
   }
 
   componentDidMount() {
     this.puzzleListRef.on('value', this.updatePuzzleList.bind(this));
+    this.userHistoryRef.on('value', this.updateUserHistory.bind(this));
   }
 
   componentWillUnmount() {
     this.puzzleListRef.off();
+    this.userHistoryRef.off();
   }
 
-  updatePuzzleList(puzzleList) {
-    this.setState({ puzzleList: values(puzzleList.val() || {}).filter(puzzle => !puzzle.private) }, () => {
+  updateUserHistory(_userHistory) {
+    let userHistory = _userHistory.val() || {};
+    this.setState({ userHistory });
+  }
+
+  updatePuzzleList(_puzzleList) {
+    let puzzleList = _puzzleList.val() || {};
+
+    this.setState({ puzzleList: values(puzzleList).filter(puzzle => !puzzle.private) }, () => {
       this.lastUpdateTime = getTime();
     });
   }
@@ -138,6 +152,31 @@ export default class Welcome extends Component {
 
   renderPuzzleList(type) {
     const { history } = this.props;
+    const { userHistory } = this.state;
+    const puzzleStatuses = {};
+    function setStatus(pid, solved) {
+      if (solved) {
+        puzzleStatuses[pid] = 'solved';
+      } else if (!puzzleStatuses[pid]) {
+        puzzleStatuses[pid] = 'started';
+      }
+    }
+
+    Object.keys(userHistory).forEach(gid => {
+      if (gid === 'solo') {
+        const soloGames = userHistory.solo[getId()];
+        if (!soloGames) {
+          return;
+        }
+        Object.keys(soloGames).forEach(pid => {
+          let { solved } = soloGames[pid];
+          setStatus(pid, solved);
+        });
+      } else {
+        let { pid, solved } = userHistory[gid];
+        setStatus(pid, solved);
+      }
+    });
     const lastUpdateTime = this.lastUpdateTime;
     return (
       <div className='puzzlelist'>
@@ -147,7 +186,7 @@ export default class Welcome extends Component {
             ))
             .map((entry, i) =>
               <div key={i} className='welcome--browse--puzzlelist--entry'>
-                <Entry { ...entry } history={history} lastUpdateTime={lastUpdateTime}/>
+                <Entry { ...entry } history={history} status={puzzleStatuses[entry.pid]} lastUpdateTime={lastUpdateTime}/>
               </div>
             )
         }
