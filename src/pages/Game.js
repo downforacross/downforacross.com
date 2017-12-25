@@ -325,7 +325,7 @@ export default class Game extends Component {
     return Object.assign({}, cell, {
       value: answer,
       good: true,
-      revealed: cell.value !== answer
+      revealed: cell.revealed || (cell.value !== answer)
     });
   }
 
