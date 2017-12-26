@@ -25,9 +25,12 @@ function migrateUserHistory() {
       // console.log('user already has history, skipping migration');
       return;
     }
-    db.ref(`user/${localId}/history`).once('value', _history => {
-      let history = _history.val();
-      if (!history) return; // don't migrate empty guy
+    db.ref(`user/${localId}/history`).transaction(history => {
+      if (!history) return history; // don't migrate empty guy
+      if (history.migrated) {
+        console.log('this browser\'s history has already been migrated');
+        return history;
+      }
       let date = new Date();
       let newUserVal = {
         migration: { date, localId },
@@ -36,6 +39,10 @@ function migrateUserHistory() {
       db.ref(`user/${id}`).set(newUserVal).then(() => {
         fireLoginCallbacks();
       });
+      return {
+        ...history,
+        migrated: true,
+      };
     });
   });
 
