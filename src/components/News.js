@@ -1,9 +1,10 @@
 import './css/news.css';
 import React from 'react';
 
-const NEWS_ITEMS = [{
+const NEWS_ITEMS = [
+  {
     date: '12/25/2017',
-    message: <span>You may now log in with Facebook to track your game history. Merry Christmas!</span>,
+    message: <span>Log in with Facebook to view and track your game history. Merry Christmas!</span>,
     hidden: false,
   },
   {
@@ -40,7 +41,7 @@ export default function News() {
       </div>
       {NEWS_ITEMS.map((item, i) =>
         <NewsItem key={i} {...item} />
-        )}
+      )}
     </div>
   );
 }
