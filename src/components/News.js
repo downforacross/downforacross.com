@@ -1,7 +1,11 @@
 import './css/news.css';
 import React from 'react';
 
-const NEWS_ITEMS = [
+const NEWS_ITEMS = [{
+    date: '12/25/2017',
+    message: <span>You may now log in with Facebook to track your game history. Merry Christmas!</span>,
+    hidden: false,
+  },
   {
     date: '11/27/2017',
     message: <span>Check out our new companion Chrome Extension, <span style={{fontWeight: 600}}>Download a Cross</span>! Available on the <a target="_blank" rel="noopener noreferrer" href="https://chrome.google.com/webstore/detail/download-a-cross/idbdbedhgabnbjfjecpflfomnklpllen?hl=en">Chrome Web Store</a>.</span>,
