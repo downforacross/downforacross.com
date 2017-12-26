@@ -28,6 +28,7 @@ function go(pidMap, solvedMap) {
           if (users[uid].history.solo.time) {
             users[uid].history.solo = users[uid].history.solo.time;
           }
+          if (!users[uid].history.solo[uid]) return; // new history format might be a bit weird...
           Object.keys(users[uid].history.solo[uid]).forEach(pid => {
             let time = users[uid].history.solo[uid][pid];
             let solved = solvedMap[gid] || false;
