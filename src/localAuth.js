@@ -1,5 +1,3 @@
-import { db } from './actions';
-
 const idKey = 'dfac-id';
 
 function genId() {
@@ -10,7 +8,7 @@ function genAnonId() {
   return 'anon' + genId();
 }
 
-function _getId() {
+function getLocalId() {
   if (localStorage) {
     if (localStorage.getItem(idKey)) {
       return localStorage.getItem(idKey);
@@ -25,18 +23,4 @@ function _getId() {
   }
 }
 
-let cachedId = null;
-function getId() {
-  if (cachedId) return cachedId;
-  cachedId = _getId();
-  return cachedId;
-}
-
-function recordUsername(username) {
-  console.log('recordUsername', username);
-  const id = getId();
-  db.ref(`user/${id}/names/${username}`).transaction((count = 0) => count + 1);
-}
-
-console.log('your dfac-id is:', getId());
-export { getId, recordUsername };
+export default getLocalId;

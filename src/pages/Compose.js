@@ -6,7 +6,7 @@ import Editor from '../components/Editor';
 import Create from '../components/Create';
 import EditableSpan from '../components/EditableSpan';
 
-import { getId } from '../localAuth'
+import { getId } from '../auth';
 
 export default class Compose extends Component {
 

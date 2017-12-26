@@ -1,6 +1,6 @@
 import './css/game.css';
 
-import { getId, recordUsername } from '../localAuth'
+import { getId, recordUsername } from '../auth'
 import { Helmet } from 'react-helmet';
 import React, { Component } from 'react';
 

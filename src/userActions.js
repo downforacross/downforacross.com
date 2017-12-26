@@ -1,5 +1,5 @@
 import { db, getTime } from './actions';
-import { getId } from './localAuth';
+import { getId } from './auth';
 
 const userActions = {
   joinGame: (gid, game) => { // safe to call this multiple times

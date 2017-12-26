@@ -1,6 +1,6 @@
 import './css/solo.css';
 import Game from './Game';
-import { getId } from '../localAuth';
+import { getId } from '../auth';
 import actions from '../actions';
 
 export default class Solo extends Game {

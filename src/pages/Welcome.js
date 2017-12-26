@@ -8,7 +8,7 @@ import News from '../components/News';
 import Nav from '../components/Nav';
 
 import actions, { db, getTime } from '../actions';
-import { getId } from '../localAuth';
+import { getId } from '../auth';
 
 function values(obj) {
   return Object.keys(obj).map(key => obj[key]);
