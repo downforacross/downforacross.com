@@ -8,18 +8,23 @@ function genAnonId() {
   return 'anon' + genId();
 }
 
+let cachedId = null;
 function getLocalId() {
+  if (cachedId) return cachedId;
   if (localStorage) {
     if (localStorage.getItem(idKey)) {
-      return localStorage.getItem(idKey);
+      cachedId = localStorage.getItem(idKey);
+      return cachedId;
     } else {
       const id = genId();
       localStorage.setItem(idKey, id);
+      cachedId = id;
       return id;
     }
   } else {
     console.log('local storage not detected , unable to assign dfac-id');
-    return genAnonId();
+    cachedId = genAnonId();
+    return cachedId;
   }
 }
 

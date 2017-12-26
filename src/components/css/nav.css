@@ -20,6 +20,9 @@
   color: white;
   text-decoration: none;
   font-size: 13px;
+}
+
+.nav--login {
   cursor: pointer;
 }
 

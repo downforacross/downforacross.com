@@ -8,7 +8,7 @@ import News from '../components/News';
 import Nav from '../components/Nav';
 
 import actions, { db, getTime } from '../actions';
-import { getId } from '../auth';
+import { getId, loggedIn, registerLoginListener } from '../auth';
 
 function values(obj) {
   return Object.keys(obj).map(key => obj[key]);
@@ -119,17 +119,39 @@ export default class Welcome extends Component {
       userHistory: {},
     };
     this.puzzleListRef = db.ref('puzzlelist');
-    this.userHistoryRef = db.ref(`user/${getId()}/history`);
+    if (loggedIn()) {
+      this.userHistoryRef = db.ref(`user/${getId()}/history`);
+    } else {
+      this.userHistoryRef = null;
+    }
+    registerLoginListener(() => {
+      if (loggedIn()) {
+        if (this.userHistoryRef) {
+          this.userHistoryRef.off();
+        }
+        this.userHistoryRef = db.ref(`user/${getId()}/history`);
+        this.userHistoryRef.on('value', this.updateUserHistory.bind(this));
+      } else {
+        if (this.userHistoryRef) {
+          this.userHistoryRef.off();
+        }
+        this.setState({ userHistory: {} });
+      }
+    });
   }
 
   componentDidMount() {
     this.puzzleListRef.on('value', this.updatePuzzleList.bind(this));
-    this.userHistoryRef.on('value', this.updateUserHistory.bind(this));
+    if (this.userHistoryRef) {
+      this.userHistoryRef.on('value', this.updateUserHistory.bind(this));
+    }
   }
 
   componentWillUnmount() {
     this.puzzleListRef.off();
-    this.userHistoryRef.off();
+    if (this.userHistoryRef) {
+      this.userHistoryRef.off();
+    }
   }
 
   updateUserHistory(_userHistory) {

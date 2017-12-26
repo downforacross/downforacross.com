@@ -1,12 +1,22 @@
 import './css/nav.css';
 
 import { Link } from 'react-router-dom';
-import { logIn, getUser, logOut } from '../auth';
+import { logIn, getUser, logOut, authStateLoaded } from '../auth';
 
 import React  from 'react';
 
 function LogIn({ user }) {
+  if (!authStateLoaded) {
+    return null;
+  }
   if (user) {
+    // for now return a simple "logged in"
+    return (
+      <div className='nav--right'>
+        Logged in
+      </div>
+    );
+    /*
     return (
       <div className='nav--right'>
         <Link to='/account'
@@ -15,6 +25,7 @@ function LogIn({ user }) {
         </Link>
       </div>
     );
+    */
   } else {
     return (
       <div className='nav--right'>

@@ -5,26 +5,53 @@ import firebase from 'firebase';
 
 let fbuser = null;
 let fbid = null;
+let authStateLoaded = false;
 
 function recordUsername(username) {
-  console.log('recordUsername', username);
   const id = getId();
   db.ref(`user/${id}/names/${username}`).transaction((count = 0) => count + 1);
 }
 
-function signUp() {
-  // 
+function migrateUserHistory() {
+  const localId = getLocalId();
+  const id = getFacebookId();
+  if (!id) {
+    console.log('cannot migrate, not signed in');
+    return;
+  }
+  db.ref(`user/${id}`).once('value', _user => {
+    let user = _user.val() || {};
+    if (user.migration) {
+      // console.log('user already has history, skipping migration');
+      return;
+    }
+    db.ref(`user/${localId}/history`).once('value', _history => {
+      let history = _history.val();
+      if (!history) return; // don't migrate empty guy
+      let date = new Date();
+      let newUserVal = {
+        migration: { date, localId },
+        history: history,
+      };
+      db.ref(`user/${id}`).set(newUserVal).then(() => {
+        fireLoginCallbacks();
+      });
+    });
+  });
+
 }
 
 var provider = new firebase.auth.FacebookAuthProvider();
 
 
 firebase.auth().onAuthStateChanged(function(user) {
+  authStateLoaded = true;
   if (user) {
     fbuser = user;
     fbid = fbuser.uid;
-    console.log('auth changed', user);
+    console.log('your dfac-id is', fbid);
     // User is signed in.
+    migrateUserHistory();
   } else {
     // No user is signed in.
   }
@@ -33,7 +60,6 @@ firebase.auth().onAuthStateChanged(function(user) {
 function logIn(cbk) {
   // copied from https://firebase.google.com/docs/auth/web/facebook-login
   firebase.auth().signInWithPopup(provider).then(function(result) {
-    console.log('authed');
     cbk();
     // success.
     // handled in authstatechanged
@@ -58,20 +84,25 @@ function getFacebookId() {
   return fbid;
 }
 
-let cachedId = null;
 function getId() {
-  if (cachedId) return cachedId;
-  cachedId = getFacebookId();
-  if (!cachedId) {
-    cachedId = getLocalId();
-  }
-  return cachedId;
+  return getFacebookId() || getLocalId();
 }
 
 function getUser() {
   return fbuser;
 }
 
-console.log('your dfac-id is:', getId());
+let loginCbks = [];
+function registerLoginListener(cbk) {
+  loginCbks.push(cbk);
+}
 
-export { getId, getUser, recordUsername, logIn, loggedIn, logOut };
+function fireLoginCallbacks() {
+  loginCbks.forEach(cbk => {
+    cbk();
+  });
+}
+
+firebase.auth().onAuthStateChanged(fireLoginCallbacks);
+
+export { getId, getUser, recordUsername, logIn, loggedIn, logOut, registerLoginListener, authStateLoaded };
