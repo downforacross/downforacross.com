@@ -186,13 +186,12 @@ export default class Welcome extends Component {
 
     Object.keys(userHistory).forEach(gid => {
       if (gid === 'solo') {
-        const soloGames = userHistory.solo[getId()];
-        if (!soloGames) {
-          return;
-        }
-        Object.keys(soloGames).forEach(pid => {
-          let { solved } = soloGames[pid];
-          setStatus(pid, solved);
+        Object.keys(userHistory.solo).forEach(uid => {
+          const soloGames = userHistory.solo[uid];
+          Object.keys(soloGames).forEach(pid => {
+            let { solved } = soloGames[pid];
+            setStatus(pid, solved);
+          });
         });
       } else {
         let { pid, solved } = userHistory[gid];
