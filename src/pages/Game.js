@@ -410,9 +410,21 @@ export default class Game extends Component {
       mobile,
     } = this.state;
 
-    if (!game) {
+    if (!game || !game.grid) {
       this.gameDoesNotExist();
-      return <div>Loading...</div>
+      return (
+        <div className='room'>
+          <Nav
+            mobile={mobile}
+          />
+          <div
+            style={{
+            }}
+          >
+            Loading your puzzle...
+          </div>
+        </div>
+      );
     }
 
     const { grid } = game;
