@@ -6,6 +6,9 @@ import GridControls from './GridControls';
 export default class MobileGridControls extends GridControls {
   constructor() {
     super();
+    this.state = {
+      typing: false
+    };
     this._handleMobileKeyDown = this.handleMobileKeyDown.bind(this);
     this._handleInput = this.handleInput.bind(this);
     this.prvInput = '';
@@ -32,10 +35,11 @@ export default class MobileGridControls extends GridControls {
   }
 
   render() {
+    const { typing } = this.state;
     return (
       <div
         ref='gridControls'
-        className='mobile-grid-controls'
+        className={'mobile-grid-controls ' + (typing ? ' typing' : '')}
         onKeyDown={this._handleMobileKeyDown}
         onInput={this._handleInput}
         onTouchEnd={e=> {
@@ -55,6 +59,16 @@ export default class MobileGridControls extends GridControls {
             autoCorrect="off"
             autoCapitalize="off"
             spellCheck="false"
+            onFocus={() => {
+              this.setState({
+                typing: true
+              })
+            }}
+            onBlur={() => {
+              this.setState({
+                typing: false
+              })
+            }}
           />
         </div>
       </div>

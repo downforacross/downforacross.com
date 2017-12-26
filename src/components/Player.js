@@ -211,6 +211,22 @@ export default class Player extends Component {
     }
   }
 
+  renderMobileClueBar() {
+    return (
+      <div className='player--mobile--clue-bar'>
+        <div className='player--mobile--clue-bar--number'>
+          { this.getClueBarAbbreviation() }
+        </div>
+        <div className='player--mobile--clue-bar--text'>
+          { this.getClueBarText() }
+        </div>
+        <i className='player--mobile--typing-hint fa fa-6 fa-keyboard-o'>
+        </i>
+      </div>
+    );
+  }
+
+
   /* Render */
   render() {
     const {
@@ -250,14 +266,7 @@ export default class Player extends Component {
           >
             <div className='player--mobile'>
 
-              <div className='player--mobile--clue-bar'>
-                <div className='player--mobile--clue-bar--number'>
-                  { this.getClueBarAbbreviation() }
-                </div>
-                <div className='player--mobile--clue-bar--text'>
-                  { this.getClueBarText() }
-                </div>
-              </div>
+              { this.renderMobileClueBar() }
 
               <div className={'player--mobile--grid' + (frozen ? ' frozen' : '')} >
                 <Grid
@@ -275,14 +284,7 @@ export default class Player extends Component {
                 />
               </div>
 
-              <div className='player--mobile--clue-bar'>
-                <div className='player--mobile--clue-bar--number'>
-                  { this.getClueBarAbbreviation() }
-                </div>
-                <div className='player--mobile--clue-bar--text'>
-                  { this.getClueBarText() }
-                </div>
-              </div>
+              { this.renderMobileClueBar() }
 
             </div>
           </MobileGridControls>

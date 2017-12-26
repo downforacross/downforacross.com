@@ -66,6 +66,35 @@
   align-items: center;
 }
 
+.player--mobile--clue-bar .player--mobile--typing-hint {
+  display: none;
+}
+.player--mobile--clue-bar:nth-child(3) .player--mobile--clue-bar--text {
+  display: none;
+}
+.player--mobile--clue-bar:nth-child(3) .player--mobile--clue-bar--number {
+  display: none;
+}
+.typing .player--mobile--clue-bar:nth-child(3) .player--mobile--clue-bar--number {
+  display: block;
+}
+.typing .player--mobile--clue-bar:nth-child(3) .player--mobile--clue-bar--text {
+  display: block;
+}
+.typing .player--mobile--clue-bar:nth-child(3) .player--mobile--typing-hint {
+  display: none;
+}
+
+.player--mobile--typing-hint {
+  width: 100%;
+  font-size: 30pt;
+  text-align: center;
+}
+
+.player--mobile--clue-bar:nth-child(3) .player--mobile--typing-hint {
+  display: block;
+}
+
 .player--mobile--clue-bar--number {
   font-weight: bold;
   display: inline-block;
