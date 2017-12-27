@@ -135,6 +135,10 @@ export default class Game extends Component {
     db.ref('game/' + this.gid).on('value', _game => {
       lazy('updateGame', () => {
         const game = _game.val() || {};
+        if (this.game && game.solved && !this.game.solved) {
+
+          userActions.markSolved(this.gid);
+        }
         this.game = game;
         this.setState({ game: this.game });
       });
