@@ -141,7 +141,7 @@ export default class Game extends Component {
         }
         this.game = game;
         this.setState({ game: this.game });
-      });
+      }, 200);
     });
     db.ref('cursors/' + this.gid).on('value', _cursors => {
       const cursors = _cursors.val() || {};

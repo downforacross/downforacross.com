@@ -47,7 +47,7 @@ window.cancelIdleCallback =
 
 
 const idleCallbacks = {};
-function lazy(id, cbk) {
+function lazy(id, cbk, minWait=0) {
   if (idleCallbacks[id]) {
     cancelIdleCallback(idleCallbacks[id]);
   }
@@ -60,7 +60,7 @@ function lazy(id, cbk) {
         } else {
           // then this was overriden
         }
-      }, 200);
+      }, minWait);
       // ensure the callback happens at least 200 ms after
       // somehow this makes the rendering look less weird
       // ok this whole thing needs to be redone soon cause it's really hacky and still kinda laggy
