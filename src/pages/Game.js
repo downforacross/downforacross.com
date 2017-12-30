@@ -1,6 +1,6 @@
 import './css/game.css';
 
-import { getId, recordUsername } from '../auth'
+import { getId, recordUsername, registerLoginListener } from '../auth'
 import { Helmet } from 'react-helmet';
 import React, { Component } from 'react';
 
@@ -129,24 +129,26 @@ export default class Game extends Component {
   }
 
   componentDidMount() {
-    this.gid = this.computeGid();
-    this.color = this.computeColor();
-    this.id = getId();
-    db.ref('game/' + this.gid).on('value', _game => {
-      lazy('updateGame', () => {
-        const game = _game.val() || {};
-        if (this.game && game.solved && !this.game.solved) {
+    registerLoginListener(() => {
+      this.gid = this.computeGid();
+      this.color = this.computeColor();
+      this.id = getId();
+      db.ref('game/' + this.gid).on('value', _game => {
+        lazy('updateGame', () => {
+          const game = _game.val() || {};
+          if (this.game && game.solved && !this.game.solved) {
 
-          userActions.markSolved(this.gid);
-        }
-        this.game = game;
-        this.setState({ game: this.game });
-      }, 200);
-    });
-    db.ref('cursors/' + this.gid).on('value', _cursors => {
-      const cursors = _cursors.val() || {};
-      lazy('updateCursors', () => {
-        this.setState({ cursors });
+            userActions.markSolved(this.gid);
+          }
+          this.game = game;
+          this.setState({ game: this.game });
+        }, 200);
+      });
+      db.ref('cursors/' + this.gid).on('value', _cursors => {
+        const cursors = _cursors.val() || {};
+        lazy('updateCursors', () => {
+          this.setState({ cursors });
+        });
       });
     });
   }
