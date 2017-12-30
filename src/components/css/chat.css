@@ -1,11 +1,11 @@
 /* chat style */
 .chat {
+  flex-grow: 0;
   padding-top: 10px;
   padding-left: 30px;
   padding-right: 30px;
   border-left: 1px solid #E2E2E2;
   min-width: 300px;
-  max-width: 350px;
   height: 650px;
   display: flex;
   flex-direction: column;
@@ -38,6 +38,7 @@
   font-size: 15px;
   display: block;
   padding-left: 20px;
+  word-wrap: break-word;
 }
 
 .chat--message--sender {

@@ -2,7 +2,6 @@
   font-family: "Avenir Next", "Avenir", "sans serif";
   height: 100%;
   width: 100%;
-  min-width: max-content;
   position: relative;
 }
 
@@ -46,11 +45,14 @@
   padding: 15px;
   display: flex;
   flex-direction: row;
-  width: max-content;
 }
 
 .room.mobile .room--game-and-chat-wrapper {
   padding: 0px;
+  flex: 1;
+}
+
+.room--chat {
   flex: 1;
 }
 
