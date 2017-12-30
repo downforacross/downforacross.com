@@ -433,8 +433,10 @@ export default class Game extends Component {
 
     const { grid } = game;
     const screenWidth = this.screenWidth;
-    const width = Math.min(35 * 15, screenWidth);
-    let size = width / grid[0].length;
+    let cols = grid[0].length;
+    let rows = grid.length;
+    const width = Math.min(35 * 15 * cols / rows, screenWidth);
+    let size = width / cols;
 
     return (
       <div className={'room ' + (mobile ? 'mobile' : '')}>
