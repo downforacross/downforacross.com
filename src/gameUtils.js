@@ -83,7 +83,6 @@ export const allNums = (str) => {
 export const getReferencedClues = (str, clues) => {
   if (!str) return [];
   str = str.toLowerCase();
-  console.log('getReferencedClues', str);
   let res = [];
   while (str.indexOf('across') !== -1 || str.indexOf('down') !== -1) {
     let a = str.indexOf('across');

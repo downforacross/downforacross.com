@@ -176,7 +176,6 @@ export default class Game extends Component {
   }
 
   checkIsSolved() {
-    console.log('checkIsSolved', this.game);
     if (this.grid.isSolved(this.game.solution)) {
       this.transaction(game => (
         Object.assign(game, {
@@ -208,7 +207,6 @@ export default class Game extends Component {
     if (this.game.solved) {
       updatedAt = cursors[id] && cursors[id].updatedAt;
     }
-    console.log({color, r, c, updatedAt, postGame});
     if (cursors[id] || !this.game.solved) {
       db.ref(`cursors/${this.gid}/${this.id}`).set({ color, r, c, updatedAt, postGame });
     }
@@ -399,7 +397,6 @@ export default class Game extends Component {
   }
 
   togglePencil() {
-    console.log('toggle pencil');
     const { pencilMode } = this.state;
     this.setState({
       pencilMode: !pencilMode,

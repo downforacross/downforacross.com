@@ -32,7 +32,6 @@ export default class Compose extends Component {
       this.puzzleRef.off();
     }
     this.pid = pid;
-    console.log('selecting', pid);
     this.puzzleRef = db.ref('puzzle/' + pid);
     this.puzzleListRef = db.ref('puzzlelist/' + pid);
     this.puzzleRef.on('value', puzzle => {

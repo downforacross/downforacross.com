@@ -1,6 +1,4 @@
 function getExtension(bytes, code) {
-  console.log('getExtension', code);
-  console.log('=', code.charCodeAt(0), code.charCodeAt(1), code.charCodeAt(2), code.charCodeAt(3));
   // struct byte format is 4S H H
   let i = 0, j = 0;
   for(i = 0; i < bytes.length; i += 1) {
@@ -53,7 +51,6 @@ function getCircles(bytes) {
   if (markups) {
     markups.forEach((byte, i) => {
       if (byte & 128) {
-        console.log(byte, i);
         circles.push(i);
       }
     });
@@ -72,7 +69,6 @@ function getShades(bytes) {
       }
     });
   }
-  console.log('shades',shades);
   return shades;
 }
 

@@ -8,7 +8,6 @@ import React, { Component } from 'react';
  *
  * Props: { black, selected, highlighted, bad, good, helped,
  *          value, onClick, cursor }
- *  - edits is not currently used, except for backwards compat.
  *
  * State: {}
  *
@@ -86,7 +85,7 @@ export default class Cell extends Component {
 
   render() {
     const {
-      black, selected, highlighted, shaded, bad, good, revealed, pencil, value, edits, myColor, onClick, number, referenced,
+      black, selected, highlighted, shaded, bad, good, revealed, pencil, value, myColor, onClick, number, referenced,
     } = this.props;
     if (black) {
       return (
