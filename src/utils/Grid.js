@@ -103,16 +103,9 @@ export default class Grid {
         }
       }
     }
-    return undefined;
-  }
 
-  getNextEmptyCellAfter(r, c, direction) {
-    if (direction === 'across') {
-      c += 1;
-    } else {
-      r += 1;
     }
-    return this.getNextEmptyCell(r, c, direction);
+    return undefined;
   }
 
   hasEmptyCells(r, c, direction) {
