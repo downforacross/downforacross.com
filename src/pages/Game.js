@@ -100,6 +100,7 @@ export default class Game extends Component {
       mobile: isMobile(),
       cursors: {},
       game: this.game,
+      pencilMode: false,
     };
 
     this._sendChatMessage = this.sendChatMessage.bind(this);
@@ -114,6 +115,7 @@ export default class Game extends Component {
     this._startClock = this.startClock.bind(this);
     this._pauseClock = this.pauseClock.bind(this);
     this._toggleMobile = this.toggleMobile.bind(this);
+    this._togglePencil = this.togglePencil.bind(this);
   }
 
   get grid() {
@@ -224,6 +226,7 @@ export default class Game extends Component {
       return ar.length > num ? ar.slice(ar.length - num) : ar;
     }
 
+    const { pencilMode } = this.state;
     this.cellTransaction(r, c, cell => (
       Object.assign(cell, {
         edits: takeLast(10, [...(cell.edits || []), {
@@ -233,6 +236,7 @@ export default class Game extends Component {
         value: value,
         bad: false,
         good: false,
+        pencil: pencilMode,
       })
     ));
     this.checkIsSolved();
@@ -315,6 +319,7 @@ export default class Game extends Component {
     return Object.assign({}, cell, {
       good: cell.value !== '' && cell.value === answer,
       bad: cell.value !== '' && cell.value !== answer,
+      pencil: false,
     });
   }
 
@@ -331,6 +336,7 @@ export default class Game extends Component {
     return Object.assign({}, cell, {
       value: answer,
       good: true,
+      pencil: false,
       revealed: cell.revealed || (cell.value !== answer)
     });
   }
@@ -350,7 +356,8 @@ export default class Game extends Component {
       value: '',
       good: false,
       bad: false,
-      revealed: false
+      revealed: false,
+      pencil: false,
     });
   }
 
@@ -391,6 +398,14 @@ export default class Game extends Component {
     });
   }
 
+  togglePencil() {
+    console.log('toggle pencil');
+    const { pencilMode } = this.state;
+    this.setState({
+      pencilMode: !pencilMode,
+    });
+  }
+
   getCursors() {
     const { cursors } = this.state;
     if (Array.isArray(cursors)) return [];
@@ -414,6 +429,7 @@ export default class Game extends Component {
     const {
       game,
       mobile,
+      pencilMode,
     } = this.state;
 
     if (!game || !game.grid) {
@@ -462,12 +478,14 @@ export default class Game extends Component {
             stopTime={this.game.stopTime}
             pausedTime={this.game.pausedTime}
             solved={this.game.solved}
+            pencilMode={pencilMode}
             onPauseClock={this._pauseClock}
             onStartClock={this._startClock}
             onCheck={this._check}
             onReveal={this._reveal}
             onReset={this._reset}
             onResetClock={this._resetClock}
+            onTogglePencil={this._togglePencil}
           />
         </div>
 

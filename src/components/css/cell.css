@@ -51,6 +51,10 @@
   background-color: transparent;
 }
 
+.cell.pencil .cell--value {
+  color: #888;
+}
+
 .cell.bad .cell--value {
   color: red;
 }
