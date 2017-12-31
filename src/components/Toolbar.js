@@ -14,14 +14,14 @@ export default class Toolbar extends Component {
     } = this.props;
     return (
       startTime
-        ? <button className='toolbar--btn pause'
-            onClick={onPauseClock} >
-            Pause Clock
-          </button>
-        : <button className='toolbar--btn start'
-            onClick={onStartClock} >
-            Start Clock
-          </button>
+      ? <button className='toolbar--btn pause'
+        onClick={onPauseClock} >
+        Pause Clock
+      </button>
+      : <button className='toolbar--btn start'
+        onClick={onStartClock} >
+        Start Clock
+      </button>
     );
   }
 
@@ -61,6 +61,20 @@ export default class Toolbar extends Component {
           'Puzzle': this.reset.bind(this, 'puzzle'),
           'Puzzle and Timer': this.resetPuzzleAndTimer.bind(this)
         }} />
+    );
+  }
+
+  renderPencil() {
+    const { pencilMode, onTogglePencil } = this.props;
+    return (
+      <div
+        className={'toolbar--pencil' + (
+          pencilMode ? ' on' : ''
+        )}
+        onClick={onTogglePencil}
+      >
+        <i className='fa fa-pencil'/>
+      </div>
     );
   }
 
@@ -116,8 +130,8 @@ export default class Toolbar extends Component {
             }
             {
               solved
-              ? this.renderResetMenu()
-              : null
+                ? this.renderResetMenu()
+                : null
             }
           </div>
         </div>
@@ -153,6 +167,9 @@ export default class Toolbar extends Component {
             this.renderResetMenu()
           }
         </div>
+        {
+          this.renderPencil()
+        }
       </div>
     );
 

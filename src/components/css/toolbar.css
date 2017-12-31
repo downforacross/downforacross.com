@@ -18,6 +18,14 @@
   text-align: center;
 }
 
+.toolbar--pencil {
+  cursor: pointer;
+}
+
+.toolbar--pencil.on .fa-pencil {
+  color: #6AA9F4 !important;
+}
+
 .toolbar--mobile--top {
   padding: 10px 10px 8px 50px;
   height: 20px;

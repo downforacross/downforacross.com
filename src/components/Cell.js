@@ -86,7 +86,7 @@ export default class Cell extends Component {
 
   render() {
     const {
-      black, selected, highlighted, shaded, bad, good, revealed, value, edits, myColor, onClick, number, referenced,
+      black, selected, highlighted, shaded, bad, good, revealed, pencil, value, edits, myColor, onClick, number, referenced,
     } = this.props;
     if (black) {
       return (
@@ -122,6 +122,9 @@ export default class Cell extends Component {
             : ''
           ) + (revealed
             ? 'revealed '
+            : ''
+          ) + (pencil
+            ? 'pencil '
             : ''
           ) + 'cell'
         }
