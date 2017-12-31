@@ -24,19 +24,22 @@ export default class Cell extends Component {
     if(['black', 'selected', 'highlighted', 'bad', 'good', 'helped', 'revealed', 'value', 'number', 'myColor', 'referenced'].some(attr => this.props[attr] !== nextProps[attr])) {
       return true;
     }
-    if (nextProps.cursors.length !== this.props.cursors.length) {
+
+    const { cursors } = this.props;
+    if (nextProps.cursors.length !== cursors.length) {
       return true;
     }
     return false;
   }
 
   renderCursors() {
+    const { cursors } = this.props;
     return (
       <div className='cell--cursors'>
-        {this.props.cursors.map(({color}, i) => (
+        {cursors.map(({color}, i) => (
           <div key={i} className='cell--cursor' style={{
             borderColor: color,
-            zIndex: Math.min(2 + this.props.cursors.length - i, 9),
+            zIndex: Math.min(2 + cursors.length - i, 9),
             borderWidth: Math.min(1 + 2 * (i + 1), 12)
           }}>
         </div>
@@ -46,13 +49,14 @@ export default class Cell extends Component {
   }
 
   renderFlipButton() {
-    if (this.props.canFlipColor) {
+    const { canFlipColor, onFlipColor } = this.props;
+    if (canFlipColor) {
       return (
         <i
           className='cell--flip fa fa-small fa-sticky-note'
           onClick={(e) => {
             e.stopPropagation();
-            this.props.onFlipColor();
+            onFlipColor();
           }}
         />
       );
@@ -61,7 +65,8 @@ export default class Cell extends Component {
   }
 
   renderCircle() {
-    if (this.props.circled) {
+    const { circled } = this.props;
+    if (circled) {
       return (
         <div className='cell--circle' />
       );
@@ -70,7 +75,8 @@ export default class Cell extends Component {
   }
 
   renderShade() {
-    if (this.props.shaded) {
+    const { shaded } = this.props;
+    if (shaded) {
       return (
         <div className='cell--shade' />
       );
@@ -79,7 +85,10 @@ export default class Cell extends Component {
   }
 
   render() {
-    if (this.props.black) {
+    const {
+      black, selected, highlighted, shaded, bad, good, revealed, value, edits, myColor, onClick, number, referenced,
+    } = this.props;
+    if (black) {
       return (
         <div className='cell black'>
           { this.renderFlipButton() }
@@ -87,48 +96,40 @@ export default class Cell extends Component {
       );
     }
 
-    let val = this.props.value;
-    // TODO remove backwards compat
-    if (val === undefined) {
-      if (this.props.edits && this.props.edits.value) { // backwards compat.
-        val = this.props.edits.value;
-      } else {
-        val = '';
-      }
-    }
+    let val = value;
 
     let l = Math.max(1, val.length);
     return (
       <div
         className={
-          (this.props.selected
+          (selected
             ? 'selected '
             : ''
-          ) + (this.props.highlighted
+          ) + (highlighted
             ? 'highlighted '
             : ''
-          ) + (this.props.referenced
+          ) + (referenced
             ? 'referenced '
             : ''
-          ) + (this.props.shaded
+          ) + (shaded
             ? 'shaded '
             : ''
-          ) + (this.props.bad
+          ) + (bad
             ? 'bad '
             : ''
-          ) + (this.props.good
+          ) + (good
             ? 'good '
             : ''
-          ) + (this.props.revealed
+          ) + (revealed
             ? 'revealed '
             : ''
           ) + 'cell'
         }
-        style={this.props.selected
-            ? { backgroundColor: this.props.myColor }
+        style={selected
+            ? { backgroundColor: myColor }
             : null
         }
-        onClick={this.props.onClick}
+        onClick={onClick}
         onTouchMove={e => {
           if (e.touches.length >= 1) {
             window.lastZoomed = getTime();
@@ -142,16 +143,16 @@ export default class Cell extends Component {
           const now = getTime();
           const disablePeriod = 200;
           if (!window.lastZoomed || window.lastZoomed + disablePeriod < now) {
-            this.props.onClick(e);
+            onClick(e);
           }
         }}>
         <div className='cell--wrapper'>
 
-          <div className={'cell--number' + (this.props.number
+          <div className={'cell--number' + (number
             ?  ' nonempty'
             : ''
           )}>
-          { this.props.number }
+          { number }
         </div>
         { this.renderFlipButton() }
         { this.renderCircle() }
