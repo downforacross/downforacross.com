@@ -119,11 +119,6 @@ export default class Welcome extends Component {
       userHistory: {},
     };
     this.puzzleListRef = db.ref('puzzlelist');
-    if (loggedIn()) {
-      this.userHistoryRef = db.ref(`user/${getId()}/history`);
-    } else {
-      this.userHistoryRef = null;
-    }
     registerLoginListener(() => {
       if (loggedIn()) {
         if (this.userHistoryRef) {

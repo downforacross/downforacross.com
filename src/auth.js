@@ -50,8 +50,10 @@ function migrateUserHistory() {
 
 var provider = new firebase.auth.FacebookAuthProvider();
 
+var authLoaded = false;
 
 firebase.auth().onAuthStateChanged(function(user) {
+  authLoaded = true;
   authStateLoaded = true;
   if (user) {
     fbuser = user;
@@ -101,7 +103,11 @@ function getUser() {
 
 let loginCbks = [];
 function registerLoginListener(cbk) {
-  loginCbks.push(cbk);
+  if (authLoaded) {
+    cbk();
+  } else {
+    loginCbks.push(cbk);
+  }
 }
 
 function fireLoginCallbacks() {
