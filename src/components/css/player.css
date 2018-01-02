@@ -30,6 +30,10 @@
   max-height: 100%;
 }
 
+.player--main--left {
+  max-width: min-content;
+}
+
 .player--main--left--grid {
   margin-top: 10px;
   position: relative;
