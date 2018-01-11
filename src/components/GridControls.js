@@ -120,6 +120,14 @@ export default class GridControls extends Component {
     actions[action](shiftKey);
   }
 
+  validLetter(letter) {
+    if (letter === '-' || letter === '/') {
+      return true; // special theme puzzles have these sometimes;
+    }
+    return letter.match(/^[A-Z0-9]$/);
+  }
+
+
   handleKeyDown(ev) {
     if (ev.target.tagName === 'INPUT') {
       return;
@@ -146,7 +154,7 @@ export default class GridControls extends Component {
       onPressEnter && onPressEnter();
     } else {
       const letter = ev.key.toUpperCase();
-      if (!ev.metaKey && !ev.ctrlKey && letter.match(/^[A-Z0-9]$/)) {
+      if (!ev.metaKey && !ev.ctrlKey && this.validLetter(letter)) {
         ev.preventDefault();
         ev.stopPropagation();
         this.typeLetter(letter, ev.shiftKey);
