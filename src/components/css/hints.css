@@ -6,17 +6,17 @@
 .hints--pattern {
   border: 1px solid black;
   padding: 20px;
+  cursor: pointer;
 }
 
 .hints--matches {
   border: 1px solid black;
   padding: 20px;
-  height: 300px;
 }
 
 .hints--matches--entries {
   overflow-y: scroll;
-  max-height: 100%;
+  max-height: 200px;
 }
 
 .hints--matches--entry {

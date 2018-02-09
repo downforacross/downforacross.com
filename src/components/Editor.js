@@ -212,9 +212,6 @@ export default class Editor extends Component {
 
   /* Render */
 
-  renderHints() {
-  }
-
   renderLeft() {
     return (
       <div className='editor--main--left'>
@@ -319,7 +316,6 @@ export default class Editor extends Component {
             </div>
 
             <div className='editor--right--hints'>
-              <h2> Hints </h2>
               <Hints
                 grid={this.props.grid}
                 num={this.getSelectedClueNumber()}

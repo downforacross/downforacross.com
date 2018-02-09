@@ -8,8 +8,9 @@ export default class Hints extends Component {
   constructor() {
     super();
     this.state = {
-      pattern: '',
-      list: []
+      pattern: 'loading...',
+      list: [],
+      hidden: false,
     };
     this.scores = {};
   }
@@ -18,10 +19,11 @@ export default class Hints extends Component {
     this.startComputing();
   }
 
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate(nextProps, nextState) {
     return (
       this.props.num !== nextProps.num
       || this.props.direction !== nextProps.direction
+      || nextState.list !== this.state.list
     );
   }
 
@@ -98,7 +100,14 @@ export default class Hints extends Component {
   render() {
     return (
       <div className='hints'>
-        <div className='hints--pattern'>
+        <div
+          className='hints--pattern'
+          onClick={() => {
+            this.setState({
+              hidden: !this.state.hidden
+            });
+          }}
+        >
           <span style={{float:'left'}}>
             Pattern: {this.state.pattern}
           </span>
@@ -106,7 +115,7 @@ export default class Hints extends Component {
             Matches: {this.state.list.length}
           </span>
         </div>
-        <div className='hints--matches'>
+        {!this.state.hidden && <div className='hints--matches'>
           {
             this.state.list && this.state.list.length > 0
               ? (
@@ -128,7 +137,7 @@ export default class Hints extends Component {
               : 'No matches'
           }
 
-        </div>
+        </div>}
       </div>
     );
   }

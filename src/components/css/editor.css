@@ -24,7 +24,7 @@
 
 .editor--main--clue-bar--text {
   display: flex;
-  overflow: scroll;
+  /* overflow: scroll; */
   max-width: 389px;
   align-items: center;
 }
@@ -40,6 +40,8 @@
   margin-left: 19px;
   display: inline-block;
   overflow-y: scroll;
+  max-width: 100%;
+  width: 100%;
   font-size: 15px;
   padding: 1px;
   font-family: avenir, "helvetica neue", "Helvetica", "arial", sans-serif;
@@ -79,6 +81,7 @@
 
 .editor--right {
   display: flex;
+  /* justify-content: space-between; */
   flex-direction: column;
 }
 
@@ -103,8 +106,8 @@
 
 .editor--main--clues--list--scroll {
   position: relative;
-  height: 95px;
   overflow-y: scroll;
+  max-height: 200px;
   border-top: 1px solid #e2e2e2;
   margin-top: 5px;
   padding-right: 10px;
@@ -144,8 +147,7 @@
 }
 
 .editor--right--hints {
-  flex: 3;
   padding: 20px;
-
-  max-height: 500px;
+  display: flex;
+  flex-direction: column;
 }
