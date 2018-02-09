@@ -44,7 +44,6 @@ function precompute(len, complete_cbk) {
   all_words.sort();
   all_words = distinct(all_words);
   all_words = all_words.filter(word => word.length === len);
-  console.log('START precompute', len, '#words=', all_words.length);
 
   const limit = 100; // don't work too hard
   const processed = {};
@@ -85,14 +84,14 @@ function precompute(len, complete_cbk) {
   }
 
   loop(() => {
-    console.log('DONE precompute', len);
     precomputed[len] = true;
     complete_cbk && complete_cbk();
   });
 }
 
 function findMatches(pattern, cbk) {
-  if (!precomputed[pattern.length]) {
+  if (!pattern) cbk([]);
+  else if (!precomputed[pattern.length]) {
     precompute(pattern.length, () => {
       findMatches(pattern, cbk);
     });

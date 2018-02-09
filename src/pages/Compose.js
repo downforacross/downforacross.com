@@ -1,12 +1,15 @@
 import './css/compose.css';
 import actions, { db } from '../actions';
 
+import GridObject from '../utils/Grid';
 import React, { Component } from 'react';
 import Editor from '../components/Editor';
 import Create from '../components/Create';
 import EditableSpan from '../components/EditableSpan';
+import { lazy } from '../jsUtils';
+import { makeGrid, makeEmptyClues } from '../gameUtils';
 
-import { getId } from '../auth';
+import { getId, loggedIn, registerLoginListener } from '../auth';
 
 export default class Compose extends Component {
 
@@ -17,11 +20,13 @@ export default class Compose extends Component {
       myPuzzles: []
     };
     this.pid = undefined;
-    this.me = getId();
-    this.myPuzzlesRef = db.ref('myPuzzles/' + this.me);
-    this.myPuzzlesRef.on('value', lst => {
-      this.setState({
-        myPuzzles: (lst.val() || []).reverse()
+    registerLoginListener(() => {
+      this.me = getId();
+      this.myPuzzlesRef = db.ref('myPuzzles/' + this.me);
+      this.myPuzzlesRef.on('value', lst => {
+        this.setState({
+          myPuzzles: (lst.val() || []).reverse()
+        });
       });
     });
     this.color = 'rgb(118, 226, 118)';
@@ -34,9 +39,11 @@ export default class Compose extends Component {
     this.pid = pid;
     this.puzzleRef = db.ref('puzzle/' + pid);
     this.puzzleListRef = db.ref('puzzlelist/' + pid);
-    this.puzzleRef.on('value', puzzle => {
-      this.setState({
-        puzzle: puzzle.val()
+    this.puzzleRef.on('value', _puzzle => {
+      lazy('updatePuzzle', () => {
+        const puzzle = _puzzle.val() || {};
+        this.puzzle = puzzle;
+        this.setState({ puzzle: this.puzzle });
       });
     });
   }
@@ -51,28 +58,26 @@ export default class Compose extends Component {
         type: type,
         author: 'Anonymous'
       },
-      grid: pattern.map(row => row.map(cell => cell === 0 ? '' : '.')),
+      grid: makeGrid(pattern.map(row => row.map(cell => (
+        cell === 0 ? '' : '.'
+      )))).toArray(),
       private: true,
-      clues: {
-        across: {
-        },
-        down: {
-        }
-      }
     };
-    actions.createPuzzle(puzzle, (pid) => {
-      this.myPuzzlesRef.transaction(lst => (
-        [...(lst || []), {
-          pid: pid,
-          title: 'Untitled',
-          dims: {
-            rows: dims.r,
-            cols: dims.c
-          },
-        }]
-      ))
-      this.selectPuzzle(pid)
-    });
+    puzzle.clues = makeEmptyClues(puzzle.grid),
+
+      actions.createPuzzle(puzzle, ({pid}) => {
+        this.myPuzzlesRef.transaction(lst => (
+          [...(lst || []), {
+            pid: pid,
+            title: 'Untitled',
+            dims: {
+              rows: dims.r,
+              cols: dims.c
+            },
+          }]
+        ))
+        this.selectPuzzle(pid)
+      });
   }
 
   updateDims(height, width) {
@@ -80,18 +85,29 @@ export default class Compose extends Component {
 
   transaction(fn, cbk) {
     this.puzzleRef.transaction(fn, cbk);
+    this.puzzle = fn(this.puzzle);
+    this.setState({puzzle: this.puzzle});
   }
 
-  cellTransaction(r, c, fn, cbk) {
-    this.puzzleRef.child('grid/' + r + '/' + c).transaction(fn, cbk);
+  cellTransaction(r, c, fn) {
+    this.puzzleRef.child('grid/' + r + '/' + c).transaction(fn);
+    this.puzzle.grid[r][c] = fn(this.puzzle.grid[r][c])
+    this.setState({ puzzle: this.puzzle });
   }
 
   updateGrid(r, c, value) {
-    this.cellTransaction(r, c, cell => value);
+    this.cellTransaction(r, c, cell => ({
+      ...cell,
+      value: value,
+      bad: false,
+      good: false,
+    }));
   }
 
   clueTransaction(ori, idx, fn, cbk) {
     this.puzzleRef.child('clues/' + ori + '/' + idx).transaction(fn, cbk);
+    this.puzzle.clues[ori][idx] = fn(this.puzzle.clues[ori][idx]);
+    this.setState({ puzzle: this.puzzle });
   }
 
   updateClues(ori, idx, value) {
@@ -99,18 +115,25 @@ export default class Compose extends Component {
   }
 
   flipColor(r, c) {
-    this.cellTransaction(r, c, cell => cell === '.' ? '' : '.');
+    console.log('flip color', this.puzzle.grid[r][c]);
+    this.puzzle.grid[r][c].black = !this.puzzle.grid[r][c].black;
+    new GridObject(this.puzzle.grid).assignNumbers();
+    this.puzzle.clues = new GridObject(this.puzzle.grid).alignClues(this.puzzle.clues);
+    this.puzzleRef.set(this.puzzle);
+    this.setState({ puzzle: this.puzzle });
   }
 
   getCellSize() {
-    return 30 * 15 / this.state.puzzle.grid[0].length;
+    return 30 * 15 / this.puzzle.grid[0].length;
   }
 
   updateTitle(title) {
-    this.puzzleRef.transaction(puzzle => Object.assign(puzzle, {
-      info: Object.assign(puzzle.info, {
-        title: title
-      })
+    this.puzzleRef.transaction(puzzle => ({
+      ...puzzle,
+      info: {
+        ...puzzle.info,
+        title,
+      }
     }));
     this.puzzleListRef.transaction(puzzle => puzzle && Object.assign({}, puzzle, {
       title: title,
@@ -129,10 +152,12 @@ export default class Compose extends Component {
   }
 
   updateAuthor(author) {
-    this.transaction(puzzle => Object.assign(puzzle, {
-      info: Object.assign(puzzle.info, {
+    this.transaction(puzzle => ({
+      ...puzzle,
+      info: {
+        ...puzzle.info,
         author: author
-      })
+      }
     }));
     this.puzzleListRef.transaction(puzzle => puzzle && Object.assign(puzzle, {
       author: author,
@@ -165,7 +190,7 @@ export default class Compose extends Component {
   }
 
   renderMain() {
-    if (!this.state.puzzle) {
+    if (!this.puzzle) {
       return (
         <div className='compose--main'>
           <div className='compose--main--select-a-puzzle'>
@@ -179,18 +204,18 @@ export default class Compose extends Component {
         <div className='compose--main--info'>
           <div className='compose--main--info--title'>
             <EditableSpan
-              value={this.state.puzzle.info.title}
+              value={this.puzzle.info.title}
               onChange={this.updateTitle.bind(this)}
             />
           </div>
         </div>
         <div className='compose--main--info--subtitle'>
           {
-            this.state.puzzle.info.type + ' | '
+            this.puzzle.info.type + ' | '
               + 'By '
           }
           <EditableSpan
-            value={this.state.puzzle.info.author}
+            value={this.puzzle.info.author}
             onChange={this.updateAuthor.bind(this)}
           />
         </div>
@@ -198,8 +223,8 @@ export default class Compose extends Component {
           <Editor
             ref='editor'
             size={this.getCellSize()}
-            grid={this.state.puzzle.grid}
-            clues={this.state.puzzle.clues}
+            grid={this.puzzle.grid}
+            clues={this.puzzle.clues}
             updateGrid={this.updateGrid.bind(this)}
             updateClues={this.updateClues.bind(this)}
             onFlipColor={this.flipColor.bind(this)}
@@ -209,7 +234,7 @@ export default class Compose extends Component {
         </div>
         <div className='compose--main--options'>
           <label>Private: </label>
-          <input type='checkbox' checked={this.state.puzzle.private} onChange={e => this.setPrivate(e.target.checked)}/>
+          <input type='checkbox' checked={this.puzzle.private} onChange={e => this.setPrivate(e.target.checked)}/>
         </div>
       </div>
     );

@@ -118,7 +118,7 @@ export default class Grid extends Component {
                       <Cell
                         {...cell}
                         onClick={this.handleClick.bind(this, r, c)}
-                        canFlipColor={this.props.canFlipColor}
+                        canFlipColor={this.props.canFlipColor && this.props.canFlipColor(r, c)}
                         onFlipColor={() => {
                           this.props.onFlipColor && this.props.onFlipColor(r, c);
                         }}

@@ -224,7 +224,10 @@ export default class Grid {
       ) {
         cell.number = nextNumber;
         nextNumber += 1;
+      } else {
+        cell.number = null;
       }
+
       cell.parents = {
         across: (this.isStartOfClue(r, c, 'across')
           ? cell.number

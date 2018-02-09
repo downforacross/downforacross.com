@@ -165,6 +165,7 @@ export default class GridControls extends Component {
   goToNextEmptyCell() {
     let { r, c } = this.props.selected;
     const nextEmptyCell = this.grid.getNextEmptyCell(r, c, this.props.direction);
+    console.log('goToNextEmptyCell', nextEmptyCell);
     if (nextEmptyCell) {
       this.setSelected(nextEmptyCell);
       return nextEmptyCell;
@@ -215,6 +216,7 @@ export default class GridControls extends Component {
     const { r, c } = this.props.selected;
     const value = this.props.grid[r][c].value;
     this.props.updateGrid(r, c, isRebus ? ((value || '').substr(0, 10) + letter) : letter);
+    console.log('done updating grid', this.props.grid);
     if (!isRebus) {
       this.goToNextEmptyCell();
     }

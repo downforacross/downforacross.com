@@ -57,12 +57,11 @@ export default class Editor extends Component {
 
   constructor(props) {
     super();
+    this.props = props;
     const grid = gameUtils.makeGrid(props.grid, true);
     this.state = {
       selected: grid.fixSelect({ r: 0, c: 0 }),
-      clues: grid.alignClues(props.clues),
       direction: 'across',
-      grid: grid.toArray()
     };
 
     if (!this.isValidDirection(this.state.direction, this.state.selected)) {
@@ -77,53 +76,24 @@ export default class Editor extends Component {
   }
 
   get grid() {
-    return new GridObject(this.state.grid);
-  }
-
-  didChangePatternOrDims(oldGrid, newGrid) {
-    if (oldGrid.length !== newGrid.length || oldGrid[0].length !== newGrid[0].length) {
-      return true;
-    }
-
-    let result = false;
-    oldGrid.forEach((row, r) => {
-      if (result) return;
-      row.forEach((cell, c) => {
-        if ((cell.black) !== (newGrid[r][c] === '.')) {
-          result = true;
-        }
-      });
-    });
-
-    return result;
+    return new GridObject(this.props.grid);
   }
 
   componentWillReceiveProps(props) {
-    let grid, clues;
-    if (props.pid !== this.props.pid || this.didChangePatternOrDims(this.state.grid, props.grid)) {
-      grid = gameUtils.makeGrid(props.grid, true);
-      clues = grid.alignClues(props.clues);
-      this.setState({
-        selected: grid.fixSelect(this.state.selected)
-      });
-    } else {
-      grid = this.state.grid;
-      clues = this.state.clues;
-
-      this.grid.items().forEach(([r, c, cell]) => {
-        cell.value = props.grid[r][c];
-      });
-      clues.across.forEach((clue, i) => {
-        clues.across[i] = (props.clues && props.clues.across && props.clues.across[i]) || '';
-      });
-      clues.down.forEach((clue, i) => {
-        clues.down[i] = (props.clues && props.clues.down && props.clues.down[i]) || '';
-      });
+    this.props = props;
+    let { r, c } = this.state.selected;
+    while (!this.grid.isWhite(r, c)) {
+      if (c < this.props.grid[0].length) {
+        c += 1;
+      } else if (r < this.props.grid.length) {
+        r += 1;
+        c = 0;
+      } else {
+        r = 0;
+        c = 0;
+      }
     }
-    this.setState({
-      grid: grid.toArray(),
-      clues: clues,
-    });
+    this.setSelected({r, c});
   }
 
   /* Callback fns, to be passed to child components */
@@ -236,6 +206,10 @@ export default class Editor extends Component {
     this.refs.clue && this.refs.clue.startEditing();
   }
 
+  canFlipColor(r, c) {
+    return this.state.selected.r !== r || this.state.selected.c !== c;
+  }
+
   /* Render */
 
   renderHints() {
@@ -251,25 +225,24 @@ export default class Editor extends Component {
           <div className='editor--main--clue-bar--text'>
             <EditableSpan
               ref='clue'
-              value={this.state.clues[this.state.direction][this.getSelectedClueNumber()]}
+              value={this.props.clues[this.state.direction][this.getSelectedClueNumber()]}
               onChange={value => this.props.updateClues(this.state.direction, this.getSelectedClueNumber(), value)}
               onBlur={() => this.focusGrid()}
             />
           </div>
         </div>
 
-
         <div
           className={'editor--main--left--grid blurable'}>
           <Grid
             ref='grid'
             size={this.props.size}
-            grid={this.state.grid}
+            grid={this.props.grid}
             selected={this.state.selected}
             direction={this.state.direction}
             onSetSelected={this.setSelected.bind(this)}
             onChangeDirection={this.changeDirection.bind(this)}
-            canFlipColor={true}
+            canFlipColor={this.canFlipColor.bind(this)}
             onFlipColor={this.props.onFlipColor.bind(this)}
             myColor={this.props.myColor}
             references={[]}
@@ -292,8 +265,8 @@ export default class Editor extends Component {
           onSetSelected={this.setSelected.bind(this)}
           onEnter={() => this.setState({ editingClue: true }, this.focusClue.bind(this))}
           updateGrid={this.props.updateGrid}
-          grid={this.state.grid}
-          clues={this.state.clues}
+          grid={this.props.grid}
+          clues={this.props.clues}
         >
 
         <div className='editor--main'>
@@ -312,7 +285,7 @@ export default class Editor extends Component {
                       className={'editor--main--clues--list--scroll ' + dir}
                       ref={'clues--list--'+dir}>
                       {
-                        this.state.clues[dir].map((clue, i) => clue !== undefined && (
+                        this.props.clues[dir].map((clue, i) => clue !== undefined && (
                           <div key={i}
                             className={
                               (this.isClueSelected(dir, i)
@@ -348,7 +321,7 @@ export default class Editor extends Component {
             <div className='editor--right--hints'>
               <h2> Hints </h2>
               <Hints
-                grid={this.state.grid}
+                grid={this.props.grid}
                 num={this.getSelectedClueNumber()}
                 direction={this.state.direction}
               />

@@ -75,6 +75,14 @@ export const makeGame = (gid, name, puzzle) => {
   return game;
 };
 
+export const makeEmptyClues = gridArray => {
+  const grid = new Grid(gridArray);
+  return grid.alignClues({
+    across: [],
+    down: [],
+  });
+};
+
 export const allNums = (str) => {
   let pattern = /\d+/g;
   return (str.match(pattern) || []).map(x => parseInt(x, 10));

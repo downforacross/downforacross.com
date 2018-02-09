@@ -4,23 +4,31 @@ import React, { Component } from 'react';
 export default class EditableSpan extends Component {
   constructor() {
     super();
+    console.log('new EditableSpan');
     this.state = {
       editing: false
     };
   }
 
   startEditing() {
+    console.log('start editing');
     this.setState({ editing: true}, () => {
       this.refs.input && this.refs.input.focus();
     });
   }
 
   stopEditing() {
+    console.log('stop editing');
     this.setState({ editing: false});
     this.props.onBlur && this.props.onBlur();
   }
 
+  shouldComponentUpdate(prevProps) {
+    return true;
+  }
+
   render() {
+    console.log('render', this.state.editing);
     return this.state.editing
       ? (
         <span className='editable-span on'>

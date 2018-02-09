@@ -18,6 +18,13 @@ export default class Hints extends Component {
     this.startComputing();
   }
 
+  shouldComponentUpdate(nextProps) {
+    return (
+      this.props.num !== nextProps.num
+      || this.props.direction !== nextProps.direction
+    );
+  }
+
   componentDidMount() {
     precompute(3);
     precompute(4);
@@ -108,8 +115,8 @@ export default class Hints extends Component {
                     this.state.list.slice(0, 100).map((word, i) => (
                       <div key={i} className='hints--matches--entry'>
                         <div className='hints--matches--entry--word'>
-                        {word}
-                      </div>
+                          {word}
+                        </div>
                         <div className='hints--matches--entry--score'>
                           {this.getScore(word) || ''}
                         </div>
