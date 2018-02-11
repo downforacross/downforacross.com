@@ -7,7 +7,6 @@ import Editor from '../components/Editor';
 import Create from '../components/Create';
 import EditableSpan from '../components/EditableSpan';
 import { lazy } from '../jsUtils';
-import { makeGrid, makeEmptyClues } from '../gameUtils';
 
 import { getId, loggedIn, registerLoginListener } from '../auth';
 
@@ -22,11 +21,11 @@ export default class Compose extends Component {
     this.cid = undefined;
     registerLoginListener(() => {
       this.me = getId();
-      this.myCompositionsRef = db.ref('myPuzzles/' + this.me);
-      this.myCompositionsRef.on('value', lst => {
-        this.setState({
-          myCompositions: (lst.val() || []).reverse()
-        });
+      this.myCompositionsRef = db.ref('myCompositions/' + this.me);
+      this.myCompositionsRef.on('value', _myCompositions => {
+        let myCompositions = _myCompositions.val() || [];
+        myCompositions = myCompositions.reverse();
+        this.setState({ myCompositions });
       });
     });
     this.color = 'rgb(118, 226, 118)';
@@ -37,48 +36,30 @@ export default class Compose extends Component {
       this.compositionRef.off();
     }
     this.cid = cid;
-    this.compositionRef = db.ref('composition/' + cid);
+    this.compositionRef = db.ref(`composition/${cid}`);
     this.compositionRef.on('value', _composition => {
       lazy('updateComposition', () => {
         const composition = _composition.val() || {};
         this.composition = composition;
-        this.setState({ composition: this.composition });
+        this.setState({ composition });
       });
     });
   }
 
   newComposition({dims, pattern}) {
-    const type = Math.max(dims.r, dims.c) <= 7
-      ? 'Mini Puzzle'
-      : 'Daily Puzzle';
-    const composition = {
-      info: {
-        title: 'Untitled',
-        type: type,
-        author: 'Anonymous'
-      },
-      grid: makeGrid(pattern.map(row => row.map(cell => (
-        cell === 0 ? '' : '.'
-      )))).toArray(),
-      private: true,
-    };
-    composition.clues = makeEmptyClues(composition.grid),
-      actions.createComposition(pattern, ({cid}) => {
-        this.myCompositionsRef.transaction((lst = []) => (
-          [...lst, {
-            cid: cid,
-            title: 'Untitled',
-            dims: {
-              rows: dims.r,
-              cols: dims.c
-            },
-          }]
-        ))
-        this.selectComposition(cid)
-      });
-  }
-
-  updateDims(height, width) {
+    actions.createComposition(dims, pattern, cid => {
+      this.myCompositionsRef.transaction(lst => (
+        [...(lst || []), {
+          cid: cid,
+          title: 'Untitled',
+          dims: {
+            rows: dims.r,
+            cols: dims.c
+          },
+        }]
+      ))
+      this.selectComposition(cid)
+    });
   }
 
   transaction(fn, cbk) {
@@ -88,7 +69,7 @@ export default class Compose extends Component {
   }
 
   cellTransaction(r, c, fn) {
-    this.compositionRef.child('grid/' + r + '/' + c).transaction(fn);
+    this.compositionRef.child(`grid/${r}/${c}`).transaction(fn);
     this.composition.grid[r][c] = fn(this.composition.grid[r][c])
     this.setState({ composition: this.composition });
   }
@@ -97,13 +78,11 @@ export default class Compose extends Component {
     this.cellTransaction(r, c, cell => ({
       ...cell,
       value: value,
-      bad: false,
-      good: false,
     }));
   }
 
-  clueTransaction(ori, idx, fn, cbk) {
-    this.compositionRef.child('clues/' + ori + '/' + idx).transaction(fn, cbk);
+  clueTransaction(ori, idx, fn) {
+    this.compositionRef.child(`clues/${ori}/${idx}`).transaction(fn);
     this.composition.clues[ori][idx] = fn(this.composition.clues[ori][idx]);
     this.setState({ composition: this.composition });
   }
@@ -151,6 +130,21 @@ export default class Compose extends Component {
         author: author
       }
     }));
+  }
+
+  publish() {
+    const textGrid = this.composition.grid.toTextGrid();
+    const puzzle = {
+      info: this.composition.info,
+      grid: textGrid,
+    };
+    actions.createPuzzle(puzzle, pid => {
+      const date = Date.now();
+      const published = { pid, date };
+      this.compositionRef.child(`published`).set(published);
+      this.composition.published = published;
+      this.setState({ composition: this.composition });
+    });
   }
 
   renderMain() {
@@ -212,7 +206,7 @@ export default class Compose extends Component {
               this.state.myCompositions.map((entry, i) =>
                 <div
                   key={i}
-                  onClick={this.selectComposition.bind(this, entry.pid)}
+                  onClick={this.selectComposition.bind(this, entry.cid)}
                   className='compose--left--list--entry'>
                   <div>
                     { entry.title } ({ entry.dims.rows } x { entry.dims.cols })
@@ -243,8 +237,7 @@ export default class Compose extends Component {
               {
                 this.cid
                   ?(
-                    <p>
-                      If you publish your puzzle.
+                    <div>
 
                       { this.composition.published
                           ? (
@@ -256,12 +249,14 @@ export default class Compose extends Component {
                           )
                           : (
                             <div>
-                              <button>Publish to Down for a Cross</button>
+                              <button
+                                onClick={this.publish.bind(this)}
+                              >Publish to Down for a Cross</button>
                             </div>
                           )
                       }
                       <button>Export as puz file</button>
-                    </p>
+                    </div>
                   )
                   : null
               }

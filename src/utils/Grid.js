@@ -265,4 +265,12 @@ export default class Grid {
   toArray() {
     return this.grid;
   }
+
+  toTextGrid() {
+    return this.grid.map(
+      row => row.map(
+        cell => cell.black ? '.' : cell.value
+      )
+    );
+  }
 }

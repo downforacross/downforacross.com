@@ -1,4 +1,4 @@
-import { makeGame } from './gameUtils';
+import { makeGame, makeGrid, makeEmptyClues } from './gameUtils';
 import firebase, { app } from './store/firebase';
 
 // for interfacing with firebase
@@ -26,6 +26,7 @@ const actions = {
       const title = puzzle.info.title;
       const author = puzzle.info.author;
       puzzle.pid = pid;
+      //FIXME this goes in the callback or else it's still a race
       db.ref('puzzlelist/' + pid).set({
         pid: pid,
         info: puzzle.info,
@@ -35,9 +36,9 @@ const actions = {
         importedTime: getTime(),
       });
       db.ref('puzzle/' + pid).set(puzzle);
-      return {...counters, pid: pid}
+      return {...counters, pid }
     }, (err, success, snapshot) => {
-      cbk && cbk(snapshot.val());
+      cbk && cbk(snapshot.child('pid').val());
     });
   },
 
@@ -66,7 +67,34 @@ const actions = {
       });
       cbk && cbk(gid);
     });
-  }
+  },
+
+  createComposition: (dims, pattern, cbk) => {
+    const type = Math.max(dims.r, dims.c) <= 7
+      ? 'Mini Puzzle'
+      : 'Daily Puzzle';
+    const textGrid = pattern.map(row => (
+      row.map(cell => (
+        cell === 0 ? '' : '.'
+      ))
+    ));
+    const grid = makeGrid(textGrid);
+    const composition = {
+      info: {
+        title: 'Untitled',
+        type: type,
+        author: 'Anonymous'
+      },
+      grid: grid.toArray(),
+      clues: grid.alignClues([]),
+      published: false,
+    };
+    console.log('pushing', composition);
+    const cid = db.ref('composition').push().key;
+    db.ref(`composition/${cid}`).set(composition, (error) => {
+      cbk(cid);
+    });
+  },
 };
 
 export { db, getTime, disconnect };
