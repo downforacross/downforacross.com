@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import Editor from '../components/Editor';
 import Create from '../components/Create';
 import EditableSpan from '../components/EditableSpan';
-import { lazy } from '../jsUtils';
+import { toArr, lazy } from '../jsUtils';
 
 import { getId, loggedIn, registerLoginListener } from '../auth';
 
@@ -40,7 +40,10 @@ export default class Compose extends Component {
     this.compositionRef.on('value', _composition => {
       lazy('updateComposition', () => {
         const composition = _composition.val() || {};
+        composition.clues.across = toArr(composition.clues.across);
+        composition.clues.down = toArr(composition.clues.down);
         this.composition = composition;
+        this.composition.clues.across;
         this.setState({ composition });
       });
     });
@@ -92,7 +95,6 @@ export default class Compose extends Component {
   }
 
   flipColor(r, c) {
-    console.log('flip color', this.composition.grid[r][c]);
     this.composition.grid[r][c].black = !this.composition.grid[r][c].black;
     new GridObject(this.composition.grid).assignNumbers();
     this.composition.clues = new GridObject(this.composition.grid).alignClues(this.composition.clues);
