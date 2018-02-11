@@ -254,7 +254,7 @@ export default class Grid {
     };
     for (const cell of this.values()) {
       for (const direction of ['across', 'down']) {
-        if (cell.parents && cell.parents[direction] === cell.number) {
+        if (!cell.black && cell.parents && cell.parents[direction] === cell.number) {
           result[direction][cell.number] = (clues && clues[direction] && clues[direction][cell.number]) || '';
         }
       }
