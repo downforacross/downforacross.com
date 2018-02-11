@@ -107,7 +107,6 @@
 .editor--main--clues--list--scroll {
   position: relative;
   overflow-y: scroll;
-  max-height: 200px;
   border-top: 1px solid #e2e2e2;
   margin-top: 5px;
   padding-right: 10px;

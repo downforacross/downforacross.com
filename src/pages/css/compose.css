@@ -130,6 +130,25 @@
 /* Right panel styles */
 .compose--right {
   flex: 1;
-  padding: 20px;
   border: 1px solid #E2E2E2;
+}
+
+.compose--right--top {
+  padding: 20px;
+}
+
+.compose--right--bottom {
+  border-top: 1px solid #E2E2E2;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.compose--right--bottom .button {
+  cursor: pointer;
+  padding: 10px;
+  border: 1px solid #999;
+  margin-top: 15px;
+  border-radius: 5px;
+  text-align: center;
 }

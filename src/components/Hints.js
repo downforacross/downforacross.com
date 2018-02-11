@@ -24,6 +24,8 @@ export default class Hints extends Component {
       this.props.num !== nextProps.num
       || this.props.direction !== nextProps.direction
       || nextState.list !== this.state.list
+      || nextState.pattern !== this.state.pattern
+      || nextState.hidden !== this.state.hidden
     );
   }
 
@@ -115,30 +117,32 @@ export default class Hints extends Component {
             Matches: {this.state.list.length}
           </span>
         </div>
-        {!this.state.hidden && <div className='hints--matches'>
-          {
-            this.state.list && this.state.list.length > 0
-              ? (
-                <div className='hints--matches--entries'>
-                  {
-                    this.state.list.slice(0, 100).map((word, i) => (
-                      <div key={i} className='hints--matches--entry'>
-                        <div className='hints--matches--entry--word'>
-                          {word}
-                        </div>
-                        <div className='hints--matches--entry--score'>
-                          {this.getScore(word) || ''}
-                        </div>
-                      </div>
-                    ))
-                  }
-                </div>
-              )
-              : 'No matches'
-          }
+        {!this.state.hidden
+            ? <div className='hints--matches'>
+              {
+                this.state.list && this.state.list.length > 0
+                  ? (
+                    <div className='hints--matches--entries'>
+                      {
+                        this.state.list.slice(0, 100).map((word, i) => (
+                          <div key={i} className='hints--matches--entry'>
+                            <div className='hints--matches--entry--word'>
+                              {word}
+                            </div>
+                            <div className='hints--matches--entry--score'>
+                              {this.getScore(word) || ''}
+                            </div>
+                          </div>
+                        ))
+                      }
+                    </div>
+                  )
+                  : 'No matches'
+              }
 
-        </div>}
-      </div>
+            </div>
+            : null}
+          </div>
     );
   }
 }

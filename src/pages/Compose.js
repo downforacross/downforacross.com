@@ -252,37 +252,44 @@ export default class Compose extends Component {
 
               <p>Press Enter to edit the clue for the word that's currently selected.</p>
 
-              {
-                this.cid
-                  ?(
-                    <div>
-
-                      { this.composition.published
-                          ? (
-                            <div>
-                              Published on {this.composition.published.date}
-                              <a href={this.composition.published.pid}></a>
-                              <button
-                                onClick={this.unpublish.bind(this)}
-                              >Unpublish</button>
-                            </div>
-                          )
-                          : (
-                            <div>
-                              <button
-                                onClick={this.publish.bind(this)}
-                              >Publish to Down for a Cross</button>
-                            </div>
-                          )
-                      }
-                      <button
-                        onClick={this.exportToPuz.bind(this)}
-                      >Export as puz file</button>
-                    </div>
-                  )
-                  : null
-              }
             </div>
+          </div>
+          <div className='compose--right--bottom'>
+            <h2> Share your puzzle </h2>
+            {
+              this.cid
+                ?(
+                  <div>
+
+                    { this.composition.published
+                        ? (
+                          <div>
+                            <p>
+                              You published {' '}
+                              <a href={`/puzzle/${this.composition.published.pid}`}>
+                                Puzzle {this.composition.published.pid}
+                              </a>
+                            </p>
+                            <div className='button'
+                              onClick={this.unpublish.bind(this)}
+                            >Unpublish</div>
+                          </div>
+                        )
+                        : (
+                          <div>
+                            <div className='button'
+                              onClick={this.publish.bind(this)}
+                            >Publish</div>
+                          </div>
+                        )
+                    }
+                    <div className='button'
+                      onClick={this.exportToPuz.bind(this)}
+                    >Export as puz file</div>
+                  </div>
+                )
+                : null
+            }
           </div>
         </div>
       </div>
