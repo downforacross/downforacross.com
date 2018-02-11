@@ -16,43 +16,42 @@ export default class Compose extends Component {
   constructor() {
     super();
     this.state = {
-      puzzle: undefined,
-      myPuzzles: []
+      composition: undefined,
+      myCompositions: [],
     };
-    this.pid = undefined;
+    this.cid = undefined;
     registerLoginListener(() => {
       this.me = getId();
-      this.myPuzzlesRef = db.ref('myPuzzles/' + this.me);
-      this.myPuzzlesRef.on('value', lst => {
+      this.myCompositionsRef = db.ref('myPuzzles/' + this.me);
+      this.myCompositionsRef.on('value', lst => {
         this.setState({
-          myPuzzles: (lst.val() || []).reverse()
+          myCompositions: (lst.val() || []).reverse()
         });
       });
     });
     this.color = 'rgb(118, 226, 118)';
   }
 
-  selectPuzzle(pid) {
-    if (this.puzzleRef) {
-      this.puzzleRef.off();
+  selectComposition(cid) {
+    if (this.compositionRef) {
+      this.compositionRef.off();
     }
-    this.pid = pid;
-    this.puzzleRef = db.ref('puzzle/' + pid);
-    this.puzzleListRef = db.ref('puzzlelist/' + pid);
-    this.puzzleRef.on('value', _puzzle => {
-      lazy('updatePuzzle', () => {
-        const puzzle = _puzzle.val() || {};
-        this.puzzle = puzzle;
-        this.setState({ puzzle: this.puzzle });
+    this.cid = cid;
+    this.compositionRef = db.ref('composition/' + cid);
+    this.compositionRef.on('value', _composition => {
+      lazy('updateComposition', () => {
+        const composition = _composition.val() || {};
+        this.composition = composition;
+        this.setState({ composition: this.composition });
       });
     });
   }
 
-  newPuzzle({dims, pattern}) {
+  newComposition({dims, pattern}) {
     const type = Math.max(dims.r, dims.c) <= 7
       ? 'Mini Puzzle'
       : 'Daily Puzzle';
-    const puzzle = {
+    const composition = {
       info: {
         title: 'Untitled',
         type: type,
@@ -63,12 +62,11 @@ export default class Compose extends Component {
       )))).toArray(),
       private: true,
     };
-    puzzle.clues = makeEmptyClues(puzzle.grid),
-
-      actions.createPuzzle(puzzle, ({pid}) => {
-        this.myPuzzlesRef.transaction(lst => (
-          [...(lst || []), {
-            pid: pid,
+    composition.clues = makeEmptyClues(composition.grid),
+      actions.createComposition(pattern, ({cid}) => {
+        this.myCompositionsRef.transaction((lst = []) => (
+          [...lst, {
+            cid: cid,
             title: 'Untitled',
             dims: {
               rows: dims.r,
@@ -76,7 +74,7 @@ export default class Compose extends Component {
             },
           }]
         ))
-        this.selectPuzzle(pid)
+        this.selectComposition(cid)
       });
   }
 
@@ -84,15 +82,15 @@ export default class Compose extends Component {
   }
 
   transaction(fn, cbk) {
-    this.puzzleRef.transaction(fn, cbk);
-    this.puzzle = fn(this.puzzle);
-    this.setState({puzzle: this.puzzle});
+    this.compositionRef.transaction(fn, cbk);
+    this.composition = fn(this.composition);
+    this.setState({composition: this.composition});
   }
 
   cellTransaction(r, c, fn) {
-    this.puzzleRef.child('grid/' + r + '/' + c).transaction(fn);
-    this.puzzle.grid[r][c] = fn(this.puzzle.grid[r][c])
-    this.setState({ puzzle: this.puzzle });
+    this.compositionRef.child('grid/' + r + '/' + c).transaction(fn);
+    this.composition.grid[r][c] = fn(this.composition.grid[r][c])
+    this.setState({ composition: this.composition });
   }
 
   updateGrid(r, c, value) {
@@ -105,9 +103,9 @@ export default class Compose extends Component {
   }
 
   clueTransaction(ori, idx, fn, cbk) {
-    this.puzzleRef.child('clues/' + ori + '/' + idx).transaction(fn, cbk);
-    this.puzzle.clues[ori][idx] = fn(this.puzzle.clues[ori][idx]);
-    this.setState({ puzzle: this.puzzle });
+    this.compositionRef.child('clues/' + ori + '/' + idx).transaction(fn, cbk);
+    this.composition.clues[ori][idx] = fn(this.composition.clues[ori][idx]);
+    this.setState({ composition: this.composition });
   }
 
   updateClues(ori, idx, value) {
@@ -115,33 +113,27 @@ export default class Compose extends Component {
   }
 
   flipColor(r, c) {
-    console.log('flip color', this.puzzle.grid[r][c]);
-    this.puzzle.grid[r][c].black = !this.puzzle.grid[r][c].black;
-    new GridObject(this.puzzle.grid).assignNumbers();
-    this.puzzle.clues = new GridObject(this.puzzle.grid).alignClues(this.puzzle.clues);
-    this.puzzleRef.set(this.puzzle);
-    this.setState({ puzzle: this.puzzle });
+    console.log('flip color', this.composition.grid[r][c]);
+    this.composition.grid[r][c].black = !this.composition.grid[r][c].black;
+    new GridObject(this.composition.grid).assignNumbers();
+    this.composition.clues = new GridObject(this.composition.grid).alignClues(this.composition.clues);
+    this.compositionRef.set(this.composition);
+    this.setState({ composition: this.composition });
   }
 
   getCellSize() {
-    return 30 * 15 / this.puzzle.grid[0].length;
+    return 30 * 15 / this.composition.grid[0].length;
   }
 
   updateTitle(title) {
-    this.puzzleRef.transaction(puzzle => ({
-      ...puzzle,
+    this.compositionRef.transaction(composition => ({
+      ...composition,
       info: {
-        ...puzzle.info,
+        ...composition.info,
         title,
       }
     }));
-    this.puzzleListRef.transaction(puzzle => puzzle && Object.assign({}, puzzle, {
-      title: title,
-      info: Object.assign(puzzle.info, {
-        title: title
-      })
-    }));
-    this.myPuzzlesRef.transaction(lst => {
+    this.myCompositionsRef.transaction(lst => {
       lst.forEach(entry => {
         if (entry.pid === this.pid) {
           entry.title = title;
@@ -152,45 +144,17 @@ export default class Compose extends Component {
   }
 
   updateAuthor(author) {
-    this.transaction(puzzle => ({
-      ...puzzle,
+    this.transaction(composition => ({
+      ...composition,
       info: {
-        ...puzzle.info,
+        ...composition.info,
         author: author
       }
     }));
-    this.puzzleListRef.transaction(puzzle => puzzle && Object.assign(puzzle, {
-      author: author,
-      info: Object.assign(puzzle.info, {
-        author: author
-      })
-    }));
-  }
-
-  setPrivate(isPrivate) {
-    this.transaction(puzzle => Object.assign(puzzle, {
-      private: isPrivate
-    }))
-    this.myPuzzlesRef.transaction(lst => {
-      if (!lst) return lst;
-      lst.forEach(entry => {
-        if (entry.pid === this.pid) {
-          entry.private = isPrivate;
-        }
-      });
-      return lst;
-    });
-    this.puzzleListRef.transaction(puzzle => puzzle && Object.assign(puzzle, {
-      private: isPrivate
-    }));
-  }
-
-  getLink() {
-    return '/puzzle/' + this.pid;
   }
 
   renderMain() {
-    if (!this.puzzle) {
+    if (!this.composition) {
       return (
         <div className='compose--main'>
           <div className='compose--main--select-a-puzzle'>
@@ -204,18 +168,18 @@ export default class Compose extends Component {
         <div className='compose--main--info'>
           <div className='compose--main--info--title'>
             <EditableSpan
-              value={this.puzzle.info.title}
+              value={this.composition.info.title}
               onChange={this.updateTitle.bind(this)}
             />
           </div>
         </div>
         <div className='compose--main--info--subtitle'>
           {
-            this.puzzle.info.type + ' | '
+            this.composition.info.type + ' | '
               + 'By '
           }
           <EditableSpan
-            value={this.puzzle.info.author}
+            value={this.composition.info.author}
             onChange={this.updateAuthor.bind(this)}
           />
         </div>
@@ -223,18 +187,14 @@ export default class Compose extends Component {
           <Editor
             ref='editor'
             size={this.getCellSize()}
-            grid={this.puzzle.grid}
-            clues={this.puzzle.clues}
+            grid={this.composition.grid}
+            clues={this.composition.clues}
             updateGrid={this.updateGrid.bind(this)}
             updateClues={this.updateClues.bind(this)}
             onFlipColor={this.flipColor.bind(this)}
             myColor={this.color}
             pid={this.pid}
           />
-        </div>
-        <div className='compose--main--options'>
-          <label>Private: </label>
-          <input type='checkbox' checked={this.puzzle.private} onChange={e => this.setPrivate(e.target.checked)}/>
         </div>
       </div>
     );
@@ -249,10 +209,10 @@ export default class Compose extends Component {
           </div>
           <div className='compose--left--list'>
             {
-              this.state.myPuzzles.map((entry, i) =>
+              this.state.myCompositions.map((entry, i) =>
                 <div
                   key={i}
-                  onClick={this.selectPuzzle.bind(this, entry.pid)}
+                  onClick={this.selectComposition.bind(this, entry.pid)}
                   className='compose--left--list--entry'>
                   <div>
                     { entry.title } ({ entry.dims.rows } x { entry.dims.cols })
@@ -265,7 +225,7 @@ export default class Compose extends Component {
             className='compose--left--new'>
             <h2> New Puzzle </h2>
             <Create
-              onCreate={this.newPuzzle.bind(this)}
+              onCreate={this.newComposition.bind(this)}
             />
           </div>
         </div>
@@ -281,13 +241,26 @@ export default class Compose extends Component {
               <p>Press Enter to edit the clue for the word that's currently selected.</p>
 
               {
-                this.pid
+                this.cid
                   ?(
                     <p>
-                      To share your puzzle, use this link:
+                      If you publish your puzzle.
 
-                      <br/>
-                      <a href={this.getLink()}>{'https://downforacross.com' + this.getLink()}</a>
+                      { this.composition.published
+                          ? (
+                            <div>
+                              Published on {this.composition.published.date}
+                              <a href={this.composition.published.pid}></a>
+                              <button>Unpublish</button>
+                            </div>
+                          )
+                          : (
+                            <div>
+                              <button>Publish to Down for a Cross</button>
+                            </div>
+                          )
+                      }
+                      <button>Export as puz file</button>
                     </p>
                   )
                   : null
