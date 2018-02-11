@@ -89,11 +89,14 @@ const actions = {
       clues: grid.alignClues([]),
       published: false,
     };
-    console.log('pushing', composition);
     const cid = db.ref('composition').push().key;
     db.ref(`composition/${cid}`).set(composition, (error) => {
       cbk(cid);
     });
+  },
+
+  makePrivate: (pid) => {
+    db.ref(`puzzlelist/${pid}/private`).set(true);
   },
 };
 

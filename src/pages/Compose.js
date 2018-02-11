@@ -31,6 +31,10 @@ export default class Compose extends Component {
     this.color = 'rgb(118, 226, 118)';
   }
 
+  get grid() {
+    return new GridObject(this.composition.grid);
+  }
+
   selectComposition(cid) {
     if (this.compositionRef) {
       this.compositionRef.off();
@@ -96,8 +100,8 @@ export default class Compose extends Component {
 
   flipColor(r, c) {
     this.composition.grid[r][c].black = !this.composition.grid[r][c].black;
-    new GridObject(this.composition.grid).assignNumbers();
-    this.composition.clues = new GridObject(this.composition.grid).alignClues(this.composition.clues);
+    this.grid.assignNumbers();
+    this.composition.clues = this.grid.alignClues(this.composition.clues);
     this.compositionRef.set(this.composition);
     this.setState({ composition: this.composition });
   }
@@ -135,10 +139,11 @@ export default class Compose extends Component {
   }
 
   publish() {
-    const textGrid = this.composition.grid.toTextGrid();
+    const textGrid = this.grid.toTextGrid();
     const puzzle = {
       info: this.composition.info,
       grid: textGrid,
+      clues: this.composition.clues,
     };
     actions.createPuzzle(puzzle, pid => {
       const date = Date.now();
@@ -147,6 +152,17 @@ export default class Compose extends Component {
       this.composition.published = published;
       this.setState({ composition: this.composition });
     });
+  }
+
+  unpublish() {
+    actions.makePrivate(this.composition.published.pid);
+    this.compositionRef.child(`published`).remove();
+    this.composition.published = null;
+    this.setState({ composition: this.composition });
+  }
+
+  exportToPuz() {
+    // TODO
   }
 
   renderMain() {
@@ -246,7 +262,9 @@ export default class Compose extends Component {
                             <div>
                               Published on {this.composition.published.date}
                               <a href={this.composition.published.pid}></a>
-                              <button>Unpublish</button>
+                              <button
+                                onClick={this.unpublish.bind(this)}
+                              >Unpublish</button>
                             </div>
                           )
                           : (
@@ -257,7 +275,9 @@ export default class Compose extends Component {
                             </div>
                           )
                       }
-                      <button>Export as puz file</button>
+                      <button
+                        onClick={this.exportToPuz.bind(this)}
+                      >Export as puz file</button>
                     </div>
                   )
                   : null
