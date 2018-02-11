@@ -31,8 +31,8 @@
   display: block;
   font-family: avenir, "helvetica neue", "Helvetica", "arial", sans-serif;
   font-size: 16px;
-  background-color: #EEE;
-  box-shadow: 2px 2px silver;
+  border: 2px solid gray;
+  border-radius: 5px;
   margin-top: 10px;
   padding: 5px 5px 5px 5px;
   cursor: pointer;
