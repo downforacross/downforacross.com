@@ -18,27 +18,38 @@ function getTime() {
   return new Date().getTime() + offset;
 }
 
+function setPuzzle(pid, puzzle) {
+  const { info, private: private_ = false } = puzzle;
+  const { title, author } = info;
+  db.ref('puzzlelist/' + pid).set({
+    pid,
+    info,
+    title,
+    private: private_,
+    author,
+    importedTime: getTime(),
+  });
+  db.ref('puzzle/' + pid).set({
+    ...puzzle,
+    pid,
+  });
+};
+
 const actions = {
+  updatePuzzle: (pid, puzzle) => {
+    setPuzzle(pid, puzzle);
+  },
   // puzzle: { title, type, grid, clues }
   createPuzzle: (puzzle, cbk) => {
     db.ref('counters').transaction(counters => {
       const pid = ((counters && counters.pid) || 0) + 1;
       const title = puzzle.info.title;
       const author = puzzle.info.author;
-      puzzle.pid = pid;
-      //FIXME this goes in the callback or else it's still a race
-      db.ref('puzzlelist/' + pid).set({
-        pid: pid,
-        info: puzzle.info,
-        title: title,
-        private: puzzle.private || false,
-        author: author,
-        importedTime: getTime(),
-      });
-      db.ref('puzzle/' + pid).set(puzzle);
       return {...counters, pid }
     }, (err, success, snapshot) => {
-      cbk && cbk(snapshot.child('pid').val());
+      const pid = snapshot.child('pid').val();
+      setPuzzle(pid, puzzle);
+      cbk && cbk(pid);
     });
   },
 
@@ -97,6 +108,10 @@ const actions = {
 
   makePrivate: (pid) => {
     db.ref(`puzzlelist/${pid}/private`).set(true);
+  },
+
+  makePublic: (pid) => {
+    db.ref(`puzzlelist/${pid}/private`).set(false);
   },
 };
 

@@ -1,10 +1,11 @@
 import './css/compose.css';
-import actions, { db } from '../actions';
+import actions, { db, getTime } from '../actions';
 
 import GridObject from '../utils/Grid';
 import React, { Component } from 'react';
 import Editor from '../components/Editor';
 import Create from '../components/Create';
+import RelativeTime from '../components/RelativeTime';
 import EditableSpan from '../components/EditableSpan';
 import { toArr, lazy } from '../jsUtils';
 
@@ -138,27 +139,62 @@ export default class Compose extends Component {
     }));
   }
 
-  publish() {
+  // convert from composition to puzzle
+  getPuzzle() {
     const textGrid = this.grid.toTextGrid();
-    const puzzle = {
+    return {
       info: this.composition.info,
       grid: textGrid,
       clues: this.composition.clues,
-    };
+      private: !this.composition.published || this.composition.published.private,
+    }
+  }
+
+  publish() {
+    const puzzle = this.getPuzzle();
     actions.createPuzzle(puzzle, pid => {
-      const date = Date.now();
-      const published = { pid, date };
+      const date = getTime();
+      const published = { pid, date, private: true };
       this.compositionRef.child(`published`).set(published);
       this.composition.published = published;
       this.setState({ composition: this.composition });
     });
   }
 
-  unpublish() {
+  republish() {
+    const { pid } = this.composition.published;
+    const puzzle = this.getPuzzle();
+    actions.updatePuzzle(pid, puzzle);
+    const date = getTime();
+    this.transaction(composition => ({
+      ...composition,
+      published: {
+        ...composition.published,
+        date,
+      },
+    }));
+  }
+
+  makePublic() {
+    this.transaction(composition => ({
+      ...composition,
+      published: {
+        ...composition.published,
+        private: false,
+      },
+    }));
+    actions.makePublic(this.composition.published.pid);
+  }
+
+  makePrivate() {
+    this.transaction(composition => ({
+      ...composition,
+      published: {
+        ...composition.published,
+        private: true,
+      },
+    }));
     actions.makePrivate(this.composition.published.pid);
-    this.compositionRef.child(`published`).remove();
-    this.composition.published = null;
-    this.setState({ composition: this.composition });
   }
 
   exportToPuz() {
@@ -255,11 +291,11 @@ export default class Compose extends Component {
             </div>
           </div>
           <div className='compose--right--bottom'>
-            <h2> Share your puzzle </h2>
             {
               this.cid
                 ?(
                   <div>
+                    <h2> Share your puzzle </h2>
 
                     { this.composition.published
                         ? (
@@ -270,29 +306,42 @@ export default class Compose extends Component {
                                 Puzzle {this.composition.published.pid}
                               </a>
                             </p>
-                            <div className='button'
-                              onClick={this.unpublish.bind(this)}
-                            >Unpublish</div>
+                            <div className='published--update'>
+                              Updated: <RelativeTime date={this.composition.published.date}/>
+                              <div className='button'
+                                onClick={this.republish.bind(this)}
+                              >Republish</div>
+                            </div>
+                            {this.composition.published.private
+                                ? <div className='button'
+                                  onClick={this.makePublic.bind(this)}
+                                >Make Public</div>
+                                : <div className='button'
+                                  onClick={this.makePrivate.bind(this)}
+                                >Make Private</div>
+                            }
                           </div>
                         )
-                        : (
-                          <div>
-                            <div className='button'
-                              onClick={this.publish.bind(this)}
-                            >Publish</div>
-                          </div>
-                        )
-                    }
-                    <div className='button'
-                      onClick={this.exportToPuz.bind(this)}
-                    >Export as puz file</div>
-                  </div>
-                )
-                : null
+                  : (
+                    <div>
+                      Published puzzles will not appear on the home page of Down for a Cross unless you mark them as public
+
+                      <div className='button'
+                        onClick={this.publish.bind(this)}
+                      >Publish</div>
+                    </div>
+                  )
             }
+            <div className='button'
+              onClick={this.exportToPuz.bind(this)}
+            >Export as puz file</div>
           </div>
+                )
+      : null
+    }
+  </div>
+</div>
         </div>
-      </div>
     );
-  }
+}
 };

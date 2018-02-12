@@ -260,7 +260,7 @@ export default class Editor extends Component {
           canSetDirection={this.canSetDirection.bind(this)}
           onSetDirection={this.setDirection.bind(this)}
           onSetSelected={this.setSelected.bind(this)}
-          onEnter={() => this.setState({ editingClue: true }, this.focusClue.bind(this))}
+          onPressEnter={() => this.setState({ editingClue: true }, this.focusClue.bind(this))}
           updateGrid={this.props.updateGrid}
           grid={this.props.grid}
           clues={this.props.clues}
