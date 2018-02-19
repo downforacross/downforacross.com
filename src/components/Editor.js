@@ -7,6 +7,7 @@ import EditableSpan from './EditableSpan';
 import Hints from './Hints';
 
 import GridObject from '../utils/Grid';
+import MobileGridControls from './MobileGridControls';
 import * as gameUtils from '../gameUtils';
 
 window.requestIdleCallback =
@@ -250,6 +251,86 @@ export default class Editor extends Component {
   }
 
   render() {
+    const { mobile } = this.props;
+    if (mobile) {
+      return (
+        <div className='editor--main--wrapper'>
+          <MobileGridControls
+            ref='gridControls'
+            ignore='input'
+            selected={this.state.selected}
+            direction={this.state.direction}
+            canSetDirection={this.canSetDirection.bind(this)}
+            onSetDirection={this.setDirection.bind(this)}
+            onSetSelected={this.setSelected.bind(this)}
+            onPressEnter={() => this.setState({ editingClue: true }, this.focusClue.bind(this))}
+            updateGrid={this.props.updateGrid}
+            grid={this.props.grid}
+            clues={this.props.clues}
+          >
+
+          <div className='editor--main'>
+            {this.renderLeft()}
+            <div className='editor--right'>
+              <div className='editor--main--clues'>
+                {
+                  // Clues component
+                  ['across', 'down'].map((dir, i) => (
+                    <div key={i} className='editor--main--clues--list'>
+                      <div className='editor--main--clues--list--title'>
+                        {dir.toUpperCase()}
+                      </div>
+
+                      <div
+                        className={'editor--main--clues--list--scroll ' + dir}
+                        ref={'clues--list--'+dir}>
+                        {
+                          this.props.clues[dir].map((clue, i) => clue !== undefined && (
+                            <div key={i}
+                              className={
+                                (this.isClueSelected(dir, i)
+                                  ? 'selected '
+                                  : (this.isClueHalfSelected(dir, i)
+                                    ? 'half-selected '
+                                    : ' ')
+                                )
+                                  + 'editor--main--clues--list--scroll--clue'
+                              }
+                              ref={
+                                (this.isClueSelected(dir, i) ||
+                                  this.isClueHalfSelected(dir, i))
+                                  ? this.scrollToClue.bind(this, dir, i)
+                                  : null
+                              }
+                              onClick={this.selectClue.bind(this, dir, i)}>
+                              <div className='editor--main--clues--list--scroll--clue--number'>
+                                {i}
+                              </div>
+                              <div className='editor--main--clues--list--scroll--clue--text'>
+                                {clue}
+                              </div>
+                            </div>
+                          ))
+                        }
+                      </div>
+                    </div>
+                  ))
+                }
+              </div>
+
+              <div className='editor--right--hints'>
+                <Hints
+                  grid={this.props.grid}
+                  num={this.getSelectedClueNumber()}
+                  direction={this.state.direction}
+                />
+              </div>
+            </div>
+          </div>
+        </MobileGridControls>
+      </div>
+      );
+    }
     return (
       <div className='editor--main--wrapper'>
         <GridControls

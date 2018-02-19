@@ -11,6 +11,33 @@ import { toArr, lazy } from '../jsUtils';
 
 import { getId, loggedIn, registerLoginListener } from '../auth';
 
+function ToggleMobile({ mobile, onClick }) {
+  return (
+    <a
+      className='toggle-mobile'
+      onClick={e => {
+        e.preventDefault();
+        onClick();
+      }}
+    >
+      <i className={"fa fa-mobile fa-lg" + (mobile
+        ? ''
+        : ' toggle-mobile--off') }
+        aria-hidden="true"
+      />
+      <span className='separator'>
+        |
+      </span>
+      <i className={"fa fa-desktop" + (!mobile
+        ? ''
+        : ' toggle-mobile--off') }
+        aria-hidden="true"
+      />
+    </a>
+  );
+}
+
+
 export default class Compose extends Component {
 
   constructor() {
@@ -18,6 +45,7 @@ export default class Compose extends Component {
     this.state = {
       composition: undefined,
       myCompositions: [],
+      mobile: false,
     };
     this.cid = undefined;
     registerLoginListener(() => {
@@ -30,6 +58,7 @@ export default class Compose extends Component {
       });
     });
     this.color = 'rgb(118, 226, 118)';
+    this._toggleMobile = this.toggleMobile.bind(this);
   }
 
   get grid() {
@@ -201,6 +230,15 @@ export default class Compose extends Component {
     // TODO
   }
 
+  toggleMobile() {
+    const { mobile } = this.state;
+    this.setState({
+      mobile: !mobile,
+    }, () => {
+      window.scrollTo(0, 0);
+    });
+  }
+
   renderMain() {
     if (!this.composition) {
       return (
@@ -249,6 +287,7 @@ export default class Compose extends Component {
   }
 
   render() {
+    const { mobile } = this.state;
     return (
       <div className='compose'>
         <div className='compose--left'>
@@ -322,26 +361,30 @@ export default class Compose extends Component {
                             }
                           </div>
                         )
-                  : (
-                    <div>
-                      Published puzzles will not appear on the home page of Down for a Cross unless you mark them as public
+                        : (
+                          <div>
+                            Published puzzles will not appear on the home page of Down for a Cross unless you mark them as public
 
-                      <div className='button'
-                        onClick={this.publish.bind(this)}
-                      >Publish</div>
-                    </div>
-                  )
-            }
-            <div className='button'
-              onClick={this.exportToPuz.bind(this)}
-            >Export as puz file</div>
-          </div>
+                            <div className='button'
+                              onClick={this.publish.bind(this)}
+                            >Publish</div>
+                          </div>
+                        )
+                    }
+                    <div className='button'
+                      onClick={this.exportToPuz.bind(this)}
+                    >Export as puz file</div>
+                  </div>
                 )
-      : null
-    }
-  </div>
-</div>
-        </div>
+                : null
+            }
+          </div>
+          <ToggleMobile
+            mobile={mobile}
+            onClick={this._toggleMobile}
+          />
+      </div>
+    </div>
     );
-}
+  }
 };
