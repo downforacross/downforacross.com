@@ -156,3 +156,15 @@
 .published--update {
   font-size: 12px;
 }
+
+.compose--wrapper {
+  width: 100%;
+}
+
+.toggle-mobile {
+  display: block;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 10px;
+}

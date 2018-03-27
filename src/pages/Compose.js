@@ -1,4 +1,5 @@
 import './css/compose.css';
+import Nav from '../components/Nav';
 import actions, { db, getTime } from '../actions';
 
 import GridObject from '../utils/Grid';
@@ -7,7 +8,7 @@ import Editor from '../components/Editor';
 import Create from '../components/Create';
 import RelativeTime from '../components/RelativeTime';
 import EditableSpan from '../components/EditableSpan';
-import { toArr, lazy } from '../jsUtils';
+import { toArr, lazy, isMobile } from '../jsUtils';
 
 import { getId, loggedIn, registerLoginListener } from '../auth';
 
@@ -45,7 +46,7 @@ export default class Compose extends Component {
     this.state = {
       composition: undefined,
       myCompositions: [],
-      mobile: false,
+      mobile: isMobile(),
     };
     this.cid = undefined;
     registerLoginListener(() => {
@@ -289,102 +290,108 @@ export default class Compose extends Component {
   render() {
     const { mobile } = this.state;
     return (
-      <div className='compose'>
-        <div className='compose--left'>
-          <div className='compose--left--top'>
-            <h2> Your Puzzles </h2>
-          </div>
-          <div className='compose--left--list'>
-            {
-              this.state.myCompositions.map((entry, i) =>
-                <div
-                  key={i}
-                  onClick={this.selectComposition.bind(this, entry.cid)}
-                  className='compose--left--list--entry'>
-                  <div>
-                    { entry.title } ({ entry.dims.rows } x { entry.dims.cols })
+      <div className={
+        'compose--wrapper ' + (mobile ? 'mobile' : '')}>
+        <Nav
+          mobile={mobile}
+        />
+        <div className='compose'>
+          <div className='compose--left'>
+            <div className='compose--left--top'>
+              <h2> Your Puzzles </h2>
+            </div>
+            <div className='compose--left--list'>
+              {
+                this.state.myCompositions.map((entry, i) =>
+                  <div
+                    key={i}
+                    onClick={this.selectComposition.bind(this, entry.cid)}
+                    className='compose--left--list--entry'>
+                    <div>
+                      { entry.title } ({ entry.dims.rows } x { entry.dims.cols })
+                    </div>
                   </div>
-                </div>
-              )
-            }
+                )
+              }
+            </div>
+            <div
+              className='compose--left--new'>
+              <h2> New Puzzle </h2>
+              <Create
+                onCreate={this.newComposition.bind(this)}
+              />
+            </div>
           </div>
-          <div
-            className='compose--left--new'>
-            <h2> New Puzzle </h2>
-            <Create
-              onCreate={this.newComposition.bind(this)}
+          { this.renderMain() }
+          <div className='compose--right'>
+            <div className='compose--right--top'>
+              <h2> Instructions </h2>
+              <div>
+                <p>Here you can browse, edit or create new puzzles.</p>
+
+                <p> Click on the grid, and use arrow keys to navigate the grid.</p>
+
+                <p>Press Enter to edit the clue for the word that's currently selected.</p>
+
+              </div>
+            </div>
+            <div className='compose--right--bottom'>
+              {
+                this.cid
+                  ?(
+                    <div>
+                      <h2> Share your puzzle </h2>
+
+                      { this.composition.published
+                          ? (
+                            <div>
+                              <p>
+                                You published {' '}
+                                <a href={`/puzzle/${this.composition.published.pid}`}>
+                                  Puzzle {this.composition.published.pid}
+                                </a>
+                              </p>
+                              <div className='published--update'>
+                                Updated: <RelativeTime date={this.composition.published.date}/>
+                                <div className='button'
+                                  onClick={this.republish.bind(this)}
+                                >Republish</div>
+                              </div>
+                              {this.composition.published.private
+                                  ? <div className='button'
+                                    onClick={this.makePublic.bind(this)}
+                                  >Make Public</div>
+                                  : <div className='button'
+                                    onClick={this.makePrivate.bind(this)}
+                                  >Make Private</div>
+                              }
+                            </div>
+                          )
+                          : (
+                            <div>
+                              Published puzzles will not appear on the home page of Down for a Cross unless you mark them as public
+
+                              <div className='button'
+                                onClick={this.publish.bind(this)}
+                              >Publish</div>
+                            </div>
+                          )
+                      }
+                      <div className='button'
+                        onClick={this.exportToPuz.bind(this)}
+                      >Export as puz file</div>
+                    </div>
+                  )
+                  : null
+              }
+            </div>
+            <ToggleMobile
+              mobile={mobile}
+              onClick={this._toggleMobile}
             />
           </div>
         </div>
-        { this.renderMain() }
-        <div className='compose--right'>
-          <div className='compose--right--top'>
-            <h2> Instructions </h2>
-            <div>
-              <p>Here you can browse, edit or create new puzzles.</p>
-
-              <p> Click on the grid, and use arrow keys to navigate the grid.</p>
-
-              <p>Press Enter to edit the clue for the word that's currently selected.</p>
-
-            </div>
-          </div>
-          <div className='compose--right--bottom'>
-            {
-              this.cid
-                ?(
-                  <div>
-                    <h2> Share your puzzle </h2>
-
-                    { this.composition.published
-                        ? (
-                          <div>
-                            <p>
-                              You published {' '}
-                              <a href={`/puzzle/${this.composition.published.pid}`}>
-                                Puzzle {this.composition.published.pid}
-                              </a>
-                            </p>
-                            <div className='published--update'>
-                              Updated: <RelativeTime date={this.composition.published.date}/>
-                              <div className='button'
-                                onClick={this.republish.bind(this)}
-                              >Republish</div>
-                            </div>
-                            {this.composition.published.private
-                                ? <div className='button'
-                                  onClick={this.makePublic.bind(this)}
-                                >Make Public</div>
-                                : <div className='button'
-                                  onClick={this.makePrivate.bind(this)}
-                                >Make Private</div>
-                            }
-                          </div>
-                        )
-                        : (
-                          <div>
-                            Published puzzles will not appear on the home page of Down for a Cross unless you mark them as public
-
-                            <div className='button'
-                              onClick={this.publish.bind(this)}
-                            >Publish</div>
-                          </div>
-                        )
-                    }
-                    <div className='button'
-                      onClick={this.exportToPuz.bind(this)}
-                    >Export as puz file</div>
-                  </div>
-                )
-                : null
-            }
-          </div>
-          <ToggleMobile
-            mobile={mobile}
-            onClick={this._toggleMobile}
-          />
       </div>
-    </div>
     );
   }
 };

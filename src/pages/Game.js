@@ -13,7 +13,7 @@ import { db, getTime } from '../actions';
 import userActions from '../userActions';
 import GridObject from '../utils/Grid';
 import { makeEmptyGame } from '../gameUtils';
-import { toArr, lazy, rand_color } from '../jsUtils';
+import { toArr, lazy, rand_color, isMobile } from '../jsUtils';
 
 const CURSOR_EXPIRE = 1000 * 60; // 60 seconds
 
@@ -68,21 +68,6 @@ function Header({ mobile, info }) {
       </div>
     </div>
   );
-}
-
-function isMobile() {
-  if (navigator.userAgent.match(/Tablet|iPad/i))
-  {
-    // do tablet stuff
-    return true;
-  } else if(navigator.userAgent.match(/Mobile|Windows Phone|Lumia|Android|webOS|iPhone|iPod|Blackberry|PlayBook|BB10|Opera Mini|\bCrMo\/|Opera Mobi/i) )
-  {
-    // do mobile stuff
-    return true;
-  } else {
-    // do desktop stuff
-    return false;
-  }
 }
 
 
