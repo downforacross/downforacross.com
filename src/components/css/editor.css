@@ -24,7 +24,7 @@
 
 .editor--main--clue-bar--text {
   display: flex;
-  /* overflow: scroll; */
+  overflow: auto;
   max-width: 389px;
   align-items: center;
 }
@@ -39,7 +39,7 @@
   flex: 1;
   margin-left: 19px;
   display: inline-block;
-  overflow-y: scroll;
+  overflow-y: auto;
   max-width: 100%;
   width: 100%;
   font-size: 15px;
@@ -57,7 +57,7 @@
   flex: 1;
   margin-left: 20px;
   display: inline-block;
-  overflow-y: scroll;
+  overflow-y: auto;
   max-height: 100%;
   height: 100%;
 }
@@ -106,7 +106,7 @@
 
 .editor--main--clues--list--scroll {
   position: relative;
-  overflow-y: scroll;
+  overflow-y: auto;
   border-top: 1px solid #e2e2e2;
   margin-top: 5px;
   padding-right: 10px;

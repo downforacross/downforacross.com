@@ -26,7 +26,7 @@
 .player--main--clue-bar--text {
   margin-left: 20px;
   display: inline-block;
-  overflow-y: scroll;
+  overflow-y: auto;
   max-height: 100%;
 }
 
@@ -107,6 +107,6 @@
 .player--mobile--clue-bar--text {
   margin-left: 20px;
   display: inline-block;
-  overflow-y: scroll;
+  overflow-y: auto;
   max-height: 100%;
 }

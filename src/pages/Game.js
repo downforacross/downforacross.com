@@ -169,7 +169,6 @@ export default class Game extends Component {
 
   cellTransaction(r, c, fn) {
     db.ref('game/' + this.gid + '/grid/' + r + '/' + c).transaction(fn);
-    console.log('cellTransaction', this.game);
     this.game.grid[r][c] = fn(this.game.grid[r][c])
     // do this whenever game changes
     this.setState({ game: this.game });

@@ -22,7 +22,7 @@
 
 .compose--left--list {
   padding: 10px;
-  overflow-y: scroll;
+  overflow-y: auto;
   max-height: 70%;
   flex: 2;
 }
