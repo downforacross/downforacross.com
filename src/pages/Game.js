@@ -9,7 +9,7 @@ import Chat from '../components/Chat';
 import Toolbar from '../components/Toolbar';
 import Nav from '../components/Nav';
 
-import { db, getTime } from '../actions';
+import { db, getTime, SERVER_TIME } from '../actions';
 import userActions from '../userActions';
 import GridObject from '../utils/Grid';
 import { makeEmptyGame } from '../gameUtils';
@@ -133,6 +133,7 @@ export default class Game extends Component {
   componentDidMount() {
     registerLoginListener(() => {
       this.gid = this.computeGid();
+      this.historyRef = db.ref(`history/${this.gid}`)
       this.color = this.computeColor();
       this.id = getId();
       db.ref('game/' + this.gid).on('value', _game => {
@@ -210,6 +211,17 @@ export default class Game extends Component {
     if (cursors[id] || !this.game.solved) {
       db.ref(`cursors/${this.gid}/${this.id}`).set({ color, r, c, updatedAt, postGame });
     }
+
+
+    this.historyRef.push({
+      timestamp: SERVER_TIME,
+      type: 'updateCursor',
+      params: {
+        timestamp: SERVER_TIME,
+        cell: {r, c},
+        id,
+      },
+    });
   }
 
   updateGrid(r, c, value) {
@@ -220,17 +232,9 @@ export default class Game extends Component {
       return; // good squares are locked
     }
 
-    function takeLast(num, ar) {
-      return ar.length > num ? ar.slice(ar.length - num) : ar;
-    }
-
     const { pencilMode } = this.state;
     this.cellTransaction(r, c, cell => (
       Object.assign(cell, {
-        edits: takeLast(10, [...(cell.edits || []), {
-          time: getTime(),
-          value: value
-        }]),
         value: value,
         bad: false,
         good: false,
@@ -239,6 +243,16 @@ export default class Game extends Component {
     ));
     this.checkIsSolved();
     this.startClock();
+
+    this.historyRef.push({
+      timestamp: SERVER_TIME,
+      type: 'updateCell',
+      params: {
+        cell: {r, c},
+        value,
+        id: this.id,
+      },
+    });
   }
 
   sendChatMessage(username, text) {

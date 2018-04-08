@@ -75,6 +75,11 @@ const actions = {
       db.ref('puzzle/' + pid).once('value', puzzle => {
         const game = makeGame(gid, name, puzzle.val());
         db.ref('game/' + gid).set(game);
+        db.ref('history/' + gid).push({
+          timestamp: SERVER_TIME,
+          type: 'create',
+          params: { game },
+        });
       });
       cbk && cbk(gid);
     });
@@ -115,5 +120,6 @@ const actions = {
   },
 };
 
-export { db, getTime, disconnect };
+const SERVER_TIME = firebase.database.ServerValue.TIMESTAMP;
+export { db, getTime, disconnect, SERVER_TIME };
 export default actions;
