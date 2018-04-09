@@ -8,7 +8,7 @@ const reducers = {
     } = game;
 
     const {
-      cell,
+      cell: {r, c},
       id,
       timestamp,
     } = params;
@@ -18,7 +18,8 @@ const reducers = {
         cursor => cursor.id !== id
       )
       .concat([{
-        cell,
+        r,
+        c,
         id,
         timestamp,
       }]);
@@ -43,7 +44,6 @@ const reducers = {
         },
       }),
     });
-    console.log('updatecell', params, grid[r][c]);
     return {
       ...game,
       grid,

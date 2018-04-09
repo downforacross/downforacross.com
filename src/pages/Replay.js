@@ -1,3 +1,5 @@
+import './css/replay.css';
+
 import { getId, recordUsername, registerLoginListener } from '../auth'
 
 import Player from '../components/Player';
@@ -5,13 +7,13 @@ import React, { Component } from 'react';
 import Nav from '../components/Nav';
 import GridObject from '../utils/Grid';
 import { db } from '../actions';
-import { toArr, lazy, rand_color } from '../jsUtils';
+import { toArr, lazy, rand_color, pure, isAncestor } from '../jsUtils';
 import _ from 'lodash';
 
 import { reduce } from '../utils/GameOperations';
 const TIMELINE_COLORS = {
-  'updateCell': '#9999FF',
-  'updateCursor': '#EEEEEE',
+  'updateCell': '#9999FF80',
+  'updateCursor': '#EEEEEE80',
   'create': '#000000',
 };
 
@@ -28,6 +30,36 @@ const TimelineBar = ({
   );
 };
 
+// a pure arrow function component, so bars aren't re-computed every time
+const TimelineBars = pure(({
+  history,
+  begin,
+  units,
+}) => {
+  return (
+    <div>
+      {history.map(({
+        timestamp,
+        type,
+      }, i) => (
+        <div
+          key={i}
+          style={{
+            left: (timestamp - begin) * units,
+            position: 'absolute',
+            width: 2,
+            height: 50,
+          }}
+        >
+          <TimelineBar
+            type={type}
+          />
+        </div>
+      ))}
+    </div>
+  );
+});
+
 class Timeline extends React.PureComponent {
   get begin() {
     const { history } = this.props;
@@ -38,7 +70,14 @@ class Timeline extends React.PureComponent {
     return history[history.length - 1].timestamp;
   }
   get units() {
-   return 0.003; // 1 second = 3 pixels wide
+    const length = this.end - this.begin;
+    const maxWidth = 10000;
+    const minWidth = 400;
+    return Math.min(
+      maxWidth / length, Math.max(
+        0.01, // 1 second = 10 pixel
+        minWidth / length,
+      ));
   }
 
   componentDidUpdate() {
@@ -75,12 +114,25 @@ class Timeline extends React.PureComponent {
       x += node.offsetLeft;
       node = node.parentElement;
     }
-    onSetPosition(x / this.units + this.begin);
+
+    let position = x / this.units + this.begin;
+    position = Math.min(
+      this.end, Math.max(
+        this.begin,
+        position,
+      ));
+    onSetPosition(position);
   }
 
   handleMouseDown = (e) => {
     this.down = true;
     this.handleMouse(e);
+  }
+
+  handleMouseOut = (e) => {
+    if (!isAncestor(this.refs.timeline, e.nativeEvent.relatedTarget)) {
+      this.down = false;
+    }
   }
 
   handleMouseUp = (e) => {
@@ -136,41 +188,27 @@ class Timeline extends React.PureComponent {
         ref='scrollContainer'
         style={{
           overflowX: 'auto',
-          width: 900,
-          height: 50,
+          width: 600,
         }}>
         <div
           ref='timeline'
           style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'stretch',
             position: 'relative',
             height: 50,
             width: (this.end - this.begin) * this.units,
+            backgroundColor: '#00000005',
+            cursor: 'pointer',
           }}
           onMouseDown={this.handleMouseDown}
+          onMouseOut={this.handleMouseOut}
           onMouseMove={this.handleMouseMove}
           onMouseUp={this.handleMouseUp}
         >
-          {history.map(({
-            timestamp,
-            type,
-          }, i) => (
-            <div
-              key={i}
-              style={{
-                left: (timestamp - this.begin) * this.units,
-                position: 'absolute',
-                width: 2,
-                height: 50,
-              }}
-            >
-              <TimelineBar
-                type={type}
-              />
-            </div>
-          ))}
+          <TimelineBars
+            history={history}
+            begin={this.begin}
+            units={this.units}
+          />
           {this.renderCursor()}
         </div>
       </div>
@@ -208,11 +246,9 @@ export default class Replay extends Component {
     let game = null;
     history.forEach(event => {
       if (event.timestamp <= position) {
-        console.log('reduce', event);
         game = reduce(game, event);
       }
     });
-    console.log('game at', position, game);
     return game;
   }
 
@@ -271,40 +307,150 @@ export default class Replay extends Component {
     );
   }
 
-  renderControls() {
+  setDirection = (direction, value) => {
+    this.setState({
+      [direction]: value,
+    });
+  }
+
+  handleMouseDownLeft = (e) => {
+    e.preventDefault();
+    clearInterval(this.interval);
+    this.interval = setInterval(this.scrubLeft, 30);
+  }
+
+  handleMouseDownRight = (e) => {
+    e.preventDefault();
+    clearInterval(this.interval);
+    this.interval = setInterval(this.scrubRight, 30);
+  }
+
+  handleMouseUpLeft = () => {
+    clearInterval(this.interval);
+    this.setState({ left: false });
+  }
+
+  handleMouseUpRight = () => {
+    clearInterval(this.interval);
+    this.setState({ right: false });
+  }
+
+  handleKeyDown = (e) => {
+    e.preventDefault();
+    if (e.key === 'ArrowLeft') {
+      this.scrubLeft();
+    } else if (e.key === 'ArrowRight') {
+      this.scrubRight();
+    }
+  }
+
+  handleKeyUp = (e) => {
+    e.preventDefault();
+    if (e.key === 'ArrowLeft') {
+      this.setState({ left: false });
+    } else if (e.key === 'ArrowRight') {
+      this.setState({ right: false });
+    }
+  }
+
+  scrubLeft = () => {
     const { position, history } = this.state;
+    const index = _.findLastIndex(history, (event) => (
+      event.timestamp < position
+    ));
+    if (!this.state.left) {
+      this.setState({
+        left: true,
+      });
+    }
+    if (index === -1) return;
+    this.setState({
+      position: history[index].timestamp,
+    });
+  }
+
+  scrubRight = () => {
+    const { position, history } = this.state;
+    const index = _.findIndex(history, (event) => (
+      event.timestamp > position
+    ));
+    if (!this.state.right) {
+      this.setState({
+        right: true,
+      });
+    }
+    if (index === -1) return;
+    this.setState({
+      position: history[index].timestamp,
+    });
+  }
+
+  renderControls() {
+    const { position, history, left, right } = this.state;
     const length = history.length;
 
     // renders the controls / state
     return (
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'stretch',
-      }}>
-      {history.length > 0
-        ? <Timeline
-          history={history}
-          position={position}
-          onSetPosition={this.handleSetPosition}
-        />
-        : null
-      }
-    </div>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'stretch',
+          padding: '20',
+          outline: 'none',
+        }}
+        tabIndex='1'
+        onKeyDown={this.handleKeyDown}
+        onKeyUp={this.handleKeyUp}
+      >
+        <div className='scrub--container'>
+          <div
+            ref='scrubLeft'
+            className={'scrub ' + (left ? 'active' : '')}
+            onMouseDown={this.handleMouseDownLeft}
+            onMouseUp={this.handleMouseUpLeft}
+            onMouseLeave={this.handleMouseUpLeft}
+          >
+            {'<<'}
+          </div>
+        </div>
+        {history.length > 0
+            ? <Timeline
+              history={history}
+              position={position}
+              onSetPosition={this.handleSetPosition}
+            />
+            : null
+        }
+        <div className='scrub--container'>
+          <div
+            ref='scrubRight'
+            className={'scrub ' + (right ? 'active' : '')}
+            onMouseDown={this.handleMouseDownRight}
+            onMouseUp={this.handleMouseUpRight}
+            onMouseLeave={this.handleMouseUpRight}
+          >
+            {'>>'}
+          </div>
+        </div>
+
+      </div>
     );
   }
 
   render() {
     return (
-      <div style={{
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        padding: 10,
-      }}>
-      {this.renderControls()}
-      {this.renderPlayer()}
-      {/*Controls:
+      <div
+        className='replay'
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          padding: 10,
+        }}
+      >
+        {this.renderControls()}
+        {this.renderPlayer()}
+        {/*Controls:
       Playback scrubber
       Playback speed toggle
       Skip inactivity checkbox*/}

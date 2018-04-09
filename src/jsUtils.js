@@ -1,3 +1,6 @@
+import _ from 'lodash';
+import React from 'react';
+
 function toArr(a) {
   if (Array.isArray(a)) return a;
   const ret = [];
@@ -85,4 +88,20 @@ function rand_color() {
   return 'hsl(' + h + ',' + s + '%,' + l + '%)';
 }
 
-export { hasShape, toArr, lazy, rand_int, rand_color };
+function pure(func) {
+  class PureComponentWrap extends React.PureComponent {
+    render() {
+      return func(this.props, this.context)
+    }
+  }
+  return PureComponentWrap
+}
+
+function isAncestor(a, b) {
+  if (!b) return false;
+  if (a === b) return true;
+  return isAncestor(a, b.parentElement);
+}
+
+export { hasShape, toArr, lazy, rand_int, rand_color, pure, isAncestor };
+

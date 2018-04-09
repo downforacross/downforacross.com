@@ -213,15 +213,17 @@ export default class Game extends Component {
     }
 
 
-    this.historyRef.push({
-      timestamp: SERVER_TIME,
-      type: 'updateCursor',
-      params: {
+    if (!postGame) {
+      this.historyRef.push({
         timestamp: SERVER_TIME,
-        cell: {r, c},
-        id,
-      },
-    });
+        type: 'updateCursor',
+        params: {
+          timestamp: SERVER_TIME,
+          cell: {r, c},
+          id,
+        },
+      });
+    }
   }
 
   updateGrid(r, c, value) {
@@ -286,6 +288,13 @@ export default class Game extends Component {
           getTime())
       }))
     );
+    this.historyRef.push({
+      timestamp: SERVER_TIME,
+      type: 'updateClock',
+      params: {
+        action: 'start',
+      },
+    });
   }
 
   pauseClock() {
@@ -296,6 +305,13 @@ export default class Game extends Component {
         pausedTime: (game.pausedTime || 0) + getTime() - (game.startTime || 0)
       }))
     );
+    this.historyRef.push({
+      timestamp: SERVER_TIME,
+      type: 'updateClock',
+      params: {
+        action: 'pause',
+      },
+    });
   }
 
   stopClock() {
@@ -312,6 +328,13 @@ export default class Game extends Component {
       game.stopTime = null;
       game.pausedTime = null;
       return game;
+    });
+    this.historyRef.push({
+      timestamp: SERVER_TIME,
+      type: 'updateClock',
+      params: {
+        action: 'reset',
+      },
     });
   }
 
@@ -342,6 +365,13 @@ export default class Game extends Component {
       });
       return game;
     });
+    this.historyRef.push({
+      timestamp: SERVER_TIME,
+      type: 'check',
+      params: {
+        scopeString,
+      },
+    });
   }
 
   _revealSquare(cell, answer) {
@@ -361,6 +391,13 @@ export default class Game extends Component {
       return game;
     });
     this.checkIsSolved();
+    this.historyRef.push({
+      timestamp: SERVER_TIME,
+      type: 'reveal',
+      params: {
+        scopeString,
+      },
+    });
   }
 
   _resetSquare(cell) {
@@ -381,6 +418,13 @@ export default class Game extends Component {
       return game;
     });
     this.checkIsSolved();
+    this.historyRef.push({
+      timestamp: SERVER_TIME,
+      type: 'reset',
+      params: {
+        scopeString,
+      },
+    });
   }
 
   focusChat() {
