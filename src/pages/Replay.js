@@ -2,6 +2,7 @@ import './css/replay.css';
 
 import { getId, recordUsername, registerLoginListener } from '../auth'
 
+import GameStore from '../store/gameStore';
 import Player from '../components/Player';
 import React, { Component } from 'react';
 import Nav from '../components/Nav';
@@ -10,7 +11,8 @@ import { db } from '../actions';
 import { toArr, lazy, rand_color, pure, isAncestor } from '../jsUtils';
 import _ from 'lodash';
 
-import { reduce } from '../utils/GameOperations';
+const SCRUB_SPEED = 60; // 30 actions per second
+
 const TIMELINE_COLORS = {
   'updateCell': '#9999FF80',
   'updateCursor': '#EEEEEE80',
@@ -224,6 +226,7 @@ export default class Replay extends Component {
       ],
       position: 0,
     };
+    this.gameStore = new GameStore([]);
   }
 
   handleSetPosition = position => {
@@ -237,19 +240,8 @@ export default class Replay extends Component {
   get game() {
     // compute the game state corresponding to current playback time
     const { history, position } = this.state;
-    return this.getSnapshotAt(history, position);
-  }
-
-  // returns the result of history[0:position]
-  // this fn will eventually live in its own module
-  getSnapshotAt(history, position) {
-    let game = null;
-    history.forEach(event => {
-      if (event.timestamp <= position) {
-        game = reduce(game, event);
-      }
-    });
-    return game;
+    console.log('get game');
+    return this.gameStore.getSnapshotAt(position);
   }
 
   componentDidMount() {
@@ -259,8 +251,9 @@ export default class Replay extends Component {
 
     this.historyRef.once('value', snapshot => {
       const history = _.values(snapshot.val());
-      if (history.length > 0) {
+      if (history.length > 0 && history[0].type === 'create') {
         const position = history[0].timestamp;
+        this.gameStore = new GameStore(history);
         this.setState({history, position});
       } else {
         this.setState({
@@ -271,6 +264,13 @@ export default class Replay extends Component {
   }
 
   renderPlayer() {
+    if (this.error) {
+      return (
+        <div>
+          Error loading replay
+        </div>
+      );
+    }
     if (!this.game) {
       return (
         <div>
@@ -316,13 +316,13 @@ export default class Replay extends Component {
   handleMouseDownLeft = (e) => {
     e.preventDefault();
     clearInterval(this.interval);
-    this.interval = setInterval(this.scrubLeft, 30);
+    this.interval = setInterval(this.scrubLeft, 1000 / SCRUB_SPEED);
   }
 
   handleMouseDownRight = (e) => {
     e.preventDefault();
     clearInterval(this.interval);
-    this.interval = setInterval(this.scrubRight, 30);
+    this.interval = setInterval(this.scrubRight, 1000 / SCRUB_SPEED);
   }
 
   handleMouseUpLeft = () => {
@@ -396,7 +396,7 @@ export default class Replay extends Component {
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'stretch',
-          padding: '20',
+          padding: 5,
           outline: 'none',
         }}
         tabIndex='1'

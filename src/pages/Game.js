@@ -220,6 +220,7 @@ export default class Game extends Component {
         params: {
           timestamp: SERVER_TIME,
           cell: {r, c},
+          color,
           id,
         },
       });
