@@ -104,7 +104,6 @@ const reducers = {
 
   reveal: (game, params) => {
     const { scope = [], squares } = params;
-    console.log('reveal', game, params);
     let { grid, solution } = game;
     const scopeGrid = getScopeGrid(grid, scope);
     grid = grid.map((row, i) => (

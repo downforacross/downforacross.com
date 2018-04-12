@@ -56,7 +56,7 @@ const TimelineBars = pure(({
             left: (timestamp - begin) * units,
             position: 'absolute',
             width: 2,
-            height: 50,
+            height: 40,
           }}
         >
           <TimelineBar
@@ -102,7 +102,7 @@ class Timeline extends React.PureComponent {
         style={{
           position: 'absolute',
           left: (position - this.begin) * this.units - 5,
-          top: 20,
+          top: 15,
           backgroundColor: '#000000',
           borderRadius: 5,
           width: 10,
@@ -202,7 +202,7 @@ class Timeline extends React.PureComponent {
           ref='timeline'
           style={{
             position: 'relative',
-            height: 50,
+            height: 40,
             width: (this.end - this.begin) * this.units,
             backgroundColor: TIMELINE_BACKGROUND_COLOR,
             cursor: 'pointer',
@@ -369,7 +369,9 @@ export default class Replay extends Component {
   }
 
   renderHeader() {
-    if (!this.game || this.state.error) return;
+    if (!this.game || this.state.error) {
+      return null;
+    }
     const { title, author, type } = this.game.info;
     return (
       <div>
@@ -385,6 +387,33 @@ export default class Replay extends Component {
             )
           }
         </div>
+      </div>
+    );
+  }
+
+  renderToolbar() {
+    if (!this.game || this.state.error) {
+      return null;
+    }
+
+    const { clock } = this.game;
+
+    function pad2(num) {
+      let s = '' + 100 + num;
+      s = s.substr(s.length - 2);
+      return s;
+    }
+    const millis = clock.totalTime;
+    let secs = Math.floor(millis / 1000);
+    let mins = Math.floor(secs / 60); secs = secs % 60;
+    let hours = Math.floor(mins / 60); mins = mins % 60;
+    const str = (hours ? (hours + ':'):'') + pad2(mins) + ':' + pad2(secs);
+
+    return (
+      <div style={{
+        marginLeft: 260,
+      }}>
+       {str}
       </div>
     );
   }
@@ -515,16 +544,19 @@ export default class Replay extends Component {
       >
         <Nav mobile={false} />
         <div style={{
-          padding: 20,
+          paddingLeft: 30,
+          paddingTop: 20,
+          paddingBottom: 20,
         }}>
           {this.renderHeader()}
         </div>
         <div style={{
-
+          padding: 10,
+          border: '1px solid #E2E2E2',
         }}>
+          {this.renderToolbar()}
         </div>
         <div style={{
-          flex: 1,
           display: 'flex',
           flexDirection: 'row',
           padding: 20,
