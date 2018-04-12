@@ -4,6 +4,7 @@ import { getId, recordUsername, registerLoginListener } from '../auth'
 
 import GameStore from '../store/gameStore';
 import Player from '../components/Player';
+import Chat from '../components/Chat';
 import React, { Component } from 'react';
 import Nav from '../components/Nav';
 import GridObject from '../utils/Grid';
@@ -11,12 +12,16 @@ import { db } from '../actions';
 import { toArr, lazy, rand_color, pure, isAncestor } from '../jsUtils';
 import _ from 'lodash';
 
-const SCRUB_SPEED = 60; // 30 actions per second
+const SCRUB_SPEED = 50; // 30 actions per second
 
 const TIMELINE_COLORS = {
-  'updateCell': '#9999FF80',
+  'updateCell'  : '#9999FF80',
   'updateCursor': '#EEEEEE80',
-  'create': '#000000',
+  'reveal'      : '#EE0000C0',
+  'check'       : '#EE000050',
+  'updateClock' : '#0000EE80',
+  'chat'        : '#00EEEE80',
+  'create'      : '#00000080',
 };
 
 const TimelineBar = ({
@@ -224,6 +229,8 @@ export default class Replay extends Component {
     this.state = {
       history: [
       ],
+      filteredHistory: [
+      ],
       position: 0,
     };
     this.gameStore = new GameStore([]);
@@ -254,7 +261,12 @@ export default class Replay extends Component {
       if (history.length > 0 && history[0].type === 'create') {
         const position = history[0].timestamp;
         this.gameStore = new GameStore(history);
-        this.setState({history, position});
+
+        const filteredHistory = history.filter(event => (
+          event.type !== 'updateCursor' &&
+          event.type !== 'chat'
+        ));
+        this.setState({history, filteredHistory, position});
       } else {
         this.setState({
           error: true,
@@ -262,9 +274,122 @@ export default class Replay extends Component {
       }
     });
   }
+  setDirection = (direction, value) => {
+    this.setState({
+      [direction]: value,
+    });
+  }
+
+  focus = () => {
+    if (this.refs.controls) {
+      this.refs.controls.focus();
+    }
+  }
+
+  handleMouseDownLeft = (e) => {
+    e.preventDefault();
+    this.focus();
+    clearInterval(this.interval);
+    this.interval = setInterval(this.scrubLeft, 1000 / SCRUB_SPEED);
+  }
+
+  handleMouseDownRight = (e) => {
+    e.preventDefault();
+    this.focus();
+    clearInterval(this.interval);
+    this.interval = setInterval(this.scrubRight, 1000 / SCRUB_SPEED);
+  }
+
+  handleMouseUpLeft = () => {
+    clearInterval(this.interval);
+    this.setState({ left: false });
+  }
+
+  handleMouseUpRight = () => {
+    clearInterval(this.interval);
+    this.setState({ right: false });
+  }
+
+  handleKeyDown = (e) => {
+    e.preventDefault();
+    const shift = e.shiftKey
+    if (e.key === 'ArrowLeft') {
+      this.scrubLeft({shift});
+    } else if (e.key === 'ArrowRight') {
+      this.scrubRight({shift});
+    }
+  }
+
+  handleKeyUp = (e) => {
+    e.preventDefault();
+    if (e.key === 'ArrowLeft') {
+      this.setState({ left: false });
+    } else if (e.key === 'ArrowRight') {
+      this.setState({ right: false });
+    }
+  }
+
+  scrubLeft = ({shift = false} = {}) => {
+    const { position, history, filteredHistory } = this.state;
+    const events = shift
+      ? filteredHistory
+      : history;
+    const index = _.findLastIndex(events, (event) => (
+      event.timestamp < position
+    ));
+    if (!this.state.left) {
+      this.setState({
+        left: true,
+      });
+    }
+    if (index === -1) return;
+    this.setState({
+      position: events[index].timestamp,
+    });
+  }
+
+  scrubRight = ({shift = false} = {}) => {
+    const { position, history, filteredHistory } = this.state;
+    const events = shift
+      ? filteredHistory
+      : history;
+    const index = _.findIndex(events, (event) => (
+      event.timestamp > position
+    ));
+    if (!this.state.right) {
+      this.setState({
+        right: true,
+      });
+    }
+    if (index === -1) return;
+    this.setState({
+      position: events[index].timestamp,
+    });
+  }
+
+  renderHeader() {
+    if (!this.game || this.state.error) return;
+    const { title, author, type } = this.game.info;
+    return (
+      <div>
+        <div className='header--title'>
+          { title }
+        </div>
+
+        <div className='header--subtitle'>
+          {
+            type && (
+              type + ' | '
+              + 'By ' + author
+            )
+          }
+        </div>
+      </div>
+    );
+  }
 
   renderPlayer() {
-    if (this.error) {
+    if (this.state.error) {
       return (
         <div>
           Error loading replay
@@ -307,82 +432,20 @@ export default class Replay extends Component {
     );
   }
 
-  setDirection = (direction, value) => {
-    this.setState({
-      [direction]: value,
-    });
-  }
-
-  handleMouseDownLeft = (e) => {
-    e.preventDefault();
-    clearInterval(this.interval);
-    this.interval = setInterval(this.scrubLeft, 1000 / SCRUB_SPEED);
-  }
-
-  handleMouseDownRight = (e) => {
-    e.preventDefault();
-    clearInterval(this.interval);
-    this.interval = setInterval(this.scrubRight, 1000 / SCRUB_SPEED);
-  }
-
-  handleMouseUpLeft = () => {
-    clearInterval(this.interval);
-    this.setState({ left: false });
-  }
-
-  handleMouseUpRight = () => {
-    clearInterval(this.interval);
-    this.setState({ right: false });
-  }
-
-  handleKeyDown = (e) => {
-    e.preventDefault();
-    if (e.key === 'ArrowLeft') {
-      this.scrubLeft();
-    } else if (e.key === 'ArrowRight') {
-      this.scrubRight();
+  renderChat() {
+    if (this.state.error || !this.game) {
+      return null;
     }
-  }
 
-  handleKeyUp = (e) => {
-    e.preventDefault();
-    if (e.key === 'ArrowLeft') {
-      this.setState({ left: false });
-    } else if (e.key === 'ArrowRight') {
-      this.setState({ right: false });
-    }
-  }
-
-  scrubLeft = () => {
-    const { position, history } = this.state;
-    const index = _.findLastIndex(history, (event) => (
-      event.timestamp < position
-    ));
-    if (!this.state.left) {
-      this.setState({
-        left: true,
-      });
-    }
-    if (index === -1) return;
-    this.setState({
-      position: history[index].timestamp,
-    });
-  }
-
-  scrubRight = () => {
-    const { position, history } = this.state;
-    const index = _.findIndex(history, (event) => (
-      event.timestamp > position
-    ));
-    if (!this.state.right) {
-      this.setState({
-        right: true,
-      });
-    }
-    if (index === -1) return;
-    this.setState({
-      position: history[index].timestamp,
-    });
+    return (
+      <div className='replay--chat'>
+        <Chat
+          ref='chat'
+          chat={this.game.chat}
+          hideChatBar={true}
+        />
+      </div>
+    );
   }
 
   renderControls() {
@@ -392,7 +455,9 @@ export default class Replay extends Component {
     // renders the controls / state
     return (
       <div
+        ref='controls'
         style={{
+          flex: 1,
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'stretch',
@@ -445,11 +510,32 @@ export default class Replay extends Component {
         style={{
           display: 'flex',
           flexDirection: 'column',
-          padding: 10,
         }}
       >
-        {this.renderControls()}
-        {this.renderPlayer()}
+        <Nav mobile={false} />
+        <div style={{
+          padding: 20,
+        }}>
+          {this.renderHeader()}
+        </div>
+        <div style={{
+
+        }}>
+        </div>
+        <div style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'row',
+          padding: 20,
+        }}>
+          {this.renderPlayer()}
+          {this.renderChat()}
+        </div>
+        <div style={{
+          // flex: 1,
+        }}>
+          {this.renderControls()}
+        </div>
         {/*Controls:
       Playback scrubber
       Playback speed toggle

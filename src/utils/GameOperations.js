@@ -1,6 +1,32 @@
+const MAX_CLOCK_INCREMENT = 1000 * 60;
+
+function getScopeGrid(grid, scope) {
+  const scopeGrid = grid.map(row => row.map(cell => false));
+  scope.forEach(({r, c}) => {scopeGrid[r][c] = true});
+  return scopeGrid;
+}
+
 const reducers = {
   create: (game, params) => {
-    return params.game;
+    const {
+      info = {},
+      grid = [ [ {} ] ],
+      solution = [ [ '' ] ],
+      circles = [],
+      chat = { messages: [] },
+      cursor = {},
+      clues = {},
+    } = params.game;
+
+    return {
+      info,
+      grid,
+      solution,
+      circles,
+      chat,
+      cursor,
+      clues,
+    };
   },
   updateCursor: (game, params) => {
     let {
@@ -56,16 +82,18 @@ const reducers = {
   },
 
   check: (game, params) => {
-    const { scopeString, squares } = params;
+    const { scope = [], squares } = params;
     let { grid, solution } = game;
+    const scopeGrid = getScopeGrid(grid, scope);
     grid = grid.map((row, i) => (
-      row.map((cell, j) => (
-        {
+      row.map((cell, j) => (scopeGrid[i][j]
+        ? {
           ...cell,
           good: cell.value !== '' && cell.value === solution[i][j],
           bad: cell.value !== '' && cell.value !== solution[i][j],
           pencil: false,
         }
+        : cell
       ))
     ));
     return {
@@ -75,19 +103,101 @@ const reducers = {
   },
 
   reveal: (game, params) => {
-    return game;
+    const { scope = [], squares } = params;
+    console.log('reveal', game, params);
+    let { grid, solution } = game;
+    const scopeGrid = getScopeGrid(grid, scope);
+    grid = grid.map((row, i) => (
+      row.map((cell, j) => (scopeGrid[i][j]
+        ? {
+          ...cell,
+          value: solution[i][j],
+          good: true,
+          pencil: false,
+          revealed: cell.revealed || (cell.value !== solution[i][j])
+        }
+        : cell
+      ))
+    ));
+    return {
+      ...game,
+      grid,
+    };
   },
 
-  clock: (game, params) => {
-    return game;
+  updateClock: (game, params) => {
+    const action = params.action;
+    let { clock } = game;
+    if (action === 'pause') {
+      clock = {
+        ...clock,
+        paused: true,
+      };
+    } else if (action === 'reset') {
+      clock = {
+        ...clock,
+        totalTime: 0,
+        paused: true,
+      };
+    }
+    return {
+      ...game,
+      clock,
+    }
+  },
+
+  chat: (game, params) => {
+    let { chat } = game;
+    const { text, senderId, sender } = params;
+    const { messages = [] } = chat;
+    chat = {
+      ...chat,
+      messages: [
+        ...messages,
+        {
+          text,
+          senderId,
+          sender,
+        }
+      ],
+    };
+
+    return {
+      ...game,
+      chat,
+    };
   },
 };
 
+export const tick = (game, timestamp) => {
+  let {
+    clock = {
+      totalTime: 0,
+      lastUpdated: timestamp,
+    },
+  } = game;
+  const timeDiff = (clock.paused
+    ? 0
+    : Math.max(0, Math.min(timestamp - clock.lastUpdated, MAX_CLOCK_INCREMENT))
+  );
+  clock = {
+    ...clock,
+    lastUpdated: timestamp,
+    totalTime: clock.totalTime + timeDiff,
+  };
+  return {
+    ...game,
+    clock,
+  };
+};
+
 export const reduce = (game, action) => {
-  const { type, params } = action;
+  const { timestamp, type, params } = action;
   if (!(type in reducers)) {
     console.error('action', type, 'not found');
     return game;
   }
-  return reducers[type](game, params);
+  game = reducers[type](game, params);
+  game = tick(game, timestamp);
+  return game;
 };

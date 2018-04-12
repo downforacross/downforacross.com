@@ -25,14 +25,14 @@
 .header {
 }
 
-.header--title {
+.room .header--title {
   font-size: 30px;
   font-weight: 500;
   color: #333;
   text-decoration: none;
 }
 
-.header--subtitle {
+.room .header--subtitle {
   margin-top: 10px;
   font-size: 14px;
   font-weight: 500;

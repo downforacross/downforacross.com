@@ -279,6 +279,16 @@ export default class Game extends Component {
         }
       });
     });
+
+    this.historyRef.push({
+      timestamp: SERVER_TIME,
+      type: 'chat',
+      params: {
+        text,
+        senderId: getId(),
+        sender: username,
+      },
+    });
   }
 
   startClock() {
@@ -289,13 +299,6 @@ export default class Game extends Component {
           getTime())
       }))
     );
-    this.historyRef.push({
-      timestamp: SERVER_TIME,
-      type: 'updateClock',
-      params: {
-        action: 'start',
-      },
-    });
   }
 
   pauseClock() {
@@ -371,6 +374,7 @@ export default class Game extends Component {
       type: 'check',
       params: {
         scopeString,
+        scope: this.scope(scopeString),
       },
     });
   }
@@ -397,6 +401,7 @@ export default class Game extends Component {
       type: 'reveal',
       params: {
         scopeString,
+        scope: this.scope(scopeString),
       },
     });
   }
