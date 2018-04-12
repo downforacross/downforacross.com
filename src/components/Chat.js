@@ -30,7 +30,7 @@ export default class Chat extends Component {
     return this.props.chat.messages.length !== nextProps.chat.messages.length || this.state.message !== nextState.message || this.state.username !== nextState.username;
   }
 
-  onKeyPress(ev) {
+  onKeyPress = (ev) => {
     const {
       onSendChatMessage,
       onPressEnter,
@@ -52,11 +52,19 @@ export default class Chat extends Component {
     }
   }
 
-  onChange(ev) {
+  onUsernameInputKeyPress = (ev) => {
+    if (ev.key === 'Enter') {
+      ev.stopPropagation();
+      ev.preventDefault();
+      this.focus();
+    }
+  }
+
+  onChange = (ev) => {
     this.setState({message: ev.target.value});
   }
 
-  onChangeUsername(ev) {
+  onChangeUsername = (ev) => {
     const username = ev.target.value;
     this.setState({ username });
   }
@@ -65,22 +73,54 @@ export default class Chat extends Component {
     this.refs.input && this.refs.input.focus();
   }
 
+  renderChatHeader() {
+    const usernameInput = (this.props.hideChatBar
+      ? null
+      : <div className='chat--username'>
+          {'You are '}
+          <input
+            style={{
+              textAlign: 'center',
+            }}
+            className='chat--username--input'
+            value={this.state.username}
+            onChange={this.onChangeUsername}
+            onKeyPress={this.onUsernameInputKeyPress}
+          />
+        </div>
+    );
+    return (
+      <div className='chat--header'>
+        <div className='chat--title'>
+          Chat
+        </div>
+        {usernameInput}
+      </div>
+    );
+  }
+
+  renderChatBar() {
+    if (this.props.hideChatBar) {
+      return null;
+    }
+    return (
+      <div className='chat--bar'>
+        <input
+          ref='input'
+          className='chat--bar--input'
+          placeholder='[Enter] to chat'
+          value={this.state.message}
+          onChange={this.onChange}
+          onKeyPress={this.onKeyPress}
+        />
+      </div>
+    );
+  }
+
   render() {
     return (
       <div className='chat'>
-        <div className='chat--header'>
-          <div className='chat--title'>
-            Chat
-          </div>
-          <div className='chat--username'>
-            Your username:
-            <input
-              className='chat--username--input'
-              value={this.state.username}
-              onChange={this.onChangeUsername.bind(this)} />
-          </div>
-        </div>
-
+        {this.renderChatHeader()}
         <div
           ref={
             el => {
@@ -101,16 +141,7 @@ export default class Chat extends Component {
           }
         </div>
 
-        <div className='chat--bar'>
-          <input
-            ref='input'
-            className='chat--bar--input'
-            placeholder='[Enter] to chat'
-            value={this.state.message}
-            onChange={this.onChange.bind(this)}
-            onKeyPress={this.onKeyPress.bind(this)}
-          />
-        </div>
+        {this.renderChatBar()}
       </div>
     );
   }

@@ -55,6 +55,7 @@
 
 .room--chat {
   flex: 1;
+  display: flex;
 }
 
 .room.mobile .room--chat {
