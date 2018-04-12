@@ -15,14 +15,15 @@ import _ from 'lodash';
 const SCRUB_SPEED = 50; // 30 actions per second
 
 const TIMELINE_COLORS = {
-  'updateCell'  : '#9999FF80',
-  'updateCursor': '#EEEEEE80',
+  'updateCell'  : '#9999FFC0',
+  'updateCursor': '#00000030',
   'reveal'      : '#EE0000C0',
   'check'       : '#EE000050',
   'updateClock' : '#0000EE80',
   'chat'        : '#00EEEE80',
   'create'      : '#00000080',
 };
+const TIMELINE_BACKGROUND_COLOR = '#00000005';
 
 const TimelineBar = ({
   type,
@@ -203,7 +204,7 @@ class Timeline extends React.PureComponent {
             position: 'relative',
             height: 50,
             width: (this.end - this.begin) * this.units,
-            backgroundColor: '#00000005',
+            backgroundColor: TIMELINE_BACKGROUND_COLOR,
             cursor: 'pointer',
           }}
           onMouseDown={this.handleMouseDown}
