@@ -39,7 +39,7 @@ import * as gameUtils from '../gameUtils';
 export default class Player extends Component {
 
   constructor(props) {
-    super();
+    super(props);
     this.state = {
       selected: {
         r: 0,
@@ -67,8 +67,7 @@ export default class Player extends Component {
     return new GridObject(this.props.grid);
   }
 
-  componentWillReceiveProps(props) {
-    this.props = props;
+  get selected() {
     let { r, c } = this.state.selected;
     while (!this.grid.isWhite(r, c)) {
       if (c < this.props.grid[0].length) {
@@ -78,7 +77,7 @@ export default class Player extends Component {
         c = 0;
       }
     }
-    this.setSelected({r, c});
+    return {r, c};
   }
 
   focus() {
@@ -92,11 +91,11 @@ export default class Player extends Component {
   }
 
   canSetDirection(direction) {
-    return this.isValidDirection(direction, this.state.selected);
+    return this.isValidDirection(direction, this.selected);
   }
 
   setDirection(direction) {
-    if (this.isValidDirection(direction, this.state.selected)) {
+    if (this.isValidDirection(direction, this.selected)) {
       this.setState({
         direction: direction
       });
@@ -105,7 +104,7 @@ export default class Player extends Component {
 
   setSelected(selected) {
     if (this.isValidDirection(this.state.direction, selected)) {
-      if (selected.r !== this.state.selected.r || selected.c !== this.state.selected.c) {
+      if (selected.r !== this.selected.r || selected.c !== this.selected.c) {
         this.setState({
           selected: selected,
         }, () => {
@@ -147,11 +146,11 @@ export default class Player extends Component {
   }
 
   getSelectedClueNumber() {
-    return this.grid.getParent(this.state.selected.r, this.state.selected.c, this.state.direction);
+    return this.grid.getParent(this.selected.r, this.selected.c, this.state.direction);
   }
 
   getHalfSelectedClueNumber() {
-    return this.grid.getParent(this.state.selected.r, this.state.selected.c, gameUtils.getOppositeDirection(this.state.direction));
+    return this.grid.getParent(this.selected.r, this.selected.c, gameUtils.getOppositeDirection(this.state.direction));
   }
 
   isClueFilled(direction, number) {
@@ -244,9 +243,9 @@ export default class Player extends Component {
     } = this.props;
 
     const {
-      selected,
       direction,
     } = this.state;
+    const selected = this.selected;
 
     if (mobile) {
       return (

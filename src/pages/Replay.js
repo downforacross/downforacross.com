@@ -434,6 +434,7 @@ export default class Replay extends Component {
       );
     }
 
+    console.log('render player', this.game);
     const { grid, circles, shades, cursors, clues, solved, } = this.game;
     const screenWidth = this.screenWidth;
     let cols = grid[0].length;

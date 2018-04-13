@@ -586,7 +586,6 @@ export default class Game extends Component {
             mobile={mobile}
             onClick={this._toggleMobile}
           />
-
       </div>
     </div>
     );
