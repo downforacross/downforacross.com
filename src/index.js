@@ -1,5 +1,5 @@
 import {
-  Welcome, Game, Compose, Solo, Account, Replay
+  Welcome, Game, Compose, Solo, Account, Replay, Room
 } from './pages/index';
 
 import ReactDOM from 'react-dom';
@@ -17,6 +17,8 @@ ReactDOM.render(
     <div className='router-wrapper'>
       <Route exact path="/" component={Welcome}/>
       <Route exact path="/game/:gid" component={Game}/>
+      <Route exact path="/room/:rid" component={Room}/>
+      <Route exact path="/room/:rid/:gid" component={Room}/>
       <Route exact path="/replay/:gid" component={Replay}/>
       <Route exact path="/game/solo/:pid" component={Solo}/>
       <Route path="/puzzle/:pid" component={Solo}/>

@@ -10,6 +10,12 @@ const config = {
 };
 
 const app = firebase.initializeApp(config);
+const db = firebase.database();
+const SERVER_TIME = firebase.database.ServerValue.TIMESTAMP;
 
-export { app };
+export {
+  app,
+  db,
+  SERVER_TIME,
+};
 export default firebase;

@@ -2,7 +2,7 @@ import './css/replay.css';
 
 import { getId, recordUsername, registerLoginListener } from '../auth'
 
-import GameStore from '../store/gameStore';
+import GameStore from '../utils/GameStore';
 import Player from '../components/Player';
 import Chat from '../components/Chat';
 import React, { Component } from 'react';

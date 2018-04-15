@@ -1,5 +1,5 @@
 import { makeGame, makeGrid, makeEmptyClues } from './gameUtils';
-import firebase, { app } from './store/firebase';
+import firebase, { app, SERVER_TIME } from './store/firebase';
 
 // for interfacing with firebase
 
@@ -120,6 +120,5 @@ const actions = {
   },
 };
 
-const SERVER_TIME = firebase.database.ServerValue.TIMESTAMP;
-export { db, getTime, disconnect, SERVER_TIME };
+export { db, getTime, disconnect };
 export default actions;

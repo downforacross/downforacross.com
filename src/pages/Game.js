@@ -9,7 +9,8 @@ import Chat from '../components/Chat';
 import Toolbar from '../components/Toolbar';
 import Nav from '../components/Nav';
 
-import { db, getTime, SERVER_TIME } from '../actions';
+import { db, getTime } from '../actions';
+import { SERVER_TIME } from '../store/firebase';
 import userActions from '../userActions';
 import GridObject from '../utils/Grid';
 import { makeEmptyGame } from '../gameUtils';
