@@ -3,12 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "events": "^2.0.0",
     "firebase": "^4.2.0",
     "lodash": "^4.17.5",
     "moment": "^2.20.1",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
+    "react": "16",
+    "react-dom": "^16.3.1",
     "react-dropzone": "^4.0.0",
+    "react-flexview": "^3.0.1",
     "react-helmet": "^5.2.0",
     "react-router-dom": "^4.1.2",
     "superagent": "^3.5.2"
