@@ -28,6 +28,7 @@ const reducers = {
       clues,
     };
   },
+
   updateCursor: (game, params) => {
     let {
       cursors = [],
@@ -142,7 +143,7 @@ const reducers = {
     return {
       ...game,
       clock,
-    }
+    };
   },
 
   chat: (game, params) => {
@@ -177,7 +178,9 @@ export const tick = (game, timestamp) => {
   } = game;
   const timeDiff = (clock.paused
     ? 0
-    : Math.max(0, Math.min(timestamp - clock.lastUpdated, MAX_CLOCK_INCREMENT))
+    : Math.max(0, Math.min(
+        timestamp - clock.lastUpdated,
+        MAX_CLOCK_INCREMENT))
   );
   clock = {
     ...clock,

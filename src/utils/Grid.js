@@ -91,16 +91,23 @@ export default class Grid {
     }
   }
 
-  getNextEmptyCell(r, c, direction, noWraparound) {
+  getNextEmptyCell(r, c, direction, options = {}) {
+    let {
+      noWraparound = false,
+      skipFirst = false,
+    } = options;
+
     while (this.isWriteable(r, c)) {
       if (!this.isFilled(r, c)) {
-        return { r, c };
-      } else {
-        if (direction === 'across') {
-          c += 1;
-        } else {
-          r += 1;
+        if (!skipFirst) {
+          return { r, c };
         }
+        skipFirst = false;
+      }
+      if (direction === 'across') {
+        c += 1;
+      } else {
+        r += 1;
       }
     }
 
@@ -120,7 +127,9 @@ export default class Grid {
       }
 
       // recurse but not infinitely
-      return this.getNextEmptyCell(r, c, direction, true);
+      return this.getNextEmptyCell(r, c, direction, {
+        noWraparound: true
+      });
     }
     return undefined;
   }

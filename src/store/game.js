@@ -5,23 +5,46 @@ import EventEmitter from 'events';
 
 const CURRENT_VERSION = '0.1';
 export default class Game extends EventEmitter {
-  constructor(path, options = {}) {
+  constructor(path) {
     super();
-    const {
-      events = true,
-    } = options;
-
     this.path = path;
     this.ref = db.ref(path);
-    if (events) {
-      this.ref.on('value', snapshot => {
-        this.emit('history', snapshot.val());
-      });
-    }
   }
 
-  unload() {
+  attach() {
+    this.ref.on('child_added', snapshot => {
+      this.emit('event', snapshot.val());
+    });
+  }
+
+  detach() {
     this.ref.off('value');
+  }
+
+  updateCell(r, c, id, color, value) {
+    this.ref.push({
+      timestamp: SERVER_TIME,
+      type: 'updateCell',
+      params: {
+        cell: {r, c},
+        value,
+        color,
+        id,
+      },
+    });
+  }
+
+  updateCursor(r, c, id, color) {
+    this.ref.push({
+      timestamp: SERVER_TIME,
+      type: 'updateCursor',
+      params: {
+        timestamp: SERVER_TIME,
+        cell: {r, c},
+        color,
+        id,
+      },
+    });
   }
 
   initialize(game) {

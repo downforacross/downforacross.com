@@ -1,15 +1,14 @@
 import './css/replay.css';
 
-import { getId, recordUsername, registerLoginListener } from '../auth'
+import React, { Component } from 'react';
+import Flex from 'react-flexview';
 
-import GameStore from '../utils/GameStore';
+import HistoryWrapper from '../utils/historyWrapper';
 import Player from '../components/Player';
 import Chat from '../components/Chat';
-import React, { Component } from 'react';
 import Nav from '../components/Nav';
-import GridObject from '../utils/Grid';
 import { db } from '../actions';
-import { toArr, lazy, rand_color, pure, isAncestor } from '../jsUtils';
+import { toArr, pure, isAncestor } from '../jsUtils';
 import _ from 'lodash';
 
 const SCRUB_SPEED = 50; // 30 actions per second
@@ -185,11 +184,8 @@ class Timeline extends React.PureComponent {
   render() {
     const {
       history,
-      position,
-      onSetPosition,
     } = this.props;
 
-    let rootEl;
     return (
       <div
         key='abc'
@@ -234,7 +230,7 @@ export default class Replay extends Component {
       ],
       position: 0,
     };
-    this.gameStore = new GameStore([]);
+    this.historyWrapper = new HistoryWrapper([]);
   }
 
   handleSetPosition = position => {
@@ -247,9 +243,8 @@ export default class Replay extends Component {
 
   get game() {
     // compute the game state corresponding to current playback time
-    const { history, position } = this.state;
-    console.log('get game');
-    return this.gameStore.getSnapshotAt(position);
+    const { position } = this.state;
+    return this.historyWrapper.getSnapshotAt(position);
   }
 
   componentDidMount() {
@@ -261,7 +256,7 @@ export default class Replay extends Component {
       const history = _.values(snapshot.val());
       if (history.length > 0 && history[0].type === 'create') {
         const position = history[0].timestamp;
-        this.gameStore = new GameStore(history);
+        this.historyWrapper = new HistoryWrapper(history);
 
         const filteredHistory = history.filter(event => (
           event.type !== 'updateCursor' &&
@@ -481,7 +476,6 @@ export default class Replay extends Component {
 
   renderControls() {
     const { position, history, left, right } = this.state;
-    const length = history.length;
 
     // renders the controls / state
     return (
@@ -536,13 +530,7 @@ export default class Replay extends Component {
 
   render() {
     return (
-      <div
-        className='replay'
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
+      <Flex column className='replay'>
         <Nav mobile={false} />
         <div style={{
           paddingLeft: 30,
@@ -557,14 +545,10 @@ export default class Replay extends Component {
         }}>
           {this.renderToolbar()}
         </div>
-        <div style={{
-          display: 'flex',
-          flexDirection: 'row',
-          padding: 20,
-        }}>
+        <Flex style={{ padding: 20 }}>
           {this.renderPlayer()}
           {this.renderChat()}
-        </div>
+        </Flex>
         <div style={{
           // flex: 1,
         }}>
@@ -574,7 +558,7 @@ export default class Replay extends Component {
       Playback scrubber
       Playback speed toggle
       Skip inactivity checkbox*/}
-    </div>
+    </Flex>
     );
   }
 }

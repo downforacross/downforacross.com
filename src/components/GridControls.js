@@ -164,7 +164,9 @@ export default class GridControls extends Component {
 
   goToNextEmptyCell() {
     let { r, c } = this.props.selected;
-    const nextEmptyCell = this.grid.getNextEmptyCell(r, c, this.props.direction);
+    const nextEmptyCell = this.grid.getNextEmptyCell(r, c, this.props.direction, {
+      skipFirst: true
+    });
     if (nextEmptyCell) {
       this.setSelected(nextEmptyCell);
       return nextEmptyCell;

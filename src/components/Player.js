@@ -236,12 +236,14 @@ export default class Player extends Component {
       clues,
       circles,
       shades,
-      cursors,
+      cursors: allCursors = [],
       updateGrid,
       frozen,
       myColor,
+      id,
     } = this.props;
 
+    const cursors = allCursors.filter(cursor => cursor.id !== id);
     const {
       direction,
     } = this.state;

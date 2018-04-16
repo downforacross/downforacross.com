@@ -3,15 +3,18 @@ import _ from 'lodash';
 
 const MEMO_RATE = 50;
 
-export default class GameStore {
-  constructor(history) {
+export default class HistoryWrapper {
+  constructor(history = []) {
     this.history = history;
     this.memo = [];
     this.initializeMemo();
   }
 
   initializeMemo() {
-    this.memo = [];
+    this.memo = [{
+      index: -1,
+      game: null,
+    }];
     let game = null;
     this.history.forEach((event, i) => {
       game = reduce(game, event);
@@ -49,8 +52,16 @@ export default class GameStore {
       {timestamp},
       event => event.timestamp
     );
-    console.log('index', timestamp, this.history[0], index);
     if (index <= 0) return null;
     return this.getSnapshotAtIndex(index - 1);
+  }
+
+  // the current snapshot
+  getSnapshot() {
+    return this.getSnapshotAtIndex(this.history.length - 1);
+  }
+
+  addEvent(event) {
+    this.history.push(event);
   }
 }

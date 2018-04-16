@@ -14,6 +14,21 @@
   text-align: center;
 }
 
+.toolbar button {
+  color: #666;
+  font-size: 14px;
+  padding: 7px 10px 7px 10px;
+  border-radius: 5px;
+  background-color: white;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.toolbar button:hover {
+  background-color: #F2F2F2;
+}
+
 .toolbar--timer {
   text-align: center;
 }

@@ -1,5 +1,6 @@
 import 'react-flexview/lib/flexView.css'
 
+import { getId, registerLoginListener } from '../auth'
 import React, { Component } from 'react';
 import Player from '../components/Player';
 import Toolbar from '../components/Toolbar';
@@ -8,7 +9,9 @@ import _ from 'lodash';
 import Flex from 'react-flexview';
 import RoomModel from '../store/room';
 import GameModel from '../store/game';
-import { pure } from '../jsUtils';
+import HistoryWrapper from '../utils/historyWrapper';
+import Game from '../components/Game';
+import { pure, rand_color } from '../jsUtils';
 
 const GameLink = pure(({
   onSelectGame,
@@ -47,41 +50,55 @@ export default class Room extends Component {
       users: {},
       games: {},
     };
+    registerLoginListener(() => this.initializeAuth());
   }
 
   // lifecycle stuff
 
-  static getDerivedStateFromProps(nextProps, prevState) {
+  static getDerivedStateFromProps(props, prevState) {
     return {
       ...prevState,
-      rid: nextProps.match.params.rid,
-      gid: nextProps.match.params.gid,
+      rid: props.match.params.rid,
+      gid: props.match.params.gid,
     };
   }
 
+  initializeAuth() {
+    const id = getId();
+    const color = rand_color();
+    this.setState({ id, color });
+  }
+
   initializeRoom() {
-    if (this.room) this.room.unload();
+    if (this.roomModel) this.roomModel.detach();
     if (this.state.rid === undefined) {
-      this.room = undefined;
+      this.roomModel = undefined;
       return;
     }
-    this.room = new RoomModel(`/room/${this.state.rid}`);
-    this.room.addListener('games', games => {
+    this.roomModel = new RoomModel(`/room/${this.state.rid}`);
+    this.roomModel.addListener('games', games => {
       this.setState({ games });
     });
-    this.room.addListener('users', users => {
+    this.roomModel.addListener('users', users => {
       this.setState({ users });
     });
+    this.roomModel.attach();
   }
 
   initializeGame() {
-    if (this.game) this.game.unload();
+    if (this.gameModel) this.gameModel.detach();
     if (this.state.rid === undefined) {
-      this.game = undefined;
+      this.gameModel = undefined;
       return;
     }
-    this.game = this.room.getGame(this.gid);
-    if (this.game) {
+    this.gameModel = this.roomModel.getGame(this.state.gid);
+    if (this.gameModel) {
+      this.historyWrapper = new HistoryWrapper();
+      this.gameModel.addListener('event', event => {
+        this.historyWrapper.addEvent(event);
+        this.handleUpdate();
+      });
+      this.gameModel.attach();
       // add listeners
     }
   }
@@ -92,8 +109,8 @@ export default class Room extends Component {
   }
 
   componentWillUnmount() {
-    if (this.game) this.game.unload();
-    if (this.room) this.room.unload();
+    if (this.gameModel) this.gameModel.detach();
+    if (this.roomModel) this.roomModel.detach();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -101,7 +118,7 @@ export default class Room extends Component {
       this.initializeRoom();
     }
     if (prevState.games !== this.state.games ||
-      prevState.gameid !== this.state.gameid) {
+      prevState.gid !== this.state.gid) {
       this.initializeGame();
     }
   }
@@ -115,7 +132,7 @@ export default class Room extends Component {
 
   handleNewGameClick = (e) => {
     const pid = 2546;
-    this.room.createGame(pid, gid => {
+    this.roomModel.createGame(pid, gid => {
       this.handleSelectGame(gid);
     });
   }
@@ -126,6 +143,26 @@ export default class Room extends Component {
       showingSidebar: !showingSidebar,
     });
   }
+
+  handlePressEnter = () => {
+    // noop for now
+  }
+
+  handleUpdateGrid = (r, c, value) => {
+    const { id, color } = this.state;
+    this.gameModel.updateCell(r, c, id, color, value);
+  }
+
+  handleUpdateCursor = ({r, c}) => {
+    const { id, color } = this.state;
+    this.gameModel.updateCursor(r, c, id, color);
+  }
+
+  handleUpdate = _.debounce(() => {
+    this.forceUpdate();
+  }, 50, {
+    leading: true,
+  });
 
   // ================
   // Render Methods
@@ -141,35 +178,50 @@ export default class Room extends Component {
   }
 
   renderSidebar() {
-    const { games } = this.state;
+    const { games, info } = this.state;
     return (
-      <Flex column style={{
-        padding: 20,
-      }}>
-      <div
-        style={{
-          alignSelf: 'center',
-          cursor: 'pointer',
-          paddingLeft: 15,
-          paddingRight: 15,
-          paddingTop: 12,
-          paddingBottom: 12,
-          color: 'white',
-          fontWeight: 500,
-          fontSize: 16,
-          backgroundColor: '#6AA9F4',
-          marginBottom: 5,
-        }}
-        onClick={this.handleNewGameClick}
-      >
-        New Game
-      </div>
-      {_.values(games).map((game, i) => (
-        <Flex key={i}>
-          {this.renderGameLink(game)}
-        </Flex>
-      ))}
-    </Flex>
+      <Flex column>
+        <div
+          style={{
+            padding: 20,
+            fontSize: 20,
+            fontFamily: 'Helvetica',
+            textAlign: 'center',
+            color: 'rgb(0, 0, 0)',
+            backgroundColor: 'rgb(0, 0, 0, 0.02)',
+          }}>
+          Steven's Lair
+        </div>
+        <div
+          style={{
+            padding: 20,
+          }}
+        >
+          <div
+            style={{
+              alignSelf: 'center',
+              cursor: 'pointer',
+              paddingLeft: 15,
+              paddingRight: 15,
+              paddingTop: 12,
+              paddingBottom: 12,
+              color: 'white',
+              fontWeight: 500,
+              fontSize: 16,
+              backgroundColor: '#6AA9F4',
+              marginBottom: 5,
+            }}
+            onClick={this.handleNewGameClick}
+          >
+            New Game
+          </div>
+          {_.values(games).map((game, i) => (
+            <Flex key={i}>
+              {this.renderGameLink(game)}
+            </Flex>
+          ))}
+        </div>
+      </Flex>
     );
   }
 
@@ -195,7 +247,25 @@ export default class Room extends Component {
     );
   }
 
-  renderPlayer() {
+  renderGame() {
+    if (!this.gameModel) {
+      return;
+    }
+
+    const { id, color } = this.state;
+    const game = this.historyWrapper.getSnapshot();
+    return (
+      <Game
+        ref='game'
+        id={id}
+        myColor={color}
+        game={game}
+        onPressEnter={this.focusChat}
+        onUpdateGrid={this.handleUpdateGrid}
+        onUpdateCursor={this.handleUpdateCursor}
+
+      />
+    );
   }
 
   render() {
@@ -219,8 +289,8 @@ export default class Room extends Component {
           <Flex>
             {this.renderSidebarToggler()}
           </Flex>
-          <Flex grow={7}>
-            { this.renderPlayer() }
+          <Flex grow={7} column>
+            { this.renderGame() }
           </Flex>
         </Flex>
       </Flex>

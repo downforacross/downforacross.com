@@ -9,8 +9,10 @@ export default class Room extends EventEmitter {
     super();
     this.path = path;
     this.ref = db.ref(path);
+  }
+
+  attach() {
     this.ref.child('games').on('value', snapshot => {
-      console.log('snapshot', snapshot.val());
       this.emit('games', snapshot.val());
     });
     this.ref.child('users').on('value', snapshot => {
@@ -18,7 +20,7 @@ export default class Room extends EventEmitter {
     });
   }
 
-  unload() {
+  detach() {
     this.ref.child('games').off('value');
     this.ref.child('users').off('value');
   }
@@ -40,8 +42,8 @@ export default class Room extends EventEmitter {
       });
   }
 
-  getGame(gid, options) {
-    return new Game(`${this.path}/history/${gid}`, options);
+  getGame(gid) {
+    return new Game(`${this.path}/history/${gid}`);
   }
 
   createGame(pid, cbk) {
