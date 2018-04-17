@@ -91,9 +91,6 @@ export default class Chat extends Component {
     );
     return (
       <div className='chat--header'>
-        <div className='chat--title'>
-          Chat
-        </div>
         {usernameInput}
       </div>
     );

@@ -1,6 +1,6 @@
 .toolbar {
   padding: 10px 10px 8px 50px;
-  height: 20px;
+  min-height: 20px;
   border-top: 1px solid #E2E2E2;
   border-left: 1px solid #E2E2E2;
   border-right: 1px solid #E2E2E2;
