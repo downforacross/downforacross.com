@@ -1,7 +1,7 @@
 import { db } from './actions';
 
 import getLocalId from './localAuth';
-import firebase from 'firebase';
+import firebase, { offline } from 'firebase';
 
 let fbuser = null;
 let fbid = null;
@@ -116,6 +116,10 @@ function fireLoginCallbacks() {
   });
 }
 
-firebase.auth().onAuthStateChanged(fireLoginCallbacks);
+if (offline) {
+  fireLoginCallbacks();
+} else {
+  firebase.auth().onAuthStateChanged(fireLoginCallbacks);
+}
 
 export { getId, getUser, recordUsername, logIn, loggedIn, logOut, registerLoginListener, authStateLoaded };

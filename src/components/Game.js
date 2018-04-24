@@ -12,6 +12,7 @@ import _ from 'lodash';
 export default class GameV2 extends Component {
   constructor() {
     super();
+    this.screenWidth = 0;
     this.state = {
     };
   }

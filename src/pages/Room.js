@@ -26,6 +26,7 @@ const GameLink = pure(({
     grow={1}
     hAlignContent={'center'}
     style={{
+      backgroundColor: gid === selectedGid ? '#006666': 'transparent',
       cursor: 'pointer',
       marginTop: 5,
       padding: 5,
@@ -59,7 +60,7 @@ export default class Room extends Component {
     return {
       ...prevState,
       rid: props.match.params.rid,
-      gid: props.match.params.gid,
+      gid: parseInt(props.match.params.gid),
     };
   }
 
@@ -138,6 +139,7 @@ export default class Room extends Component {
   }
 
   handleToggleShowingSidebar = (e) => {
+    e.preventDefault();
     const { showingSidebar } = this.state;
     this.setState({
       showingSidebar: !showingSidebar,
@@ -183,16 +185,18 @@ export default class Room extends Component {
       <Flex column>
         <div
           style={{
-            padding: 20,
+            padding: 30,
+            paddingTop: 24,
+            paddingBottom: 24,
             fontSize: 20,
             fontFamily: 'Helvetica',
             textAlign: 'center',
             color: 'rgb(0, 0, 0)',
-            backgroundColor: 'rgb(0, 0, 0, 0.02)',
+            backgroundColor: 'rgb(0, 0, 0, 0.04)',
           }}>
           Steven's Lair
         </div>
-        <div
+        <Flex column
           style={{
             padding: 20,
           }}
@@ -209,7 +213,7 @@ export default class Room extends Component {
               fontWeight: 500,
               fontSize: 16,
               backgroundColor: '#6AA9F4',
-              marginBottom: 5,
+              marginBottom: 15,
             }}
             onClick={this.handleNewGameClick}
           >
@@ -220,7 +224,7 @@ export default class Room extends Component {
               {this.renderGameLink(game)}
             </Flex>
           ))}
-        </div>
+        </Flex>
       </Flex>
     );
   }
@@ -234,12 +238,13 @@ export default class Room extends Component {
         vAlignContent='center'
         style={{
           padding: 3,
-          backgroundColor: 'rgb(0, 0, 0, 0.02)',
+          backgroundColor: 'rgb(0, 0, 0, 0.04)',
           borderRight: '1px solid rgb(0, 0, 0, 0.5)',
           color: 'rgb(0, 0, 0, 0.7)',
           cursor: 'pointer',
           userSelect: 'none',
         }}
+        onMouseDown={e=>{e.preventDefault();}}
         onClick={this.handleToggleShowingSidebar}
       >
         {showingSidebar ? '<' : '>'}

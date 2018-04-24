@@ -1,10 +1,11 @@
-import { db, SERVER_TIME } from './firebase';
+import DemoGame from './demoGame';
+import { db, SERVER_TIME, offline } from './firebase';
 import EventEmitter from 'events';
 
 // a wrapper class that models Game
 
 const CURRENT_VERSION = '0.1';
-export default class Game extends EventEmitter {
+class Game extends EventEmitter {
   constructor(path) {
     super();
     this.path = path;
@@ -60,4 +61,4 @@ export default class Game extends EventEmitter {
   }
 }
 
-
+export default (offline ? DemoGame : Game);

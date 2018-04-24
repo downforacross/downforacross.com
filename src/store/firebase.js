@@ -18,4 +18,10 @@ export {
   db,
   SERVER_TIME,
 };
+
+let offline = true;
+// offline = false;
+
+export { offline };
+
 export default firebase;
