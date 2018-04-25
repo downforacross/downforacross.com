@@ -19,7 +19,7 @@ class Game extends EventEmitter {
   }
 
   detach() {
-    this.ref.off('value');
+    this.ref.off('child_added');
   }
 
   updateCell(r, c, id, color, value) {
