@@ -1,11 +1,11 @@
 import { makeGame, makeGrid, makeEmptyClues } from './gameUtils';
-import firebase, { app, SERVER_TIME } from './store/firebase';
+import firebase, { SERVER_TIME } from './store/firebase';
 
 // for interfacing with firebase
 
 const db = firebase.database();
 function disconnect() {
-  app.delete();
+  // no-op for now
 }
 
 const offsetRef = firebase.database().ref(".info/serverTimeOffset");

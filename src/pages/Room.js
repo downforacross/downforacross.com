@@ -1,6 +1,5 @@
 import 'react-flexview/lib/flexView.css'
 
-import { getId, registerLoginListener } from '../auth'
 import React, { Component } from 'react';
 import Player from '../components/Player';
 import Toolbar from '../components/Toolbar';
@@ -9,9 +8,10 @@ import _ from 'lodash';
 import Flex from 'react-flexview';
 import RoomModel from '../store/room';
 import GameModel from '../store/game';
+import { getUser } from '../store/user';
 import HistoryWrapper from '../utils/historyWrapper';
 import Game from '../components/Game';
-import { pure, rand_color } from '../jsUtils';
+import { pure } from '../jsUtils';
 
 const GameLink = pure(({
   onSelectGame,
@@ -26,7 +26,7 @@ const GameLink = pure(({
     grow={1}
     hAlignContent={'center'}
     style={{
-      backgroundColor: gid === selectedGid ? '#006666': 'transparent',
+      backgroundColor: gid === selectedGid ? '#00DDDD': 'transparent',
       cursor: 'pointer',
       marginTop: 5,
       padding: 5,
@@ -51,7 +51,7 @@ export default class Room extends Component {
       users: {},
       games: {},
     };
-    registerLoginListener(() => this.initializeAuth());
+    this.initializeUser();
   }
 
   // lifecycle stuff
@@ -64,10 +64,13 @@ export default class Room extends Component {
     };
   }
 
-  initializeAuth() {
-    const id = getId();
-    const color = rand_color();
-    this.setState({ id, color });
+  initializeUser() {
+    this.user = getUser();
+    this.user.onAuth(() => {
+      const id = this.user.id;
+      const color = this.user.color;
+      this.setState({ id, color });
+    });
   }
 
   initializeRoom() {

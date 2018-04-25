@@ -8,8 +8,7 @@ import Create from '../components/Create';
 import RelativeTime from '../components/RelativeTime';
 import EditableSpan from '../components/EditableSpan';
 import { toArr, lazy } from '../jsUtils';
-
-import { getId, loggedIn, registerLoginListener } from '../auth';
+import { getUser } from '../store/user';
 
 export default class Compose extends Component {
 
@@ -20,8 +19,9 @@ export default class Compose extends Component {
       myCompositions: [],
     };
     this.cid = undefined;
-    registerLoginListener(() => {
-      this.me = getId();
+    this.user = getUser();
+    this.user.onAuth(() => {
+      this.me = this.user.id;
       this.myCompositionsRef = db.ref('myCompositions/' + this.me);
       this.myCompositionsRef.on('value', _myCompositions => {
         let myCompositions = _myCompositions.val() || [];

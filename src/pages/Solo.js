@@ -1,6 +1,6 @@
 import './css/solo.css';
 import Game from './Game';
-import { getId } from '../auth';
+import { getUser } from '../store/user';
 import actions from '../actions';
 
 export default class Solo extends Game {
@@ -18,7 +18,7 @@ export default class Solo extends Game {
 
   computeGid() {
     const pid = this.props.match.params.pid;
-    return `solo/${getId()}/${pid}`;
+    return `solo/${this.user.id}/${pid}`;
   }
 
   computeColor() {

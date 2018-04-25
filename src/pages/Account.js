@@ -1,8 +1,6 @@
 import './css/account.css';
 
 import Nav from '../components/Nav';
-import { getUser, logOut } from '../auth';
-
 import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
 

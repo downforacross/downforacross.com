@@ -8,7 +8,7 @@ import News from '../components/News';
 import Nav from '../components/Nav';
 
 import actions, { db, getTime } from '../actions';
-import { getId, loggedIn, registerLoginListener } from '../auth';
+import { getUser } from '../store/user';
 
 function values(obj) {
   return Object.keys(obj).map(key => obj[key]);
@@ -46,7 +46,7 @@ class Entry extends Component {
     actions.createGame({
       name: 'Public Game',
       pid: pid,
-      gid: `solo/${getId()}/${pid}`,
+      gid: `solo/${this.user.id}/${pid}`,
     }, gid => {
       this.props.history.push(`/game/solo/${pid}`);
     });
@@ -119,12 +119,31 @@ export default class Welcome extends Component {
       userHistory: {},
     };
     this.puzzleListRef = db.ref('puzzlelist');
-    registerLoginListener(() => {
-      if (loggedIn()) {
+  }
+
+  componentDidMount() {
+    this.puzzleListRef.on('value', this.updatePuzzleList.bind(this));
+    if (this.userHistoryRef) {
+      this.userHistoryRef.on('value', this.updateUserHistory.bind(this));
+    }
+    this.initializeUser();
+  }
+
+  componentWillUnmount() {
+    this.puzzleListRef.off();
+    if (this.userHistoryRef) {
+      this.userHistoryRef.off();
+    }
+  }
+
+  initializeUser() {
+    this.user = getUser();
+    this.user.onAuth(() => {
+      if (this.user.fb) {
         if (this.userHistoryRef) {
           this.userHistoryRef.off();
         }
-        this.userHistoryRef = db.ref(`user/${getId()}/history`);
+        this.userHistoryRef = db.ref(`user/${this.user.id}/history`);
         this.userHistoryRef.on('value', this.updateUserHistory.bind(this));
       } else {
         if (this.userHistoryRef) {
@@ -133,20 +152,6 @@ export default class Welcome extends Component {
         this.setState({ userHistory: {} });
       }
     });
-  }
-
-  componentDidMount() {
-    this.puzzleListRef.on('value', this.updatePuzzleList.bind(this));
-    if (this.userHistoryRef) {
-      this.userHistoryRef.on('value', this.updateUserHistory.bind(this));
-    }
-  }
-
-  componentWillUnmount() {
-    this.puzzleListRef.off();
-    if (this.userHistoryRef) {
-      this.userHistoryRef.off();
-    }
   }
 
   updateUserHistory(_userHistory) {

@@ -1,5 +1,8 @@
 import firebase from 'firebase';
 
+let offline = true;
+// offline = false;
+
 const config = {
   apiKey: "AIzaSyCe4BWm9kbjXFwlZcmq4x8DvLD3TDoinhA",
   authDomain: "crosswordsio.firebaseapp.com",
@@ -9,18 +12,14 @@ const config = {
   messagingSenderId: "1021412055058"
 };
 
-const app = firebase.initializeApp(config);
+firebase.initializeApp(config);
 const db = firebase.database();
 const SERVER_TIME = firebase.database.ServerValue.TIMESTAMP;
 
 export {
-  app,
   db,
   SERVER_TIME,
 };
-
-let offline = true;
-// offline = false;
 
 export { offline };
 

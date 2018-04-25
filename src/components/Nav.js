@@ -1,15 +1,15 @@
 import './css/nav.css';
 
 import { Link } from 'react-router-dom';
-import { logIn, getUser, logOut, authStateLoaded } from '../auth';
 
 import React  from 'react';
+import { getUser } from '../store/user';
 
 function LogIn({ user }) {
-  if (!authStateLoaded) {
+  if (!user.attached) {
     return null;
   }
-  if (user) {
+  if (user.fb) {
     // for now return a simple "logged in"
     return (
       <div className='nav--right'>
@@ -30,7 +30,9 @@ function LogIn({ user }) {
     return (
       <div className='nav--right'>
         <div className='nav--login'
-          onClick={logIn}>
+          onClick={() => {
+            user.logIn()
+          }}>
           Log in
         </div>
       </div>

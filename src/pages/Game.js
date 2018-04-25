@@ -1,6 +1,5 @@
 import './css/game.css';
 
-import { getId, recordUsername, registerLoginListener } from '../auth'
 import { Helmet } from 'react-helmet';
 import React, { Component } from 'react';
 
@@ -11,10 +10,10 @@ import Nav from '../components/Nav';
 
 import { db, getTime } from '../actions';
 import { SERVER_TIME } from '../store/firebase';
-import userActions from '../userActions';
 import GridObject from '../utils/Grid';
 import { makeEmptyGame } from '../gameUtils';
 import { toArr, lazy, rand_color } from '../jsUtils';
+import { getUser } from '../store/user';
 
 const CURSOR_EXPIRE = 1000 * 60; // 60 seconds
 
@@ -132,17 +131,24 @@ export default class Game extends Component {
   }
 
   componentDidMount() {
-    registerLoginListener(() => {
+    this.initializeUser();
+  }
+
+  initializeUser() {
+    this.user = getUser();
+    this.user.onAuth(() => {
       this.gid = this.computeGid();
+      this.setState({
+        id: this.user.id,
+      });
       this.historyRef = db.ref(`history/${this.gid}`)
       this.color = this.computeColor();
-      this.id = getId();
       db.ref('game/' + this.gid).on('value', _game => {
         lazy('updateGame', () => {
           const game = _game.val() || {};
           if (this.game && game.solved && !this.game.solved) {
 
-            userActions.markSolved(this.gid);
+            this.user.markSolved(this.gid);
           }
           this.game = game;
           this.setState({ game: this.game });
@@ -166,7 +172,7 @@ export default class Game extends Component {
     this.game = fn(this.game);
     // do this whenever game changes
     this.setState({ game: this.game });
-    userActions.joinGame(this.gid, this.game);
+    this.user.joinGame(this.gid, this.game);
   }
 
   cellTransaction(r, c, fn) {
@@ -174,7 +180,7 @@ export default class Game extends Component {
     this.game.grid[r][c] = fn(this.game.grid[r][c])
     // do this whenever game changes
     this.setState({ game: this.game });
-    userActions.joinGame(this.gid, this.game);
+    this.user.joinGame(this.gid, this.game);
   }
 
   checkIsSolved() {
@@ -200,7 +206,7 @@ export default class Game extends Component {
   }
 
   updateCursor({r, c}) {
-    if (!this.color || !this.id) return;
+    if (!this.color || !this.user.attached) return;
     const id = this.id;
     const { cursors } = this.state;
     const color = this.color;
@@ -260,7 +266,8 @@ export default class Game extends Component {
   }
 
   sendChatMessage(username, text) {
-    recordUsername(username);
+    const { id } = this.state;
+    this.user.recordUsername(username);
     this.transaction(game => {
       game = game || {};
       game.chat = game.chat || {};
@@ -272,7 +279,7 @@ export default class Game extends Component {
           messages: [
             ...game.chat.messages,
             {
-              senderId: getId(),
+              senderId: id,
               sender: username,
               text,
             }
@@ -286,7 +293,7 @@ export default class Game extends Component {
       type: 'chat',
       params: {
         text,
-        senderId: getId(),
+        senderId: id,
         sender: username,
       },
     });
