@@ -102,8 +102,8 @@ export default class Grid {
         if (!skipFirst) {
           return { r, c };
         }
-        skipFirst = false;
       }
+      skipFirst = false;
       if (direction === 'across') {
         c += 1;
       } else {

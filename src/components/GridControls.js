@@ -216,10 +216,10 @@ export default class GridControls extends Component {
   typeLetter(letter, isRebus) {
     const { r, c } = this.props.selected;
     const value = this.props.grid[r][c].value;
-    this.props.updateGrid(r, c, isRebus ? ((value || '').substr(0, 10) + letter) : letter);
     if (!isRebus) {
       this.goToNextEmptyCell();
     }
+    this.props.updateGrid(r, c, isRebus ? ((value || '').substr(0, 10) + letter) : letter);
   }
 
   backspace(shouldStay) {
