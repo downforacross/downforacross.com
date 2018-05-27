@@ -1,7 +1,7 @@
 // Used for generating usernames
 // copied from some random website's list of animals and adjectives
 var rawAdjectiveList = `
-  	Able, Abundant, Accepting, Accommodating, Active, Addictive, Adequate, Aggressive, Amazing, Amiable, Amicable, Amusing, Antagonistic, Anxious, Anxious, Apathetic, Aquatic, Arrogant, Articulate, Artistic, Attentive, Attractive, Authoritative, Awesome,
+  	Able, Abundant, Accepting, Accommodating, Active, Addictive, Adequate, Aggressive, AMERICAN, Amazing, Amiable, Amicable, Amusing, Antagonistic, Anxious, Anxious, Apathetic, Aquatic, Arrogant, Articulate, Artistic, Attentive, Attractive, Authoritative, Awesome,
 	Barren, Benevolent, Biodegradable, Blase, Bold, Bonding, Boorish, Bountiful, Braggart, Brave, Brilliant, Busy, Buzz,
 	Callow, Captious, CARING, Celestial, Chaste, Cheerful, Churlish, Civil, Clean, Clever, Coastal, Cold, Colossal, Combustible, Comfortable, Commercial, Communicative, Compact, Competitive, Compulsive, Confident, Conflicted, Congenial, Conscientious, Conservative, Considerate, Conspicuous, Contemptible, Contiguous, COOPERATIVE, Cordial, COURAGEOUS, Courteous, Covetous, Creative, Critical, Critical, Crucial, Crude, Culpable, Curious, Current, Curt, Cynical,
 	Decent, Decorous, Defensive, Deferential, Deft, Dejected, Delightful, Demeaning, Demise, Dependable, Deplorable, Depressed, Destructive, Devious, Devoted, Dictatorial, Diligent, Diminutive, Diplomatic, Discreet, Disdainful, Dishonesty, Dishonorable, Disposable, Disrespectful, Distracted, Docile, Downcast, Dynamic,
@@ -37,6 +37,7 @@ Albatross
 Alligator
 Alpaca
 American buffalo (bison)
+American cow (usacow)
 American robin
 Amphibian
 Anaconda
@@ -444,6 +445,7 @@ Turkey
 Turtle
 Tyrannosaurus
 Urial
+Usacow
 Vampire bat
 Vampire squid
 Vaquita
@@ -470,6 +472,7 @@ Wildcat
 Wildebeest
 Wildfowl
 Wolf
+Wolfie
 Wolverine
 Wombat
 Wood lemming
