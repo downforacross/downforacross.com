@@ -134,6 +134,11 @@ export default class Game extends Component {
     this.initializeUser();
   }
 
+  get id() {
+    if (!this.user) return '';
+    return this.user.id;
+  }
+
   initializeUser() {
     this.user = getUser();
     this.user.onAuth(() => {
