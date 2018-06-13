@@ -270,6 +270,25 @@ export default class Replay extends Component {
       }
     });
   }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.position !== this.state.position) {
+      if (!this.refs.game) return;
+      if (this.followCursor !== undefined) {
+        const gameCursors = this.game.cursors;
+        const cursor = _.find(gameCursors, (cursor => (
+          cursor.id === this.followCursor
+        )));
+        if (cursor) {
+          this.refs.game.setSelected({
+            r: cursor.r,
+            c: cursor.c
+          });
+        }
+      }
+    }
+  }
+
   setDirection = (direction, value) => {
     this.setState({
       [direction]: value,
@@ -279,6 +298,18 @@ export default class Replay extends Component {
   focus = () => {
     if (this.refs.controls) {
       this.refs.controls.focus();
+    }
+  }
+
+  handleUpdateCursor = ({r, c}) => {
+    const gameCursors = this.game.cursors;
+    const cursor = _.find(gameCursors, (cursor => (
+      cursor.r === r && cursor.c === c
+    )));
+    if (cursor !== undefined) {
+      this.followCursor = cursor.id;
+    } else {
+      this.followCursor = undefined;
     }
   }
 
@@ -429,7 +460,6 @@ export default class Replay extends Component {
       );
     }
 
-    console.log('render player', this.game);
     const { grid, circles, shades, cursors, clues, solved, } = this.game;
     const screenWidth = this.screenWidth;
     let cols = grid[0].length;
@@ -451,7 +481,7 @@ export default class Replay extends Component {
         frozen={solved}
         myColor={this.color}
         updateGrid={_.noop}
-        updateCursor={_.noop}
+        updateCursor={this.handleUpdateCursor}
         onPressEnter={_.noop}
         mobile={false}
       />
