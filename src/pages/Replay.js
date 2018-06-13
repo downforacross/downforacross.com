@@ -544,16 +544,16 @@ export default class Replay extends Component {
           border: '1px solid #E2E2E2',
         }}>
           {this.renderToolbar()}
+          <div style={{
+            // flex: 1,
+          }}>
+            {this.renderControls()}
+          </div>
         </div>
         <Flex style={{ padding: 20 }}>
           {this.renderPlayer()}
           {this.renderChat()}
         </Flex>
-        <div style={{
-          // flex: 1,
-        }}>
-          {this.renderControls()}
-        </div>
         {/*Controls:
       Playback scrubber
       Playback speed toggle
