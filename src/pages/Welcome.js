@@ -46,7 +46,7 @@ class Entry extends Component {
     actions.createGame({
       name: 'Public Game',
       pid: pid,
-      gid: `solo/${this.user.id}/${pid}`,
+      gid: `solo/${this.props.user.id}/${pid}`,
     }, gid => {
       this.props.history.push(`/game/solo/${pid}`);
     });
@@ -207,7 +207,7 @@ export default class Welcome extends Component {
             ))
             .map((entry, i) =>
               <div key={i} className='welcome--browse--puzzlelist--entry'>
-                <Entry { ...entry } history={history} status={puzzleStatuses[entry.pid]} lastUpdateTime={lastUpdateTime}/>
+                <Entry { ...entry } history={history} status={puzzleStatuses[entry.pid]} lastUpdateTime={lastUpdateTime} user={this.user}/>
               </div>
             )
         }
