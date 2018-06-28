@@ -39,7 +39,7 @@ class User extends EventEmitter {
       return undefined;
     }
     if (this.fb) {
-      return this.fb.id;
+      return this.fb.uid;
     }
     return getLocalId();
   }
