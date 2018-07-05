@@ -37,9 +37,7 @@ export default class Clock extends Component {
       clock += pausedTime;
     }
 
-    // TODO use this.props.isPaused
-    // (once Game->V2 migration is complete)
-    if (start) { // not paused
+    if (start && !this.props.isPaused) { // not paused
       if (stop) { // finished
         clock += stop - start;
       } else {

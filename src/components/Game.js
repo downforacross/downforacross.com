@@ -14,6 +14,7 @@ export default class GameV2 extends Component {
     super();
     this.screenWidth = 0;
     this.state = {
+      pencilMode: false,
     };
   }
 
@@ -45,7 +46,8 @@ export default class GameV2 extends Component {
 
   handleUpdateGrid = (r, c, value) => {
     const { id, myColor } = this.props;
-    this.gameModel.updateCell(r, c, id, myColor, value);
+    const { pencilMode } = this.state;
+    this.gameModel.updateCell(r, c, id, myColor, pencilMode, value);
   }
 
   handleUpdateCursor = ({r, c}) => {
@@ -81,6 +83,11 @@ export default class GameV2 extends Component {
     this.props.gameModel.reset(scope);
   }
 
+  handleTogglePencil = () => {
+    this.setState({
+      pencilMode: !this.state.pencilMode,
+    });
+  }
 
   renderPlayer() {
     const {
@@ -128,13 +135,19 @@ export default class GameV2 extends Component {
   renderToolbar() {
     if (!this.game) return;
     const { clock } = this.game;
-    const { startTime, pausedTime, isPaused } = clock;
+    const { pencilMode } = this.state;
+    const {
+      lastUpdated: startTime,
+      totalTime: pausedTime,
+      paused: isPaused,
+    } = clock;
     return (
       <Toolbar
         mobile={false}
         startTime={startTime}
         pausedTime={pausedTime}
         isPaused={isPaused}
+        pencilMode={pencilMode}
         onStartClock={this.handleStartClock}
         onPauseClock={this.handlePauseClock}
         onResetClock={this.handleResetClock}

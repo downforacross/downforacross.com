@@ -17,9 +17,9 @@ const reducers = {
       cursor = {},
       clues = {},
       clock = {
-        startTime: 0,
-        pausedTime: 0,
-        isPaused: true,
+        lastUpdated: 0,
+        totalTime: 0,
+        paused: true,
       },
     } = params.game;
 
@@ -70,6 +70,7 @@ const reducers = {
     const {
       cell: { r, c },
       value,
+      pencil = false,
     } = params
     if (!game.solved && !grid[r][c].good) {
       grid = Object.assign([], grid, {
@@ -78,6 +79,7 @@ const reducers = {
             ...grid[r][c],
             value,
             bad: false,
+            pencil,
           },
         }),
       });
@@ -161,21 +163,16 @@ const reducers = {
     if (action === 'pause') {
       clock = {
         ...clock,
-        pausedTime: clock.pausedTime + timestamp - clock.startTime,
-        startTime: 0,
+        totalTime: clock.totalTime + timestamp - clock.lastUpdated,
+        lastUpdated: 0,
         paused: true,
       };
     } else if (action === 'start') {
-      clock = {
-        ...clock,
-        startTime: timestamp,
-        paused: false,
-      };
+      // no-op, will be handled by tick
     } else if (action === 'reset') {
       clock = {
         ...clock,
-        startTime: 0,
-        pausedTime: 0,
+        totalTime: 0,
         paused: true,
       };
     }
@@ -208,7 +205,7 @@ const reducers = {
   },
 };
 
-export const tick = (game, timestamp) => {
+export const tick = (game, timestamp, isPause) => {
   let {
     clock = {
       totalTime: 0,
@@ -225,7 +222,9 @@ export const tick = (game, timestamp) => {
     ...clock,
     lastUpdated: timestamp,
     totalTime: clock.totalTime + timeDiff,
+    paused: isPause,
   };
+  // console.log(clock);
   return {
     ...game,
     clock,
@@ -239,6 +238,8 @@ export const reduce = (game, action) => {
     return game;
   }
   game = reducers[type](game, params);
-  game = tick(game, timestamp);
+
+  const isPause = type === 'updateClock' && params && params.action === 'pause';
+  game = tick(game, timestamp, isPause);
   return game;
 };

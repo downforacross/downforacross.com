@@ -147,7 +147,7 @@ export default class Toolbar extends Component {
             startTime={startTime}
             stopTime={stopTime}
             pausedTime={pausedTime}
-            isPaused={!startTime}
+            isPaused={this.props.isPaused || !startTime}
             onStart={onStartClock}
             onPause={onPauseClock}
           />

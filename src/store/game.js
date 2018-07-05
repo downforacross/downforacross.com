@@ -15,7 +15,6 @@ class Game extends EventEmitter {
   attach() {
     console.log('attached to game', this.path);
     this.ref.on('child_added', snapshot => {
-      console.log('event', snapshot.val());
       this.emit('event', snapshot.val());
     });
   }
@@ -24,7 +23,7 @@ class Game extends EventEmitter {
     this.ref.off('child_added');
   }
 
-  updateCell(r, c, id, color, value) {
+  updateCell(r, c, id, color, pencil, value) {
     this.ref.push({
       timestamp: SERVER_TIME,
       type: 'updateCell',
@@ -32,6 +31,7 @@ class Game extends EventEmitter {
         cell: {r, c},
         value,
         color,
+        pencil,
         id,
       },
     });
