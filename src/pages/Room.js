@@ -47,7 +47,7 @@ export default class Room extends Component {
     this.state = {
       rid: undefined,
       gid: undefined,
-      showingSidebar: true,
+      showingSidebar: false,
       users: {},
       games: {},
     };
@@ -69,7 +69,7 @@ export default class Room extends Component {
     this.user.onAuth(() => {
       const id = this.user.id;
       const color = this.user.color;
-      this.setState({ id, color });
+      console.log('init user', id, color);
     });
   }
 
@@ -105,6 +105,7 @@ export default class Room extends Component {
       this.gameModel.attach();
       // add listeners
     }
+    this.handleUpdate();
   }
 
   componentDidMount() {
@@ -151,16 +152,6 @@ export default class Room extends Component {
 
   handlePressEnter = () => {
     // noop for now
-  }
-
-  handleUpdateGrid = (r, c, value) => {
-    const { id, color } = this.state;
-    this.gameModel.updateCell(r, c, id, color, value);
-  }
-
-  handleUpdateCursor = ({r, c}) => {
-    const { id, color } = this.state;
-    this.gameModel.updateCursor(r, c, id, color);
   }
 
   handleUpdate = _.debounce(() => {
@@ -260,14 +251,14 @@ export default class Room extends Component {
       return;
     }
 
-    const { id, color } = this.state;
-    const game = this.historyWrapper.getSnapshot();
+    const { id, color } = this.user;
     return (
       <Game
         ref='game'
         id={id}
         myColor={color}
-        game={game}
+        historyWrapper={this.historyWrapper}
+        gameModel={this.gameModel}
         onPressEnter={this.focusChat}
         onUpdateGrid={this.handleUpdateGrid}
         onUpdateCursor={this.handleUpdateCursor}
@@ -295,7 +286,7 @@ export default class Room extends Component {
             </Flex>
           )}
           <Flex>
-            {this.renderSidebarToggler()}
+            {/*this.renderSidebarToggler()*/}
           </Flex>
           <Flex grow={7} column>
             { this.renderGame() }

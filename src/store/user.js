@@ -8,10 +8,9 @@ import { rand_color } from '../jsUtils';
 class User extends EventEmitter {
   constructor() {
     super();
-    console.trace();
-    console.log('firebase auth');
     this.auth = firebase.auth();
     this.attached = false;
+    this.color = rand_color();
   }
 
   attach() {
@@ -42,10 +41,6 @@ class User extends EventEmitter {
       return this.fb.uid;
     }
     return getLocalId();
-  }
-
-  get color() {
-    return rand_color();
   }
 
   onAuth(cbk) {

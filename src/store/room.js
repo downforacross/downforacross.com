@@ -44,7 +44,10 @@ class Room extends EventEmitter {
   }
 
   getGame(gid) {
-    return new Game(`${this.path}/history/${gid}`);
+    if (!gid) {
+      return;
+    }
+    return new Game(`/history/${gid}`);
   }
 
   createGame(pid, cbk) {

@@ -13,7 +13,9 @@ class Game extends EventEmitter {
   }
 
   attach() {
+    console.log('attached to game', this.path);
     this.ref.on('child_added', snapshot => {
+      console.log('event', snapshot.val());
       this.emit('event', snapshot.val());
     });
   }
@@ -44,6 +46,47 @@ class Game extends EventEmitter {
         cell: {r, c},
         color,
         id,
+      },
+    });
+  }
+
+  updateClock(action) {
+    this.ref.push({
+      timestamp: SERVER_TIME,
+      type: 'updateClock',
+      params: {
+        action,
+        timestamp: SERVER_TIME,
+      },
+    });
+  }
+
+  check(scope) {
+    this.ref.push({
+      timestamp: SERVER_TIME,
+      type: 'check',
+      params: {
+        scope,
+      },
+    });
+  }
+
+  reveal(scope) {
+    this.ref.push({
+      timestamp: SERVER_TIME,
+      type: 'reveal',
+      params: {
+        scope,
+      },
+    });
+  }
+
+  reset(scope) {
+    this.ref.push({
+      timestamp: SERVER_TIME,
+      type: 'reset',
+      params: {
+        scope,
       },
     });
   }

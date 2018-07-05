@@ -17,24 +17,78 @@ export default class GameV2 extends Component {
     };
   }
 
-  static getDerivedStateFromProps(props, prevState) {
-    return prevState;
-  }
-
   componentDidMount() {
     this.screenWidth = window.innerWidth;
   }
+
+  get game() {
+    if (!this.props.historyWrapper) return;
+    return this.props.historyWrapper.getSnapshot();
+  }
+
+  get gameModel() {
+    return this.props.gameModel;
+  }
+
+  scope(s) {
+    if (s === 'square') {
+      return this.refs.player.getSelectedSquares();
+    } else if (s === 'word') {
+      return this.refs.player.getSelectedAndHighlightedSquares();
+    } else if (s === 'puzzle') {
+      return this.refs.player.getAllSquares();
+    } else {
+      return [];
+    }
+  }
+
+
+  handleUpdateGrid = (r, c, value) => {
+    const { id, myColor } = this.props;
+    this.gameModel.updateCell(r, c, id, myColor, value);
+  }
+
+  handleUpdateCursor = ({r, c}) => {
+    const { id, myColor } = this.props;
+    this.gameModel.updateCursor(r, c, id, myColor);
+  }
+
+  handleStartClock = () => {
+    this.props.gameModel.updateClock('start');
+  }
+
+  handlePauseClock = () => {
+    this.props.gameModel.updateClock('pause');
+  }
+
+  handleResetClock = () => {
+    this.props.gameModel.updateClock('reset');
+  }
+
+  handleCheck = (scopeString) => {
+    const scope = this.scope(scopeString);
+    this.props.gameModel.check(scope);
+  }
+
+  handleReveal = (scopeString) => {
+    const scope = this.scope(scopeString);
+    this.props.gameModel.reveal(scope);
+  }
+
+
+  handleReset = (scopeString) => {
+    const scope = this.scope(scopeString);
+    this.props.gameModel.reset(scope);
+  }
+
 
   renderPlayer() {
     const {
       id,
       myColor,
-      game,
-      onUpdateGrid,
-      onUpdateCursor,
       onPressEnter,
     } = this.props;
-    if (!game) {
+    if (!this.game) {
       return (
         <div>
           Select a game
@@ -42,7 +96,7 @@ export default class GameV2 extends Component {
       );
     }
 
-    const { grid, circles, shades, cursors, clues, solved, } = game;
+    const { grid, circles, shades, cursors, clues, solved, } = this.game;
     const screenWidth = this.screenWidth;
     let cols = grid[0].length;
     let rows = grid.length;
@@ -50,6 +104,7 @@ export default class GameV2 extends Component {
     let size = width / cols;
     return (
       <Player
+        ref='player'
         size={size}
         grid={grid}
         circles={circles}
@@ -62,24 +117,45 @@ export default class GameV2 extends Component {
         cursors={cursors}
         frozen={solved}
         myColor={myColor}
-        updateGrid={onUpdateGrid}
-        updateCursor={onUpdateCursor}
+        updateGrid={this.handleUpdateGrid}
+        updateCursor={this.handleUpdateCursor}
         onPressEnter={onPressEnter}
         mobile={false}
       />
     );
   }
+
+  renderToolbar() {
+    if (!this.game) return;
+    const { clock } = this.game;
+    const { startTime, pausedTime, isPaused } = clock;
+    return (
+      <Toolbar
+        mobile={false}
+        startTime={startTime}
+        pausedTime={pausedTime}
+        isPaused={isPaused}
+        onStartClock={this.handleStartClock}
+        onPauseClock={this.handlePauseClock}
+        onResetClock={this.handleResetClock}
+        onCheck={this.handleCheck}
+        onReveal={this.handleReveal}
+        onReset={this.handleReset}
+        onTogglePencil={this.handleTogglePencil}
+      />
+    );
+  }
+
   render() {
-    const { game } = this.props;
     return (
       <Flex column>
-        <Toolbar/>
+        {this.renderToolbar()}
         <div
           style={{
             padding: 20,
           }}>
-        {this.renderPlayer()}
-      </div>
+          {this.renderPlayer()}
+        </div>
       </Flex>
     );
   }

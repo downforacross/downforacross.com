@@ -16,6 +16,11 @@ const reducers = {
       chat = { messages: [] },
       cursor = {},
       clues = {},
+      clock = {
+        startTime: 0,
+        pausedTime: 0,
+        isPaused: true,
+      },
     } = params.game;
 
     return {
@@ -26,6 +31,7 @@ const reducers = {
       chat,
       cursor,
       clues,
+      clock,
     };
   },
 
@@ -83,7 +89,7 @@ const reducers = {
   },
 
   check: (game, params) => {
-    const { scope = [], squares } = params;
+    const { scope = [] } = params;
     let { grid, solution } = game;
     const scopeGrid = getScopeGrid(grid, scope);
     grid = grid.map((row, i) => (
@@ -104,7 +110,7 @@ const reducers = {
   },
 
   reveal: (game, params) => {
-    const { scope = [], squares } = params;
+    const { scope = [] } = params;
     let { grid, solution } = game;
     const scopeGrid = getScopeGrid(grid, scope);
     grid = grid.map((row, i) => (
@@ -125,18 +131,51 @@ const reducers = {
     };
   },
 
+  reset: (game, params) => {
+    const { scope = [] } = params;
+    let { grid } = game;
+    const scopeGrid = getScopeGrid(grid, scope);
+    grid = grid.map((row, i) => (
+      row.map((cell, j) => (scopeGrid[i][j]
+        ? {
+          ...cell,
+          value: '',
+          good: false,
+          bad: false,
+          revealed: false,
+          pencil: false,
+        }
+        : cell
+      ))
+    ));
+    return {
+      ...game,
+      grid,
+    };
+  },
+
   updateClock: (game, params) => {
     const action = params.action;
+    const { timestamp } = params;
     let { clock } = game;
     if (action === 'pause') {
       clock = {
         ...clock,
+        pausedTime: clock.pausedTime + timestamp - clock.startTime,
+        startTime: 0,
         paused: true,
+      };
+    } else if (action === 'start') {
+      clock = {
+        ...clock,
+        startTime: timestamp,
+        paused: false,
       };
     } else if (action === 'reset') {
       clock = {
         ...clock,
-        totalTime: 0,
+        startTime: 0,
+        pausedTime: 0,
         paused: true,
       };
     }
