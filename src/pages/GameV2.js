@@ -130,10 +130,10 @@ export default class GameV2 extends Component {
       >
         <Nav/>
         <Flex className='room--main' grow={1}>
-          <Flex grow={7} column>
+          <Flex column shrink={0}>
             { this.renderGame() }
           </Flex>
-          <Flex>
+          <Flex grow={1}>
             { this.renderChat() }
           </Flex>
         </Flex>

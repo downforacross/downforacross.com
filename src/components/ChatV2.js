@@ -76,13 +76,13 @@ export default class Chat extends Component {
     if (!this.game) return null;
     const { title, author, type } = this.game.info || {};
 
-    const header = (
-      <div className='header'>
-        <div className='header--title'>
+    return (
+      <div className='chatv2--header'>
+        <div className='chatv2--header--title'>
           { title }
         </div>
 
-        <div className='header--subtitle'>
+        <div className='chatv2--header--subtitle'>
           {
             type && (
               type + ' | '
@@ -90,12 +90,6 @@ export default class Chat extends Component {
             )
           }
         </div>
-      </div>
-    );
-
-    return (
-      <div className='chatv2--header'>
-        {header}
       </div>
     );
   }
