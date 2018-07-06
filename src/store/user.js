@@ -1,4 +1,4 @@
-import firebase, { db, SERVER_TIME, offline } from './firebase';
+import firebase, { db } from './firebase';
 import getLocalId from '../localAuth';
 import EventEmitter from 'events';
 import { getTime } from '../actions';
@@ -77,7 +77,6 @@ export default class User extends EventEmitter {
   }
 
   recordUsername(username) {
-    const id = this.id;
     this.ref
       .child('names')
       .child(username)

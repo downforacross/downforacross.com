@@ -1,17 +1,14 @@
 import 'react-flexview/lib/flexView.css'
 
 import React, { Component } from 'react';
-import Player from '../components/Player';
-import Toolbar from '../components/Toolbar';
 import Nav from '../components/Nav';
 import _ from 'lodash';
 import Flex from 'react-flexview';
-import { GameModel, UserModel } from '../store';
+import { GameModel } from '../store';
 import { getUser } from '../store';
 import HistoryWrapper from '../utils/historyWrapper';
 import Game from '../components/Game';
 import ChatV2 from '../components/ChatV2';
-import { pure } from '../jsUtils';
 
 export default class GameV2 extends Component {
   constructor(props) {
@@ -28,7 +25,7 @@ export default class GameV2 extends Component {
     return {
       ...prevState,
       rid: props.match.params.rid,
-      gid: parseInt(props.match.params.gid),
+      gid: parseInt(props.match.params.gid, 10),
     };
   }
 

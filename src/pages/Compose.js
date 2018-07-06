@@ -48,7 +48,6 @@ export default class Compose extends Component {
         composition.clues.across = toArr(composition.clues.across);
         composition.clues.down = toArr(composition.clues.down);
         this.composition = composition;
-        this.composition.clues.across;
         this.setState({ composition });
       });
     });

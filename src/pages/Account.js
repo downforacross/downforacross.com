@@ -1,7 +1,6 @@
 import './css/account.css';
 
 import Nav from '../components/Nav';
-import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
 
 function AccountHistory() {

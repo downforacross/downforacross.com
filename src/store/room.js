@@ -1,6 +1,6 @@
 import Game from './game';
 import { makeGame } from '../gameUtils';
-import { db, offline, SERVER_TIME } from './firebase';
+import { db, SERVER_TIME } from './firebase';
 import EventEmitter from 'events';
 
 // a wrapper class that models Room

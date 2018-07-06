@@ -1,6 +1,3 @@
-import getLocalId from '../localAuth';
-import EventEmitter from 'events';
-import { rand_color } from '../jsUtils';
 import User from './user';
 
 export default class DemoUser extends User {

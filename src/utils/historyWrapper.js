@@ -56,7 +56,6 @@ export default class HistoryWrapper {
 
   // this is used for replay
   getSnapshotAt(timestamp) {
-    let game = null;
     // compute the number of events that have happened
     const index = _.sortedLastIndexBy(
       this.history,

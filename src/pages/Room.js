@@ -1,12 +1,10 @@
 import 'react-flexview/lib/flexView.css'
 
 import React, { Component } from 'react';
-import Player from '../components/Player';
-import Toolbar from '../components/Toolbar';
 import Nav from '../components/Nav';
 import _ from 'lodash';
 import Flex from 'react-flexview';
-import {RoomModel, GameModel, getUser} from '../store';
+import {RoomModel, getUser} from '../store';
 import HistoryWrapper from '../utils/historyWrapper';
 import Game from '../components/Game';
 import { pure } from '../jsUtils';
@@ -58,7 +56,7 @@ export default class Room extends Component {
     return {
       ...prevState,
       rid: props.match.params.rid,
-      gid: parseInt(props.match.params.gid),
+      gid: parseInt(props.match.params.gid, 10),
     };
   }
 
@@ -172,7 +170,7 @@ export default class Room extends Component {
   }
 
   renderSidebar() {
-    const { games, info } = this.state;
+    const { games } = this.state;
     return (
       <Flex column>
         <div

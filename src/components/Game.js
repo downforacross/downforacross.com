@@ -6,7 +6,6 @@ import Flex from 'react-flexview';
 import Player from '../components/Player';
 import Toolbar from '../components/Toolbar';
 import { toArr } from '../jsUtils';
-import _ from 'lodash';
 
 // component for gameplay -- incl. grid/clues & toolbar
 export default class GameV2 extends Component {

@@ -1,4 +1,4 @@
-import { db, SERVER_TIME, offline } from './firebase';
+import { db, SERVER_TIME } from './firebase';
 import EventEmitter from 'events';
 
 // a wrapper class that models Game

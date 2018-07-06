@@ -42,7 +42,7 @@ export default class Chat extends Component {
     if (ev.key === 'Enter') {
       ev.stopPropagation();
       ev.preventDefault();
-      if (message.length > 0) {
+      if (username.length > 0 && message.length > 0) {
         this.sendChatMessage();
         this.setState({message: ''});
       } else {

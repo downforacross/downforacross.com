@@ -1,10 +1,8 @@
 import Game from './game';
 import { db, SERVER_TIME } from './firebase';
-import EventEmitter from 'events';
 
 // a wrapper class that models Game
 
-const CURRENT_VERSION = '0.1';
 export default class DemoGame extends Game {
   constructor(path) {
     super();
