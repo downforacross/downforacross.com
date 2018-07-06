@@ -1,4 +1,5 @@
 import Welcome from './Welcome';
+import WelcomeV2 from './WelcomeV2';
 import Game from './Game';
 import Compose from './Compose';
 import Solo from './Solo';
@@ -7,4 +8,4 @@ import Replay from './Replay';
 import Room from './Room';
 import GameV2 from './GameV2';
 
-export { Welcome, Game, Compose, Solo, Account, Replay, Room, GameV2 };
+export { Welcome, WelcomeV2, Game, Compose, Solo, Account, Replay, Room, GameV2 };

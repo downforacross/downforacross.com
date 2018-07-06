@@ -40,13 +40,13 @@ function LogIn({ user }) {
   }
 }
 
-export default function Nav(props) {
-  if (props.mobile) return null; // no nav for mobile
+export default function Nav({mobile, v2}) {
+  if (mobile) return null; // no nav for mobile
 
   return (
     <div className='nav'>
       <div className='nav--left'>
-        <Link to='/'>
+        <Link to={v2 ? '/v2' : '/'}>
           Down for a Cross
         </Link>
       </div>

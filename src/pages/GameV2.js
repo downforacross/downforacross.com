@@ -125,7 +125,7 @@ export default class GameV2 extends Component {
           height: '100%',
         }}
       >
-        <Nav/>
+        <Nav v2/>
         <Flex className='room--main' grow={1}>
           <Flex column shrink={0}>
             { this.renderGame() }

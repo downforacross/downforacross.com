@@ -1,9 +1,10 @@
 import { db, SERVER_TIME } from './firebase';
-import EventEmitter from 'events';
+import EventEmitter
+  from 'events';
 
 // a wrapper class that models Game
 
-const CURRENT_VERSION = '0.1';
+const CURRENT_VERSION = 1.0;
 export default class Game extends EventEmitter {
   constructor(path) {
     super();

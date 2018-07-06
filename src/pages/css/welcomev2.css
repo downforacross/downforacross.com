@@ -1,0 +1,231 @@
+.welcomev2 {
+  display: flex;
+  flex-direction: column;
+  background-color: #FAFAFA;
+  font-family: "Avenir Next", "Avenir", "sans serif";
+  color: #333;
+}
+
+.welcomev2--main {
+  display: flex;
+  flex-direction: row;
+}
+
+.welcomev2--browse {
+  flex: 2;
+  padding: 15px 15px 15px 15px;
+  display: flex;
+  flex-direction: row;
+}
+
+.welcomev2--browse--filter {
+  flex: 1;
+  padding: 15px 15px 15px 15px;
+  border-right: 1px solid #9B9B9B;
+  display: flex;
+  flex-direction: column;
+  display: none;
+}
+
+.welcomev2--browse--filter--header {
+  font-size: 20px;
+  margin-left: 3px;
+}
+
+.welcomev2--browse--puzzlelist--wrapper {
+  flex: 6;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.welcomev2--browse--puzzlelist {
+  padding: 10px 0px 10px 0px;
+  width: 50%;
+}
+
+.welcomev2--browse--title {
+  text-align: center;
+  font-size: 22px;
+}
+
+.puzzlelist {
+  padding: 0px 30px 0px 30px;
+  max-height: 100%;
+  overflow-y: auto;
+  font-size: 20px;
+}
+
+.entry {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  font-family: sans-serif;
+  border: 2px solid silver;
+  border-radius: 3px;
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.entry.started {
+  border-color: #a0d9fc;
+}
+
+.entry.solved {
+  border-color: #8df79d;
+}
+
+@keyframes slidein {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+.entry.new {
+  animation: 1s slidein;
+}
+
+.entry--back {
+  opacity: 0;
+  transition: opacity .2s ease-in;
+  -moz-user-select: none;
+}
+
+.entry.flipped .entry--back {
+  opacity: 1;
+  transition: opacity .2s ease-in;
+}
+
+.entry--front {
+  flex: 1;
+  height: 50px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.entry--front--title {
+  font-size: 15px;
+  text-align: center;
+}
+
+.entry--front--author {
+  margin-top: 8px;
+  font-size: 12px;
+  text-align: center;
+}
+
+.entry--back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: rgba(40, 69, 94, .95);
+}
+
+.entry--back--btns {
+  display: flex;
+  justify-content: space-around;
+}
+
+.entry--back--btn {
+  padding: 10px;
+  font-size: 15px;
+  font-weight: bold;
+  color: white;
+  background-color: rgba(106, 169, 254, .95);
+  border-radius: 5px;
+}
+
+.entry--back--btn:hover {
+  color: white;
+  background-color: rgb(76, 109, 184);
+}
+
+.entry--back--btn.play-solo {
+
+}
+
+.welcomev2--browse--puzzlelist--entry:hover {
+  background-color: #FFF;
+}
+
+.welcomev2--right {
+  flex: 1;
+  padding: 15px 15px 15px 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.welcomev2--upload {
+  padding: 10px;
+  flex: 3;
+}
+
+.welcomev2--news {
+  padding: 10px;
+  flex: 2;
+}
+
+.welcomev2--upload--title {
+  text-align: center;
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+
+.welcomev2--create--title {
+  text-align: center;
+  font-size: 30px;
+}
+
+.welcomev2--create--options {
+  margin-top: 10px;
+}
+
+.welcomev2--create--options--option {
+  font-size: 20px;
+}
+
+.welcomev2--create--options--option input {
+  font-size: 90%;
+  width: 300px;
+  padding: 1px;
+}
+
+.welcomev2--create--options--option select {
+  font-size: 90%;
+  font-color: #666;
+  width: 350px;
+  padding: 1px;
+}
+
+.welcomev2--create--options--option .emoji {
+  font-size: 120%;
+  cursor: pointer;
+}
+
+.welcomev2--create button {
+  margin-top: 10px;
+  padding: 5px 5px 5px 5px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+::-webkit-scrollbar {
+    width: 2px;  /* remove scrollbar space */
+    background: transparent;  /* optional: just make scrollbar invisible */
+}
+/* optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+    background: #F0F0F0;
+}
+
