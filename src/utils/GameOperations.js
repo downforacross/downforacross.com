@@ -258,7 +258,6 @@ const checkSolved = (game) => {
   }
 };
 
-// TODO this can be memoized
 export const reduce = (game, action) => {
   const { timestamp, type, params } = action;
   if (!(type in reducers)) {
