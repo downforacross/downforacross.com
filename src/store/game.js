@@ -1,11 +1,10 @@
-import DemoGame from './demoGame';
 import { db, SERVER_TIME, offline } from './firebase';
 import EventEmitter from 'events';
 
 // a wrapper class that models Game
 
 const CURRENT_VERSION = '0.1';
-class Game extends EventEmitter {
+export default class Game extends EventEmitter {
   constructor(path) {
     super();
     this.path = path;
@@ -91,6 +90,18 @@ class Game extends EventEmitter {
     });
   }
 
+  chat(username, id, text) {
+    this.ref.push({
+      timestamp: SERVER_TIME,
+      type: 'chat',
+      params: {
+        text,
+        senderId: id,
+        sender: username,
+      },
+    });
+  }
+
   initialize(game) {
     const version = CURRENT_VERSION;
     this.ref.push({
@@ -103,5 +114,3 @@ class Game extends EventEmitter {
     });
   }
 }
-
-export default (offline ? DemoGame : Game);

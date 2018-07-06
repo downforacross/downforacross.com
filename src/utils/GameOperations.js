@@ -224,7 +224,6 @@ export const tick = (game, timestamp, isPause) => {
     totalTime: clock.totalTime + timeDiff,
     paused: isPause,
   };
-  // console.log(clock);
   return {
     ...game,
     clock,

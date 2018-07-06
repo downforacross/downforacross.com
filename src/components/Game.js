@@ -98,7 +98,7 @@ export default class GameV2 extends Component {
     if (!this.game) {
       return (
         <div>
-          Select a game
+          Loading...
         </div>
       );
     }

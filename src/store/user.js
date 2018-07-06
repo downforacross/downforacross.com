@@ -1,11 +1,10 @@
-import DemoUser from './demoUser';
 import firebase, { db, SERVER_TIME, offline } from './firebase';
 import getLocalId from '../localAuth';
 import EventEmitter from 'events';
 import { getTime } from '../actions';
 import { rand_color } from '../jsUtils';
 
-class User extends EventEmitter {
+export default class User extends EventEmitter {
   constructor() {
     super();
     this.auth = firebase.auth();
@@ -87,14 +86,10 @@ class User extends EventEmitter {
   }
 }
 
-const _User = (offline ? DemoUser : User);
-
-export default _User;
-
 let globalUser;
 export const getUser = () => {
   if (!globalUser) {
-    globalUser = new _User();
+    globalUser = new User();
     globalUser.attach();
   }
   return globalUser;

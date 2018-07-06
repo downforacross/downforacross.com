@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 
 let offline = true;
-offline = false;
+// offline = false;
 
 const config = {
   apiKey: "AIzaSyCe4BWm9kbjXFwlZcmq4x8DvLD3TDoinhA",
@@ -14,6 +14,8 @@ const config = {
 
 firebase.initializeApp(config);
 const db = firebase.database();
+
+console.log(db);
 const SERVER_TIME = firebase.database.ServerValue.TIMESTAMP;
 
 export {
