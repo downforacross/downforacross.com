@@ -6,6 +6,25 @@ function getScopeGrid(grid, scope) {
   return scopeGrid;
 }
 
+function isSolved(game) {
+  const { grid, solution } = game;
+  // TODO this can be memoized
+  function isRowSolved(gridRow, solutionRow) {
+    for (let i = 0; i < gridRow.length; i += 1) {
+      if (!(solutionRow[i] === '.' || solutionRow[i] === gridRow[i].value)) {
+        return false;
+      }
+    }
+    return true;
+  }
+  for (let i = 0; i < grid.length; i += 1) {
+    if (!isRowSolved(grid[i], solution[i])) {
+      return false;
+    }
+  }
+  return true;
+}
+
 const reducers = {
   create: (game, params) => {
     const {
@@ -21,6 +40,7 @@ const reducers = {
         totalTime: 0,
         paused: true,
       },
+      solved = false,
     } = params.game;
 
     return {
@@ -32,6 +52,7 @@ const reducers = {
       cursor,
       clues,
       clock,
+      solved,
     };
   },
 
@@ -215,8 +236,8 @@ export const tick = (game, timestamp, isPause) => {
   const timeDiff = (clock.paused
     ? 0
     : Math.max(0, Math.min(
-        timestamp - clock.lastUpdated,
-        MAX_CLOCK_INCREMENT))
+      timestamp - clock.lastUpdated,
+      MAX_CLOCK_INCREMENT))
   );
   clock = {
     ...clock,
@@ -230,6 +251,14 @@ export const tick = (game, timestamp, isPause) => {
   };
 };
 
+const checkSolved = (game) => {
+  return {
+    ...game,
+    solved: isSolved(game),
+  }
+};
+
+// TODO this can be memoized
 export const reduce = (game, action) => {
   const { timestamp, type, params } = action;
   if (!(type in reducers)) {
@@ -238,7 +267,11 @@ export const reduce = (game, action) => {
   }
   game = reducers[type](game, params);
 
-  const isPause = type === 'updateClock' && params && params.action === 'pause';
+  game = checkSolved(game);
+  const isPause = (
+    (type === 'updateClock' && params && params.action === 'pause') ||
+    game.solved
+  );
   game = tick(game, timestamp, isPause);
   return game;
 };
