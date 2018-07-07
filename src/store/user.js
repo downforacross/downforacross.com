@@ -17,6 +17,7 @@ export default class User extends EventEmitter {
       this.attached = true;
       this.fb = user;
       this.emit('auth');
+      console.log('Your id is', this.id);
     });
   }
 
