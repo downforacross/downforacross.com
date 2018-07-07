@@ -247,8 +247,12 @@ export default class Replay extends Component {
     return this.historyWrapper.getSnapshotAt(position);
   }
 
+  historyPath() {
+      return `history/${this.gid}`
+  }
+
   componentDidMount() {
-    this.historyRef = db.ref(`history/${this.gid}`)
+    this.historyRef = db.ref(this.historyPath())
     // compute it here so the grid doesn't go crazy
     this.screenWidth = window.innerWidth;
 
