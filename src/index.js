@@ -21,8 +21,8 @@ ReactDOM.render(
       <Route exact path="/room/:rid/:gid" component={Room}/>
       <Route exact path="/replay/:gid" component={Replay}/>
       <Route exact path="/game/solo/:pid" component={Solo}/>
-      <Route exact path="/v2" component={WelcomeV2}/>
-      <Route exact path="/v2/game/:gid" component={GameV2}/>
+      <Route exact path="/beta" component={WelcomeV2}/>
+      <Route exact path="/beta/game/:gid" component={GameV2}/>
       <Route path="/puzzle/:pid" component={Solo}/>
       <Route path="/account" component={Account}/>
       <Route exact path="/compose" component={Compose}/>

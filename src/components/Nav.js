@@ -48,6 +48,7 @@ export default function Nav({mobile, v2}) {
       <div className='nav--left'>
         <Link to={v2 ? '/v2' : '/'}>
           Down for a Cross
+          { v2 ? <span className='nav--v2'> (beta)</span> : null }
         </Link>
       </div>
       <LogIn user={getUser()}/>

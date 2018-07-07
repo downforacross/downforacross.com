@@ -110,7 +110,7 @@ class Entry extends Component {
   }
 }
 
-export default class Welcome extends Component {
+export default class WelcomeV2 extends Component {
 
   constructor() {
     super();
@@ -217,17 +217,17 @@ export default class Welcome extends Component {
 
   render() {
     return (
-      <div className='welcome'>
+      <div className='welcomev2'>
         <Helmet>
           <title>Down for a Cross</title>
         </Helmet>
-        <div className='welcome--nav'>
+        <div className='welcomev2--nav'>
           <Nav v2/>
         </div>
-        <div className='welcome--main'>
-          <div className='welcome--browse'>
-            <div className='welcome--browse--filter'>
-              <div className='welcome--browse--filter--header'>
+        <div className='welcomev2--main'>
+          <div className='welcomev2--browse'>
+            <div className='welcomev2--browse--filter'>
+              <div className='welcomev2--browse--filter--header'>
                 Difficulty
               </div>
               {
@@ -242,7 +242,7 @@ export default class Welcome extends Component {
                 ].map((day, i) =>
                   <div
                     key={i}
-                    className='welcome--browse--filter--option'
+                    className='welcomev2--browse--filter--option'
                   >
                     <input type="checkbox"/>
                     <label>{day}</label>
@@ -250,27 +250,27 @@ export default class Welcome extends Component {
                 )
               }
             </div>
-            <div className='welcome--browse--puzzlelist--wrapper'>
-              <div className='welcome--browse--puzzlelist dailies'>
-                <div className='welcome--browse--title'>
+            <div className='welcomev2--browse--puzzlelist--wrapper'>
+              <div className='welcomev2--browse--puzzlelist dailies'>
+                <div className='welcomev2--browse--title'>
                   Daily Puzzles
                 </div>
                 { this.renderPuzzleList('Daily Puzzle') }
               </div>
 
-              <div className='welcome--browse--puzzlelist minis'>
-                <div className='welcome--browse--title'>
+              <div className='welcomev2--browse--puzzlelist minis'>
+                <div className='welcomev2--browse--title'>
                   Mini Puzzles
                 </div>
                 { this.renderPuzzleList('Mini Puzzle') }
               </div>
             </div>
           </div>
-          <div className='welcome--right'>
-            <div className='welcome--upload'>
+          <div className='welcomev2--right'>
+            <div className='welcomev2--upload'>
               <Upload history={this.props.history}/>
             </div>
-            <div className='welcome--news'>
+            <div className='welcomev2--news'>
               <News />
             </div>
           </div>
