@@ -19,9 +19,13 @@ export default class User extends EventEmitter {
       this.emit('auth');
       console.log('Your id is', this.id);
     });
+    this.ref.child('history').on('value', snapshot => {
+      this.emit('history', snapshot.val());
+    });
   }
 
   detach() {
+    this.ref.child('history').off('value');
   }
 
   logIn() {
@@ -33,6 +37,14 @@ export default class User extends EventEmitter {
     return db.ref(`user/${this.id}`);
   }
 
+  onAuth(cbk) {
+    this.addListener('auth', cbk);
+    if (this.attached) {
+      cbk();
+    }
+  }
+
+  // read methods
   get id() {
     if (!this.attached) {
       return undefined;
@@ -43,13 +55,7 @@ export default class User extends EventEmitter {
     return getLocalId();
   }
 
-  onAuth(cbk) {
-    this.addListener('auth', cbk);
-    if (this.attached) {
-      cbk();
-    }
-  }
-
+  // write methods
   joinGame(gid, game) {
     const time = getTime();
     // safe to call this multiple times

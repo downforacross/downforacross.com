@@ -2,110 +2,79 @@ import './css/welcomev2.css';
 
 import React, { Component } from 'react';
 import { Helmet } from 'react-helmet';
-
-import Upload from '../components/Upload';
-import News from '../components/News';
+import Flex from 'react-flexview';
+import FontAwesome from 'react-fontawesome';
 import Nav from '../components/Nav';
 
-import actions, { db, getTime } from '../actions';
-import { getUser } from '../store/user';
+import { getUser, PuzzlelistModel } from '../store';
+import _ from 'lodash';
 
-function values(obj) {
-  return Object.keys(obj).map(key => obj[key]);
-}
-
-function EntryTitle({title}) {
+function shortenTitle(title) {
   if (title.length > 60) {
     title = title.substring(0, 55) + ' ...';
   }
-  return <span>
-    {title}
-  </span>;
+  return title;
 }
 
 class Entry extends Component {
   constructor() {
     super();
     this.state = {
-      flipped: false,
+      expanded: false,
     }
   }
 
-  playGame() {
-    const { pid } = this.props;
-    actions.createGame({
-      name: 'Public Game',
-      pid: pid
-    }, gid => {
-      this.props.history.push(`/game/${gid}`);
+  handleClick = e => {
+    this.setState({
+      expanded: !this.state.expanded,
     });
   }
 
-  playGameSolo() {
-    const { pid } = this.props;
-    actions.createGame({
-      name: 'Public Game',
-      pid: pid,
-      gid: `solo/${this.props.user.id}/${pid}`,
-    }, gid => {
-      this.props.history.push(`/game/solo/${pid}`);
+  handleMouseLeave = e => {
+    this.setState({
+      expanded: false,
     });
   }
 
-  isNew() {
-    const { importedTime, lastUpdateTime } = this.props;
-    return importedTime && lastUpdateTime && importedTime > lastUpdateTime;
+  get size() {
+    const { info = {} } = this.props;
+    const { type } = info;
+    if (type === 'Daily Puzzle') {
+      return 'Standard';
+    } else if (type === 'Mini Puzzle') {
+      return 'Mini';
+    } else {
+      return '';
+    }
   }
 
   render() {
     const { title, author, pid, status } = this.props;
-    const { flipped } = this.state;
-
-    const solved = status === 'solved';
-    const started = status === 'started';
-
-    const front = (
-      <div style={{ textDecoration: 'none', color: 'black' }} className='entry--front'>
-        <div className='entry--front--title'><EntryTitle title={title}/></div>
-        <div className='entry--front--author'>{author}</div>
-      </div>
-    );
-
-    const back = (
-      <div className='entry--back'>
-        <div className='entry--back--btns'>
-          <div
-            className='entry--back--btn play-solo'
-            onClick={()=>{
-              this.playGameSolo();
-            }} >
-            Play Solo
-          </div>
-          <div
-            className='entry--back--btn play-friends'
-            onClick={() => {
-              this.playGame();
-            }} >
-            Play With Friends
-          </div>
-        </div>
-      </div>
-    );
+    const shortenedTitle = shortenTitle(title);
+    const { expanded } = this.state;
     return (
-      <div key={pid} onClick={e => {
-        e.preventDefault();
-        e.stopPropagation();
-        this.setState({
-          flipped: !flipped,
-        });
-      }}
-      onMouseLeave={e => {
-        this.setState({ flipped: false });
-      }}
-      className={'entry' + (flipped ? ' flipped' : '') + (this.isNew() ? '  new' : '')  + (solved ? ' solved' : '') + (started ? ' started' : '')}>
-      { front }
-      { flipped ? back : <div className='entry--back'/> }
-    </div>
+      <Flex column
+        onClick={this.handleClick}
+        onMouseLeave={this.handleMouseLeave}
+        style={{
+          fontFamily: 'sans-serif',
+          border: '2px solid silver',
+          borderRadius: '3px',
+          marginTop: '18px',
+          display: 'flex',
+        }}>
+        <Flex style={{ justifyContent: 'space-between' }}>
+          <Flex className='entry--top--left'>
+            {author} | {this.size}
+          </Flex>
+          <Flex className='entry--top--right'>
+            <FontAwesome name='rocket'/>
+          </Flex>
+        </Flex>
+        <Flex className='entry--main'>
+          { shortenedTitle }
+        </Flex>
+      </Flex>
     );
   }
 }
@@ -115,24 +84,19 @@ export default class WelcomeV2 extends Component {
   constructor() {
     super();
     this.state = {
-      puzzleList: [],
+      puzzles: [],
       userHistory: {},
     };
-    this.puzzleListRef = db.ref('puzzlelist');
   }
 
   componentDidMount() {
-    this.puzzleListRef.on('value', this.updatePuzzleList.bind(this));
-    if (this.userHistoryRef) {
-      this.userHistoryRef.on('value', this.updateUserHistory.bind(this));
-    }
+    this.initializePuzzlelist();
     this.initializeUser();
   }
 
   componentWillUnmount() {
-    this.puzzleListRef.off();
-    if (this.userHistoryRef) {
-      this.userHistoryRef.off();
+    if (this.puzzleList) {
+      this.puzzleList.detach();
     }
   }
 
@@ -140,30 +104,19 @@ export default class WelcomeV2 extends Component {
     this.user = getUser();
     this.user.onAuth(() => {
       if (this.user.fb) {
-        if (this.userHistoryRef) {
-          this.userHistoryRef.off();
-        }
-        this.userHistoryRef = db.ref(`user/${this.user.id}/history`);
-        this.userHistoryRef.on('value', this.updateUserHistory.bind(this));
-      } else {
-        if (this.userHistoryRef) {
-          this.userHistoryRef.off();
-        }
-        this.setState({ userHistory: {} });
+        this.user.on('history', userHistory => {
+          this.setState({ userHistory });
+        });
       }
     });
   }
 
-  updateUserHistory(_userHistory) {
-    let userHistory = _userHistory.val() || {};
-    this.setState({ userHistory });
-  }
-
-  updatePuzzleList(_puzzleList) {
-    let puzzleList = _puzzleList.val() || {};
-
-    this.setState({ puzzleList: values(puzzleList).filter(puzzle => !puzzle.private) }, () => {
-      this.lastUpdateTime = getTime();
+  initializePuzzlelist() {
+    this.puzzleList = new PuzzlelistModel();
+    this.puzzleList.getPages(1, page => {
+      this.setState({
+        puzzles: page,
+      });
     });
   }
 
@@ -172,9 +125,9 @@ export default class WelcomeV2 extends Component {
     ev.stopPropagation();
   }
 
-  renderPuzzleList(type) {
+  renderPuzzles() {
     const { history } = this.props;
-    const { userHistory } = this.state;
+    const { userHistory, puzzles } = this.state;
     const puzzleStatuses = {};
     function setStatus(pid, solved) {
       if (solved) {
@@ -184,11 +137,11 @@ export default class WelcomeV2 extends Component {
       }
     }
 
-    Object.keys(userHistory).forEach(gid => {
+    _.keys(userHistory).forEach(gid => {
       if (gid === 'solo') {
-        Object.keys(userHistory.solo).forEach(uid => {
+        _.keys(userHistory.solo).forEach(uid => {
           const soloGames = userHistory.solo[uid];
-          Object.keys(soloGames).forEach(pid => {
+          _.keys(soloGames).forEach(pid => {
             let { solved } = soloGames[pid];
             setStatus(pid, solved);
           });
@@ -201,9 +154,9 @@ export default class WelcomeV2 extends Component {
     const lastUpdateTime = this.lastUpdateTime;
     return (
       <div className='puzzlelist'>
-        { this.state.puzzleList.slice().reverse()
+        { [...puzzles].reverse()
             .filter(entry => (
-              entry.info && entry.info.type === type
+              entry && entry.info && !entry.private
             ))
             .map((entry, i) =>
               <div key={i} className='welcome--browse--puzzlelist--entry'>
@@ -251,27 +204,7 @@ export default class WelcomeV2 extends Component {
               }
             </div>
             <div className='welcomev2--browse--puzzlelist--wrapper'>
-              <div className='welcomev2--browse--puzzlelist dailies'>
-                <div className='welcomev2--browse--title'>
-                  Daily Puzzles
-                </div>
-                { this.renderPuzzleList('Daily Puzzle') }
-              </div>
-
-              <div className='welcomev2--browse--puzzlelist minis'>
-                <div className='welcomev2--browse--title'>
-                  Mini Puzzles
-                </div>
-                { this.renderPuzzleList('Mini Puzzle') }
-              </div>
-            </div>
-          </div>
-          <div className='welcomev2--right'>
-            <div className='welcomev2--upload'>
-              <Upload history={this.props.history}/>
-            </div>
-            <div className='welcomev2--news'>
-              <News />
+              { this.renderPuzzles() }
             </div>
           </div>
         </div>

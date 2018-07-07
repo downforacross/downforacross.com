@@ -1,11 +1,11 @@
 html {
-  display: flex;
   height: 100%;
+  width: 100%;
 }
 
-body, #root, .router-wrapper {
-  flex: 1;
+html, body, #root, .router-wrapper {
   display: flex;
+  flex-direction: column;
   margin: 0;
   font-family: "avenir next", avenir, "helvetica neue", "Helvetica", "arial", sans-serif;
 }
