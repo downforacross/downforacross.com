@@ -7,6 +7,23 @@ import {db} from '../actions';
 import moment from "moment";
 import game from "../store/game";
 
+const TimeFormatter = ({millis}) => (
+  millis
+  ? (
+    <span>
+      {Math.floor(millis/60000)} minutes, {Math.floor(millis/1000) % 60} seconds
+    </span>
+  )
+  : null
+);
+
+function getTime(game) {
+  if (game.stopTime) {
+    let t = game.stopTime - game.startTime;
+    if (game.pauseTime) t += game.pauseTime;
+    return t;
+  }
+}
 
 export default class Replays extends Component {
   constructor() {
@@ -24,7 +41,7 @@ export default class Replays extends Component {
 
   get puzzle() {
     // compute the game state corresponding to current playback time
-    return this.state.puzzle
+    return this.state.puzzle;
   }
 
   componentDidMount() {
@@ -36,8 +53,14 @@ export default class Replays extends Component {
           childSnap => {
             console.log(childSnap);
             this.setState((prevState, props) => {
+              const game = childSnap.val();
+              console.log(game);
               // TODO: compute solved percentage, create time
-              return {games: [...prevState.games, childSnap.key]}
+              return {games: [...prevState.games, {
+                gid: childSnap.key,
+                solved: game.solved,
+                time: getTime(game),
+              }]}
             });
           });
       }
@@ -93,18 +116,20 @@ export default class Replays extends Component {
     }
 
     const games = this.state.games;
-    const list1Items = games.map(number =>
+    const list1Items = games.map(({gid, solved, time}) =>
       <tr>
-        <td><a href={'/replay/' + number}>Game #{number}</a></td>
-        <td>time</td>
+        <td><a href={'/replay/' + gid}>Game #{gid}</a></td>
+        <td><TimeFormatter millis={time}/></td>
+        <td>{solved ? 'done' : 'not done'}</td>
       </tr>
     );
 
     const players = this.state.soloPlayers;
-    const list2Items = players.map(id =>
+    const list2Items = players.map(({id, solved, time}) =>
       <tr>
         <td><a href={'/replay/solo/' + id + '/' + this.pid}>Play by player #{id}</a></td>
-        <td>time</td>
+        <td><TimeFormatter millis={time}/></td>
+        <td>{solved ? 'done' : 'not done'}</td>
       </tr>
     );
 
@@ -140,7 +165,7 @@ export default class Replays extends Component {
     </div>
   </div>
 
-</Flex>
+      </Flex>
     );
   }
 }
