@@ -1,0 +1,54 @@
+.replays {
+  font-family: "Avenir Next", "Avenir", "sans serif";
+  height: 100%;
+  width: 100%;
+  min-width: min-content;
+  position: relative;
+}
+
+.replays .grid-controls .grid--content .blurable {
+  opacity: 1;
+}
+
+
+.replays .grid-controls .grid--cover {
+  display: none;
+}
+
+.replays .scrub--container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 10px;
+  margin-bottom: 17.8px;
+}
+
+.replays .scrub {
+  cursor: pointer;
+  user-select: none;
+}
+
+.replays .scrub.active {
+  color: #4d4dff;
+  font-weight: bold;
+}
+
+.replays .header--title {
+  font-size: 30px;
+  font-weight: 500;
+  color: #333;
+  text-decoration: none;
+}
+
+.replays .header--subtitle {
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+
+.replays .main-table{
+  table-layout: auto;
+  width: 100%;
+
+}

@@ -1,4 +1,4 @@
-import './css/replay.css';
+import './css/replays.css';
 
 import React, {Component} from 'react';
 import Flex from 'react-flexview';
@@ -7,14 +7,17 @@ import {db} from '../actions';
 import moment from "moment";
 import game from "../store/game";
 
+const Timestamp = require('react-timestamp');
+
+
 const TimeFormatter = ({millis}) => (
-  millis
-  ? (
-    <span>
+    millis
+        ? (
+            <span>
       {Math.floor(millis/60000)} minutes, {Math.floor(millis/1000) % 60} seconds
     </span>
-  )
-  : null
+        )
+        : null
 );
 
 function getTime(game) {
@@ -25,11 +28,25 @@ function getTime(game) {
   }
 }
 
+function getChatters(game) {
+    if(!game || !game.chat) {
+        return []
+    }
+    const messages = game.chat.messages;
+    let chatters = [];
+    Object.values(messages).forEach(msg => {
+        chatters.push(msg.sender);
+    });
+    return Array.from(new Set(chatters));
+}
+
+
+
 export default class Replays extends Component {
   constructor() {
     super();
     this.state = {
-      games: [],
+      games: {},
       soloPlayers: [],
       puzInfo: {},
     };
@@ -64,11 +81,13 @@ export default class Replays extends Component {
             this.setState((prevState, props) => {
               const game = childSnap.val();
               // TODO: compute solved percentage, create time
-              return {games: [...prevState.games, {
+              return {games: {...prevState.games, [childSnap.key]: {
                 gid: childSnap.key,
                 solved: game.solved,
+                startTime: game.startTime/1000,
                 time: getTime(game),
-              }]}
+                chatters: getChatters(game),
+              }}}
             });
           });
       }
@@ -110,7 +129,7 @@ export default class Replays extends Component {
   }
 
   linkToGame(gid){
-      return <a href={'/game/' + gid}> not done</a>
+      return <a href={'/game/' + gid}>still playing</a>
   }
 
   renderList() {
@@ -123,28 +142,38 @@ export default class Replays extends Component {
     }
 
     const games = this.state.games;
-    const list1Items = games.map(({gid, solved, time}) =>
-      <tr>
-        <td><a href={'/replay/' + gid}>Game #{gid}</a></td>
-        <td><TimeFormatter millis={time}/></td>
-          <td>{solved ? 'done' : this.linkToGame(gid)}</td>
-      </tr>
-    );
+    let list1Items = [];
+
+    Object.values(games).forEach(({gid, solved, startTime, time, chatters}) => {
+        list1Items.push(
+            <tr key={gid}>
+                <td><a href={'/replay/' + gid}>Game #{gid}</a></td>
+                <td><Timestamp time={startTime}/></td>
+                <td><TimeFormatter millis={time}/></td>
+                <td>{solved ? 'done' : this.linkToGame(gid)}</td>
+                <td>{chatters.join(", ")}</td>
+            </tr>
+        );
+    });
 
     const players = this.state.soloPlayers;
     const list2Items = players.map(({id, solved, time}) =>
       <tr>
         <td><a href={'/replay/solo/' + id + '/' + this.pid}>Play by player #{id}</a></td>
+        <td>Not implemented</td>
         <td><TimeFormatter millis={time}/></td>
         <td>{solved ? 'done' : 'not done'}</td>
+        <td>Solo by user {id}</td>
       </tr>
     );
 
     return (
-      <table>
-        <tr><th>Game</th><th>Time of game</th><th>Progress</th></tr>
+      <table className={'main-table'}>
+          <tbody>
+          <tr><th>Game</th><th>Start time</th><th>Duration</th><th>Progress</th><th>Participants</th></tr>
         {list1Items}
         {list2Items}
+          </tbody>
       </table>
     );
   }
