@@ -31,6 +31,7 @@ export default class Replays extends Component {
     this.state = {
       games: [],
       soloPlayers: [],
+      puzInfo: {},
     };
   }
 
@@ -45,16 +46,23 @@ export default class Replays extends Component {
   }
 
   componentDidMount() {
+    const puzRef = db.ref('puzzlelist/'+this.pid);
+    puzRef.once('value', puzSnap => {
+        this.setState((prevState,props) =>
+        {
+            console.log(puzSnap.val());
+            return {puzInfo: puzSnap.val()};
+        });
+    });
+
     // go through the list of all the games
     // callback: if this is its pid, append its gid to the games list
     db.ref('game').orderByChild('pid').equalTo(parseInt(this.pid, 10)).once('value').then(
       gameSnap => {
         gameSnap.forEach(
           childSnap => {
-            console.log(childSnap);
             this.setState((prevState, props) => {
               const game = childSnap.val();
-              console.log(game);
               // TODO: compute solved percentage, create time
               return {games: [...prevState.games, {
                 gid: childSnap.key,
@@ -78,32 +86,31 @@ export default class Replays extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(this.state)
+    // console.log(this.state)
     // TODO: determine if this needs anything
   }
 
 
   renderHeader() {
-    if (!this.puzzle || this.state.error) {
+    if (!this.state.puzInfo || this.state.error) {
       return null;
     }
-    const {title, author, type} = this.puzzle.info;
+    console.log(this.state.puzInfo);
     return (
       <div>
         <div className='header--title'>
-          {title}
+          {this.state.puzInfo.title}
         </div>
 
         <div className='header--subtitle'>
-          {
-            type && (
-              type + ' | '
-              + 'By ' + author
-            )
-          }
+          Replays / currently playing games
         </div>
       </div>
     );
+  }
+
+  linkToGame(gid){
+      return <a href={'/game/' + gid}> not done</a>
   }
 
   renderList() {
@@ -120,7 +127,7 @@ export default class Replays extends Component {
       <tr>
         <td><a href={'/replay/' + gid}>Game #{gid}</a></td>
         <td><TimeFormatter millis={time}/></td>
-        <td>{solved ? 'done' : 'not done'}</td>
+          <td>{solved ? 'done' : this.linkToGame(gid)}</td>
       </tr>
     );
 
@@ -145,7 +152,7 @@ export default class Replays extends Component {
 
   render() {
     return (
-      <Flex column className='replay'>
+      <Flex column className='replays'>
         <Nav mobile={false}/>
         <div style={{
           paddingLeft: 30,
