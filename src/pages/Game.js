@@ -147,6 +147,15 @@ export default class Game extends Component {
         id: this.user.id,
       });
       this.historyRef = db.ref(`history/${this.gid}`)
+      console.log('here');
+      this.historyRef.once('value', snapshot => {
+        const history = snapshot.val();
+        const isV2 = history.length > 0 && history[0].params && history[0].params.version >= 1.0;
+        if (isV2) {
+          alert('Redirecting to v2...');
+          window.redirect(`/v2/game/${this.gid}`);
+        }
+      });
       this.color = this.computeColor();
       db.ref('game/' + this.gid).on('value', _game => {
         lazy('updateGame', () => {

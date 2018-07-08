@@ -1,8 +1,6 @@
-import getLocalId from '../localAuth';
-import EventEmitter from 'events';
-import { rand_color } from '../jsUtils';
+import User from './user';
 
-export default class DemoUser extends EventEmitter {
+export default class DemoUser extends User {
   constructor(fb) {
     super();
     this.fb = fb;
@@ -25,36 +23,13 @@ export default class DemoUser extends EventEmitter {
     };
     this.emit('auth');
   }
-
-  get id() {
-    if (!this.attached) {
-      return undefined;
-    }
-    if (this.fb) {
-      return this.fb.id;
-    }
-    return getLocalId();
-  }
-
-  get color() {
-    return rand_color();
-  }
-
-  onAuth(cbk) {
-    this.addListener('auth', cbk);
-    if (this.attached) {
-      cbk();
-    }
-  }
-
-  joinGame(gid, game) {
-  }
-
-  markSolved(gid) {
-  }
-
-  recordUsername(username) {
-  }
-
-
 }
+
+let globalUser;
+export const getUser = () => {
+  if (!globalUser) {
+    globalUser = new DemoUser();
+    globalUser.attach();
+  }
+  return globalUser;
+};

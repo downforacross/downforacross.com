@@ -37,7 +37,7 @@ export default class Clock extends Component {
       clock += pausedTime;
     }
 
-    if (start) { // not paused
+    if (start && !this.props.isPaused) { // not paused
       if (stop) { // finished
         clock += stop - start;
       } else {

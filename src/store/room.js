@@ -1,11 +1,10 @@
 import Game from './game';
-import DemoRoom from './demoRoom';
 import { makeGame } from '../gameUtils';
-import { db, offline, SERVER_TIME } from './firebase';
+import { db, SERVER_TIME } from './firebase';
 import EventEmitter from 'events';
 
 // a wrapper class that models Room
-class Room extends EventEmitter {
+export default class Room extends EventEmitter {
   constructor(path) {
     super();
     this.path = path;
@@ -44,7 +43,10 @@ class Room extends EventEmitter {
   }
 
   getGame(gid) {
-    return new Game(`${this.path}/history/${gid}`);
+    if (!gid) {
+      return;
+    }
+    return new Game(`/history/${gid}`);
   }
 
   createGame(pid, cbk) {
@@ -79,5 +81,3 @@ class Room extends EventEmitter {
     });
   }
 };
-
-export default offline ? DemoRoom : Room;

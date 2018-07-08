@@ -1,17 +1,15 @@
-import DemoUser from './demoUser';
-import firebase, { db, SERVER_TIME, offline } from './firebase';
+import firebase, { db } from './firebase';
 import getLocalId from '../localAuth';
 import EventEmitter from 'events';
 import { getTime } from '../actions';
 import { rand_color } from '../jsUtils';
 
-class User extends EventEmitter {
+export default class User extends EventEmitter {
   constructor() {
     super();
-    console.trace();
-    console.log('firebase auth');
     this.auth = firebase.auth();
     this.attached = false;
+    this.color = rand_color();
   }
 
   attach() {
@@ -19,10 +17,15 @@ class User extends EventEmitter {
       this.attached = true;
       this.fb = user;
       this.emit('auth');
+      console.log('Your id is', this.id);
+    });
+    this.ref.child('history').on('value', snapshot => {
+      this.emit('history', snapshot.val());
     });
   }
 
   detach() {
+    this.ref.child('history').off('value');
   }
 
   logIn() {
@@ -34,6 +37,14 @@ class User extends EventEmitter {
     return db.ref(`user/${this.id}`);
   }
 
+  onAuth(cbk) {
+    this.addListener('auth', cbk);
+    if (this.attached) {
+      cbk();
+    }
+  }
+
+  // read methods
   get id() {
     if (!this.attached) {
       return undefined;
@@ -44,17 +55,7 @@ class User extends EventEmitter {
     return getLocalId();
   }
 
-  get color() {
-    return rand_color();
-  }
-
-  onAuth(cbk) {
-    this.addListener('auth', cbk);
-    if (this.attached) {
-      cbk();
-    }
-  }
-
+  // write methods
   joinGame(gid, game) {
     const time = getTime();
     // safe to call this multiple times
@@ -83,7 +84,6 @@ class User extends EventEmitter {
   }
 
   recordUsername(username) {
-    const id = this.id;
     this.ref
       .child('names')
       .child(username)
@@ -92,14 +92,10 @@ class User extends EventEmitter {
   }
 }
 
-const _User = (offline ? DemoUser : User);
-
-export default _User;
-
 let globalUser;
 export const getUser = () => {
   if (!globalUser) {
-    globalUser = new _User();
+    globalUser = new User();
     globalUser.attach();
   }
   return globalUser;

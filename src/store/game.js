@@ -1,11 +1,11 @@
-import DemoGame from './demoGame';
-import { db, SERVER_TIME, offline } from './firebase';
-import EventEmitter from 'events';
+import { db, SERVER_TIME } from './firebase';
+import EventEmitter
+  from 'events';
 
 // a wrapper class that models Game
 
-const CURRENT_VERSION = '0.1';
-class Game extends EventEmitter {
+const CURRENT_VERSION = 1.0;
+export default class Game extends EventEmitter {
   constructor(path) {
     super();
     this.path = path;
@@ -13,6 +13,7 @@ class Game extends EventEmitter {
   }
 
   attach() {
+    console.log('attached to game', this.path);
     this.ref.on('child_added', snapshot => {
       this.emit('event', snapshot.val());
     });
@@ -22,7 +23,7 @@ class Game extends EventEmitter {
     this.ref.off('child_added');
   }
 
-  updateCell(r, c, id, color, value) {
+  updateCell(r, c, id, color, pencil, value) {
     this.ref.push({
       timestamp: SERVER_TIME,
       type: 'updateCell',
@@ -30,6 +31,7 @@ class Game extends EventEmitter {
         cell: {r, c},
         value,
         color,
+        pencil,
         id,
       },
     });
@@ -48,6 +50,59 @@ class Game extends EventEmitter {
     });
   }
 
+  updateClock(action) {
+    this.ref.push({
+      timestamp: SERVER_TIME,
+      type: 'updateClock',
+      params: {
+        action,
+        timestamp: SERVER_TIME,
+      },
+    });
+  }
+
+  check(scope) {
+    this.ref.push({
+      timestamp: SERVER_TIME,
+      type: 'check',
+      params: {
+        scope,
+      },
+    });
+  }
+
+  reveal(scope) {
+    this.ref.push({
+      timestamp: SERVER_TIME,
+      type: 'reveal',
+      params: {
+        scope,
+      },
+    });
+  }
+
+  reset(scope) {
+    this.ref.push({
+      timestamp: SERVER_TIME,
+      type: 'reset',
+      params: {
+        scope,
+      },
+    });
+  }
+
+  chat(username, id, text) {
+    this.ref.push({
+      timestamp: SERVER_TIME,
+      type: 'chat',
+      params: {
+        text,
+        senderId: id,
+        sender: username,
+      },
+    });
+  }
+
   initialize(game) {
     const version = CURRENT_VERSION;
     this.ref.push({
@@ -60,5 +115,3 @@ class Game extends EventEmitter {
     });
   }
 }
-
-export default (offline ? DemoGame : Game);

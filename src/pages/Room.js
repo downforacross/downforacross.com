@@ -1,14 +1,10 @@
 import 'react-flexview/lib/flexView.css'
 
 import React, { Component } from 'react';
-import Player from '../components/Player';
-import Toolbar from '../components/Toolbar';
 import Nav from '../components/Nav';
 import _ from 'lodash';
 import Flex from 'react-flexview';
-import RoomModel from '../store/room';
-import GameModel from '../store/game';
-import { getUser } from '../store/user';
+import {RoomModel, getUser} from '../store';
 import HistoryWrapper from '../utils/historyWrapper';
 import Game from '../components/Game';
 import { pure } from '../jsUtils';
@@ -47,7 +43,7 @@ export default class Room extends Component {
     this.state = {
       rid: undefined,
       gid: undefined,
-      showingSidebar: true,
+      showingSidebar: false,
       users: {},
       games: {},
     };
@@ -60,7 +56,7 @@ export default class Room extends Component {
     return {
       ...prevState,
       rid: props.match.params.rid,
-      gid: parseInt(props.match.params.gid),
+      gid: parseInt(props.match.params.gid, 10),
     };
   }
 
@@ -69,7 +65,7 @@ export default class Room extends Component {
     this.user.onAuth(() => {
       const id = this.user.id;
       const color = this.user.color;
-      this.setState({ id, color });
+      console.log('init user', id, color);
     });
   }
 
@@ -105,6 +101,7 @@ export default class Room extends Component {
       this.gameModel.attach();
       // add listeners
     }
+    this.handleUpdate();
   }
 
   componentDidMount() {
@@ -153,16 +150,6 @@ export default class Room extends Component {
     // noop for now
   }
 
-  handleUpdateGrid = (r, c, value) => {
-    const { id, color } = this.state;
-    this.gameModel.updateCell(r, c, id, color, value);
-  }
-
-  handleUpdateCursor = ({r, c}) => {
-    const { id, color } = this.state;
-    this.gameModel.updateCursor(r, c, id, color);
-  }
-
   handleUpdate = _.debounce(() => {
     this.forceUpdate();
   }, 50, {
@@ -183,7 +170,7 @@ export default class Room extends Component {
   }
 
   renderSidebar() {
-    const { games, info } = this.state;
+    const { games } = this.state;
     return (
       <Flex column>
         <div
@@ -260,14 +247,14 @@ export default class Room extends Component {
       return;
     }
 
-    const { id, color } = this.state;
-    const game = this.historyWrapper.getSnapshot();
+    const { id, color } = this.user;
     return (
       <Game
         ref='game'
         id={id}
         myColor={color}
-        game={game}
+        historyWrapper={this.historyWrapper}
+        gameModel={this.gameModel}
         onPressEnter={this.focusChat}
         onUpdateGrid={this.handleUpdateGrid}
         onUpdateCursor={this.handleUpdateCursor}
@@ -295,7 +282,7 @@ export default class Room extends Component {
             </Flex>
           )}
           <Flex>
-            {this.renderSidebarToggler()}
+            {/*this.renderSidebarToggler()*/}
           </Flex>
           <Flex grow={7} column>
             { this.renderGame() }

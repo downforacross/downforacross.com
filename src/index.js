@@ -1,5 +1,5 @@
 import {
-  Welcome, Game, Compose, Solo, Account, Replay, Room
+  Welcome, WelcomeV2, Game, GameV2, Compose, Solo, Account, Replay, ReplaySolo, Room, Replays,
 } from './pages/index';
 
 import ReactDOM from 'react-dom';
@@ -20,7 +20,11 @@ ReactDOM.render(
       <Route exact path="/room/:rid" component={Room}/>
       <Route exact path="/room/:rid/:gid" component={Room}/>
       <Route exact path="/replay/:gid" component={Replay}/>
+      <Route exact path="/replay/solo/:uid/:pid" component={ReplaySolo}/>
+      <Route exact path="/replays/:pid" component={Replays}/>
       <Route exact path="/game/solo/:pid" component={Solo}/>
+      <Route exact path="/beta" component={WelcomeV2}/>
+      <Route exact path="/beta/game/:gid" component={GameV2}/>
       <Route path="/puzzle/:pid" component={Solo}/>
       <Route path="/account" component={Account}/>
       <Route exact path="/compose" component={Compose}/>

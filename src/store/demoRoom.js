@@ -2,9 +2,8 @@ import Room from './room';
 import DemoGame from './demoGame';
 import { makeGame } from '../gameUtils';
 import { db, SERVER_TIME } from './firebase';
-import EventEmitter from 'events';
 
-export default class DemoRoom extends EventEmitter {
+export default class DemoRoom extends Room {
   constructor(path) {
     super();
     this.path = path;

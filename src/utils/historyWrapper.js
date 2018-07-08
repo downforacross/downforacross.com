@@ -1,7 +1,7 @@
 import { reduce } from '../utils/GameOperations';
 import _ from 'lodash';
 
-const MEMO_RATE = 50;
+const MEMO_RATE = 10;
 
 export default class HistoryWrapper {
   constructor(history = []) {
@@ -15,16 +15,21 @@ export default class HistoryWrapper {
       index: -1,
       game: null,
     }];
-    let game = null;
-    this.history.forEach((event, i) => {
-      game = reduce(game, event);
-      const index = i;
-      if (index % MEMO_RATE === 0) {
-        this.memo.push({
-          index,
-          game,
-        })
-      }
+
+    _.range(this.history.length).forEach(index => {
+      this.memoize(index);
+    });
+  }
+
+  memoize(index) {
+    if (index <= _.last(this.memo).index) {
+      console.error('tried to memoize out of order');
+      return;
+    }
+    const game = this.getSnapshotAtIndex(index);
+    this.memo.push({
+      game,
+      index,
     });
   }
 
@@ -44,8 +49,13 @@ export default class HistoryWrapper {
     return game;
   }
 
+  // the current snapshot
+  getSnapshot() {
+    return this.getSnapshotAtIndex(this.history.length - 1);
+  }
+
+  // this is used for replay
   getSnapshotAt(timestamp) {
-    let game = null;
     // compute the number of events that have happened
     const index = _.sortedLastIndexBy(
       this.history,
@@ -56,12 +66,21 @@ export default class HistoryWrapper {
     return this.getSnapshotAtIndex(index - 1);
   }
 
-  // the current snapshot
-  getSnapshot() {
-    return this.getSnapshotAtIndex(this.history.length - 1);
-  }
-
   addEvent(event) {
-    this.history.push(event);
+    // we must support retroactive updates to the event log
+    const insertPoint =  _.sortedLastIndexBy(
+      this.history,
+      event,
+      event => event.timestamp,
+    );
+    this.history.splice(insertPoint, 0, event);
+    while (_.last(this.memo).index >= insertPoint) {
+      this.memo.pop();
+    }
+    _.range(0, this.history.length, MEMO_RATE).forEach(index => {
+      if (index > _.last(this.memo).index) {
+        this.memoize(index);
+      }
+    });
   }
 }

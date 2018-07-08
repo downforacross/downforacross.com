@@ -1,4 +1,4 @@
-import { makeGame, makeGrid, makeEmptyClues } from './gameUtils';
+import { makeGame, makeGrid } from './gameUtils';
 import firebase, { SERVER_TIME } from './store/firebase';
 
 // for interfacing with firebase
@@ -43,8 +43,6 @@ const actions = {
   createPuzzle: (puzzle, cbk) => {
     db.ref('counters').transaction(counters => {
       const pid = ((counters && counters.pid) || 0) + 1;
-      const title = puzzle.info.title;
-      const author = puzzle.info.author;
       return {...counters, pid }
     }, (err, success, snapshot) => {
       const pid = snapshot.child('pid').val();
