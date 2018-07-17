@@ -150,6 +150,7 @@ export default class GameV2 extends Component {
     } = clock;
     return (
       <Toolbar
+        v2={true}
         mobile={false}
         startTime={startTime}
         pausedTime={pausedTime}

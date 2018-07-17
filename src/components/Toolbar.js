@@ -144,6 +144,7 @@ export default class Toolbar extends Component {
       <div className='toolbar'>
         <div className='toolbar--timer'>
           <Clock
+            v2={this.props.v2}
             startTime={startTime}
             stopTime={stopTime}
             pausedTime={pausedTime}

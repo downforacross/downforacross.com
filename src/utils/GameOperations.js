@@ -1,4 +1,4 @@
-const MAX_CLOCK_INCREMENT = 1000 * 60;
+import { MAX_CLOCK_INCREMENT } from '../timing';
 
 function getScopeGrid(grid, scope) {
   const scopeGrid = grid.map(row => row.map(cell => false));
@@ -182,12 +182,7 @@ const reducers = {
     const { timestamp } = params;
     let { clock } = game;
     if (action === 'pause') {
-      clock = {
-        ...clock,
-        totalTime: clock.totalTime + timestamp - clock.lastUpdated,
-        lastUpdated: 0,
-        paused: true,
-      };
+      // no-op, will be handled by tick
     } else if (action === 'start') {
       // no-op, will be handled by tick
     } else if (action === 'reset') {
@@ -245,6 +240,7 @@ export const tick = (game, timestamp, isPause) => {
     totalTime: clock.totalTime + timeDiff,
     paused: isPause,
   };
+  console.log({timeDiff, timestamp, lastUpdated: clock.lastUpdated, totalTime: clock.totalTime});
   return {
     ...game,
     clock,
