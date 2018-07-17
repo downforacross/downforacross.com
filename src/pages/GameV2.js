@@ -66,8 +66,12 @@ export default class GameV2 extends Component {
     }
   }
 
-  handlePressEnter = () => {
-    // noop for now
+  handlePressEnter = (el) => {
+    if (el === this.chat) {
+      this.game && this.game.focus();
+    } else if (el === this.game) {
+      this.chat && this.chat.focus();
+    }
   }
 
   handleUpdate = _.debounce(() => {
@@ -87,7 +91,7 @@ export default class GameV2 extends Component {
     const { id, color } = this.user;
     return (
       <Game
-        ref='game'
+        ref={c => {this.game = c;}}
         id={id}
         myColor={color}
         historyWrapper={this.historyWrapper}
@@ -106,7 +110,7 @@ export default class GameV2 extends Component {
     const { id, color } = this.user;
     return (
       <ChatV2
-        ref='chat'
+        ref={c => {this.chat = c;}}
         id={id}
         myColor={color}
         historyWrapper={this.historyWrapper}

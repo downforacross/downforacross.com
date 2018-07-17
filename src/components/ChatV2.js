@@ -46,7 +46,7 @@ export default class Chat extends Component {
         this.sendChatMessage();
         this.setState({message: ''});
       } else {
-        onPressEnter();
+        onPressEnter(this);
       }
     }
   }

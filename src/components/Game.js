@@ -88,6 +88,14 @@ export default class GameV2 extends Component {
     });
   }
 
+  handlePressEnter = () => {
+    this.props.onPressEnter(this);
+  }
+
+  focus() {
+    this.player && this.player.focus();
+  }
+
   renderPlayer() {
     const {
       id,
@@ -110,7 +118,7 @@ export default class GameV2 extends Component {
     let size = width / cols;
     return (
       <Player
-        ref='player'
+        ref={c => {this.player = c;}}
         size={size}
         grid={grid}
         circles={circles}
@@ -125,7 +133,7 @@ export default class GameV2 extends Component {
         myColor={myColor}
         updateGrid={this.handleUpdateGrid}
         updateCursor={this.handleUpdateCursor}
-        onPressEnter={onPressEnter}
+        onPressEnter={this.handlePressEnter}
         mobile={false}
       />
     );
