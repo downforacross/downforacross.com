@@ -9,6 +9,7 @@ import { getUser } from '../store';
 import HistoryWrapper from '../utils/historyWrapper';
 import Game from '../components/Game';
 import ChatV2 from '../components/ChatV2';
+import redirect from '../redirect';
 
 export default class GameV2 extends Component {
   constructor(props) {
@@ -43,6 +44,9 @@ export default class GameV2 extends Component {
     if (this.gameModel) {
       this.historyWrapper = new HistoryWrapper();
       this.gameModel.addListener('event', event => {
+        if (!event.params || event.params.type) {
+          redirect(`/game/${this.state.gid}`, 'Redirecting to old site...');
+        }
         this.historyWrapper.addEvent(event);
         this.handleUpdate();
       });

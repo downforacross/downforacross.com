@@ -2,6 +2,7 @@ import './css/game.css';
 
 import { Helmet } from 'react-helmet';
 import React, { Component } from 'react';
+import _ from 'lodash';
 
 import Player from '../components/Player';
 import Chat from '../components/Chat';
@@ -14,7 +15,7 @@ import GridObject from '../utils/Grid';
 import { makeEmptyGame } from '../gameUtils';
 import { toArr, lazy, rand_color } from '../jsUtils';
 import { getUser } from '../store/user';
-import _ from 'lodash';
+import redirect from '../redirect';
 
 const CURSOR_EXPIRE = 1000 * 60; // 60 seconds
 
@@ -154,9 +155,7 @@ export default class Game extends Component {
         console.log('history', history);
         const isV2 = history.length > 0 && history[0].params && history[0].params.version >= 1.0;
         if (isV2) {
-          console.log('redirecting');
-          alert('Redirecting to beta...');
-          window.location.replace(`/beta/game/${this.gid}`);
+          redirect(`/beta/game/${this.gid}`);
         }
       });
       this.color = this.computeColor();
