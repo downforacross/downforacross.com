@@ -5,16 +5,11 @@ import { Helmet } from 'react-helmet';
 import Flex from 'react-flexview';
 import FontAwesome from 'react-fontawesome';
 import Nav from '../components/Nav';
+import Upload from '../components/Upload';
 
-import { getUser, PuzzlelistModel } from '../store';
+import { getUser, PuzzlelistModel, GameModel, PuzzleModel } from '../store';
+import actions from '../actions';
 import _ from 'lodash';
-
-function shortenTitle(title) {
-  if (title.length > 60) {
-    title = title.substring(0, 55) + ' ...';
-  }
-  return title;
-}
 
 class Entry extends Component {
   constructor() {
@@ -28,6 +23,7 @@ class Entry extends Component {
     this.setState({
       expanded: !this.state.expanded,
     });
+    this.props.onPlay(this.props.pid);
   }
 
   handleMouseLeave = e => {
@@ -50,29 +46,21 @@ class Entry extends Component {
 
   render() {
     const { title, author, pid, status } = this.props;
-    const shortenedTitle = shortenTitle(title);
     const { expanded } = this.state;
     return (
-      <Flex column
+      <Flex className='entryv2' column
         onClick={this.handleClick}
-        onMouseLeave={this.handleMouseLeave}
-        style={{
-          fontFamily: 'sans-serif',
-          border: '2px solid silver',
-          borderRadius: '3px',
-          marginTop: '18px',
-          display: 'flex',
-        }}>
+        onMouseLeave={this.handleMouseLeave}>
         <Flex style={{ justifyContent: 'space-between' }}>
-          <Flex className='entry--top--left'>
+          <Flex className='entryv2--top--left'>
             {author} | {this.size}
           </Flex>
-          <Flex className='entry--top--right'>
+          <Flex className='entryv2--top--right'>
             <FontAwesome name='rocket'/>
           </Flex>
         </Flex>
-        <Flex className='entry--main'>
-          { shortenedTitle }
+        <Flex className='entryv2--main'>
+          { title }
         </Flex>
       </Flex>
     );
@@ -92,12 +80,6 @@ export default class WelcomeV2 extends Component {
   componentDidMount() {
     this.initializePuzzlelist();
     this.initializeUser();
-  }
-
-  componentWillUnmount() {
-    if (this.puzzleList) {
-      this.puzzleList.detach();
-    }
   }
 
   initializeUser() {
@@ -120,9 +102,21 @@ export default class WelcomeV2 extends Component {
     });
   }
 
-  prevent(ev) {
-    ev.preventDefault();
-    ev.stopPropagation();
+  handlePlay = (pid) => {
+    actions.getNextGid(gid => {
+      const game = new GameModel(`/game/${gid}`);
+      const puzzle = new PuzzleModel(`/puzzle/${pid}`);
+      puzzle.attach();
+      puzzle.on('ready', () => {
+        const rawGame = puzzle.toGame();
+        game.initialize(rawGame);
+        const redirect = url => {
+          this.props.history.push(url);
+        };
+        redirect(`/beta/game/${gid}`);
+        this.props.history.push();
+      });
+    });
   }
 
   renderPuzzles() {
@@ -153,62 +147,88 @@ export default class WelcomeV2 extends Component {
     });
     const lastUpdateTime = this.lastUpdateTime;
     return (
-      <div className='puzzlelist'>
+      <Flex wrap style={{justifyContent: 'space-around', overflowY: 'auto'}}>
         { [...puzzles].reverse()
             .filter(entry => (
               entry && entry.info && !entry.private
             ))
             .map((entry, i) =>
-              <div key={i} className='welcome--browse--puzzlelist--entry'>
-                <Entry { ...entry } history={history} status={puzzleStatuses[entry.pid]} lastUpdateTime={lastUpdateTime} user={this.user}/>
+              <div key={i}>
+                <Entry { ...entry }
+                  history={history}
+                  status={puzzleStatuses[entry.pid]}
+                  lastUpdateTime={lastUpdateTime}
+                  user={this.user}
+                  onPlay={this.handlePlay}/>
               </div>
             )
         }
-      </div>
+      </Flex>
+    );
+  }
+
+  renderFilters() {
+    const headerStyle = {
+      fontWeight: 600,
+      marginTop: 10,
+      marginBottom: 10,
+    };
+    const groupStyle = {
+      padding: 20,
+    };
+
+    const checkboxGroup = (header, items, handleChange) => (
+      <Flex column style={groupStyle} className='checkbox-group'>
+        <span style={headerStyle}>{header}</span>
+        {items.map((name, i) => (
+          <label key={i}>
+            <input type="checkbox" defaultChecked="checked"/>
+            <div className='checkmark'/>
+            {name}
+          </label>
+        ))}
+      </Flex>
+    );
+
+    return (
+      <Flex className='filters' column hAlignContent='left' shrink={0}>
+        {checkboxGroup('Size', ['Mini', 'Standard'], (e) => {
+          console.log('change', e.target);
+        })}
+        {checkboxGroup('Status', ['New', 'In progress', 'Complete'], (e) => {
+          console.log('change', e.target);
+        })}
+      </Flex>
+    );
+  }
+
+  renderQuickUpload() {
+    return (
+      <Flex column className="quickplay">
+        <Upload/>
+      </Flex>
     );
   }
 
   render() {
     return (
-      <div className='welcomev2'>
+      <Flex className='welcomev2' column grow={1}>
         <Helmet>
           <title>Down for a Cross</title>
         </Helmet>
         <div className='welcomev2--nav'>
           <Nav v2/>
         </div>
-        <div className='welcomev2--main'>
-          <div className='welcomev2--browse'>
-            <div className='welcomev2--browse--filter'>
-              <div className='welcomev2--browse--filter--header'>
-                Difficulty
-              </div>
-              {
-                ['Monday',
-                  'Tuesday',
-                  'Wednesday',
-                  'Thursday',
-                  'Friday',
-                  'Saturday',
-                  'Sunday',
-                  'All',
-                ].map((day, i) =>
-                  <div
-                    key={i}
-                    className='welcomev2--browse--filter--option'
-                  >
-                    <input type="checkbox"/>
-                    <label>{day}</label>
-                  </div>
-                )
-              }
-            </div>
-            <div className='welcomev2--browse--puzzlelist--wrapper'>
-              { this.renderPuzzles() }
-            </div>
-          </div>
-        </div>
-      </div>
+        <Flex grow={1}>
+          <Flex className='welcomev2--sidebar' column shrink={0} style={{justifyContent: 'space-between'}}>
+            { this.renderFilters() }
+            { this.renderQuickUpload() }
+          </Flex>
+          <Flex className='welcomev2--main'>
+            { this.renderPuzzles() }
+          </Flex>
+        </Flex>
+      </Flex>
     );
   }
 }

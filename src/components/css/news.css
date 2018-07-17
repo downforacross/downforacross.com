@@ -17,9 +17,9 @@
 }
 .news--item--date {
   font-weight: 600;
-  width: 100px;
+  /* width: 100px; */
 }
 .news--item--message {
   padding-left: 10px;
-  min-width: 100px;
+  /* min-width: 100px; */
 }

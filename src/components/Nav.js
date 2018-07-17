@@ -46,7 +46,7 @@ export default function Nav({mobile, v2}) {
   return (
     <div className='nav'>
       <div className='nav--left'>
-        <Link to={v2 ? '/v2' : '/'}>
+        <Link to={v2 ? '/beta' : '/'}>
           Down for a Cross
           { v2 ? <span className='nav--v2'> (beta)</span> : null }
         </Link>

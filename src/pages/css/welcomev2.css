@@ -1,14 +1,7 @@
 .welcomev2 {
-  display: flex;
-  flex-direction: column;
-  background-color: #FAFAFA;
+  background-color: #FFFFFF;
   font-family: "Avenir Next", "Avenir", "sans serif";
   color: #333;
-}
-
-.welcomev2--main {
-  display: flex;
-  flex-direction: row;
 }
 
 .welcomev2--browse {
@@ -49,31 +42,108 @@
   font-size: 22px;
 }
 
-.puzzlelist {
-  padding: 0px 30px 0px 30px;
-  max-height: 100%;
-  overflow-y: auto;
-  font-size: 20px;
+.welcomev2--main {
+  border-left: 1px solid gray;
+  padding: 10px;
+  overflow: hidden;
 }
 
-.entry {
+
+.welcomev2--sidebar > div {
+  padding-left: 5px;
+  padding-right: 10px;
+}
+
+.filters label {
+  position: relative;
+  cursor: pointer;
+}
+
+.filters input {
+  /* display: none; */
+}
+
+.filters .checkmark {
+  /* position: absolute; */
+  /* left: 0; */
+  /* top: 0; */
+  display: inline-block;
+  height: 15px;
+  width: 15px;
+  position: relative;
+  top: 3px;
+  margin-right: 10px;
+  background-color: white !important;
+  outline: 1px solid gray;
+}
+
+.filters input {
+  width: 0px;
+  opacity: 0;
+}
+
+.filters input:checked ~ .checkmark:after {
+  content: '';
+  /* drawing a "checkmark" with css */
+  /* https://www.w3schools.com/howto/howto_css_custom_checkbox.asp */
+  position: relative;
+  left: 8.5px;
+  top: -4.0px;
+  width: 4px;
+  height: 12px;
+  border: solid #6AA9F4;
+  border-width: 0 4px 4px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  display: block;
+}
+
+.quickplay {
+  padding-top: 10px;
+  border-top: 1px solid gray;
+}
+
+.entryv2 {
+  cursor: pointer;
+  white-space: nowrap;
+  margin-right: 20px;
+  margin-top: 20px;
   position: relative;
   overflow: hidden;
   display: block;
   font-family: sans-serif;
-  border: 2px solid silver;
+  border: 1px solid silver;
   border-radius: 3px;
-  margin-top: 18px;
+  margin-bottom: 18px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  padding: 10px;
+  font-size: 15px;
+  width: 330px;
 }
 
-.entry.started {
+.entryv2--top--left {
+  font-size: 13px;
+  font-weight: 200;
+  margin-left: 10px;
+  margin-right: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.entryv2--main {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 10px;
+}
+
+.entryv2.started {
   border-color: #a0d9fc;
 }
 
-.entry.solved {
+.entryv2.solved {
   border-color: #8df79d;
 }
 
@@ -82,22 +152,22 @@
   to   { transform: scaleX(1); }
 }
 
-.entry.new {
+.entryv2.new {
   animation: 1s slidein;
 }
 
-.entry--back {
+.entryv2--back {
   opacity: 0;
   transition: opacity .2s ease-in;
   -moz-user-select: none;
 }
 
-.entry.flipped .entry--back {
+.entryv2.flipped .entryv2--back {
   opacity: 1;
   transition: opacity .2s ease-in;
 }
 
-.entry--front {
+.entryv2--front {
   flex: 1;
   height: 50px;
   padding: 15px;
@@ -107,18 +177,18 @@
   cursor: pointer;
 }
 
-.entry--front--title {
+.entryv2--front--title {
   font-size: 15px;
   text-align: center;
 }
 
-.entry--front--author {
+.entryv2--front--author {
   margin-top: 8px;
   font-size: 12px;
   text-align: center;
 }
 
-.entry--back {
+.entryv2--back {
   position: absolute;
   top: 0;
   left: 0;
@@ -131,12 +201,12 @@
   background-color: rgba(40, 69, 94, .95);
 }
 
-.entry--back--btns {
+.entryv2--back--btns {
   display: flex;
   justify-content: space-around;
 }
 
-.entry--back--btn {
+.entryv2--back--btn {
   padding: 10px;
   font-size: 15px;
   font-weight: bold;
@@ -145,79 +215,13 @@
   border-radius: 5px;
 }
 
-.entry--back--btn:hover {
+.entryv2--back--btn:hover {
   color: white;
   background-color: rgb(76, 109, 184);
 }
 
-.entry--back--btn.play-solo {
+.entryv2--back--btn.play-solo {
 
-}
-
-.welcomev2--browse--puzzlelist--entry:hover {
-  background-color: #FFF;
-}
-
-.welcomev2--right {
-  flex: 1;
-  padding: 15px 15px 15px 15px;
-  display: flex;
-  flex-direction: column;
-}
-
-.welcomev2--upload {
-  padding: 10px;
-  flex: 3;
-}
-
-.welcomev2--news {
-  padding: 10px;
-  flex: 2;
-}
-
-.welcomev2--upload--title {
-  text-align: center;
-  font-size: 30px;
-  margin-bottom: 10px;
-}
-
-
-.welcomev2--create--title {
-  text-align: center;
-  font-size: 30px;
-}
-
-.welcomev2--create--options {
-  margin-top: 10px;
-}
-
-.welcomev2--create--options--option {
-  font-size: 20px;
-}
-
-.welcomev2--create--options--option input {
-  font-size: 90%;
-  width: 300px;
-  padding: 1px;
-}
-
-.welcomev2--create--options--option select {
-  font-size: 90%;
-  font-color: #666;
-  width: 350px;
-  padding: 1px;
-}
-
-.welcomev2--create--options--option .emoji {
-  font-size: 120%;
-  cursor: pointer;
-}
-
-.welcomev2--create button {
-  margin-top: 10px;
-  padding: 5px 5px 5px 5px;
-  font-size: 20px;
-  font-weight: bold;
 }
 
 ::-webkit-scrollbar {

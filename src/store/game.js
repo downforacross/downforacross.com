@@ -1,6 +1,5 @@
 import { db, SERVER_TIME } from './firebase';
-import EventEmitter
-  from 'events';
+import EventEmitter from 'events';
 
 // a wrapper class that models Game
 
@@ -103,7 +102,36 @@ export default class Game extends EventEmitter {
     });
   }
 
-  initialize(game) {
+  initialize(rawGame) {
+    const {
+      info = {},
+      grid = [ [ {} ] ],
+      solution = [ [ '' ] ],
+      circles = [],
+      chat = { messages: [] },
+      cursor = {},
+      clues = {},
+      clock = {
+        lastUpdated: 0,
+        totalTime: 0,
+        paused: true,
+      },
+      solved = false,
+    } = rawGame;
+
+    // TODO validation
+
+    const game = {
+      info,
+      grid,
+      solution,
+      circles,
+      chat,
+      cursor,
+      clues,
+      clock,
+      solved,
+    };
     const version = CURRENT_VERSION;
     this.ref.push({
       timestamp: SERVER_TIME,

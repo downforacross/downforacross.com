@@ -34,13 +34,12 @@ export default class GameV2 extends Component {
     this.user.onAuth(() => {
       const id = this.user.id;
       const color = this.user.color;
-      console.log('init user', id, color);
     });
   }
 
   initializeGame() {
     if (this.gameModel) this.gameModel.detach();
-    this.gameModel = new GameModel(`/history/${this.state.gid}`);
+    this.gameModel = new GameModel(`/game/${this.state.gid}`);
     if (this.gameModel) {
       this.historyWrapper = new HistoryWrapper();
       this.gameModel.addListener('event', event => {
