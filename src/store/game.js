@@ -12,7 +12,6 @@ export default class Game extends EventEmitter {
   }
 
   attach() {
-    console.log('attached to game', this.path);
     this.ref.on('child_added', snapshot => {
       this.emit('event', snapshot.val());
     });

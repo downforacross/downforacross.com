@@ -62,7 +62,6 @@ export default class Clock extends Component {
     if (!this.props.v2) return false;
     const start = this.props.startTime;
     const now = getTime();
-    console.log({start, now});
     return now > start + MAX_CLOCK_INCREMENT;
   }
 

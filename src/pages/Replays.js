@@ -51,10 +51,8 @@ export default class Replays extends Component {
       gameSnap => {
         gameSnap.forEach(
           childSnap => {
-            console.log(childSnap);
             this.setState((prevState, props) => {
               const game = childSnap.val();
-              console.log(game);
               // TODO: compute solved percentage, create time
               return {games: [...prevState.games, {
                 gid: childSnap.key,
@@ -76,12 +74,6 @@ export default class Replays extends Component {
     //     }))
     // }
   }
-
-  componentDidUpdate(prevProps, prevState) {
-    console.log(this.state)
-    // TODO: determine if this needs anything
-  }
-
 
   renderHeader() {
     if (!this.puzzle || this.state.error) {

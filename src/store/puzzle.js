@@ -18,7 +18,6 @@ export default class Puzzle extends EventEmitter {
   }
 
   toGame() {
-    console.log('puzzle', this.puzzle);
     // TODO rewrite makeGame in here
     return makeGame(undefined, undefined, this.puzzle);
   }

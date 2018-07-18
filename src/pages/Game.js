@@ -152,7 +152,6 @@ export default class Game extends Component {
       this.gameRef = db.ref(`game/${this.gid}`)
       this.gameRef.once('value', snapshot => {
         const history = _.values(snapshot.val());
-        console.log('history', history);
         const isV2 = history.length > 0 && history[0].params && history[0].params.version >= 1.0;
         if (isV2) {
           redirect(`/beta/game/${this.gid}`);

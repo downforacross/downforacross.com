@@ -15,7 +15,6 @@ const config = {
 firebase.initializeApp(config);
 const db = firebase.database();
 
-console.log(db);
 const SERVER_TIME = firebase.database.ServerValue.TIMESTAMP;
 
 export {
