@@ -6,7 +6,7 @@ import Flex from 'react-flexview';
 import FontAwesome from 'react-fontawesome';
 import Nav from '../components/Nav';
 import Upload from '../components/Upload';
-
+import { Link } from 'react-router-dom';
 import { getUser, PuzzlelistModel, GameModel, PuzzleModel } from '../store';
 import actions from '../actions';
 import _ from 'lodash';
@@ -20,10 +20,12 @@ class Entry extends Component {
   }
 
   handleClick = e => {
+    /*
     this.setState({
       expanded: !this.state.expanded,
     });
     this.props.onPlay(this.props.pid);
+    */
   }
 
   handleMouseLeave = e => {
@@ -48,21 +50,23 @@ class Entry extends Component {
     const { title, author, pid, status } = this.props;
     const { expanded } = this.state;
     return (
-      <Flex className='entryv2' column
-        onClick={this.handleClick}
-        onMouseLeave={this.handleMouseLeave}>
-        <Flex style={{ justifyContent: 'space-between' }}>
-          <Flex className='entryv2--top--left'>
-            {author} | {this.size}
+      <Link to={`/beta/play/${pid}`} style={{textDecoration: 'none', color: 'initial'}}>
+        <Flex className='entryv2' column
+          onClick={this.handleClick}
+          onMouseLeave={this.handleMouseLeave}>
+          <Flex style={{ justifyContent: 'space-between' }}>
+            <Flex className='entryv2--top--left'>
+              {author} | {this.size}
+            </Flex>
+            <Flex className='entryv2--top--right'>
+              <FontAwesome name='rocket'/>
+            </Flex>
           </Flex>
-          <Flex className='entryv2--top--right'>
-            <FontAwesome name='rocket'/>
+          <Flex className='entryv2--main'>
+            { title }
           </Flex>
         </Flex>
-        <Flex className='entryv2--main'>
-          { title }
-        </Flex>
-      </Flex>
+      </Link>
     );
   }
 }
