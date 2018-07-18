@@ -32,11 +32,11 @@ export default class GameV2 extends Component {
 
   scope(s) {
     if (s === 'square') {
-      return this.refs.player.getSelectedSquares();
+      return this.player.getSelectedSquares();
     } else if (s === 'word') {
-      return this.refs.player.getSelectedAndHighlightedSquares();
+      return this.player.getSelectedAndHighlightedSquares();
     } else if (s === 'puzzle') {
-      return this.refs.player.getAllSquares();
+      return this.player.getAllSquares();
     } else {
       return [];
     }

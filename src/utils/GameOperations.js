@@ -265,6 +265,7 @@ export const reduce = (game, action) => {
   game = checkSolved(game);
   const isPause = (
     (type === 'updateClock' && params && params.action === 'pause') ||
+    (type === 'create') ||
     game.solved
   );
   game = tick(game, timestamp, isPause);
