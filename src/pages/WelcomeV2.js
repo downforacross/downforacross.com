@@ -49,6 +49,7 @@ class Entry extends Component {
   render() {
     const { title, author, pid, status } = this.props;
     const { expanded } = this.state;
+    const faName = status === 'started' ? 'circle-o' : status === 'solved' ? 'check-circle' : '';
     return (
       <Link to={`/beta/play/${pid}`} style={{textDecoration: 'none', color: 'initial'}}>
         <Flex className='entryv2' column
@@ -59,7 +60,7 @@ class Entry extends Component {
               {author} | {this.size}
             </Flex>
             <Flex className='entryv2--top--right'>
-              <FontAwesome name='rocket'/>
+              <FontAwesome name={faName}/>
             </Flex>
           </Flex>
           <Flex className='entryv2--main'>
@@ -136,7 +137,6 @@ export default class WelcomeV2 extends Component {
   }
 
   renderPuzzles() {
-    const { history } = this.props;
     const { userHistory, puzzles } = this.state;
     const puzzleStatuses = {};
     function setStatus(pid, solved) {
@@ -162,6 +162,7 @@ export default class WelcomeV2 extends Component {
       }
     });
     const lastUpdateTime = this.lastUpdateTime;
+    console.log(puzzleStatuses);
     return (
       <Flex
         wrap
@@ -175,7 +176,6 @@ export default class WelcomeV2 extends Component {
           .map((entry, i) =>
             <div key={i}>
               <Entry { ...entry }
-                history={history}
                 status={puzzleStatuses[entry.pid]}
                 lastUpdateTime={lastUpdateTime}
                 user={this.user}

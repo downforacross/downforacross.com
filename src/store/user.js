@@ -14,11 +14,16 @@ export default class User extends EventEmitter {
 
   attach() {
     this.auth.onAuthStateChanged((user) => {
+      this.ref.child('history').off('value');
       this.attached = true;
       this.fb = user;
       this.emit('auth');
+      this.ref.child('history').on('value', snapshot => {
+        this.emit('history', snapshot.val());
+      });
       console.log('Your id is', this.id);
     });
+
     this.ref.child('history').on('value', snapshot => {
       this.emit('history', snapshot.val());
     });
