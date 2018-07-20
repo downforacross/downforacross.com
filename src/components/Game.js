@@ -47,6 +47,7 @@ export default class GameV2 extends Component {
     const { id, myColor } = this.props;
     const { pencilMode } = this.state;
     this.gameModel.updateCell(r, c, id, myColor, pencilMode, value);
+    this.props.onChange();
   }
 
   handleUpdateCursor = ({r, c}) => {
@@ -74,6 +75,7 @@ export default class GameV2 extends Component {
   handleReveal = (scopeString) => {
     const scope = this.scope(scopeString);
     this.props.gameModel.reveal(scope);
+    this.props.onChange();
   }
 
 
