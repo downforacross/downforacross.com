@@ -78,7 +78,9 @@ export default class WelcomeV2 extends Component {
     this.state = {
       puzzles: [],
       userHistory: {},
+      pages: 0,
     };
+    this.loading = false;
   }
 
   componentDidMount() {
@@ -97,30 +99,40 @@ export default class WelcomeV2 extends Component {
     });
   }
 
-  initializePuzzlelist() {
-    this.puzzleList = new PuzzlelistModel();
-    this.puzzleList.getPages(1, page => {
+  get done() {
+    const { pages, puzzles } = this.state;
+    return puzzles.length < pages * this.puzzleList.pageSize;
+  }
+
+  nextPage = () => {
+    const { pages } = this.state;
+    if (this.loading || this.done) {
+      return;
+    }
+    this.loading = true;
+    this.puzzleList.getPages(pages + 1, page => {
       this.setState({
         puzzles: page,
+        pages: pages + 1,
+      }, () => {
+        this.loading = false;
       });
     });
   }
 
-  handlePlay = (pid) => {
-    actions.getNextGid(gid => {
-      const game = new GameModel(`/game/${gid}`);
-      const puzzle = new PuzzleModel(`/puzzle/${pid}`);
-      puzzle.attach();
-      puzzle.on('ready', () => {
-        const rawGame = puzzle.toGame();
-        game.initialize(rawGame);
-        const redirect = url => {
-          this.props.history.push(url);
-        };
-        redirect(`/beta/game/${gid}`);
-        this.props.history.push();
-      });
-    });
+  initializePuzzlelist() {
+    this.puzzleList = new PuzzlelistModel();
+    this.nextPage();
+  }
+
+  handleScroll = (e) => {
+    // hack hack hack
+    const el = e.target;
+    const { scrollTop, scrollHeight, clientHeight } = el;
+    const buffer = 600; // 600 pixels of buffer, i guess?
+    if (scrollTop + clientHeight + buffer > scrollHeight) {
+      this.nextPage();
+    }
   }
 
   renderPuzzles() {
@@ -151,21 +163,25 @@ export default class WelcomeV2 extends Component {
     });
     const lastUpdateTime = this.lastUpdateTime;
     return (
-      <Flex wrap style={{justifyContent: 'space-around', overflowY: 'auto'}}>
+      <Flex
+        wrap
+        style={{justifyContent: 'space-around', overflowY: 'auto'}}
+        onScroll={this.handleScroll}
+        ref={el => {this.puzzlesContainer = el;}}>
         { [...puzzles].reverse()
-            .filter(entry => (
-              entry && entry.info && !entry.private
-            ))
-            .map((entry, i) =>
-              <div key={i}>
-                <Entry { ...entry }
-                  history={history}
-                  status={puzzleStatuses[entry.pid]}
-                  lastUpdateTime={lastUpdateTime}
-                  user={this.user}
-                  onPlay={this.handlePlay}/>
-              </div>
-            )
+          .filter(entry => (
+            entry && entry.info && !entry.private
+          ))
+          .map((entry, i) =>
+            <div key={i}>
+              <Entry { ...entry }
+                history={history}
+                status={puzzleStatuses[entry.pid]}
+                lastUpdateTime={lastUpdateTime}
+                user={this.user}
+                onPlay={this.handlePlay}/>
+            </div>
+          )
         }
       </Flex>
     );
