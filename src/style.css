@@ -8,6 +8,6 @@ html, body, #root, .router-wrapper {
   flex-direction: column;
   flex: 1;
   margin: 0;
-  font-family: "avenir next", avenir, "helvetica neue", "Helvetica", "arial", sans-serif;
+  font-family: "avenir next", avenir, 'Nunito', "helvetica neue", "Helvetica", "arial", sans-serif;
 }
 

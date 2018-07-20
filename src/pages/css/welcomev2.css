@@ -1,6 +1,5 @@
 .welcomev2 {
   background-color: #FFFFFF;
-  font-family: "Avenir Next", "Avenir", "sans-serif";
   color: #333;
 }
 
@@ -112,7 +111,6 @@
   position: relative;
   overflow: hidden;
   display: block;
-  font-family: sans-serif;
   border: 1px solid silver;
   border-radius: 3px;
   margin-bottom: 18px;
