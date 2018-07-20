@@ -230,6 +230,7 @@ export default class Replay extends Component {
       ],
       position: 0,
     };
+    this.followCursor = -1;
     this.historyWrapper = new HistoryWrapper([]);
   }
 
@@ -279,6 +280,15 @@ export default class Replay extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevState.position !== this.state.position) {
       if (!this.refs.game) return;
+      if (!this.game.cursors) return;
+      const gameCursors = this.game.cursors;
+      if (this.followCursor === -1) {
+        // follow a random cursor in the beginning
+        if (gameCursors.length > 0) {
+          this.followCursor = gameCursors[0].id;
+        }
+      }
+
       if (this.followCursor !== undefined) {
         const gameCursors = this.game.cursors;
         const cursor = _.find(gameCursors, (cursor => (
