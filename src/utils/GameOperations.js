@@ -27,6 +27,7 @@ function isSolved(game) {
 
 const reducers = {
   create: (game, params) => {
+    const pid = params.pid;
     const {
       info = {},
       grid = [ [ {} ] ],
@@ -44,6 +45,7 @@ const reducers = {
     } = params.game;
 
     return {
+      pid,
       info,
       grid,
       solution,
@@ -240,7 +242,6 @@ export const tick = (game, timestamp, isPause) => {
     totalTime: clock.totalTime + timeDiff,
     paused: isPause,
   };
-  console.log({timeDiff, timestamp, lastUpdated: clock.lastUpdated, totalTime: clock.totalTime});
   return {
     ...game,
     clock,

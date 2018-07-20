@@ -89,15 +89,21 @@ export default class WelcomeV2 extends Component {
     this.initializeUser();
   }
 
+  componentWillUnmount() {
+    this.user.offAuth(this.handleAuth);
+  }
+
+  handleAuth = () => {
+    if (this.user.fb) {
+      this.user.on('history', userHistory => {
+        this.setState({ userHistory });
+      });
+    }
+  }
+
   initializeUser() {
     this.user = getUser();
-    this.user.onAuth(() => {
-      if (this.user.fb) {
-        this.user.on('history', userHistory => {
-          this.setState({ userHistory });
-        });
-      }
-    });
+    this.user.onAuth(this.handleAuth);
   }
 
   get done() {

@@ -41,19 +41,15 @@ export default class GameV2 extends Component {
   initializeGame() {
     if (this.gameModel) this.gameModel.detach();
     this.gameModel = new GameModel(`/game/${this.state.gid}`);
-    if (this.gameModel) {
-      this.historyWrapper = new HistoryWrapper();
-      this.gameModel.addListener('event', event => {
-        if (!event.params || event.params.type) {
-          redirect(`/game/${this.state.gid}`, 'Redirecting to old site...');
-        }
-        this.historyWrapper.addEvent(event);
-        this.handleUpdate();
-      });
-      this.gameModel.attach();
-      // add listeners
-    }
-    this.handleUpdate();
+    this.historyWrapper = new HistoryWrapper();
+    this.gameModel.addListener('event', event => {
+      if (!event.params || event.params.type) {
+        redirect(`/game/${this.state.gid}`, 'Redirecting to old site...');
+      }
+      this.historyWrapper.addEvent(event);
+      this.handleUpdate();
+    });
+    this.gameModel.attach();
   }
 
   componentDidMount() {
@@ -80,8 +76,17 @@ export default class GameV2 extends Component {
 
   handleUpdate = _.debounce(() => {
     this.forceUpdate();
-  }, 50, {
+  }, 0, {
     leading: true,
+  });
+
+  handleChange = _.debounce(() => {
+    const game = this.historyWrapper.getSnapshot();
+    if (game.solved) {
+      this.user.markSolved(this.state.gid);
+    } else {
+      this.user.joinGame(this.state.gid, game);
+    }
   });
 
   // ================
@@ -101,6 +106,7 @@ export default class GameV2 extends Component {
         historyWrapper={this.historyWrapper}
         gameModel={this.gameModel}
         onPressEnter={this.handlePressEnter}
+        onChange={this.handleChange}
 
       />
     );

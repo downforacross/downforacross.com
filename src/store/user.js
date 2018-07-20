@@ -42,6 +42,10 @@ export default class User extends EventEmitter {
     return db.ref(`user/${this.id}`);
   }
 
+  offAuth(cbk) {
+    this.removeListener('auth', cbk);
+  }
+
   onAuth(cbk) {
     this.addListener('auth', cbk);
     if (this.attached) {

@@ -18,7 +18,7 @@ import Cell from './Cell';
  * - Previewer (TODO)
  **/
 
-export default class Grid extends Component {
+export default class Grid extends React.PureComponent {
 
   get grid() {
     return new GridObject(this.props.grid);

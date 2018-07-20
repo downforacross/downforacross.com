@@ -116,6 +116,7 @@ export default class Game extends EventEmitter {
         paused: true,
       },
       solved = false,
+      pid,
     } = rawGame;
 
     // TODO validation
@@ -136,6 +137,7 @@ export default class Game extends EventEmitter {
       timestamp: SERVER_TIME,
       type: 'create',
       params: {
+        pid,
         version,
         game,
       },
