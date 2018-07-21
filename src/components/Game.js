@@ -11,14 +11,16 @@ import { toArr } from '../jsUtils';
 export default class GameV2 extends Component {
   constructor() {
     super();
-    this.screenWidth = 0;
     this.state = {
       pencilMode: false,
+      screenWidth: 0,
     };
   }
 
   componentDidMount() {
-    this.screenWidth = window.innerWidth;
+    this.setState({
+      screenWidth: window.innerWidth,
+    });
   }
 
   get game() {
@@ -112,7 +114,7 @@ export default class GameV2 extends Component {
     }
 
     const { grid, circles, shades, cursors, clues, solved, } = this.game;
-    const screenWidth = this.screenWidth;
+    const { screenWidth } = this.state;
     let cols = grid[0].length;
     let rows = grid.length;
     const width = Math.min(35 * 15 * cols / rows, screenWidth);
