@@ -222,7 +222,7 @@ export default class Welcome extends Component {
           <title>Down for a Cross</title>
         </Helmet>
         <div className='welcome--nav'>
-          <Nav/>
+          <Nav secret/>
         </div>
         <div className='welcome--main'>
           <div className='welcome--browse'>

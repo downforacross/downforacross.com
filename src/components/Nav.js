@@ -40,8 +40,24 @@ function LogIn({ user }) {
   }
 }
 
-export default function Nav({mobile, v2}) {
+export default function Nav({mobile, v2, secret}) {
   if (mobile) return null; // no nav for mobile
+  if (secret) {
+    return (
+      <div className='nav'>
+        <div className='nav--left'>
+          <Link to={'/'}>
+            Down for a Cross
+          </Link>
+          {' '}
+          <Link to={'/beta'}>
+            <span className='nav--v2 secret'>(beta)</span>
+          </Link>
+        </div>
+        <LogIn user={getUser()}/>
+      </div>
+    );
+  }
 
   return (
     <div className='nav'>

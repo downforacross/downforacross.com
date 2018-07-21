@@ -36,3 +36,13 @@
   color: pink;
   margin-left: 2px;
 }
+
+.secret {
+  opacity: 0;
+  transition: all ease-in 0.5s;
+}
+
+.secret:hover {
+  opacity: 1;
+  transition: all ease-in 2s;
+}
