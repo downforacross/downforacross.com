@@ -102,7 +102,6 @@ export default class GameV2 extends Component {
     const {
       id,
       myColor,
-      onPressEnter,
     } = this.props;
     if (!this.game) {
       return (

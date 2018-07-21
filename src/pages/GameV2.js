@@ -33,8 +33,8 @@ export default class GameV2 extends Component {
   initializeUser() {
     this.user = getUser();
     this.user.onAuth(() => {
-      const id = this.user.id;
-      const color = this.user.color;
+      // const id = this.user.id;
+      // const color = this.user.color;
     });
   }
 

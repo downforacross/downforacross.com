@@ -1,10 +1,5 @@
 import React, { Component } from 'react';
-import { Helmet } from 'react-helmet';
 import Flex from 'react-flexview';
-import FontAwesome from 'react-fontawesome';
-import { Link } from 'react-router-dom';
-import { getUser, PuzzlelistModel, GameModel, PuzzleModel } from '../store';
-import actions from '../actions';
 import _ from 'lodash';
 import Entry from './Entry';
 
@@ -21,7 +16,7 @@ export default class PuzzleList extends Component {
   }
 
   render() {
-    const { userHistory, puzzles, filters } = this.props;
+    const { userHistory, puzzles } = this.props;
     const puzzleStatuses = {};
     function setStatus(pid, solved) {
       if (solved) {

@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
-import Flex from 'react-flexview';
 import Nav from '../components/Nav';
-import redirect from '../redirect';
 import actions from '../actions';
-import _ from 'lodash';
-import { getUser, PuzzlelistModel, GameModel, PuzzleModel } from '../store';
+import { GameModel, PuzzleModel } from '../store';
 
 export default class Play extends Component {
   componentDidMount() {
     const { pid } = this.props.match.params;
-    const search = this.props.location.search;
     this.create(pid);
   }
 

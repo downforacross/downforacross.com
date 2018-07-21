@@ -1,4 +1,4 @@
-import { db, SERVER_TIME } from './firebase';
+import { db } from './firebase';
 import EventEmitter from 'events';
 import { makeGame } from '../gameUtils';
 

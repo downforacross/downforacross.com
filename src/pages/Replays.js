@@ -4,8 +4,6 @@ import React, {Component} from 'react';
 import Flex from 'react-flexview';
 import Nav from '../components/Nav';
 import {db} from '../actions';
-import moment from "moment";
-import game from "../store/game";
 
 const TimeFormatter = ({millis}) => (
   millis

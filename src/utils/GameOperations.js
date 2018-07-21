@@ -181,7 +181,6 @@ const reducers = {
 
   updateClock: (game, params) => {
     const action = params.action;
-    const { timestamp } = params;
     let { clock } = game;
     if (action === 'pause') {
       // no-op, will be handled by tick
