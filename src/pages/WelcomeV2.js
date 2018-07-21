@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { getUser, PuzzlelistModel, GameModel, PuzzleModel } from '../store';
 import actions from '../actions';
 import _ from 'lodash';
+import PuzzleList from '../components/PuzzleList';
 
 class Entry extends Component {
   constructor() {
@@ -132,64 +133,15 @@ export default class WelcomeV2 extends Component {
     this.nextPage();
   }
 
-  handleScroll = (e) => {
-    // hack hack hack
-    const el = e.target;
-    const { scrollTop, scrollHeight, clientHeight } = el;
-    const buffer = 600; // 600 pixels of buffer, i guess?
-    if (scrollTop + clientHeight + buffer > scrollHeight) {
-      this.nextPage();
-    }
-  }
-
   renderPuzzles() {
     const { userHistory, puzzles } = this.state;
-    const puzzleStatuses = {};
-    function setStatus(pid, solved) {
-      if (solved) {
-        puzzleStatuses[pid] = 'solved';
-      } else if (!puzzleStatuses[pid]) {
-        puzzleStatuses[pid] = 'started';
-      }
-    }
-
-    _.keys(userHistory).forEach(gid => {
-      if (gid === 'solo') {
-        _.keys(userHistory.solo).forEach(uid => {
-          const soloGames = userHistory.solo[uid];
-          _.keys(soloGames).forEach(pid => {
-            let { solved } = soloGames[pid];
-            setStatus(pid, solved);
-          });
-        });
-      } else {
-        let { pid, solved } = userHistory[gid];
-        setStatus(pid, solved);
-      }
-    });
-    const lastUpdateTime = this.lastUpdateTime;
-    console.log(puzzleStatuses);
     return (
-      <Flex
-        wrap
-        style={{justifyContent: 'space-around', overflowY: 'auto'}}
-        onScroll={this.handleScroll}
-        ref={el => {this.puzzlesContainer = el;}}>
-        { [...puzzles].reverse()
-          .filter(entry => (
-            entry && entry.info && !entry.private
-          ))
-          .map((entry, i) =>
-            <div key={i}>
-              <Entry { ...entry }
-                status={puzzleStatuses[entry.pid]}
-                lastUpdateTime={lastUpdateTime}
-                user={this.user}
-                onPlay={this.handlePlay}/>
-            </div>
-          )
-        }
-      </Flex>
+      <PuzzleList
+        puzzles={puzzles}
+        userHistory={userHistory}
+        filters={{}}
+        onNextPage={this.nextPage}
+      />
     );
   }
 
