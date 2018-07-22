@@ -11,7 +11,7 @@ const TimeFormatter = ({millis}) => (
   millis
   ? (
     <span>
-      {Math.floor(millis/60000)} minutes, {Math.floor(millis/1000) % 60} seconds
+      {Math.floor(millis/60000)}m {Math.floor(millis/1000) % 60}s
     </span>
   )
   : null
@@ -66,7 +66,7 @@ export default class Replays extends Component {
     }
     const {title, author, type} = this.state.info;
     return (
-      <div>
+      <div className='header'>
         <div className='header--title'>
           {title}
         </div>
@@ -111,31 +111,23 @@ export default class Replays extends Component {
     );
 
     return (
-      <table>
-        <tr><th>Game</th><th>Time of game</th><th>Progress</th></tr>
+      <table className='replays--table'><tbody>
+        <tr><th>Game</th><th>Solve Time</th><th>Progress</th></tr>
         {list1Items}
         {list2Items}
-      </table>
+    </tbody></table>
     );
   }
 
 
   render() {
     return (
-      <Flex column className='replay'>
+      <Flex column className='replays'>
         <Nav/>
+        {this.renderHeader()}
         <div
           style={{
-            paddingLeft: 30,
-            paddingTop: 20,
-            paddingBottom: 20,
-          }}>
-          {this.renderHeader()}
-        </div>
-        <div
-          style={{
-            padding: 10,
-            border: '1px solid #E2E2E2',
+            padding: 20,
           }}>
           <div
             style={{
