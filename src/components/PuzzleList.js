@@ -23,8 +23,16 @@ export default class PuzzleList extends PureComponent {
     const { scrollTop, scrollHeight, clientHeight } = this.container.current;
     const buffer = 600; // 600 pixels of buffer, i guess?
     if (scrollTop + clientHeight + buffer > scrollHeight) {
+      if (this.isEmpty) {
+        return; // if the filters are dead, don't load as they won't help
+      }
       this.props.onNextPage();
     }
+  }
+
+  get isEmpty() {
+    const { sizeFilter, statusFilter } = this.props;
+    return !(_.some(_.values(sizeFilter)) && _.some(_.values(statusFilter)));
   }
 
   accept = entry => {
