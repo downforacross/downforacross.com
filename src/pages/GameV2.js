@@ -3,9 +3,10 @@ import 'react-flexview/lib/flexView.css'
 import React, { Component } from 'react';
 import Nav from '../components/Nav';
 import _ from 'lodash';
+import { Helmet } from 'react-helmet';
 import Flex from 'react-flexview';
-import { GameModel } from '../store';
-import { getUser } from '../store';
+
+import { GameModel, getUser } from '../store';
 import HistoryWrapper from '../utils/historyWrapper';
 import Game from '../components/Game';
 import ChatV2 from '../components/ChatV2';
@@ -130,6 +131,13 @@ export default class GameV2 extends Component {
     );
   }
 
+  getPuzzleTitle() {
+    if (!this.historyWrapper) return '';
+    const game = this.historyWrapper.getSnapshot();
+    if (!game || !game.info) return '';
+    return game.info.title;
+  }
+
   render() {
     return (
       <Flex className='room' column grow={1}
@@ -138,6 +146,9 @@ export default class GameV2 extends Component {
           height: '100%',
         }}
       >
+        <Helmet>
+          <title>{this.getPuzzleTitle()}</title>
+        </Helmet>
         <Nav v2/>
         <Flex className='room--main' grow={1}>
           <Flex column shrink={0}>
