@@ -52,7 +52,7 @@ export default class Entry extends Component {
               {author} | {this.size}
             </Flex>
             <Flex className='entryv2--top--right'>
-              <FontAwesome name={faName}/>
+              <FontAwesome name={faName} style={{color: '#6AA9F4'}}/>
             </Flex>
           </Flex>
           <Flex className='entryv2--main'>
