@@ -5,6 +5,7 @@ import React, {Component} from 'react';
 import Flex from 'react-flexview';
 import Nav from '../components/Nav';
 import { PuzzleModel } from '../store';
+import { db } from '../actions';
 
 const Timestamp = require('react-timestamp');
 
@@ -15,8 +16,8 @@ const TimeFormatter = ({millis}) => (
     <span>
       {Math.floor(millis/60000)}m {Math.floor(millis/1000) % 60}s
     </span>
-        )
-        : null
+  )
+  : null
 );
 
 function getTime(game) {
@@ -28,15 +29,15 @@ function getTime(game) {
 }
 
 function getChatters(game) {
-    if(!game || !game.chat) {
-        return []
-    }
-    const messages = game.chat.messages;
-    let chatters = [];
-    Object.values(messages).forEach(msg => {
-        chatters.push(msg.sender);
-    });
-    return Array.from(new Set(chatters));
+  if(!game || !game.chat) {
+    return []
+  }
+  const messages = game.chat.messages;
+  let chatters = [];
+  Object.values(messages).forEach(msg => {
+    chatters.push(msg.sender);
+  });
+  return Array.from(new Set(chatters));
 }
 
 
@@ -51,13 +52,17 @@ export default class Replays extends Component {
     };
   }
 
+  get pid() {
+    return this.props.match.params.pid;
+  }
+
   componentDidMount() {
     const puzRef = db.ref('puzzlelist/'+this.pid);
     puzRef.once('value', puzSnap => {
-        this.setState((prevState,props) =>
+      this.setState((prevState,props) =>
         {
-            console.log(puzSnap.val());
-            return {puzInfo: puzSnap.val()};
+          console.log(puzSnap.val());
+          return {puzInfo: puzSnap.val()};
         });
     });
 
@@ -117,7 +122,7 @@ export default class Replays extends Component {
   }
 
   linkToGame(gid){
-      return <a href={'/game/' + gid}>still playing</a>
+    return <a href={'/game/' + gid}>still playing</a>
   }
 
   renderList() {
@@ -133,15 +138,15 @@ export default class Replays extends Component {
     let list1Items = [];
 
     Object.values(games).forEach(({gid, solved, startTime, time, chatters}) => {
-        list1Items.push(
-            <tr key={gid}>
-                <td><a href={'/replay/' + gid}>Game #{gid}</a></td>
-                <td><Timestamp time={startTime}/></td>
-                <td><TimeFormatter millis={time}/></td>
-                <td>{solved ? 'done' : this.linkToGame(gid)}</td>
-                <td>{chatters.join(", ")}</td>
-            </tr>
-        );
+      list1Items.push(
+        <tr key={gid}>
+          <td><a href={'/replay/' + gid}>Game #{gid}</a></td>
+          <td><Timestamp time={startTime}/></td>
+          <td><TimeFormatter millis={time}/></td>
+          <td>{solved ? 'done' : this.linkToGame(gid)}</td>
+          <td>{chatters.join(", ")}</td>
+        </tr>
+      );
     });
 
     const players = this.state.soloPlayers;
@@ -157,11 +162,11 @@ export default class Replays extends Component {
 
     return (
       <table className={'main-table'}>
-          <tbody>
+        <tbody>
           <tr><th>Game</th><th>Start time</th><th>Duration</th><th>Progress</th><th>Participants</th></tr>
-        {list1Items}
-        {list2Items}
-          </tbody>
+          {list1Items}
+          {list2Items}
+        </tbody>
       </table>
     );
   }
@@ -171,19 +176,16 @@ export default class Replays extends Component {
     return (
       <Flex column className='replays'>
         <Nav mobile={false}/>
-        <div style={{
-          paddingLeft: 30,
-          paddingTop: 20,
-          paddingBottom: 20,
-        }}>
-        {this.renderHeader()}
         <div
           style={{
-            padding: 20,
+            paddingLeft: 30,
+            paddingTop: 20,
+            paddingBottom: 20,
           }}>
+          {this.renderHeader()}
           <div
             style={{
-              // flex: 1,
+              padding: 20,
             }}>
             {this.renderList()}
           </div>
