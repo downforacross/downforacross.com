@@ -4,7 +4,6 @@ import _ from 'lodash';
 import React, {Component} from 'react';
 import Flex from 'react-flexview';
 import Nav from '../components/Nav';
-import {db} from '../actions';
 import { PuzzleModel } from '../store';
 
 const TimeFormatter = ({millis}) => (

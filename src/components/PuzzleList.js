@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import Flex from 'react-flexview';
 import _ from 'lodash';
 import Entry from './Entry';
 

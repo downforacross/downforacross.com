@@ -1,7 +1,6 @@
 import './css/replay.css';
 
 import Replay from './Replay'
-import redirect from '../redirect';
 
 export default class ReplayV2 extends Replay {
   historyPath() {
