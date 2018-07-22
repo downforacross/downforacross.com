@@ -17,12 +17,15 @@ export default class PuzzleList extends PureComponent {
     // calling handleScroll twice with different delays to be performant but also resistant to weirdly slow browsers that alg??
   }
 
-  handleScroll = (e) => {
-    console.log('did update');
-    // hack hack hack
+  get fullyScrolled() {
+    if (!this.container.current) return false;
     const { scrollTop, scrollHeight, clientHeight } = this.container.current;
     const buffer = 600; // 600 pixels of buffer, i guess?
-    if (scrollTop + clientHeight + buffer > scrollHeight) {
+    return scrollTop + clientHeight + buffer > scrollHeight;
+  }
+
+  handleScroll = (e) => {
+    if (this.fullyScrolled) {
       if (this.isEmpty) {
         return; // if the filters are dead, don't load as they won't help
       }
@@ -51,12 +54,17 @@ export default class PuzzleList extends PureComponent {
 
   get puzzles() {
     const { puzzles } = this.props;
-    return [...puzzles]
+    const list = [...puzzles]
       .reverse()
       .filter(entry => (
         entry && entry.info && !entry.private
       ))
       .filter(this.accept);
+    if (!this.fullyScrolled) {
+      return list.slice(0, 100);
+    } else {
+      return list;
+    }
   }
 
   get puzzleStatuses() {
