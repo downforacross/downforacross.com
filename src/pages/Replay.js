@@ -2,6 +2,7 @@ import './css/replay.css';
 
 import React, { Component } from 'react';
 import Flex from 'react-flexview';
+import _ from 'lodash';
 
 import HistoryWrapper from '../utils/historyWrapper';
 import Player from '../components/Player';
@@ -9,7 +10,7 @@ import Chat from '../components/Chat';
 import Nav from '../components/Nav';
 import { db } from '../actions';
 import { toArr, pure, isAncestor } from '../jsUtils';
-import _ from 'lodash';
+import redirect from '../redirect';
 
 const SCRUB_SPEED = 50; // 30 actions per second
 
@@ -248,9 +249,18 @@ export default class Replay extends Component {
     return this.historyWrapper.getSnapshotAt(position);
   }
 
-  // overridden in replaysolo
+  // overridden in replaysolo and replayv2
   historyPath() {
     return `history/${this.gid}`;
+  }
+
+  // overridden in replayv2
+  backupHistoryPath() {
+    return `game/${this.gid}/events`;
+  }
+
+  backupUrl() {
+    return `/beta/replay/${this.gid}`;
   }
 
   componentDidMount() {
@@ -270,6 +280,13 @@ export default class Replay extends Component {
         ));
         this.setState({history, filteredHistory, position});
       } else {
+        const gamev2ref = db.ref(this.backupHistoryPath());
+        gamev2ref.once('value', snapshot => {
+          const history = _.values(snapshot.val());
+          if (history.length > 0 && history[0].type === 'create') {
+            redirect(this.backupUrl());
+          }
+        });
         this.setState({
           error: true,
         });
