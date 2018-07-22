@@ -48,6 +48,10 @@
 }
 
 
+.welcomev2--sidebar {
+  padding-bottom: 20px;
+}
+
 .welcomev2--sidebar > div {
   padding-left: 5px;
   padding-right: 10px;
