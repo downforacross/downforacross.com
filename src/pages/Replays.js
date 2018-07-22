@@ -1,9 +1,11 @@
-import './css/replay.css';
+import './css/replays.css';
 
+import _ from 'lodash';
 import React, {Component} from 'react';
 import Flex from 'react-flexview';
 import Nav from '../components/Nav';
 import {db} from '../actions';
+import { PuzzleModel } from '../store';
 
 const TimeFormatter = ({millis}) => (
   millis
@@ -32,52 +34,37 @@ export default class Replays extends Component {
     };
   }
 
+  componentDidMount() {
+    const pid = this.pid;
+    this.puzzle = new PuzzleModel(`/puzzle/${pid}`, pid);
+    this.puzzle.attach();
+    this.puzzle.on('ready', () => {
+      this.setState({
+        info: this.puzzle.info,
+      });
+    });
+
+    this.puzzle.listGames(rawGames => {
+      const games = _.map(_.keys(rawGames), gid => ({
+        gid,
+        solved: rawGames[gid].solved,
+        time: getTime(rawGames[gid]),
+      }))
+      this.setState({
+        games,
+      });
+    });
+  }
 
   get pid() {
     return this.props.match.params.pid;
   }
 
-  get puzzle() {
-    // compute the game state corresponding to current playback time
-    return this.state.puzzle;
-  }
-
-  componentDidMount() {
-    // go through the list of all the games
-    // callback: if this is its pid, append its gid to the games list
-    db.ref('game').orderByChild('pid').equalTo(parseInt(this.pid, 10)).once('value').then(
-      gameSnap => {
-        gameSnap.forEach(
-          childSnap => {
-            this.setState((prevState, props) => {
-              const game = childSnap.val();
-              // TODO: compute solved percentage, create time
-              return {games: [...prevState.games, {
-                gid: childSnap.key,
-                solved: game.solved,
-                time: getTime(game),
-              }]}
-            });
-          });
-      }
-    );
-
-    // TODO: go through the list of solo games
-    // callback: if this is its pid, append it to the list of solo players
-    //
-    // function callback(something) {
-    //     this.setState(prevState => ({
-    //         soloPlayers: [...prevState.soloPlayers, [pid, time]],
-    //         games: prevState.games,
-    //     }))
-    // }
-  }
-
   renderHeader() {
-    if (!this.puzzle || this.state.error) {
+    if (!this.state.info) {
       return null;
     }
-    const {title, author, type} = this.puzzle.info;
+    const {title, author, type} = this.state.info;
     return (
       <div>
         <div className='header--title'>
@@ -136,7 +123,7 @@ export default class Replays extends Component {
   render() {
     return (
       <Flex column className='replay'>
-        <Nav mobile={false}/>
+        <Nav/>
         <div
           style={{
             paddingLeft: 30,
