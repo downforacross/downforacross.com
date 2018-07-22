@@ -28,18 +28,30 @@ function getTime(game) {
   }
 }
 
+// I guess this function can live here for now
+// TODO have participants be accessible from the game store
+// TODO usernames???
 function getChatters(game) {
-  if(!game || !game.chat) {
-    return []
+  if (!game) return [];
+  if (game.chat) {
+    const messages = game.chat.messages;
+    let chatters = [];
+    _.values(messages).forEach(msg => {
+      chatters.push(msg.sender);
+    });
+    return Array.from(new Set(chatters));
+  } else if (game.events) {
+    console.log(game.events);
+    let chatters = [];
+    _.values(game.events).forEach(event => {
+      if (event.type === 'chat') {
+        chatters.push(event.params.sender);
+      }
+    });
+    return Array.from(new Set(chatters));
   }
-  const messages = game.chat.messages;
-  let chatters = [];
-  Object.values(messages).forEach(msg => {
-    chatters.push(msg.sender);
-  });
-  return Array.from(new Set(chatters));
+  return [];
 }
-
 
 
 export default class Replays extends Component {
@@ -57,35 +69,28 @@ export default class Replays extends Component {
   }
 
   componentDidMount() {
-    const puzRef = db.ref('puzzlelist/'+this.pid);
-    puzRef.once('value', puzSnap => {
-      this.setState((prevState,props) =>
-        {
-          console.log(puzSnap.val());
-          return {puzInfo: puzSnap.val()};
-        });
+    this.puzzle = new PuzzleModel(`/puzzle/${this.pid}`, this.pid);
+    this.puzzle.attach();
+    this.puzzle.on('ready', () => {
+      this.setState({
+        puzInfo: this.puzzle.info,
+      });
     });
 
     // go through the list of all the games
     // callback: if this is its pid, append its gid to the games list
-    db.ref('game').orderByChild('pid').equalTo(parseInt(this.pid, 10)).once('value').then(
-      gameSnap => {
-        gameSnap.forEach(
-          childSnap => {
-            this.setState((prevState, props) => {
-              const game = childSnap.val();
-              // TODO: compute solved percentage, create time
-              return {games: {...prevState.games, [childSnap.key]: {
-                gid: childSnap.key,
-                solved: game.solved,
-                startTime: game.startTime/1000,
-                time: getTime(game),
-                chatters: getChatters(game),
-              }}}
-            });
-          });
-      }
-    );
+    this.puzzle.listGames(rawGames => {
+      const games = _.map(_.keys(rawGames), gid => ({
+        gid,
+        solved: rawGames[gid].solved,
+        startTime: rawGames[gid].startTime / 1000,
+        time: getTime(rawGames[gid]),
+        chatters: getChatters(rawGames[gid]),
+      }));
+      this.setState({
+        games,
+      });
+    });
 
     // TODO: go through the list of solo games
     // callback: if this is its pid, append it to the list of solo players
@@ -96,11 +101,6 @@ export default class Replays extends Component {
     //         games: prevState.games,
     //     }))
     // }
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    // console.log(this.state)
-    // TODO: determine if this needs anything
   }
 
   renderHeader() {
