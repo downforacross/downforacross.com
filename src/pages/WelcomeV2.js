@@ -3,6 +3,7 @@ import './css/welcomev2.css';
 import React, { Component } from 'react';
 import { Helmet } from 'react-helmet';
 import Flex from 'react-flexview';
+import _ from 'lodash';
 import Nav from '../components/Nav';
 import Upload from '../components/Upload';
 import { getUser, PuzzlelistModel } from '../store';
@@ -16,6 +17,15 @@ export default class WelcomeV2 extends Component {
       puzzles: [],
       userHistory: {},
       pages: 0,
+      statusFilter: {
+        'Complete': true,
+        'In progress': true,
+        'New': true,
+      },
+      sizeFilter: {
+        'Mini': true,
+        'Standard': true,
+      },
     };
     this.loading = false;
   }
@@ -69,18 +79,39 @@ export default class WelcomeV2 extends Component {
   }
 
   renderPuzzles() {
-    const { userHistory, puzzles } = this.state;
+    const { userHistory, puzzles, sizeFilter, statusFilter } = this.state;
     return (
       <PuzzleList
         puzzles={puzzles}
         userHistory={userHistory}
-        filters={{}}
+        sizeFilter={sizeFilter}
+        statusFilter={statusFilter}
         onNextPage={this.nextPage}
       />
     );
   }
 
+  handleFilterChange = (header, name, on) => {
+    const { sizeFilter, statusFilter } = this.state;
+    if (header === 'Size') {
+      this.setState({
+        sizeFilter: {
+          ...sizeFilter,
+          [name]: on,
+        },
+      });
+    } else if (header === 'Status') {
+      this.setState({
+        statusFilter: {
+          ...statusFilter,
+          [name]: on,
+        },
+      });
+    }
+  }
+
   renderFilters() {
+    const { sizeFilter, statusFilter } = this.state;
     const headerStyle = {
       fontWeight: 600,
       marginTop: 10,
@@ -93,9 +124,11 @@ export default class WelcomeV2 extends Component {
     const checkboxGroup = (header, items, handleChange) => (
       <Flex column style={groupStyle} className='checkbox-group'>
         <span style={headerStyle}>{header}</span>
-        {items.map((name, i) => (
-          <label key={i}>
-            <input type="checkbox" defaultChecked="checked"/>
+        {_.keys(items).map((name, i) => (
+          <label key={i} onMouseDown={e => {e.preventDefault();}}>
+            <input type="checkbox" checked={items[name]} onChange={e => {
+              handleChange(header, name, e.target.checked);
+            }}/>
             <div className='checkmark'/>
             {name}
           </label>
@@ -105,12 +138,8 @@ export default class WelcomeV2 extends Component {
 
     return (
       <Flex className='filters' column hAlignContent='left' shrink={0}>
-        {checkboxGroup('Size', ['Mini', 'Standard'], (e) => {
-          console.log('change', e.target);
-        })}
-        {checkboxGroup('Status', ['New', 'In progress', 'Complete'], (e) => {
-          console.log('change', e.target);
-        })}
+        {checkboxGroup('Size', sizeFilter, this.handleFilterChange)}
+        {checkboxGroup('Status', statusFilter,  this.handleFilterChange)}
       </Flex>
     );
   }
