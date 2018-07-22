@@ -14,25 +14,12 @@ export default class User extends EventEmitter {
 
   attach() {
     this.auth.onAuthStateChanged((user) => {
-      this.ref.child('history').off('value');
       this.attached = true;
       this.fb = user;
       this.emit('auth');
-      this.ref.child('history').on('value', snapshot => {
-        this.emit('history', snapshot.val());
-      });
       console.log('Your id is', this.id);
     });
-
-    this.ref.child('history').on('value', snapshot => {
-      this.emit('history', snapshot.val());
-    });
   }
-
-  detach() {
-    this.ref.child('history').off('value');
-  }
-
   logIn() {
     const provider = new firebase.auth.FacebookAuthProvider();
     this.auth.signInWithPopup(provider);
@@ -64,6 +51,13 @@ export default class User extends EventEmitter {
     return getLocalId();
   }
 
+  listUserHistory(cbk) {
+    this.ref.child('history').on('value', snapshot => {
+      cbk(snapshot.val());
+    });
+  }
+
+
   // write methods
   joinGame(gid, game) {
     const time = getTime();
@@ -91,7 +85,6 @@ export default class User extends EventEmitter {
       }
     });
   }
-
   recordUsername(username) {
     this.ref
       .child('names')
