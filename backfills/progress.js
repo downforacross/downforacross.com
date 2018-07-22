@@ -9,7 +9,7 @@ user[uid].history[gid]: {
 
 Current structure: user[uid].history[gid]: time
 */
-
+// npx babel-node backfills/progress.js
 import { db, disconnect } from '../src/actions'
 
 function go(pidMap, solvedMap) {
