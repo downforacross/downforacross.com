@@ -1,6 +1,7 @@
 import './css/clock.css';
 import React, { Component } from 'react';
 import { getTime } from '../actions';
+import { MAX_CLOCK_INCREMENT } from '../timing';
 
 export default class Clock extends Component {
   constructor() {
@@ -40,6 +41,8 @@ export default class Clock extends Component {
     if (start && !this.props.isPaused) { // not paused
       if (stop) { // finished
         clock += stop - start;
+      } else if (this.isCapped) {
+        clock += MAX_CLOCK_INCREMENT;
       } else {
         clock += now - start;
       }
@@ -55,9 +58,21 @@ export default class Clock extends Component {
     });
   }
 
+  get isCapped() {
+    if (!this.props.v2) return false;
+    const start = this.props.startTime;
+    const now = getTime();
+    return now > start + MAX_CLOCK_INCREMENT;
+  }
+
+  get isPaused() {
+    // to this component, there's no difference between capped & paused
+    return this.props.isPaused || this.isCapped;
+  }
+
   togglePause() {
-    const { isPaused, onPause, onStart } = this.props;
-    if (isPaused) {
+    const { onPause, onStart } = this.props;
+    if (this.isPaused) {
       onStart();
     } else {
       onPause();
@@ -66,11 +81,10 @@ export default class Clock extends Component {
 
   render() {
     const { clock } = this.state;
-    const { isPaused } = this.props;
-    const clockStr = isPaused
+    const clockStr = this.isPaused
       ? '(' + clock + ')'
       : clock;
-    const titleStr = isPaused
+    const titleStr = this.isPaused
       ? 'Click to unpause'
       : 'Click to pause';
     return <div className='clock' onClick={this._togglePause} title={titleStr}>

@@ -1,20 +1,19 @@
 import './css/replays.css';
 
+import _ from 'lodash';
 import React, {Component} from 'react';
 import Flex from 'react-flexview';
 import Nav from '../components/Nav';
-import {db} from '../actions';
-import moment from "moment";
-import game from "../store/game";
+import { PuzzleModel } from '../store';
 
 const Timestamp = require('react-timestamp');
 
 
 const TimeFormatter = ({millis}) => (
-    millis
-        ? (
-            <span>
-      {Math.floor(millis/60000)} minutes, {Math.floor(millis/1000) % 60} seconds
+  millis
+  ? (
+    <span>
+      {Math.floor(millis/60000)}m {Math.floor(millis/1000) % 60}s
     </span>
         )
         : null
@@ -50,16 +49,6 @@ export default class Replays extends Component {
       soloPlayers: [],
       puzInfo: {},
     };
-  }
-
-
-  get pid() {
-    return this.props.match.params.pid;
-  }
-
-  get puzzle() {
-    // compute the game state corresponding to current playback time
-    return this.state.puzzle;
   }
 
   componentDidMount() {
@@ -109,14 +98,13 @@ export default class Replays extends Component {
     // TODO: determine if this needs anything
   }
 
-
   renderHeader() {
     if (!this.state.puzInfo || this.state.error) {
       return null;
     }
     console.log(this.state.puzInfo);
     return (
-      <div>
+      <div className='header'>
         <div className='header--title'>
           {this.state.puzInfo.title}
         </div>
@@ -189,18 +177,17 @@ export default class Replays extends Component {
           paddingBottom: 20,
         }}>
         {this.renderHeader()}
-      </div>
-      <div style={{
-        padding: 10,
-        border: '1px solid #E2E2E2',
-      }}>
-      <div style={{
-        // flex: 1,
-      }}>
-      {this.renderList()}
-    </div>
-  </div>
-
+        <div
+          style={{
+            padding: 20,
+          }}>
+          <div
+            style={{
+              // flex: 1,
+            }}>
+            {this.renderList()}
+          </div>
+        </div>
       </Flex>
     );
   }

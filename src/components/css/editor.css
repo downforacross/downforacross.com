@@ -44,7 +44,7 @@
   width: 100%;
   font-size: 15px;
   padding: 1px;
-  font-family: avenir, "helvetica neue", "Helvetica", "arial", sans-serif;
+  font-family: inherit;
   border: none;
   resize: none;
 }

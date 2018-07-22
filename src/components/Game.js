@@ -11,14 +11,16 @@ import { toArr } from '../jsUtils';
 export default class GameV2 extends Component {
   constructor() {
     super();
-    this.screenWidth = 0;
     this.state = {
       pencilMode: false,
+      screenWidth: 0,
     };
   }
 
   componentDidMount() {
-    this.screenWidth = window.innerWidth;
+    this.setState({
+      screenWidth: window.innerWidth,
+    });
   }
 
   get game() {
@@ -32,11 +34,11 @@ export default class GameV2 extends Component {
 
   scope(s) {
     if (s === 'square') {
-      return this.refs.player.getSelectedSquares();
+      return this.player.getSelectedSquares();
     } else if (s === 'word') {
-      return this.refs.player.getSelectedAndHighlightedSquares();
+      return this.player.getSelectedAndHighlightedSquares();
     } else if (s === 'puzzle') {
-      return this.refs.player.getAllSquares();
+      return this.player.getAllSquares();
     } else {
       return [];
     }
@@ -47,6 +49,7 @@ export default class GameV2 extends Component {
     const { id, myColor } = this.props;
     const { pencilMode } = this.state;
     this.gameModel.updateCell(r, c, id, myColor, pencilMode, value);
+    this.props.onChange();
   }
 
   handleUpdateCursor = ({r, c}) => {
@@ -74,6 +77,7 @@ export default class GameV2 extends Component {
   handleReveal = (scopeString) => {
     const scope = this.scope(scopeString);
     this.props.gameModel.reveal(scope);
+    this.props.onChange();
   }
 
 
@@ -88,11 +92,18 @@ export default class GameV2 extends Component {
     });
   }
 
+  handlePressEnter = () => {
+    this.props.onPressEnter(this);
+  }
+
+  focus() {
+    this.player && this.player.focus();
+  }
+
   renderPlayer() {
     const {
       id,
       myColor,
-      onPressEnter,
     } = this.props;
     if (!this.game) {
       return (
@@ -103,14 +114,14 @@ export default class GameV2 extends Component {
     }
 
     const { grid, circles, shades, cursors, clues, solved, } = this.game;
-    const screenWidth = this.screenWidth;
+    const { screenWidth } = this.state;
     let cols = grid[0].length;
     let rows = grid.length;
     const width = Math.min(35 * 15 * cols / rows, screenWidth);
     let size = width / cols;
     return (
       <Player
-        ref='player'
+        ref={c => {this.player = c;}}
         size={size}
         grid={grid}
         circles={circles}
@@ -125,7 +136,7 @@ export default class GameV2 extends Component {
         myColor={myColor}
         updateGrid={this.handleUpdateGrid}
         updateCursor={this.handleUpdateCursor}
-        onPressEnter={onPressEnter}
+        onPressEnter={this.handlePressEnter}
         mobile={false}
       />
     );
@@ -142,6 +153,7 @@ export default class GameV2 extends Component {
     } = clock;
     return (
       <Toolbar
+        v2={true}
         mobile={false}
         startTime={startTime}
         pausedTime={pausedTime}

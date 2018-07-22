@@ -1,7 +1,6 @@
 .compose {
   height: 100%;
   width: 100%;
-  font-family: avenir, "helvetica neue", "Helvetica", "arial", sans-serif;
   display: flex;
   flex-direction: row;
   min-height: 760px;
@@ -29,7 +28,6 @@
 
 .compose--left--list--entry {
   display: block;
-  font-family: avenir, "helvetica neue", "Helvetica", "arial", sans-serif;
   font-size: 16px;
   border: 2px solid gray;
   border-radius: 5px;
@@ -77,7 +75,6 @@
 .compose--main--info--title .text {
   display: inline-block;
   padding: 1px;
-  font-family: avenir, "helvetica neue", "Helvetica", "arial", sans-serif;
   font-size: 30px;
   font-weight: 500;
   color: #333;
@@ -100,7 +97,6 @@
 
 .compose--main--info--subtitle .text {
   padding: 1px;
-  font-family: avenir, "helvetica neue", "Helvetica", "arial", sans-serif;
   font-size: 16px;
   font-weight: 500;
   color: #333;
@@ -109,7 +105,6 @@
 
 .compose--main--info--subtitle .off .text {
   padding: 3px;
-  font-family: avenir, "helvetica neue", "Helvetica", "arial", sans-serif;
   font-size: 16px;
   font-weight: 500;
   color: #333;

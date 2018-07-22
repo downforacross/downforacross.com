@@ -1,6 +1,6 @@
 import './css/grid.css';
 
-import React, { Component } from 'react';
+import React  from 'react';
 import GridObject from '../utils/Grid';
 import Cell from './Cell';
 
@@ -18,7 +18,7 @@ import Cell from './Cell';
  * - Previewer (TODO)
  **/
 
-export default class Grid extends Component {
+export default class Grid extends React.PureComponent {
 
   get grid() {
     return new GridObject(this.props.grid);

@@ -9,6 +9,7 @@ import { getUser } from '../store';
 import HistoryWrapper from '../utils/historyWrapper';
 import Game from '../components/Game';
 import ChatV2 from '../components/ChatV2';
+import redirect from '../redirect';
 
 export default class GameV2 extends Component {
   constructor(props) {
@@ -32,25 +33,23 @@ export default class GameV2 extends Component {
   initializeUser() {
     this.user = getUser();
     this.user.onAuth(() => {
-      const id = this.user.id;
-      const color = this.user.color;
-      console.log('init user', id, color);
+      // const id = this.user.id;
+      // const color = this.user.color;
     });
   }
 
   initializeGame() {
     if (this.gameModel) this.gameModel.detach();
-    this.gameModel = new GameModel(`/history/${this.state.gid}`);
-    if (this.gameModel) {
-      this.historyWrapper = new HistoryWrapper();
-      this.gameModel.addListener('event', event => {
-        this.historyWrapper.addEvent(event);
-        this.handleUpdate();
-      });
-      this.gameModel.attach();
-      // add listeners
-    }
-    this.handleUpdate();
+    this.gameModel = new GameModel(`/game/${this.state.gid}`);
+    this.historyWrapper = new HistoryWrapper();
+    this.gameModel.addListener('event', event => {
+      if (!event.params || event.params.type) {
+        redirect(`/game/${this.state.gid}`, 'Redirecting to old site...');
+      }
+      this.historyWrapper.addEvent(event);
+      this.handleUpdate();
+    });
+    this.gameModel.attach();
   }
 
   componentDidMount() {
@@ -67,14 +66,27 @@ export default class GameV2 extends Component {
     }
   }
 
-  handlePressEnter = () => {
-    // noop for now
+  handlePressEnter = (el) => {
+    if (el === this.chat) {
+      this.game && this.game.focus();
+    } else if (el === this.game) {
+      this.chat && this.chat.focus();
+    }
   }
 
   handleUpdate = _.debounce(() => {
     this.forceUpdate();
-  }, 50, {
+  }, 0, {
     leading: true,
+  });
+
+  handleChange = _.debounce(() => {
+    const game = this.historyWrapper.getSnapshot();
+    if (game.solved) {
+      this.user.markSolved(this.state.gid);
+    } else {
+      this.user.joinGame(this.state.gid, game);
+    }
   });
 
   // ================
@@ -88,12 +100,13 @@ export default class GameV2 extends Component {
     const { id, color } = this.user;
     return (
       <Game
-        ref='game'
+        ref={c => {this.game = c;}}
         id={id}
         myColor={color}
         historyWrapper={this.historyWrapper}
         gameModel={this.gameModel}
         onPressEnter={this.handlePressEnter}
+        onChange={this.handleChange}
 
       />
     );
@@ -107,7 +120,7 @@ export default class GameV2 extends Component {
     const { id, color } = this.user;
     return (
       <ChatV2
-        ref='chat'
+        ref={c => {this.chat = c;}}
         id={id}
         myColor={color}
         historyWrapper={this.historyWrapper}

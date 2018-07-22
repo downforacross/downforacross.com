@@ -3,81 +3,11 @@ import './css/welcomev2.css';
 import React, { Component } from 'react';
 import { Helmet } from 'react-helmet';
 import Flex from 'react-flexview';
-import FontAwesome from 'react-fontawesome';
-import Nav from '../components/Nav';
-
-import { getUser, PuzzlelistModel } from '../store';
 import _ from 'lodash';
-
-function shortenTitle(title) {
-  if (title.length > 60) {
-    title = title.substring(0, 55) + ' ...';
-  }
-  return title;
-}
-
-class Entry extends Component {
-  constructor() {
-    super();
-    this.state = {
-      expanded: false,
-    }
-  }
-
-  handleClick = e => {
-    this.setState({
-      expanded: !this.state.expanded,
-    });
-  }
-
-  handleMouseLeave = e => {
-    this.setState({
-      expanded: false,
-    });
-  }
-
-  get size() {
-    const { info = {} } = this.props;
-    const { type } = info;
-    if (type === 'Daily Puzzle') {
-      return 'Standard';
-    } else if (type === 'Mini Puzzle') {
-      return 'Mini';
-    } else {
-      return '';
-    }
-  }
-
-  render() {
-    const { title, author, pid, status } = this.props;
-    const shortenedTitle = shortenTitle(title);
-    const { expanded } = this.state;
-    return (
-      <Flex column
-        onClick={this.handleClick}
-        onMouseLeave={this.handleMouseLeave}
-        style={{
-          fontFamily: 'sans-serif',
-          border: '2px solid silver',
-          borderRadius: '3px',
-          marginTop: '18px',
-          display: 'flex',
-        }}>
-        <Flex style={{ justifyContent: 'space-between' }}>
-          <Flex className='entry--top--left'>
-            {author} | {this.size}
-          </Flex>
-          <Flex className='entry--top--right'>
-            <FontAwesome name='rocket'/>
-          </Flex>
-        </Flex>
-        <Flex className='entry--main'>
-          { shortenedTitle }
-        </Flex>
-      </Flex>
-    );
-  }
-}
+import Nav from '../components/Nav';
+import Upload from '../components/Upload';
+import { getUser, PuzzlelistModel } from '../store';
+import PuzzleList from '../components/PuzzleList';
 
 export default class WelcomeV2 extends Component {
 
@@ -86,7 +16,18 @@ export default class WelcomeV2 extends Component {
     this.state = {
       puzzles: [],
       userHistory: {},
+      pages: 0,
+      statusFilter: {
+        'Complete': true,
+        'In progress': true,
+        'New': true,
+      },
+      sizeFilter: {
+        'Mini': true,
+        'Standard': true,
+      },
     };
+    this.loading = false;
   }
 
   componentDidMount() {
@@ -95,120 +36,141 @@ export default class WelcomeV2 extends Component {
   }
 
   componentWillUnmount() {
-    if (this.puzzleList) {
-      this.puzzleList.detach();
+    this.user.offAuth(this.handleAuth);
+  }
+
+  handleAuth = () => {
+    if (this.user.fb) {
+      this.user.listUserHistory(userHistory => {
+        this.setState({ userHistory });
+      });
     }
   }
 
   initializeUser() {
     this.user = getUser();
-    this.user.onAuth(() => {
-      if (this.user.fb) {
-        this.user.on('history', userHistory => {
-          this.setState({ userHistory });
-        });
-      }
+    this.user.onAuth(this.handleAuth);
+  }
+
+  get done() {
+    const { pages, puzzles } = this.state;
+    return puzzles.length < pages * this.puzzleList.pageSize;
+  }
+
+  nextPage = () => {
+    const { pages } = this.state;
+    if (this.loading || this.done) {
+      return;
+    }
+    this.loading = true;
+    this.puzzleList.getPages(pages + 1, page => {
+      this.setState({
+        puzzles: page,
+        pages: pages + 1,
+      }, () => {
+        this.loading = false;
+      });
     });
   }
 
   initializePuzzlelist() {
     this.puzzleList = new PuzzlelistModel();
-    this.puzzleList.getPages(1, page => {
-      this.setState({
-        puzzles: page,
-      });
-    });
-  }
-
-  prevent(ev) {
-    ev.preventDefault();
-    ev.stopPropagation();
+    this.nextPage();
   }
 
   renderPuzzles() {
-    const { history } = this.props;
-    const { userHistory, puzzles } = this.state;
-    const puzzleStatuses = {};
-    function setStatus(pid, solved) {
-      if (solved) {
-        puzzleStatuses[pid] = 'solved';
-      } else if (!puzzleStatuses[pid]) {
-        puzzleStatuses[pid] = 'started';
-      }
-    }
-
-    _.keys(userHistory).forEach(gid => {
-      if (gid === 'solo') {
-        _.keys(userHistory.solo).forEach(uid => {
-          const soloGames = userHistory.solo[uid];
-          _.keys(soloGames).forEach(pid => {
-            let { solved } = soloGames[pid];
-            setStatus(pid, solved);
-          });
-        });
-      } else {
-        let { pid, solved } = userHistory[gid];
-        setStatus(pid, solved);
-      }
-    });
-    const lastUpdateTime = this.lastUpdateTime;
+    const { userHistory, puzzles, sizeFilter, statusFilter } = this.state;
     return (
-      <div className='puzzlelist'>
-        { [...puzzles].reverse()
-            .filter(entry => (
-              entry && entry.info && !entry.private
-            ))
-            .map((entry, i) =>
-              <div key={i} className='welcome--browse--puzzlelist--entry'>
-                <Entry { ...entry } history={history} status={puzzleStatuses[entry.pid]} lastUpdateTime={lastUpdateTime} user={this.user}/>
-              </div>
-            )
-        }
-      </div>
+      <PuzzleList
+        puzzles={puzzles}
+        userHistory={userHistory}
+        sizeFilter={sizeFilter}
+        statusFilter={statusFilter}
+        onNextPage={this.nextPage}
+      />
+    );
+  }
+
+  handleFilterChange = (header, name, on) => {
+    const { sizeFilter, statusFilter } = this.state;
+    if (header === 'Size') {
+      this.setState({
+        sizeFilter: {
+          ...sizeFilter,
+          [name]: on,
+        },
+      });
+    } else if (header === 'Status') {
+      this.setState({
+        statusFilter: {
+          ...statusFilter,
+          [name]: on,
+        },
+      });
+    }
+  }
+
+  renderFilters() {
+    const { sizeFilter, statusFilter } = this.state;
+    const headerStyle = {
+      fontWeight: 600,
+      marginTop: 10,
+      marginBottom: 10,
+    };
+    const groupStyle = {
+      padding: 20,
+    };
+
+    const checkboxGroup = (header, items, handleChange) => (
+      <Flex column style={groupStyle} className='checkbox-group'>
+        <span style={headerStyle}>{header}</span>
+        {_.keys(items).map((name, i) => (
+          <label key={i} onMouseDown={e => {e.preventDefault();}}>
+            <input type="checkbox" checked={items[name]} onChange={e => {
+              handleChange(header, name, e.target.checked);
+            }}/>
+            <div className='checkmark'/>
+            {name}
+          </label>
+        ))}
+      </Flex>
+    );
+
+    return (
+      <Flex className='filters' column hAlignContent='left' shrink={0}>
+        {checkboxGroup('Size', sizeFilter, this.handleFilterChange)}
+        {checkboxGroup('Status', statusFilter,  this.handleFilterChange)}
+      </Flex>
+    );
+  }
+
+  renderQuickUpload() {
+    return (
+      <Flex column className="quickplay">
+        <Upload v2/>
+      </Flex>
     );
   }
 
   render() {
     return (
-      <div className='welcomev2'>
+      <Flex className='welcomev2' column grow={1}>
         <Helmet>
           <title>Down for a Cross</title>
         </Helmet>
         <div className='welcomev2--nav'>
           <Nav v2/>
         </div>
-        <div className='welcomev2--main'>
-          <div className='welcomev2--browse'>
-            <div className='welcomev2--browse--filter'>
-              <div className='welcomev2--browse--filter--header'>
-                Difficulty
-              </div>
-              {
-                ['Monday',
-                  'Tuesday',
-                  'Wednesday',
-                  'Thursday',
-                  'Friday',
-                  'Saturday',
-                  'Sunday',
-                  'All',
-                ].map((day, i) =>
-                  <div
-                    key={i}
-                    className='welcomev2--browse--filter--option'
-                  >
-                    <input type="checkbox"/>
-                    <label>{day}</label>
-                  </div>
-                )
-              }
-            </div>
-            <div className='welcomev2--browse--puzzlelist--wrapper'>
-              { this.renderPuzzles() }
-            </div>
-          </div>
-        </div>
-      </div>
+        <Flex grow={1}>
+          <Flex className='welcomev2--sidebar' column shrink={0} style={{justifyContent: 'space-between'}}>
+            { this.renderFilters() }
+            { this.renderQuickUpload() }
+          </Flex>
+          <Flex className='welcomev2--main'>
+            { this.renderPuzzles() }
+          </Flex>
+        </Flex>
+      </Flex>
     );
   }
 }

@@ -1,0 +1,4 @@
+{
+  "presets": ["env", "stage-3"],
+  "plugins": ["transform-es2015-destructuring", "transform-object-rest-spread"]
+}

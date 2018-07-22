@@ -1,6 +1,5 @@
 import { db, SERVER_TIME } from './firebase';
-import EventEmitter
-  from 'events';
+import EventEmitter from 'events';
 
 // a wrapper class that models Game
 
@@ -10,21 +9,21 @@ export default class Game extends EventEmitter {
     super();
     this.path = path;
     this.ref = db.ref(path);
+    this.events = this.ref.child('events');
   }
 
   attach() {
-    console.log('attached to game', this.path);
-    this.ref.on('child_added', snapshot => {
+    this.events.on('child_added', snapshot => {
       this.emit('event', snapshot.val());
     });
   }
 
   detach() {
-    this.ref.off('child_added');
+    this.events.off('child_added');
   }
 
   updateCell(r, c, id, color, pencil, value) {
-    this.ref.push({
+    this.events.push({
       timestamp: SERVER_TIME,
       type: 'updateCell',
       params: {
@@ -38,7 +37,7 @@ export default class Game extends EventEmitter {
   }
 
   updateCursor(r, c, id, color) {
-    this.ref.push({
+    this.events.push({
       timestamp: SERVER_TIME,
       type: 'updateCursor',
       params: {
@@ -51,7 +50,7 @@ export default class Game extends EventEmitter {
   }
 
   updateClock(action) {
-    this.ref.push({
+    this.events.push({
       timestamp: SERVER_TIME,
       type: 'updateClock',
       params: {
@@ -62,7 +61,7 @@ export default class Game extends EventEmitter {
   }
 
   check(scope) {
-    this.ref.push({
+    this.events.push({
       timestamp: SERVER_TIME,
       type: 'check',
       params: {
@@ -72,7 +71,7 @@ export default class Game extends EventEmitter {
   }
 
   reveal(scope) {
-    this.ref.push({
+    this.events.push({
       timestamp: SERVER_TIME,
       type: 'reveal',
       params: {
@@ -82,7 +81,7 @@ export default class Game extends EventEmitter {
   }
 
   reset(scope) {
-    this.ref.push({
+    this.events.push({
       timestamp: SERVER_TIME,
       type: 'reset',
       params: {
@@ -92,7 +91,7 @@ export default class Game extends EventEmitter {
   }
 
   chat(username, id, text) {
-    this.ref.push({
+    this.events.push({
       timestamp: SERVER_TIME,
       type: 'chat',
       params: {
@@ -103,15 +102,47 @@ export default class Game extends EventEmitter {
     });
   }
 
-  initialize(game) {
+  initialize(rawGame) {
+    const {
+      info = {},
+      grid = [ [ {} ] ],
+      solution = [ [ '' ] ],
+      circles = [],
+      chat = { messages: [] },
+      cursor = {},
+      clues = {},
+      clock = {
+        lastUpdated: 0,
+        totalTime: 0,
+        paused: true,
+      },
+      solved = false,
+      pid,
+    } = rawGame;
+
+    // TODO validation
+
+    const game = {
+      info,
+      grid,
+      solution,
+      circles,
+      chat,
+      cursor,
+      clues,
+      clock,
+      solved,
+    };
     const version = CURRENT_VERSION;
-    this.ref.push({
+    this.events.push({
       timestamp: SERVER_TIME,
       type: 'create',
       params: {
+        pid,
         version,
         game,
       },
     });
+    this.ref.child('pid').set(pid);
   }
 }

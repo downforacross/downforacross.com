@@ -40,12 +40,13 @@ export default class Upload extends Component {
   }
 
   renderButton() {
+    const { v2 } = this.props;
     const { info } = this.state.puzzle || {};
     const { type } = info || {};
     if (type) {
       return (
         <button
-          className='upload--button'
+          className={'upload--button '+ (v2 ? 'v2' : '')}
           onClick={this.create}
         >
           {`Add to the ${type} repository`}
@@ -55,6 +56,7 @@ export default class Upload extends Component {
   }
 
   render() {
+    const { v2 } = this.props;
     return (
       <div className='upload'>
         <div className='upload--main'>
@@ -65,6 +67,7 @@ export default class Upload extends Component {
             <FileUploader
               success={this.success}
               fail={this.fail}
+              v2={v2}
             />
             {this.renderSuccessMessage()}
             {this.renderButton()}

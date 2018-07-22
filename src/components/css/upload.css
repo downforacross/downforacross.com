@@ -38,7 +38,6 @@
 }
 
 .upload--success--title {
-  /* font-family: Courier; */
   font-weight: bold;
 }
 
@@ -46,4 +45,8 @@
   margin-top: 12px;
   font-size: 15px;
   background-color: #FAFAFA;
+}
+
+.upload--button.v2 {
+  background-color: #FFFFFF;
 }

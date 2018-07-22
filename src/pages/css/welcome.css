@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   background-color: #FAFAFA;
-  font-family: "Avenir Next", "Avenir", "sans serif";
   color: #333;
 }
 
@@ -60,7 +59,6 @@
   position: relative;
   overflow: hidden;
   display: block;
-  font-family: sans-serif;
   border: 2px solid silver;
   border-radius: 3px;
   margin-top: 18px;

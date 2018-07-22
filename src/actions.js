@@ -51,6 +51,19 @@ const actions = {
     });
   },
 
+  getNextGid: (cbk) => {
+    db.ref('counters').transaction(counters => {
+      let gid = ((counters && counters.gid) || 0);
+      return {
+        ...counters,
+        gid: gid + 1,
+      };
+    }, (error, committed, snapshot) => {
+      const gid = snapshot.child('gid').val();
+      cbk(gid);
+    });
+  },
+
   createGame: ({ name, pid, gid }, cbk) => {
     db.ref('counters').transaction(counters => {
       let nextGid = ((counters && counters.gid) || 0);

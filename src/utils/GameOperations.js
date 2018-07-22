@@ -1,4 +1,4 @@
-const MAX_CLOCK_INCREMENT = 1000 * 60;
+import { MAX_CLOCK_INCREMENT } from '../timing';
 
 function getScopeGrid(grid, scope) {
   const scopeGrid = grid.map(row => row.map(cell => false));
@@ -27,6 +27,7 @@ function isSolved(game) {
 
 const reducers = {
   create: (game, params) => {
+    const pid = params.pid;
     const {
       info = {},
       grid = [ [ {} ] ],
@@ -44,6 +45,7 @@ const reducers = {
     } = params.game;
 
     return {
+      pid,
       info,
       grid,
       solution,
@@ -179,15 +181,9 @@ const reducers = {
 
   updateClock: (game, params) => {
     const action = params.action;
-    const { timestamp } = params;
     let { clock } = game;
     if (action === 'pause') {
-      clock = {
-        ...clock,
-        totalTime: clock.totalTime + timestamp - clock.lastUpdated,
-        lastUpdated: 0,
-        paused: true,
-      };
+      // no-op, will be handled by tick
     } else if (action === 'start') {
       // no-op, will be handled by tick
     } else if (action === 'reset') {
@@ -269,6 +265,7 @@ export const reduce = (game, action) => {
   game = checkSolved(game);
   const isPause = (
     (type === 'updateClock' && params && params.action === 'pause') ||
+    (type === 'create') ||
     game.solved
   );
   game = tick(game, timestamp, isPause);
