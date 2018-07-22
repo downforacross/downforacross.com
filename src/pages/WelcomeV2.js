@@ -161,7 +161,7 @@ export default class WelcomeV2 extends Component {
         <div className='welcomev2--nav'>
           <Nav v2/>
         </div>
-        <Flex grow={1}>
+        <Flex grow={1} basis={1}>
           <Flex className='welcomev2--sidebar' column shrink={0} style={{justifyContent: 'space-between'}}>
             { this.renderFilters() }
             { this.renderQuickUpload() }
