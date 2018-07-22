@@ -12,6 +12,7 @@
     "react-dropzone": "^4.0.0",
     "react-flexview": "^3.0.1",
     "react-fontawesome": "^1.6.1",
+    "react-timestamp": "^4.4.0",
     "react-helmet": "^5.2.0",
     "react-router-dom": "^4.1.2",
     "superagent": "^3.5.2"

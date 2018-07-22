@@ -1,10 +1,36 @@
-.replays--table td, .replays--table th {
-  padding: 0 5px 5px 5px;
+.replays {
+  font-family: "Avenir Next", "Avenir", "sans serif";
+  height: 100%;
+  width: 100%;
+  min-width: min-content;
+  position: relative;
 }
 
-.replays .header {
-  padding: 20px;
-  border-bottom: 1px solid #E2E2E2;
+.replays .grid-controls .grid--content .blurable {
+  opacity: 1;
+}
+
+
+.replays .grid-controls .grid--cover {
+  display: none;
+}
+
+.replays .scrub--container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 10px;
+  margin-bottom: 17.8px;
+}
+
+.replays .scrub {
+  cursor: pointer;
+  user-select: none;
+}
+
+.replays .scrub.active {
+  color: #4d4dff;
+  font-weight: bold;
 }
 
 .replays .header--title {
@@ -20,3 +46,9 @@
   font-weight: 500;
 }
 
+
+.replays .main-table{
+  table-layout: auto;
+  width: 100%;
+
+}
