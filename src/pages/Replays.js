@@ -137,24 +137,26 @@ export default class Replays extends Component {
     return (
       <Flex column className='replay'>
         <Nav mobile={false}/>
-        <div style={{
-          paddingLeft: 30,
-          paddingTop: 20,
-          paddingBottom: 20,
-        }}>
-        {this.renderHeader()}
-      </div>
-      <div style={{
-        padding: 10,
-        border: '1px solid #E2E2E2',
-      }}>
-      <div style={{
-        // flex: 1,
-      }}>
-      {this.renderList()}
-    </div>
-  </div>
-
+        <div
+          style={{
+            paddingLeft: 30,
+            paddingTop: 20,
+            paddingBottom: 20,
+          }}>
+          {this.renderHeader()}
+        </div>
+        <div
+          style={{
+            padding: 10,
+            border: '1px solid #E2E2E2',
+          }}>
+          <div
+            style={{
+              // flex: 1,
+            }}>
+            {this.renderList()}
+          </div>
+        </div>
       </Flex>
     );
   }
