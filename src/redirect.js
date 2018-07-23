@@ -1,8 +1,9 @@
 let redirected = false;
-export default (url, message = 'Redirecting...') => {
+
+export default (url, message) => {
   if (redirected) return;
   redirected = true;
-  alert(message);
+  if (message) alert(message);
   window.location.replace(url);
 };
 
