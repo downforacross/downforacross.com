@@ -112,10 +112,14 @@ export default class WelcomeV2 extends Component {
     }
   }
 
+  updateSearch = _.debounce((search) => {
+    this.setState({search});
+  }, 250)
+
   handleSearchInput = (e) => {
     const search = e.target.value;
-    this.setState({search});
-  };
+    this.updateSearch(search);
+  }
 
   renderFilters() {
     const { sizeFilter, statusFilter } = this.state;
