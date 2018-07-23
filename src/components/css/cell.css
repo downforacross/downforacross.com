@@ -39,6 +39,10 @@
 }
 
 .cell.highlighted {
+  background-color: rgba(110, 198, 255, 0.3);
+}
+
+div:focus .cell.highlighted {
   background-color: #6ec6ff;
 }
 
