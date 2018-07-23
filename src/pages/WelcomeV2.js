@@ -26,6 +26,7 @@ export default class WelcomeV2 extends Component {
         'Mini': true,
         'Standard': true,
       },
+      search: '',
     };
     this.loading = false;
   }
@@ -79,13 +80,14 @@ export default class WelcomeV2 extends Component {
   }
 
   renderPuzzles() {
-    const { userHistory, puzzles, sizeFilter, statusFilter } = this.state;
+    const { userHistory, puzzles, sizeFilter, statusFilter, search } = this.state;
     return (
       <PuzzleList
         puzzles={puzzles}
         userHistory={userHistory}
         sizeFilter={sizeFilter}
         statusFilter={statusFilter}
+        search={search}
         onNextPage={this.nextPage}
       />
     );
@@ -109,6 +111,11 @@ export default class WelcomeV2 extends Component {
       });
     }
   }
+
+  handleSearchInput = (e) => {
+    const search = e.target.value;
+    this.setState({search});
+  };
 
   renderFilters() {
     const { sizeFilter, statusFilter } = this.state;
@@ -144,6 +151,15 @@ export default class WelcomeV2 extends Component {
     );
   }
 
+  renderSearch() {
+    const { search } = this.state;
+    return (
+      <Flex>
+        <input placeholder='Search' onInput={this.handleSearchInput} val={search}/>
+      </Flex>
+    );
+  }
+
   renderQuickUpload() {
     return (
       <Flex column className="quickplay">
@@ -164,6 +180,7 @@ export default class WelcomeV2 extends Component {
         <Flex grow={1} basis={1}>
           <Flex className='welcomev2--sidebar' column shrink={0} style={{justifyContent: 'space-between'}}>
             { this.renderFilters() }
+            { this.renderSearch() }
             { this.renderQuickUpload() }
           </Flex>
           <Flex className='welcomev2--main'>

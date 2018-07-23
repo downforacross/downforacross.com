@@ -38,7 +38,7 @@ export default class PuzzleList extends PureComponent {
   }
 
   accept = entry => {
-    const { sizeFilter, statusFilter } = this.props;
+    const { sizeFilter, statusFilter, search } = this.props;
     const size = {
       'Daily Puzzle': 'Standard',
       'Mini Puzzle': 'Mini',
@@ -48,7 +48,18 @@ export default class PuzzleList extends PureComponent {
       'solved': 'Complete',
       'started': 'In progress',
     }[this.puzzleStatuses[entry.pid]];
-    return statusFilter[status] && sizeFilter[size];
+
+    const matches = (str, expr) => {
+      if (expr.toLowerCase() === expr) {
+        // case insensitive
+        return str.toLowerCase().indexOf(expr) !== -1;
+      } else {
+        // case sensitive
+        return str.indexOf(expr) !== -1;
+      }
+    };
+    const searchMatches = matches(entry.info.author, search) || matches(entry.info.title, search);
+    return statusFilter[status] && sizeFilter[size] && searchMatches;
   };
 
   get puzzles() {
