@@ -20,6 +20,7 @@ export default class User extends EventEmitter {
       console.log('Your id is', this.id);
     });
   }
+
   logIn() {
     const provider = new firebase.auth.FacebookAuthProvider();
     this.auth.signInWithPopup(provider);
@@ -51,25 +52,27 @@ export default class User extends EventEmitter {
     return getLocalId();
   }
 
-  listUserHistory(cbk) {
-    this.ref.child('history').on('value', snapshot => {
-      cbk(snapshot.val());
-    });
+  listUserHistory() {
+    return this.ref.child('history').once('value')
+      .then(snapshot =>
+        snapshot.val()
+      );
   }
 
 
   // write methods
-  joinGame(gid, game) {
+  joinGame(gid, {pid, solved = false, v2 = false}) {
     const time = getTime();
     // safe to call this multiple times
-    this.ref
+    return this.ref
       .child('history')
       .child(gid)
       .set({
-        pid: game.pid,
-        solved: game.solved || false,
+        pid,
+        solved,
         // progress: game.progress,
         time,
+        v2,
       });
   }
 

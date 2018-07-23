@@ -42,7 +42,7 @@ export default class WelcomeV2 extends Component {
 
   handleAuth = () => {
     if (this.user.fb) {
-      this.user.listUserHistory(userHistory => {
+      this.user.listUserHistory().then(userHistory => {
         this.setState({ userHistory });
       });
     }

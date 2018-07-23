@@ -86,7 +86,11 @@ export default class GameV2 extends Component {
     if (game.solved) {
       this.user.markSolved(this.state.gid);
     } else {
-      this.user.joinGame(this.state.gid, game);
+      this.user.joinGame(this.state.gid, {
+        pid: game.pid,
+        solved: false,
+        v2: true,
+      });
     }
   });
 
