@@ -41,7 +41,6 @@ function getChatters(game) {
     });
     return Array.from(new Set(chatters));
   } else if (game.events) {
-    console.log(game.events);
     let chatters = [];
     _.values(game.events).forEach(event => {
       if (event.type === 'chat') {
@@ -65,7 +64,7 @@ export default class Replays extends Component {
   }
 
   get pid() {
-    return this.props.match.params.pid;
+    return parseInt(this.props.match.params.pid);
   }
 
   componentDidMount() {
@@ -107,7 +106,6 @@ export default class Replays extends Component {
     if (!this.state.puzInfo || this.state.error) {
       return null;
     }
-    console.log(this.state.puzInfo);
     return (
       <div className='header'>
         <div className='header--title'>
@@ -152,7 +150,7 @@ export default class Replays extends Component {
     const players = this.state.soloPlayers;
     const list2Items = players.map(({id, solved, time}) =>
       <tr>
-        <td><a href={'/replay/solo/' + id + '/' + this.pid}>Play by player #{id}</a></td>
+        <td><a href={`/replay/solo/${id}/${this.pid}`}>Play by player #{id}</a></td>
         <td>Not implemented</td>
         <td><TimeFormatter millis={time}/></td>
         <td>{solved ? 'done' : 'not done'}</td>

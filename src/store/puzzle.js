@@ -32,8 +32,11 @@ export default class Puzzle extends EventEmitter {
   // return list of games that were played off this puzzle
   // includes beta games, but not solo games
   listGames(cbk) {
-    const query = db.ref('game').orderByChild('pid').equalTo(parseInt(this.pid, 10)).limitToLast(10);
-    query.once('value', snapshot => {
+    console.log('list games', this.pid);
+    db.ref('game')
+      .orderByChild('pid')
+      .equalTo(this.pid)
+      .once('value').then(snapshot => {
       const games = snapshot.val();
       cbk(games);
     });
