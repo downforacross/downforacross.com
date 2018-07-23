@@ -52,3 +52,7 @@
   width: 100%;
 
 }
+
+.replays .main-table td {
+ border-bottom: 1px solid #E2E2E2;
+}
