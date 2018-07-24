@@ -27,11 +27,11 @@
 }
 
 .frozen .cell.selected {
-  background-color: #1FFF3D;
+  background-color: #1FFF3D !important;
 }
 
 .frozen .cell.highlighted {
-  background-color: #1FFF3D;
+  background-color: #1FFF3D !important;
 }
 
 .cell.referenced {
