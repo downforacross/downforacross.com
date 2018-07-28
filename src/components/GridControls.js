@@ -121,9 +121,8 @@ export default class GridControls extends Component {
   }
 
   validLetter(letter) {
-    if (letter === '-' || letter === '/') {
-      return true; // special theme puzzles have these sometimes;
-    }
+    const VALID_SYMBOLS = '!@#$%^&*()-+=`~/?\\'; // special theme puzzles have these sometimes;
+    if (VALID_SYMBOLS.indexOf(letter) !== -1) return true;
     return letter.match(/^[A-Z0-9]$/);
   }
 
