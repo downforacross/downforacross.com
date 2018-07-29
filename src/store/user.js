@@ -81,7 +81,10 @@ export default class User extends EventEmitter {
       .child('history')
       .child(gid)
       .transaction(item => {
-      if (!item) return null;
+        if (!item) {
+          // don't mark un-joined games as solved
+          return null;
+        }
       return {
         ...item,
         solved: true,

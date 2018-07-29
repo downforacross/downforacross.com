@@ -55,6 +55,7 @@ export default class GameV2 extends Component {
         redirect(`/game/${this.state.gid}`, 'Redirecting to old site...');
       }
       this.historyWrapper.addEvent(event);
+      this.handleChange();
       this.handleUpdate();
     });
     this.gameModel.attach();
@@ -88,16 +89,18 @@ export default class GameV2 extends Component {
     leading: true,
   });
 
-  handleChange = _.debounce(() => {
+  handleChange = _.debounce(({isEdit = false} = {}) => {
     const game = this.historyWrapper.getSnapshot();
     if (game.solved) {
       this.user.markSolved(this.state.gid);
     } else {
-      this.user.joinGame(this.state.gid, {
-        pid: game.pid,
-        solved: false,
-        v2: true,
-      });
+      if (isEdit) {
+        this.user.joinGame(this.state.gid, {
+          pid: game.pid,
+          solved: false,
+          v2: true,
+        });
+      }
     }
   });
 

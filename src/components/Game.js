@@ -49,7 +49,7 @@ export default class GameV2 extends Component {
     const { id, myColor } = this.props;
     const { pencilMode } = this.state;
     this.gameModel.updateCell(r, c, id, myColor, pencilMode, value);
-    this.props.onChange();
+    this.props.onChange({isEdit: true});
   }
 
   handleUpdateCursor = ({r, c}) => {
