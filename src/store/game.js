@@ -1,6 +1,8 @@
 import { db, SERVER_TIME } from './firebase';
 import EventEmitter from 'events';
 
+import Puzzle from './puzzle';
+
 // a wrapper class that models Game
 
 const CURRENT_VERSION = 1.0;
@@ -10,16 +12,42 @@ export default class Game extends EventEmitter {
     this.path = path;
     this.ref = db.ref(path);
     this.events = this.ref.child('events');
+    this.createEvent = null;
   }
 
   attach() {
     this.events.on('child_added', snapshot => {
-      this.emit('event', snapshot.val());
+      const event = snapshot.val();
+      if (event.type === 'create') {
+        this.createEvent = event;
+        this.subscribeToPuzzle();
+        this.emit('createEvent', event);
+      } else {
+        this.emit('event', event);
+      }
     });
   }
 
   detach() {
     this.events.off('child_added');
+  }
+
+  subscribeToPuzzle() {
+    if (!this.createEvent) return;
+    const { pid } = this.createEvent.params;
+    const puzzle = new Puzzle(`/puzzle/${pid}`, pid);
+    puzzle.on('ready', () => {
+      const event = {
+        ...this.createEvent,
+        params: {
+          ...this.createEvent.params,
+          game: puzzle.toGame(),
+        },
+      };
+      this.createEvent = event;
+      this.emit('createEvent', event);
+    });
+    puzzle.attach();
   }
 
   updateCell(r, c, id, color, pencil, value) {

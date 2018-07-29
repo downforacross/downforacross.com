@@ -76,7 +76,7 @@ export default class Play extends Component {
       const game = new GameModel(`/game/${gid}`);
       const puzzle = new PuzzleModel(`/puzzle/${this.pid}`);
       puzzle.attach();
-      puzzle.on('ready', () => {
+      puzzle.once('ready', () => {
         const rawGame = puzzle.toGame();
         game.initialize(rawGame);
         const redirect = url => {

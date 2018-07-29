@@ -232,7 +232,7 @@ export default class Replay extends Component {
       position: 0,
     };
     this.followCursor = -1;
-    this.historyWrapper = new HistoryWrapper([]);
+    this.historyWrapper = null;
   }
 
   handleSetPosition = position => {
@@ -246,6 +246,7 @@ export default class Replay extends Component {
   get game() {
     // compute the game state corresponding to current playback time
     const { position } = this.state;
+    if (!this.historyWrapper) return null;
     return this.historyWrapper.getSnapshotAt(position);
   }
 

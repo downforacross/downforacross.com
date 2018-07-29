@@ -43,7 +43,14 @@ export default class GameV2 extends Component {
     if (this.gameModel) this.gameModel.detach();
     this.gameModel = new GameModel(`/game/${this.state.gid}`);
     this.historyWrapper = new HistoryWrapper();
-    this.gameModel.addListener('event', event => {
+    this.gameModel.on('createEvent', event => {
+      if (!event.params || event.params.type) {
+        redirect(`/game/${this.state.gid}`, 'Redirecting to old site...');
+      }
+      this.historyWrapper.setCreateEvent(event);
+      this.handleUpdate();
+    });
+    this.gameModel.on('event', event => {
       if (!event.params || event.params.type) {
         redirect(`/game/${this.state.gid}`, 'Redirecting to old site...');
       }

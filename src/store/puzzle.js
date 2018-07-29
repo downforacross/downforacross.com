@@ -12,8 +12,7 @@ export default class Puzzle extends EventEmitter {
   }
 
   attach() {
-    console.log('attach', this.ref);
-    this.ref.once('value', snapshot => {
+    this.ref.on('value', snapshot => {
       this.data = snapshot.val();
       this.emit('ready');
     });

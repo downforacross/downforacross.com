@@ -5,15 +5,25 @@ const MEMO_RATE = 10;
 
 export default class HistoryWrapper {
   constructor(history = []) {
-    this.history = history;
+    this.history = [];
     this.memo = [];
-    this.initializeMemo();
+    this.createEvent = null;
+    history.forEach(event => {
+      if (event.type === 'create') {
+        this.setCreateEvent(event);
+      } else {
+        this.addEvent(event);
+      }
+    });
   }
 
   initializeMemo() {
+    if (!this.createEvent) {
+      return;
+    }
     this.memo = [{
       index: -1,
-      game: null,
+      game: reduce(null, this.createEvent),
     }];
 
     _.range(this.history.length).forEach(index => {
@@ -62,8 +72,12 @@ export default class HistoryWrapper {
       {timestamp},
       event => event.timestamp
     );
-    if (index <= 0) return null;
     return this.getSnapshotAtIndex(index - 1);
+  }
+
+  setCreateEvent(event) {
+    this.createEvent = event;
+    this.initializeMemo();
   }
 
   addEvent(event) {
@@ -74,6 +88,9 @@ export default class HistoryWrapper {
       event => event.timestamp,
     );
     this.history.splice(insertPoint, 0, event);
+    if (!this.createEvent) {
+      return;
+    }
     while (_.last(this.memo).index >= insertPoint) {
       this.memo.pop();
     }
