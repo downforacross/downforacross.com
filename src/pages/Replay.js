@@ -2,6 +2,7 @@ import './css/replay.css';
 
 import React, { Component } from 'react';
 import Flex from 'react-flexview';
+import { Helmet } from 'react-helmet';
 import _ from 'lodash';
 
 import HistoryWrapper from '../utils/historyWrapper';
@@ -591,10 +592,20 @@ export default class Replay extends Component {
     );
   }
 
+  getPuzzleTitle() {
+    if (!this.historyWrapper) return '';
+    const game = this.historyWrapper.getSnapshot();
+    if (!game || !game.info) return '';
+    return game.info.title;
+  }
+
   render() {
     return (
       <Flex column className='replay'>
-        <Nav mobile={false} />
+        <Nav mobile={false} v2/>
+        <Helmet>
+          <title>{`Replay ${this.gid}: ${this.getPuzzleTitle()}`}</title>
+        </Helmet>
         <div style={{
           paddingLeft: 30,
           paddingTop: 20,

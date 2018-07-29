@@ -1,13 +1,15 @@
 import './css/replays.css';
 
+import { Helmet } from 'react-helmet';
 import _ from 'lodash';
 import React, {Component} from 'react';
 import Flex from 'react-flexview';
+
 import Nav from '../components/Nav';
 import { PuzzleModel } from '../store';
 import { db } from '../actions';
-
-const Timestamp = require('react-timestamp');
+import Timestamp from 'react-timestamp';
+// const Timestamp = require('react-timestamp');
 
 
 const TimeFormatter = ({millis}) => (
@@ -61,6 +63,7 @@ export default class Replays extends Component {
       soloPlayers: [],
       puzInfo: {},
     };
+    this.puzzle = null;
   }
 
   get pid() {
@@ -169,11 +172,19 @@ export default class Replays extends Component {
     );
   }
 
+  getPuzzleTitle() {
+    if (!this.puzzle || !this.puzzle.info) return '';
+    return this.puzzle.info.title;
+  }
 
   render() {
+    console.log(this.pid, this.getPuzzleTitle());
     return (
       <Flex column className='replays'>
-        <Nav mobile={false}/>
+        <Nav mobile={false} v2/>
+        <Helmet>
+          <title>{`Replays ${this.pid}: ${this.getPuzzleTitle()}`}</title>
+        </Helmet>
         <div
           style={{
             paddingLeft: 30,
