@@ -5,6 +5,7 @@ import _ from 'lodash';
 import React, {Component} from 'react';
 import Flex from 'react-flexview';
 
+import HistoryWrapper from '../utils/historyWrapper';
 import Nav from '../components/Nav';
 import { PuzzleModel } from '../store';
 import { db } from '../actions';
@@ -70,6 +71,35 @@ export default class Replays extends Component {
     return parseInt(this.props.match.params.pid);
   }
 
+  processGame(rawGame, gid) {
+    if (rawGame.events) {
+      const events = _.values(rawGame.events);
+      const historyWrapper = new HistoryWrapper(events);
+      const game = historyWrapper.getSnapshot();
+      const startTime = historyWrapper.createEvent.timestamp / 1000;
+      console.log(startTime);
+      return ({
+        gid,
+        v2: true,
+        startTime,
+        solved: game.solved,
+        time: game.clock.totalTime,
+        chatters: getChatters(rawGame),
+        active: !game.clock.paused,
+      });
+    } else {
+      return ({
+        gid,
+        v2: false,
+        solved: rawGame.solved,
+        startTime: rawGame.startTime / 1000,
+        time: getTime(rawGame),
+        chatters: getChatters(rawGame),
+        active: true,
+      });
+    }
+  }
+
   componentDidMount() {
     this.puzzle = new PuzzleModel(`/puzzle/${this.pid}`, this.pid);
     this.puzzle.attach();
@@ -82,13 +112,7 @@ export default class Replays extends Component {
     // go through the list of all the games
     // callback: if this is its pid, append its gid to the games list
     this.puzzle.listGames(rawGames => {
-      const games = _.map(_.keys(rawGames), gid => ({
-        gid,
-        solved: rawGames[gid].solved,
-        startTime: rawGames[gid].startTime / 1000,
-        time: getTime(rawGames[gid]),
-        chatters: getChatters(rawGames[gid]),
-      }));
+      const games = _.map(_.keys(rawGames), gid => this.processGame(rawGames[gid], gid));
       this.setState({
         games,
       });
@@ -122,8 +146,8 @@ export default class Replays extends Component {
     );
   }
 
-  linkToGame(gid){
-    return <a href={'/game/' + gid}>still playing</a>
+  linkToGame(gid, {v2, active, solved}) {
+    return <a href={(v2 ? '/beta' : '') + '/game/' + gid}>{solved ? 'done' : active ? 'still playing' : 'paused'}</a>
   }
 
   renderList() {
@@ -136,20 +160,16 @@ export default class Replays extends Component {
     }
 
     const games = this.state.games;
-    let list1Items = [];
-
-    Object.values(games).forEach(({gid, solved, startTime, time, chatters}) => {
-      list1Items.push(
+    const list1Items = _.values(games).map(({ gid, solved, startTime, time, chatters, v2, active }) => (
         <tr key={gid}>
-          <td><a href={'/replay/' + gid}>Game #{gid}</a></td>
+          <td><a href={'/replay/' + gid}>Game #{gid}{v2 ? '(beta)' : ''}</a></td>
           <td><Timestamp time={startTime}/></td>
           <td><TimeFormatter millis={time}/></td>
-          <td>{solved ? 'done' : this.linkToGame(gid)}</td>
+          <td>{this.linkToGame(gid, {v2, active, solved})}</td>
           <td>{chatters.join(", ")}</td>
         </tr>
-      );
-    });
-
+      )
+    );
     const players = this.state.soloPlayers;
     const list2Items = players.map(({id, solved, time}) =>
       <tr>
