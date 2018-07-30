@@ -29,9 +29,10 @@ export default class Play extends Component {
   get pid() {
     return parseInt(this.props.match.params.pid);
   }
+
   componentDidUpdate() {
     const games = this.games;
-    const shouldAutocreate = (games && games.length === 0 && !this.state.creating);
+    const shouldAutocreate = (!games || (games && games.length === 0 && !this.state.creating));
     if (shouldAutocreate) {
       this.create();
       return;
@@ -94,18 +95,18 @@ export default class Play extends Component {
   }
 
   renderMain() {
-    if (!this.games) {
-      return (
-        <div style={{padding: 20}}>
-          Loading...
-        </div>
-      );
-    }
-
     if (this.state.creating) {
       return (
         <div style={{padding: 20}}>
           Creating game...
+        </div>
+      );
+    }
+
+    if (!this.games) {
+      return (
+        <div style={{padding: 20}}>
+          Loading...
         </div>
       );
     }
