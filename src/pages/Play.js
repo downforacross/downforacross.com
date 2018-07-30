@@ -32,7 +32,7 @@ export default class Play extends Component {
 
   componentDidUpdate() {
     const games = this.games;
-    const shouldAutocreate = (!games || (games && games.length === 0 && !this.state.creating));
+    const shouldAutocreate = (!this.state.creating && (!games || (games && games.length === 0)));
     if (shouldAutocreate) {
       this.create();
       return;
