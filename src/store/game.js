@@ -162,14 +162,17 @@ export default class Game extends EventEmitter {
       solved,
     };
     const version = CURRENT_VERSION;
-    this.events.push({
-      timestamp: SERVER_TIME,
-      type: 'create',
-      params: {
-        pid,
-        version,
-        game,
-      },
+    // nuke existing events
+    this.ref.events.set({}).then(() => {
+      this.events.push({
+        timestamp: SERVER_TIME,
+        type: 'create',
+        params: {
+          pid,
+          version,
+          game,
+        },
+      });
     });
     this.ref.child('pid').set(pid);
   }
