@@ -104,6 +104,7 @@ export default class GameV2 extends Component {
     const {
       id,
       myColor,
+      mobile,
     } = this.props;
     if (!this.game) {
       return (
@@ -137,7 +138,7 @@ export default class GameV2 extends Component {
         updateGrid={this.handleUpdateGrid}
         updateCursor={this.handleUpdateCursor}
         onPressEnter={this.handlePressEnter}
-        mobile={false}
+        mobile={mobile}
       />
     );
   }

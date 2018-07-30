@@ -11,6 +11,7 @@ import HistoryWrapper from '../utils/historyWrapper';
 import Game from '../components/Game';
 import ChatV2 from '../components/ChatV2';
 import redirect from '../redirect';
+import { isMobile } from '../jsUtils';
 
 export default class GameV2 extends Component {
   constructor(props) {
@@ -63,6 +64,9 @@ export default class GameV2 extends Component {
 
   componentDidMount() {
     this.initializeGame();
+    this.setState({
+      mobile: isMobile(),
+    });
   }
 
   componentWillUnmount() {
@@ -108,10 +112,11 @@ export default class GameV2 extends Component {
   // Render Methods
 
   renderGame() {
-    if (!this.gameModel) {
+    if (!this.gameModel || !this.gameModel.attached) {
       return;
     }
 
+    const { mobile } = this.state;
     const { id, color } = this.user;
     return (
       <Game
@@ -122,13 +127,14 @@ export default class GameV2 extends Component {
         gameModel={this.gameModel}
         onPressEnter={this.handlePressEnter}
         onChange={this.handleChange}
+        mobile={mobile}
 
       />
     );
   }
 
   renderChat() {
-    if (!this.gameModel) {
+    if (!this.gameModel || !this.gameModel.attached) {
       return;
     }
 
@@ -146,7 +152,9 @@ export default class GameV2 extends Component {
   }
 
   getPuzzleTitle() {
-    if (!this.historyWrapper) return '';
+    if (!this.gameModel || !this.gameModel.attached) {
+      return;
+    }
     const game = this.historyWrapper.getSnapshot();
     if (!game || !game.info) return '';
     return game.info.title;

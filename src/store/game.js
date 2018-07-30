@@ -13,12 +13,14 @@ export default class Game extends EventEmitter {
     this.ref = db.ref(path);
     this.events = this.ref.child('events');
     this.createEvent = null;
+    this.attached = false;
   }
 
   attach() {
     this.events.on('child_added', snapshot => {
       const event = snapshot.val();
       if (event.type === 'create') {
+        this.attached = true;
         this.createEvent = event;
         this.subscribeToPuzzle();
         this.emit('createEvent', event);
