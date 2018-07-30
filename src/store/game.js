@@ -165,7 +165,7 @@ export default class Game extends EventEmitter {
     };
     const version = CURRENT_VERSION;
     // nuke existing events
-    this.ref.events.set({}).then(() => {
+    this.events.set({}).then(() => {
       this.events.push({
         timestamp: SERVER_TIME,
         type: 'create',
