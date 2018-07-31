@@ -95,16 +95,15 @@ export default class GameV2 extends Component {
 
   handleChange = _.debounce(({isEdit = false} = {}) => {
     const game = this.historyWrapper.getSnapshot();
+    if (isEdit) {
+      this.user.joinGame(this.state.gid, {
+        pid: game.pid,
+        solved: false,
+        v2: true,
+      });
+    }
     if (game.solved) {
       this.user.markSolved(this.state.gid);
-    } else {
-      if (isEdit) {
-        this.user.joinGame(this.state.gid, {
-          pid: game.pid,
-          solved: false,
-          v2: true,
-        });
-      }
     }
   });
 
