@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "bluebird": "^3.5.1",
     "events": "^2.0.0",
     "firebase": "^4.2.0",
     "lodash": "^4.17.5",
@@ -12,9 +13,9 @@
     "react-dropzone": "^4.0.0",
     "react-flexview": "^3.0.1",
     "react-fontawesome": "^1.6.1",
-    "react-timestamp": "^4.4.0",
     "react-helmet": "^5.2.0",
     "react-router-dom": "^4.1.2",
+    "react-timestamp": "^4.4.0",
     "superagent": "^3.5.2"
   },
   "devDependencies": {

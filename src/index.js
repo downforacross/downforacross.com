@@ -23,6 +23,7 @@ ReactDOM.render(
       <Route exact path="/replay/solo/:uid/:pid" component={ReplaySolo}/>
       <Route exact path="/beta/replay/:gid" component={ReplayV2}/>
       <Route exact path="/replays/:pid" component={Replays}/>
+      <Route exact path="/replays" component={Replays}/>
       <Route exact path="/game/solo/:pid" component={Solo}/>
       <Route exact path="/beta" component={WelcomeV2}/>
       <Route exact path="/beta/game/:gid" component={GameV2}/>

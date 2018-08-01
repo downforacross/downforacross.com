@@ -31,14 +31,12 @@ export default class Puzzle extends EventEmitter {
 
   // return list of games that were played off this puzzle
   // includes beta games, but not solo games
-  listGames(cbk) {
-    console.log('list games', this.pid);
-    db.ref('game')
+  listGames(limit = 100) {
+    return db.ref('/game')
       .orderByChild('pid')
       .equalTo(this.pid)
-      .once('value').then(snapshot => {
-      const games = snapshot.val();
-      cbk(games);
-    });
+      .limitToLast(limit)
+      .once('value')
+      .then(snapshot => snapshot.val());
   }
 }
