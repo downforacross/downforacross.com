@@ -158,16 +158,19 @@ export default class WelcomeV2 extends Component {
 
   renderSearch() {
     const { search } = this.state;
+    const style = {
+      fontSize: 16,
+    };
     return (
-      <Flex>
-        <input placeholder='Search' onInput={this.handleSearchInput} val={search}/>
+      <Flex style={{padding: 20}}>
+        <input placeholder='Search' onInput={this.handleSearchInput} val={search} style={style}/>
       </Flex>
     );
   }
 
   renderQuickUpload() {
     return (
-      <Flex column className="quickplay">
+      <Flex className="quickplay">
         <Upload v2/>
       </Flex>
     );
