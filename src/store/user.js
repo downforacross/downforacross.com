@@ -61,7 +61,7 @@ export default class User extends EventEmitter {
 
 
   // write methods
-  joinGame(gid, {pid, solved = false, v2 = false}) {
+  joinGame(gid, {pid = -1, solved = false, v2 = false}) {
     const time = getTime();
     // safe to call this multiple times
     return this.ref
