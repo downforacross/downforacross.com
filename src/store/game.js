@@ -37,6 +37,7 @@ export default class Game extends EventEmitter {
   subscribeToPuzzle() {
     if (!this.createEvent) return;
     const { pid } = this.createEvent.params;
+    if (!pid) return;
     const puzzle = new Puzzle(`/puzzle/${pid}`, pid);
     puzzle.on('ready', () => {
       const event = {
