@@ -9,6 +9,7 @@ import Flex from 'react-flexview';
 import { GameModel, getUser } from '../store';
 import HistoryWrapper from '../utils/historyWrapper';
 import Game from '../components/Game';
+import MobilePanel from '../components/MobilePanel';
 import ChatV2 from '../components/ChatV2';
 import redirect from '../redirect';
 import { isMobile } from '../jsUtils';
@@ -18,6 +19,8 @@ export default class GameV2 extends Component {
     super();
     this.state = {
       gid: undefined,
+      mobile: isMobile(),
+      mode: 'game',
     };
     this.initializeUser();
   }
@@ -63,9 +66,6 @@ export default class GameV2 extends Component {
 
   componentDidMount() {
     this.initializeGame();
-    this.setState({
-      mobile: isMobile(),
-    });
   }
 
   componentWillUnmount() {
@@ -76,6 +76,14 @@ export default class GameV2 extends Component {
     if (prevState.gid !== this.state.gid) {
       this.initializeGame();
     }
+  }
+
+  get showingGame() {
+    return !this.state.mobile || this.state.mode === 'game';
+  }
+
+  get showingChat() {
+    return !this.state.mobile || this.state.mode === 'chat';
   }
 
   handlePressEnter = (el) => {
@@ -126,7 +134,6 @@ export default class GameV2 extends Component {
         onPressEnter={this.handlePressEnter}
         onChange={this.handleChange}
         mobile={mobile}
-
       />
     );
   }
@@ -169,13 +176,14 @@ export default class GameV2 extends Component {
         <Helmet>
           <title>{this.getPuzzleTitle()}</title>
         </Helmet>
-        <Nav v2/>
+        <Nav v2 hidden={this.state.mobile}/>
+        <MobilePanel/>
         <Flex className='room--main' grow={1}>
           <Flex column shrink={0}>
-            { this.renderGame() }
+            { this.showingGame && this.renderGame() }
           </Flex>
           <Flex grow={1}>
-            { this.renderChat() }
+            { this.showingChat && this.renderChat() }
           </Flex>
         </Flex>
       </Flex>

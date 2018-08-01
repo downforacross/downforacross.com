@@ -8,6 +8,7 @@ import Nav from '../components/Nav';
 import Upload from '../components/Upload';
 import { getUser, PuzzlelistModel } from '../store';
 import PuzzleList from '../components/PuzzleList';
+import { isMobile } from '../jsUtils';
 
 export default class WelcomeV2 extends Component {
 
