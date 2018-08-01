@@ -543,9 +543,7 @@ export default class Game extends Component {
 
     return (
       <div className={'room ' + (mobile ? 'mobile' : '')}>
-        <Nav
-          mobile={mobile}
-        />
+        <Nav hidden={mobile} />
         <Helmet>
           <title>{this.getPuzzleTitle()}</title>
         </Helmet>

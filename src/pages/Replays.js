@@ -237,7 +237,7 @@ export default class Replays extends Component {
     const { limit } = this.state;
     return (
       <Flex column className='replays'>
-        <Nav mobile={false} v2/>
+        <Nav v2/>
         <Helmet>
           <title>{this.pid ? `Replays ${this.pid}: ${this.getPuzzleTitle()}` : `Last ${limit} games`}</title>
         </Helmet>

@@ -602,7 +602,7 @@ export default class Replay extends Component {
   render() {
     return (
       <Flex column className='replay'>
-        <Nav mobile={false} v2/>
+        <Nav v2/>
         <Helmet>
           <title>{`Replay ${this.gid}: ${this.getPuzzleTitle()}`}</title>
         </Helmet>
