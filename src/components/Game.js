@@ -92,6 +92,8 @@ export default class GameV2 extends Component {
     });
   }
 
+  handlePressPeriod = this.handleTogglePencil
+
   handlePressEnter = () => {
     this.props.onPressEnter(this);
   }
@@ -138,6 +140,7 @@ export default class GameV2 extends Component {
         updateGrid={this.handleUpdateGrid}
         updateCursor={this.handleUpdateCursor}
         onPressEnter={this.handlePressEnter}
+        onPressPeriod={this.handlePressPeriod}
         mobile={mobile}
       />
     );

@@ -142,11 +142,15 @@ export default class GridControls extends Component {
       ' ': 'space',
     };
 
-    const { onPressEnter } = this.props;
+    const { onPressEnter, onPressPeriod } = this.props;
     if (ev.key in actionKeys) {
       ev.preventDefault();
       ev.stopPropagation();
       this.handleAction(actionKeys[ev.key], ev.shiftKey);
+    } else if (ev.key === '.') {
+      ev.preventDefault();
+      ev.stopPropagation();
+      onPressPeriod && onPressPeriod();
     } else if (ev.key === 'Enter') {
       ev.preventDefault();
       ev.stopPropagation();

@@ -231,6 +231,7 @@ export default class Player extends Component {
     const {
       mobile,
       onPressEnter,
+      onPressPeriod,
       size,
       grid,
       clues,
@@ -256,6 +257,7 @@ export default class Player extends Component {
           <MobileGridControls
             ref='mobileGridControls'
             onPressEnter={onPressEnter}
+            onPressPeriod={onPressPeriod}
             selected={selected}
             direction={direction}
             onSetDirection={this._setDirection}
@@ -298,6 +300,7 @@ export default class Player extends Component {
         <GridControls
           ref='gridControls'
           onPressEnter={onPressEnter}
+          onPressPeriod={onPressPeriod}
           selected={selected}
           direction={direction}
           onSetDirection={this._setDirection}
