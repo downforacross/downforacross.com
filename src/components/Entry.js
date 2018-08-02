@@ -47,16 +47,16 @@ export default class Entry extends Component {
         <Flex className='entryv2' column
           onClick={this.handleClick}
           onMouseLeave={this.handleMouseLeave}>
-          <Flex style={{ justifyContent: 'space-between' }}>
-            <Flex className='entryv2--top--left'>
+          <Flex className='entryv2--main'>
+            { title }
+          </Flex>
+          <Flex style={{ justifyContent: 'space-between', padding: 10, paddingTop: 0 }}>
+            <Flex className='entryv2--top--left' title={`${author} | ${this.size}`}>
               {author} | {this.size}
             </Flex>
             <Flex className='entryv2--top--right'>
               <FontAwesome name={faName} style={{color: '#6AA9F4'}}/>
             </Flex>
-          </Flex>
-          <Flex className='entryv2--main'>
-            { title }
           </Flex>
         </Flex>
       </Link>

@@ -166,12 +166,12 @@ export default class WelcomeV2 extends Component {
       padding: 5,
       width: 342,
       borderRadius: 3,
-      border: '1px solid silver',
+      border: '2px solid silver',
     };
     return (
       <Flex style={{
         padding: 25,
-        borderBottom: '1px solid gray',
+        borderBottom: '2px solid #6AA9F4',
       }} shrink={0}>
         <input placeholder='Search' onInput={this.handleSearchInput} val={search} style={style}/>
       </Flex>

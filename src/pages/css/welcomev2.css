@@ -10,20 +10,6 @@
   flex-direction: row;
 }
 
-.welcomev2--browse--filter {
-  flex: 1;
-  padding: 15px 15px 15px 15px;
-  border-right: 1px solid #9B9B9B;
-  display: flex;
-  flex-direction: column;
-  display: none;
-}
-
-.welcomev2--browse--filter--header {
-  font-size: 20px;
-  margin-left: 3px;
-}
-
 .welcomev2--browse--puzzlelist--wrapper {
   flex: 6;
   height: 100%;
@@ -42,7 +28,7 @@
 }
 
 .welcomev2--main {
-  border-left: 1px solid gray;
+  border-left: 2px solid #6AA9F4;
   /* padding: 10px; */
   overflow: hidden;
 }
@@ -104,7 +90,7 @@
 
 .quickplay {
   padding-top: 10px;
-  border-top: 1px solid gray;
+  border-top: 2px solid #6AA9F4;
 }
 
 .entryv2 {
@@ -121,16 +107,16 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 10px;
+  padding: 15px;
   font-size: 15px;
   width: 330px;
 }
 
 .entryv2--top--left {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 400;
   color: rgba(0, 0, 0, 0.7);
-  margin-left: 10px;
+  /* margin-left: 10px; */
   margin-right: 10px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -139,6 +125,7 @@
 .entryv2--main {
   overflow: hidden;
   text-overflow: ellipsis;
+  padding-bottom: 0px;
   padding: 10px;
 }
 
