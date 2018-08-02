@@ -132,13 +132,16 @@ export default class WelcomeV2 extends Component {
     const groupStyle = {
       padding: 20,
     };
+    const inputStyle = {
+      margin: 'unset',
+    };
 
     const checkboxGroup = (header, items, handleChange) => (
       <Flex column style={groupStyle} className='checkbox-group'>
         <span style={headerStyle}>{header}</span>
         {_.keys(items).map((name, i) => (
           <label key={i} onMouseDown={e => {e.preventDefault();}}>
-            <input type="checkbox" checked={items[name]} onChange={e => {
+            <input type="checkbox" style={inputStyle} checked={items[name]} onChange={e => {
               handleChange(header, name, e.target.checked);
             }}/>
             <div className='checkmark'/>
@@ -160,10 +163,13 @@ export default class WelcomeV2 extends Component {
     const { search } = this.state;
     const style = {
       fontSize: 16,
-      paddingLeft: 5,
+      padding: 5,
+      width: 342,
+      borderRadius: 3,
+      border: '1px solid silver',
     };
     return (
-      <Flex style={{padding: 20}}>
+      <Flex style={{padding: 20}} shrink={0}>
         <input placeholder='Search' onInput={this.handleSearchInput} val={search} style={style}/>
       </Flex>
     );
@@ -189,10 +195,10 @@ export default class WelcomeV2 extends Component {
         <Flex grow={1} basis={1}>
           <Flex className='welcomev2--sidebar' column shrink={0} style={{justifyContent: 'space-between'}}>
             { this.renderFilters() }
-            { this.renderSearch() }
             { this.renderQuickUpload() }
           </Flex>
-          <Flex className='welcomev2--main'>
+          <Flex className='welcomev2--main' column>
+            { this.renderSearch() }
             { this.renderPuzzles() }
           </Flex>
         </Flex>

@@ -8,7 +8,6 @@
 .file-uploader--wrapper {
   background-color: #FAFAFA;
   outline: 2px dashed #AAA;
-  outline-offset: -10px;
   width: 100%;
   flex: 1;
 }

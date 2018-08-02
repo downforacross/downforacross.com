@@ -61,9 +61,6 @@ export default class Upload extends Component {
       <div className='upload'>
         <div className='upload--main'>
           <div className='upload--main--upload'>
-            <div className='upload--main--upload--title'>
-              Import
-            </div>
             <FileUploader
               success={this.success}
               fail={this.fail}
