@@ -164,7 +164,7 @@ export default class WelcomeV2 extends Component {
     const style = {
       fontSize: 16,
       padding: 5,
-      width: 342,
+      width: 735,
       borderRadius: 3,
       border: '2px solid silver',
     };

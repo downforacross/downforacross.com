@@ -116,12 +116,11 @@ export default class PuzzleList extends PureComponent {
           flexWrap: 'wrap',
           // justifyContent: 'space-around',
           overflowY: 'auto',
-          marginLeft: '25',
         }}
         onScroll={this.handleScroll}>
         { this.puzzles
           .map((entry, i) =>
-            <div key={i} style={{marginLeft: 25}}>
+            <div key={i} style={{ marginLeft: 25, marginTop: 25}}>
               <Entry { ...entry }
                 status={this.puzzleStatuses[entry.pid]}
                 lastUpdateTime={lastUpdateTime}
