@@ -160,6 +160,7 @@ export default class WelcomeV2 extends Component {
     const { search } = this.state;
     const style = {
       fontSize: 16,
+      paddingLeft: 5,
     };
     return (
       <Flex style={{padding: 20}}>
