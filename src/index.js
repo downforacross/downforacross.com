@@ -12,11 +12,13 @@ import {
 
 import './style.css';
 
+/*
 ReactDOM.render(
   <h4 style={{marginLeft: 10}}>down for a maintenance</h4>,
   document.getElementById('root')
 );
-/*ReactDOM.render(
+*/
+ReactDOM.render(
   <Router>
     <div className='router-wrapper'>
       <Route exact path="/" component={Welcome}/>
@@ -39,4 +41,3 @@ ReactDOM.render(
   </Router>,
   document.getElementById('root')
 );
-*/
