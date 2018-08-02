@@ -156,7 +156,7 @@ export default class Replays extends Component {
     this.updatePuzzles();
   }
 
-  componentDidUpdate(prevState) {
+  componentDidUpdate(prevProps, prevState) {
     if (this.state.limit !== prevState.limit) {
       this.updatePuzzles();
     }
