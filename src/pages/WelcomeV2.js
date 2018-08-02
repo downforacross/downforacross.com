@@ -169,7 +169,10 @@ export default class WelcomeV2 extends Component {
       border: '1px solid silver',
     };
     return (
-      <Flex style={{padding: 20}} shrink={0}>
+      <Flex style={{
+        padding: 25,
+        borderBottom: '1px solid gray',
+      }} shrink={0}>
         <input placeholder='Search' onInput={this.handleSearchInput} val={search} style={style}/>
       </Flex>
     );
@@ -197,7 +200,7 @@ export default class WelcomeV2 extends Component {
             { this.renderFilters() }
             { this.renderQuickUpload() }
           </Flex>
-          <Flex className='welcomev2--main' column>
+          <Flex className='welcomev2--main' column grow={1}>
             { this.renderSearch() }
             { this.renderPuzzles() }
           </Flex>
