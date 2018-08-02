@@ -5,7 +5,7 @@ const NEWS_ITEMS = [
   {
     date: '08/01/2016',
     message: <span>We've got a whole bunch of new features. Check them out <a href='/beta'>here</a>!</span>,
-    hidden: false,
+    hidden: true,
   },
   {
     date: '12/25/2017',
