@@ -180,7 +180,7 @@ export default class WelcomeV2 extends Component {
 
   renderQuickUpload() {
     return (
-      <Flex className="quickplay">
+      <Flex className="quickplay" style={{width: 200}}>
         <Upload v2/>
       </Flex>
     );

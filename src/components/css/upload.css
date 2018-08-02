@@ -35,6 +35,7 @@
 }
 
 .upload--success {
+  margin-top: 10px;
   font-size: 12px;
   text-align: center;
 }
