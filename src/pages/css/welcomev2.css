@@ -99,7 +99,6 @@
   /* margin-right: 25px; */
   margin-top: 25px;
   position: relative;
-  overflow: hidden;
   display: block;
   border: 1px solid silver;
   border-radius: 3px;
@@ -117,16 +116,22 @@
   font-weight: 400;
   color: rgba(0, 0, 0, 0.7);
   /* margin-left: 10px; */
-  margin-right: 10px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /* margin-right: 10px; */
+  padding: 10px;
+  padding-bottom: 0;
+  justify-content: space-between;
 }
 
 .entryv2--main {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding-bottom: 0px;
+  padding-top: 0px;
   padding: 10px;
+}
+
+.entryv2--icon {
+  position: relative;
+  z-index: 1;
+  bottom: 15px;
+  left: 15px;
 }
 
 .entryv2.started {
@@ -226,4 +231,9 @@
 input::placeholder {
   color: silver;
   font-weight: 200;
+}
+
+p {
+  margin-top: unset;
+  margin-bottom: unset;
 }

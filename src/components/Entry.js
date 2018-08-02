@@ -47,15 +47,17 @@ export default class Entry extends Component {
         <Flex className='entryv2' column
           onClick={this.handleClick}
           onMouseLeave={this.handleMouseLeave}>
-          <Flex className='entryv2--main'>
-            { title }
-          </Flex>
-          <Flex style={{ justifyContent: 'space-between', padding: 10, paddingTop: 0 }}>
-            <Flex className='entryv2--top--left' title={`${author} | ${this.size}`}>
-              {author} | {this.size}
+          <Flex className='entryv2--top--left'>
+            <Flex grow={0}>
+              <p style={{textOverflow: 'ellipsis',whiteSpace: 'nowrap', overflow: 'hidden'}} title={`${author} | ${this.size}`}>{author} | {this.size}</p>
             </Flex>
-            <Flex className='entryv2--top--right'>
+            <Flex className='entryv2--icon'>
               <FontAwesome name={faName} style={{color: '#6AA9F4'}}/>
+            </Flex>
+          </Flex>
+          <Flex className='entryv2--main'>
+            <Flex grow={0}>
+              <p style={{textOverflow: 'ellipsis',whiteSpace: 'nowrap', overflow: 'hidden'}} title={title}>{title}</p>
             </Flex>
           </Flex>
         </Flex>
