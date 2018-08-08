@@ -1,5 +1,5 @@
 import './css/editor.css';
-
+import Flex from 'react-flexview';
 import React, { Component } from 'react';
 import Grid from './Grid';
 import GridControls from './GridControls';
@@ -246,7 +246,7 @@ export default class Editor extends Component {
   render() {
     const { selected, direction } = this.state;
     return (
-      <div className='editor--main--wrapper'>
+      <Flex className='editor--main--wrapper'>
         <GridControls
           ref='gridControls'
           ignore='input'
@@ -260,69 +260,70 @@ export default class Editor extends Component {
           onPressPeriod={this.handlePressPeriod}
           updateGrid={this.handleUpdateGrid}
           grid={this.props.grid}
-          clues={this.props.clues}
-        >
+          clues={this.props.clues} >
 
-        <div className='editor--main'>
-          {this.renderLeft()}
-          <div className='editor--right'>
-            <div className='editor--main--clues'>
-              {
-                // Clues component
-                ['across', 'down'].map((dir, i) => (
-                  <div key={i} className='editor--main--clues--list'>
-                    <div className='editor--main--clues--list--title'>
-                      {dir.toUpperCase()}
-                    </div>
+          <Flex className='editor--main'>
+            {this.renderLeft()}
+            <Flex className='editor--right' column>
+              <Flex className='editor--main--clues' grow={1}>
+                {
+                  // Clues component
+                  ['across', 'down'].map((dir, i) => (
+                    <Flex key={i} className='editor--main--clues--list'>
+                      <Flex className='editor--main--clues--list--title'>
+                        {dir.toUpperCase()}
+                      </Flex>
 
-                    <div
-                      className={'editor--main--clues--list--scroll ' + dir}
-                      ref={'clues--list--'+dir}>
-                      {
-                        this.props.clues[dir].map((clue, i) => clue !== undefined && (
-                          <div key={i}
-                            className={
-                              (this.isClueSelected(dir, i)
-                                ? 'selected '
-                                : (this.isClueHalfSelected(dir, i)
-                                  ? 'half-selected '
-                                  : ' ')
-                              )
-                                + 'editor--main--clues--list--scroll--clue'
-                            }
-                            ref={
-                              (this.isClueSelected(dir, i) ||
-                                this.isClueHalfSelected(dir, i))
-                                ? this.scrollToClue.bind(this, dir, i)
-                                : null
-                            }
-                            onClick={() => {this.handleSelectClue(dir, i)}}>
-                            <div className='editor--main--clues--list--scroll--clue--number'>
-                              {i}
-                            </div>
-                            <div className='editor--main--clues--list--scroll--clue--text'>
-                              {clue}
-                            </div>
-                          </div>
-                        ))
-                      }
-                    </div>
-                  </div>
-                ))
-              }
-            </div>
+                      <Flex column grow={1}>
+                        <Flex column grow={1} basis={1}
+                          className={'editor--main--clues--list--scroll ' + dir}
+                          ref={'clues--list--'+dir}>
+                          {
+                            this.props.clues[dir].map((clue, i) => clue !== undefined && (
+                              <Flex shrink={0} key={i}
+                                className={
+                                  (this.isClueSelected(dir, i)
+                                    ? 'selected '
+                                    : (this.isClueHalfSelected(dir, i)
+                                      ? 'half-selected '
+                                      : ' ')
+                                  )
+                                    + 'editor--main--clues--list--scroll--clue'
+                                }
+                                ref={
+                                  (this.isClueSelected(dir, i) ||
+                                    this.isClueHalfSelected(dir, i))
+                                    ? this.scrollToClue.bind(this, dir, i)
+                                    : null
+                                }
+                                onClick={() => {this.handleSelectClue(dir, i)}}>
+                                <Flex className='editor--main--clues--list--scroll--clue--number'>
+                                  {i}
+                                </Flex>
+                                <Flex className='editor--main--clues--list--scroll--clue--text'>
+                                  {clue}
+                                </Flex>
+                              </Flex>
+                            ))
+                          }
+                        </Flex>
+                      </Flex>
+                    </Flex>
+                  ))
+                }
+              </Flex>
 
-            <div className='editor--right--hints'>
-              <Hints
-                grid={this.props.grid}
-                num={this.selectedClueNumber}
-                direction={direction}
-              />
-            </div>
-          </div>
-        </div>
-      </GridControls>
-    </div>
+              {null && <Flex className='editor--right--hints'>
+                <Hints
+                  grid={this.props.grid}
+                  num={this.selectedClueNumber}
+                  direction={direction}
+                />
+              </Flex>}
+            </Flex>
+          </Flex>
+        </GridControls>
+      </Flex>
     );
   }
 }
