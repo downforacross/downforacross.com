@@ -78,11 +78,11 @@ export default class Composition extends Component {
     leading: true,
   });
 
-  handleChange = _.debounce(({isEdit = false, isPublished = false} = {}) => {
+  handleChange = _.debounce(({isEdit = true, isPublished = false} = {}) => {
     const composition = this.historyWrapper.getSnapshot();
     if (isEdit) {
       const { title, author } = composition.info;
-      this.user.joinGame(this.cid, {
+      this.user.joinComposition(this.cid, {
         title,
         author,
         published: isPublished,
@@ -131,6 +131,7 @@ export default class Composition extends Component {
         clues={clues}
         onUpdateGrid={this.handleUpdateGrid}
         onUpdateClue={this.handleUpdateClue}
+        onChange={this.handleChange}
         onFlipColor={this.handleFlipColor}
         myColor={this.color}
       />
@@ -164,6 +165,9 @@ export default class Composition extends Component {
   }
 
   render() {
+    const style = {
+      padding: 20,
+    };
     return (
       <Flex className='composition' column grow={1}
         style={{
@@ -175,7 +179,7 @@ export default class Composition extends Component {
           <title>{this.title}</title>
         </Helmet>
         <Nav v2 hidden={this.state.mobile}/>
-        <Flex className='room--main' grow={1}>
+        <Flex style={style} grow={1}>
           <Flex column shrink={0}>
             { this.renderEditor() }
           </Flex>

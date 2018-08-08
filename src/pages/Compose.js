@@ -46,6 +46,7 @@ export default class Compose extends Component {
   handleAuth = () => {
     if (this.user.fb) {
       this.user.listCompositions().then(compositions => {
+        console.log('list compositions', compositions);
         this.setState({ compositions });
       });
     }
@@ -67,7 +68,7 @@ export default class Compose extends Component {
   }
 
   linkToComposition(cid, { title, author }) {
-    return <a href={`/composition/${cid}/`}>{title} by {author}</a>
+    return <span><a href={`/composition/${cid}/`}>{cid}</a>: {title} by {author}</span>
   }
 
   render() {
@@ -92,12 +93,14 @@ export default class Compose extends Component {
             paddingBottom: 20,
           }}>
           <h3>Compositions</h3>
-          <div>
+          <Flex column>
             {_.keys(compositions).length === 0 && 'Nothing found'}
             {_.keys(compositions).map(cid => (
-              this.linkToComposition(cid, compositions[cid])
+              <div>
+                {this.linkToComposition(cid, compositions[cid])}
+              </div>
             ))}
-          </div>
+          </Flex>
           <div>
             <button onClick={this.handleCreateClick}>New</button>
           </div>

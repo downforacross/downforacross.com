@@ -86,7 +86,6 @@ export default class Editor extends Component {
   }
 
   handleSetSelected = (selected) => {
-    console.log('handle set selected');
     this.setState({
       selected,
     });
@@ -104,13 +103,20 @@ export default class Editor extends Component {
 
   handleUpdateGrid = (r, c, value) => {
     this.props.onUpdateGrid(r, c, value);
+    this.props.onChange();
   }
 
   handlePressPeriod = () => {
     const { selected } = this.state;
     this.props.onFlipColor(selected.r, selected.c);
+    this.props.onChange();
   }
 
+  handleChangeClue = value => {
+    const { selected, direction } = this.state;
+    this.props.onUpdateClue(this.selectedParent.r, this.selectedParent.c, direction, value)
+    this.props.onChange();
+  }
 
   /* Helper functions used when rendering */
 
@@ -211,7 +217,7 @@ export default class Editor extends Component {
             <EditableSpan
               ref='clue'
               value={this.props.clues[direction][this.selectedClueNumber] || ''}
-              onChange={value => this.props.onUpdateClue(this.selectedParent.r, this.selectedParent.c, direction, value)}
+              onChange={this.handleChangeClue}
               onBlur={() => this.focusGrid()}
               disabled={!this.selectedIsWhite}
             />

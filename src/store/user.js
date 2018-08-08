@@ -60,7 +60,7 @@ export default class User extends EventEmitter {
   }
 
   listCompositions() {
-    return this.ref.child('composiions').once('value')
+    return this.ref.child('compositions').once('value')
       .then(snapshot =>
         snapshot.val()
       );
@@ -68,8 +68,8 @@ export default class User extends EventEmitter {
 
   // write methods
   joinComposition(cid, { title, author, published = false }) {
-    const time = getTime();
     // safe to call this multiple times
+    console.log('join', cid);
     return this.ref
       .child('compositions')
       .child(cid)
