@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default ({text}) => {
+export default ({text=''}) => {
   const parts = [];
   while (text.length > 0) {
     const s = text.indexOf('<i>');
