@@ -112,6 +112,21 @@ export default class Composition extends EventEmitter {
     });
   }
 
+  import(filename, contents) {
+    const {info, grid, circles, clues} = contents;
+    this.events.push({
+      timestamp: SERVER_TIME,
+      type: 'updateComposition',
+      params: {
+        filename, // unused, for now
+        info,
+        grid,
+        circles,
+        clues,
+      },
+    });
+  }
+
   initialize(rawComposition = {}) {
     const {
       info = {

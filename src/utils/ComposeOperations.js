@@ -22,6 +22,24 @@ const reducers = {
     };
   },
 
+  updateComposition: (composition, params) => {
+    // equivalent to create, but there can only be one create
+    const {
+      info = {},
+      grid = [ [ {} ] ],
+      circles = [],
+      clues = [],
+    } = params;
+
+    return {
+      ...composition,
+      info,
+      grid,
+      circles,
+      clues,
+    };
+  },
+
   updateCursor: (composition, params) => {
     let {
       cursors = [],

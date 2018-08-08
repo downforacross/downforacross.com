@@ -82,6 +82,38 @@ export const makeClues = (cluesBySquare, grid) => {
   return result;
 };
 
+export const convertCluesForComposition = (clues, gridObject) => {
+  const alignedClues = gridObject.alignClues(clues);
+  const result = [];
+  ['across', 'down'].forEach(dir => {
+    alignedClues[dir].forEach((value, i) => {
+      if (value) {
+        const cell = gridObject.getCellByNumber(i);
+        if (!cell) {
+          debugger;
+          return;
+        }
+        const { r, c } = cell;
+        result.push({
+          dir,
+          r,
+          c,
+          value,
+        });
+      }
+    });
+  });
+  return result;
+};
+
+export const convertGridForComposition = (grid) => {
+  return grid.map(row => row.map(value => ({
+    value,
+  })));
+};
+
+
+
 
 export const makeGame = (gid, name, puzzle) => {
   const grid = makeGrid(puzzle.grid);

@@ -7,13 +7,14 @@ import { Helmet } from 'react-helmet';
 import Flex from 'react-flexview';
 
 import Editor from '../components/Editor';
+import FileUploader from '../components/FileUploader';
 import { CompositionModel, getUser } from '../store';
 import ComposeHistoryWrapper from '../utils/ComposeHistoryWrapper';
 import Game from '../components/Game';
 import ChatV2 from '../components/ChatV2';
 import redirect from '../redirect';
 import { isMobile } from '../jsUtils';
-import { makeGridFromComposition, makeClues } from '../gameUtils';
+import { makeGridFromComposition, makeClues, convertCluesForComposition, convertGridForComposition } from '../gameUtils';
 
 export default class Composition extends Component {
   constructor(props) {
@@ -103,7 +104,22 @@ export default class Composition extends Component {
     this.compositionModel.updateClue(r, c, dir, value);
   }
 
+  handleUploadSuccess = (puzzle, filename = '') => {
+    const { info, grid, circles, clues } = puzzle;
+    const convertedGrid = convertGridForComposition(grid);
+    const gridObject = makeGridFromComposition(convertedGrid);
+    const convertedClues = convertCluesForComposition(clues, gridObject);
+    this.compositionModel.import(filename, {
+      info,
+      grid: convertedGrid,
+      circles,
+      clues: convertedClues,
+    });
+    this.handleChange();
+  }
 
+  handleUploadFail = () => {
+  }
 
   // ================
   // Render Methods
@@ -185,6 +201,13 @@ export default class Composition extends Component {
           </Flex>
           <Flex grow={1}>
             { this.showingChat && this.renderChat() }
+          </Flex>
+          <Flex column>
+            <FileUploader
+              success={this.handleUploadSuccess}
+              fail={this.handleUploadFail}
+              v2
+            />
           </Flex>
         </Flex>
       </Flex>

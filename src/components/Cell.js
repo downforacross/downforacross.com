@@ -95,7 +95,7 @@ export default class Cell extends Component {
       );
     }
 
-    let val = value;
+    let val = value || '';
 
     let l = Math.max(1, val.length);
     return (
