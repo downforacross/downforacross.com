@@ -8,6 +8,7 @@ import GridObject from '../utils/Grid';
 
 import Grid from './Grid';
 import Clues from './Clues';
+import Clue from './ClueText';
 import GridControls from './GridControls';
 import MobileGridControls from './MobileGridControls';
 
@@ -214,10 +215,10 @@ export default class Player extends Component {
     return (
       <div className='player--mobile--clue-bar'>
         <div className='player--mobile--clue-bar--number'>
-          { this.getClueBarAbbreviation() }
+          <Clue text={this.getClueBarText()}/>
         </div>
         <div className='player--mobile--clue-bar--text'>
-          { this.getClueBarText() }
+          <Clue text={this.getClueBarText()}/>
         </div>
         <i className='player--mobile--typing-hint fa fa-6 fa-keyboard-o'>
         </i>
@@ -317,7 +318,7 @@ export default class Player extends Component {
                   { this.getClueBarAbbreviation() }
                 </div>
                 <div className='player--main--clue-bar--text'>
-                  { this.getClueBarText() }
+                  <Clue text={this.getClueBarText()}/>
                 </div>
               </div>
 
