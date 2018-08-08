@@ -60,6 +60,10 @@ export default class GridControls extends Component {
     this.setSelected(firstEmptyCell || clueRoot);
   }
 
+  isSelectable(r, c) {
+    return this.props.editMode || this.grid.isWhite(r, c);
+  }
+
   // factored out handleAction for mobileGridControls
   handleAction(action, shiftKey) {
     const moveSelectedBy = (dr, dc) => () => {
@@ -72,8 +76,7 @@ export default class GridControls extends Component {
       step();
       safe_while(() => (
         this.grid.isInBounds(r, c)
-        && !this.grid.isWhite(r, c)
-      ), step);
+        && !this.isSelectable(r, c)      ), step);
       if (this.grid.isInBounds(r, c)) {
         this.setSelected({ r, c });
       }

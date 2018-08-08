@@ -1,5 +1,6 @@
 import { makeGame, makeGrid } from './gameUtils';
 import firebase, { SERVER_TIME } from './store/firebase';
+import uuid from 'uuid';
 
 // for interfacing with firebase
 
@@ -62,6 +63,14 @@ const actions = {
       const gid = snapshot.child('gid').val();
       cbk(gid);
     });
+  },
+
+  getNextCid: (cbk) => {
+    const NUM_CIDS = 1000000;
+    for (let tries = 0; tries < 10; tries += 1) {
+      const cid = `${NUM_CIDS + Math.floor(Math.random() * NUM_CIDS)}`.substring(1);
+      cbk(cid);
+    }
   },
 
   createGame: ({ name, pid, gid }, cbk) => {

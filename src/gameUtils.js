@@ -52,6 +52,37 @@ export const makeGrid = (textGrid, fillWithSol) => {
   return grid;
 };
 
+export const makeGridFromComposition = (compositionGrid) => {
+  const newGridArray = compositionGrid.map(row =>
+    row.map(({value, pencil}) => ({
+      black: value === '.',
+      value: value === '.' ? '' : value,
+      pencil,
+      number: null
+    }))
+  );
+  const grid = new Grid(newGridArray);
+  grid.assignNumbers();
+  return grid;
+};
+
+
+export const makeClues = (cluesBySquare, grid) => {
+  const result = {
+    across: [],
+    down: [],
+  };
+  console.log(grid, cluesBySquare);
+  cluesBySquare.forEach(({r, c, dir, value}) => {
+    const num = grid[r][c].number;
+    if (num) {
+      result[dir][num] = value;
+    }
+  });
+  return result;
+};
+
+
 export const makeGame = (gid, name, puzzle) => {
   const grid = makeGrid(puzzle.grid);
   const clues = grid.alignClues(puzzle.clues);

@@ -52,11 +52,11 @@ export default class EditableSpan extends Component {
           <span className='text'>
             {this.props.value}
           </span>
-          <i
+          {!this.props.disabled && <i
             className='fa fa-pencil-square-o'
             onClick={this.startEditing.bind(this)}
             style={{ cursor: 'pointer' }}
-          />
+          />}
         </span>
       );
   }

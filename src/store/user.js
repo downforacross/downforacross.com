@@ -1,4 +1,4 @@
-import firebase, { db } from './firebase';
+import firebase, { db, SERVER_TIME } from './firebase';
 import getLocalId from '../localAuth';
 import EventEmitter from 'events';
 import { getTime } from '../actions';
@@ -59,8 +59,28 @@ export default class User extends EventEmitter {
       );
   }
 
+  listCompositions() {
+    return this.ref.child('composiions').once('value')
+      .then(snapshot =>
+        snapshot.val()
+      );
+  }
 
   // write methods
+  joinComposition(cid, { title, author, published = false }) {
+    const time = getTime();
+    // safe to call this multiple times
+    return this.ref
+      .child('compositions')
+      .child(cid)
+      .set({
+        title,
+        author,
+        published,
+        updateTime: SERVER_TIME,
+      });
+  }
+
   joinGame(gid, {pid = -1, solved = false, v2 = false}) {
     const time = getTime();
     // safe to call this multiple times
@@ -91,6 +111,7 @@ export default class User extends EventEmitter {
       }
     });
   }
+
   recordUsername(username) {
     this.ref
       .child('names')

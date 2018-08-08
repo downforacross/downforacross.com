@@ -17,13 +17,17 @@ export default class HistoryWrapper {
     });
   }
 
+  get reduce() {
+    return reduce;
+  }
+
   initializeMemo() {
     if (!this.createEvent) {
       return;
     }
     this.memo = [{
       index: -1,
-      game: reduce(null, this.createEvent),
+      game: this.reduce(null, this.createEvent),
     }];
 
     _.range(this.history.length).forEach(index => {
@@ -54,7 +58,7 @@ export default class HistoryWrapper {
     let game = memoItem.game;
     for (let i = memoItem.index + 1; i <= index; i += 1) {
       const event = this.history[i];
-      game = reduce(game, event);
+      game = this.reduce(game, event);
     }
     return game;
   }

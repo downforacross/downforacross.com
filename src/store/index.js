@@ -8,6 +8,7 @@ import room from './room';
 import user from './user';
 import puzzlelist from './puzzlelist';
 import puzzle from './puzzle';
+import composition from './composition';
 import { getUser as _getUser } from './user';
 import { getUser as _demoGetUser } from './demoUser';
 
@@ -18,3 +19,4 @@ export const PuzzlelistModel = offline ? demoPuzzlelist : puzzlelist;
 export const PuzzleModel = puzzle;
 
 export const getUser = offline ? _demoGetUser : _getUser;
+export const CompositionModel = composition;

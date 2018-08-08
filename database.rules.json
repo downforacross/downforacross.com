@@ -35,6 +35,14 @@
     "history": {
       ".read": true,
       ".write": true
+    },
+    "composition": {
+      ".read": true,
+      ".write": true
+    },
+    "myCompositions": {
+      ".read": true,
+      ".write": true
     }
   }
 }

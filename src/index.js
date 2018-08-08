@@ -1,5 +1,5 @@
 import {
-  Welcome, WelcomeV2, Game, GameV2, Compose, Solo, Account, Replay, ReplaySolo, Room, Replays, Play, ReplayV2
+  Welcome, WelcomeV2, Game, GameV2, Compose, Solo, Account, Replay, ReplaySolo, Room, Replays, Play, ReplayV2, Composition
 } from './pages/index';
 
 import ReactDOM from 'react-dom';
@@ -37,6 +37,7 @@ ReactDOM.render(
       <Route path="/puzzle/:pid" component={Solo}/>
       <Route path="/account" component={Account}/>
       <Route exact path="/compose" component={Compose}/>
+      <Route exact path="/composition/:cid" component={Composition}/>
     </div>
   </Router>,
   document.getElementById('root')

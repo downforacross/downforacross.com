@@ -85,9 +85,13 @@ export default class Cell extends Component {
     } = this.props;
     if (black) {
       return (
-        <div className='cell black'>
-          { this.renderFlipButton() }
-        </div>
+        <div className={'cell black ' + (selected ? 'selected' : '')}
+        style={selected
+            ? { borderColor: myColor }
+            : undefined
+        }
+        onClick={onClick}
+        />
       );
     }
 

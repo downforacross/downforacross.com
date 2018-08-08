@@ -21,9 +21,19 @@
   height: 100%;
 }
 
+.cell {
+  box-sizing: border-box;
+}
+
 .cell.black {
   background-color: black;
   color: black;
+}
+
+.cell.black.selected {
+  background-color: black;
+  color: black;
+  border: 3px solid #4aeba1;
 }
 
 .frozen .cell.highlighted {
