@@ -160,7 +160,7 @@ export default class Composition extends Component {
       return;
     }
     const info = this.composition.info;
-    return `${info.title} ${info.author}`;
+    return `Compose: ${info.title}`;
   }
 
   render() {

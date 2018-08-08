@@ -148,7 +148,7 @@ export default class Editor extends Component {
   }
 
   isClueSelected(direction, number) {
-    return direction === direction && number === this.selectedClueNumber;
+    return direction === this.state.direction && number === this.selectedClueNumber;
   }
 
   isClueHalfSelected(direction, number) {
