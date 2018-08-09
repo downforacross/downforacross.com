@@ -3,6 +3,7 @@ import demoGame from './demoGame';
 import demoRoom from './demoRoom';
 import demoUser from './demoUser';
 import demoPuzzlelist from './demoPuzzlelist';
+import demoComposition from './demoComposition';
 import game from './game';
 import room from './room';
 import user from './user';
@@ -19,4 +20,4 @@ export const PuzzlelistModel = offline ? demoPuzzlelist : puzzlelist;
 export const PuzzleModel = puzzle;
 
 export const getUser = offline ? _demoGetUser : _getUser;
-export const CompositionModel = composition;
+export const CompositionModel = offline ? demoComposition : composition;

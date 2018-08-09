@@ -5,7 +5,7 @@ import { db, SERVER_TIME } from './firebase';
 
 // a wrapper class that models Composition
 //
-const CURRENT_VERSION = 1.0;
+export const CURRENT_VERSION = 1.0;
 export default class Composition extends EventEmitter {
   constructor(path) {
     super();
