@@ -174,10 +174,19 @@ export const getReferencedClues = (str, clues) => {
       str = str.substr(b + 'down'.length);
     }
   }
-  if (str.indexOf('starred clues') !== -1) {
+
+  const referencesStars = (
+    str.indexOf('starred') !== -1 &&
+    ( str.indexOf('clue') !== -1 ||
+      str.indexOf('entry') !== -1 ||
+      str.indexOf('entries') !== -1
+    )
+  );
+  if (referencesStars) {
     ['down', 'across'].forEach(dir => {
       clues[dir].forEach((clueText, i) => {
-        if (clueText.startsWith('*')) {
+        const hasStar = clueText.trim().startsWith('*') || clueText.trim().endsWith('*');
+        if (hasStar) {
           res.push({
             ori: dir,
             num: i,
