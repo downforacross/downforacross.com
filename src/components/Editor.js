@@ -128,6 +128,7 @@ export default class Editor extends Component {
   get clueBarAbbreviation() {
     const { direction } = this.state;
     if (!this.selectedIsWhite) return;
+    if (!this.selectedClueNumber) return;
     return this.selectedClueNumber + direction.substr(0, 1).toUpperCase();
   }
 
@@ -219,7 +220,7 @@ export default class Editor extends Component {
               value={this.props.clues[direction][this.selectedClueNumber] || ''}
               onChange={this.handleChangeClue}
               onBlur={() => this.focusGrid()}
-              disabled={!this.selectedIsWhite}
+              disabled={!this.selectedIsWhite || !this.selectedClueNumber}
             />
           </div>
         </div>
@@ -313,7 +314,7 @@ export default class Editor extends Component {
                 }
               </Flex>
 
-              {null && <Flex className='editor--right--hints'>
+              {<Flex className='editor--right--hints'>
                 <Hints
                   grid={this.props.grid}
                   num={this.selectedClueNumber}
