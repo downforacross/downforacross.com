@@ -5,6 +5,11 @@ import emoji from 'node-emoji';
 import nameGenerator from '../nameGenerator';
 import ChatBar from './ChatBar';
 
+const isEmojis = str => {
+  const res = str.match(/[A-Za-z,.0-9!-]/g);
+  return !res;
+};
+
 export default class Chat extends Component {
   constructor() {
     super();
@@ -101,11 +106,13 @@ export default class Chat extends Component {
   }
 
   renderMessage(message) {
+    const { sender, text } = message;
+    const big = text.length <= 10 && isEmojis(text);
     return (
-      <div className='chatv2--message'>
+      <div className={'chatv2--message' + (big ? ' big' : '')}>
         <span className='chatv2--message--sender'>{message.sender}</span>
         {':'}
-        <span className='chatv2--message--text'>{emoji.emojify(message.text)}</span>
+        <span className={'chatv2--message--text'}>{emoji.emojify(message.text)}</span>
       </div>
     );
   }
