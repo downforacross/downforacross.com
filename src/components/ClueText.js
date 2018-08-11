@@ -27,8 +27,8 @@ export default ({text=''}) => {
   }
   return (
     <React.Fragment>
-      {parts.map(({text, ital}) => (
-        <span style={{fontStyle: ital ? 'italic' : 'inherit'}}>{text}</span>
+      {parts.map(({text, ital}, i) => (
+        <span key={i} style={{fontStyle: ital ? 'italic' : 'inherit'}}>{text}</span>
       ))}
     </React.Fragment>
   );
