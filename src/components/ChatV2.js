@@ -1,15 +1,15 @@
 import './css/chatv2.css';
 
 import React, { Component } from 'react';
-
+import emoji from 'node-emoji';
 import nameGenerator from '../nameGenerator';
+import ChatBar from './ChatBar';
 
 export default class Chat extends Component {
   constructor() {
     super();
     this.state = {
       username: nameGenerator(),
-      message: '',
     };
   }
 
@@ -24,31 +24,10 @@ export default class Chat extends Component {
     return this.game.chat.messages || [];
   }
 
-  sendChatMessage() {
-    const { username, message } = this.state;
+  handleSendMessage = (message) => {
+    const { username } = this.state;
     const { id } = this.props;
     this.props.gameModel.chat(username, id, message);
-  }
-
-  handleKeyPress = (ev) => {
-    const {
-      onPressEnter,
-    } = this.props;
-    const {
-      message,
-      username,
-    } = this.state;
-
-    if (ev.key === 'Enter') {
-      ev.stopPropagation();
-      ev.preventDefault();
-      if (username.length > 0 && message.length > 0) {
-        this.sendChatMessage();
-        this.setState({message: ''});
-      } else {
-        onPressEnter(this);
-      }
-    }
   }
 
   handleUsernameInputKeyPress = (ev) => {
@@ -57,10 +36,6 @@ export default class Chat extends Component {
       ev.preventDefault();
       this.focus();
     }
-  }
-
-  handleChange = (ev) => {
-    this.setState({message: ev.target.value});
   }
 
   handleChangeUsername = (ev) => {
@@ -118,15 +93,19 @@ export default class Chat extends Component {
       return null;
     }
     return (
-      <div className='chatv2--bar'>
-        <input
-          ref='input'
-          className='chatv2--bar--input'
-          placeholder='[Enter] to chat'
-          value={this.state.message}
-          onChange={this.handleChange}
-          onKeyPress={this.handleKeyPress}
-        />
+      <ChatBar ref={this.chatBar}
+        placeHolder='[Enter] to chat'
+        onSendMessage={this.handleSendMessage}
+        onUnfocus={this.onUnfocus}/>
+    );
+  }
+
+  renderMessage(message) {
+    return (
+      <div className='chatv2--message'>
+        <span className='chatv2--message--sender'>{message.sender}</span>
+        {':'}
+        <span className='chatv2--message--text'>{emoji.emojify(message.text)}</span>
       </div>
     );
   }
@@ -147,11 +126,7 @@ export default class Chat extends Component {
           className='chatv2--messages'>
           {
             this.messages.map((message, i) => (
-              <div key={i} className='chatv2--message'>
-                <span className='chatv2--message--sender'>{message.sender}</span>
-                {':'}
-                <span className='chatv2--message--text'>{message.text}</span>
-              </div>
+              <div key={i}>{this.renderMessage(message)}</div>
             ))
           }
         </div>

@@ -8,6 +8,7 @@
     "firebase": "^4.2.0",
     "lodash": "^4.17.5",
     "moment": "^2.20.1",
+    "node-emoji": "^1.8.1",
     "react": "16",
     "react-dom": "^16.3.1",
     "react-dropzone": "^4.0.0",
