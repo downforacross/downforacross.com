@@ -91,6 +91,7 @@ export default class Toolbar extends Component {
         )}
         onClick={this.handlePencilClick}
         onMouseDown={this.handleMouseDown}
+        title={'Shortuct: .'}
       >
         <i className='fa fa-pencil'/>
       </div>
