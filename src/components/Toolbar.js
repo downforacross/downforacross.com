@@ -6,6 +6,19 @@ import ActionMenu from './ActionMenu';
 
 export default class Toolbar extends Component {
 
+  handleBlur = (e) => {
+    this.props.onRefocus();
+  }
+
+  handleMouseDown = (e) => {
+    e.preventDefault();
+  }
+
+  handlePencilClick = (e) => {
+    e.preventDefault();
+    this.props.onTogglePencil();
+  }
+
   renderClockControl() {
     const {
       startTime,
@@ -15,10 +28,12 @@ export default class Toolbar extends Component {
     return (
       startTime
       ? <button className='toolbar--btn pause'
+        onMouseDown={this.handleMouseDown}
         onClick={onPauseClock} >
         Pause Clock
       </button>
       : <button className='toolbar--btn start'
+        onMouseDown={this.handleMouseDown}
         onClick={onStartClock} >
         Start Clock
       </button>
@@ -29,6 +44,7 @@ export default class Toolbar extends Component {
     return (
       <div className='toolbar--menu check'>
         <ActionMenu label='Check'
+          onBlur={this.handleBlur}
           actions={{
             'Square': this.check.bind(this, 'square'),
             'Word': this.check.bind(this, 'word'),
@@ -43,6 +59,7 @@ export default class Toolbar extends Component {
     return (
       <div className='toolbar--menu reveal'>
         <ActionMenu label='Reveal'
+          onBlur={this.handleBlur}
           actions={{
             'Square': this.reveal.bind(this, 'square'),
             'Word': this.reveal.bind(this, 'word'),
@@ -55,6 +72,7 @@ export default class Toolbar extends Component {
   renderResetMenu() {
     return (
       <ActionMenu label='Reset'
+        onBlur={this.handleBlur}
         actions={{
           'Square': this.reset.bind(this, 'square'),
           'Word': this.reset.bind(this, 'word'),
@@ -71,7 +89,8 @@ export default class Toolbar extends Component {
         className={'toolbar--pencil' + (
           pencilMode ? ' on' : ''
         )}
-        onClick={onTogglePencil}
+        onClick={this.handlePencilClick}
+        onMouseDown={this.handleMouseDown}
       >
         <i className='fa fa-pencil'/>
       </div>

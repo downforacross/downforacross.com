@@ -92,6 +92,10 @@ export default class GameV2 extends Component {
     });
   }
 
+  handleRefocus = () => {
+    this.focus();
+  }
+
   handlePressPeriod = this.handleTogglePencil
 
   handlePressEnter = () => {
@@ -170,6 +174,7 @@ export default class GameV2 extends Component {
         onReveal={this.handleReveal}
         onReset={this.handleReset}
         onTogglePencil={this.handleTogglePencil}
+        onRefocus={this.handleRefocus}
       />
     );
   }

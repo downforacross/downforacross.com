@@ -38,6 +38,7 @@ export default class ActionMenu extends Component {
 
   onBlur() {
     this.setState({active: false});
+    this.props.onBlur();
   }
 
   render() {
@@ -56,12 +57,15 @@ export default class ActionMenu extends Component {
                 key={i}
                 className='action-menu--list--action'
                 onMouseDown={(ev)=>{
+                  ev.preventDefault();
                   this.props.actions[key]();
+                  this.onBlur();
                   this.setState({active: false});
                 }}
                 onTouchStart={(ev)=>{
                   ev.preventDefault();
                   this.props.actions[key]();
+                  this.onBlur();
                   this.setState({active: false});
                 }} >
                 <span> {key} </span>
