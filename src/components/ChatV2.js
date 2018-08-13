@@ -16,6 +16,7 @@ export default class Chat extends Component {
     this.state = {
       username: nameGenerator(),
     };
+    this.chatBar = React.createRef();
   }
 
   get game() {
@@ -48,8 +49,15 @@ export default class Chat extends Component {
     this.setState({ username });
   }
 
+  handleUnfocus = () => {
+    this.props.onUnfocus();
+  }
+
   focus() {
-    this.refs.input && this.refs.input.focus();
+    const chatBar = this.chatBar.current;
+    if (chatBar) {
+      chatBar.focus();
+    }
   }
 
   renderChatHeader() {
@@ -101,7 +109,7 @@ export default class Chat extends Component {
       <ChatBar ref={this.chatBar}
         placeHolder='[Enter] to chat'
         onSendMessage={this.handleSendMessage}
-        onUnfocus={this.onUnfocus}/>
+        onUnfocus={this.handleUnfocus}/>
     );
   }
 

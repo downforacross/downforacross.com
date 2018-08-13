@@ -37,6 +37,13 @@ export default class ChatBar extends React.Component {
     this.setState({ message });
   }
 
+  focus() {
+    const input = this.input.current;
+    if (input) {
+      input.focus();
+    }
+  }
+
   render() {
     return (
       <div className='chatv2--bar'>

@@ -101,7 +101,7 @@ export default class GameV2 extends Component {
   handlePressPeriod = this.handleTogglePencil
 
   handlePressEnter = () => {
-    this.props.onPressEnter(this);
+    this.props.onUnfocus();
   }
 
   focus() {

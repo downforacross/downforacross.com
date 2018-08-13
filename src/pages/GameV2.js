@@ -86,12 +86,12 @@ export default class GameV2 extends Component {
     return !this.state.mobile || this.state.mode === 'chat';
   }
 
-  handlePressEnter = (el) => {
-    if (el === this.chat) {
-      this.game && this.game.focus();
-    } else if (el === this.game) {
-      this.chat && this.chat.focus();
-    }
+  handleUnfocusGame = () => {
+    this.chat && this.chat.focus();
+  }
+
+  handleUnfocusChat = () => {
+    this.game && this.game.focus();
   }
 
   handleUpdate = _.debounce(() => {
@@ -131,7 +131,7 @@ export default class GameV2 extends Component {
         myColor={color}
         historyWrapper={this.historyWrapper}
         gameModel={this.gameModel}
-        onPressEnter={this.handlePressEnter}
+        onUnfocus={this.handleUnfocusGame}
         onChange={this.handleChange}
         mobile={mobile}
       />
@@ -151,7 +151,7 @@ export default class GameV2 extends Component {
         myColor={color}
         historyWrapper={this.historyWrapper}
         gameModel={this.gameModel}
-        onPressEnter={this.handlePressEnter}
+        onUnfocus={this.handleUnfocusChat}
       />
     );
   }
