@@ -131,10 +131,11 @@ export default class Toolbar extends Component {
         <div className='toolbar--mobile'>
           <div className='toolbar--mobile--top'>
             <Clock
+              v2={this.props.v2}
               startTime={startTime}
               stopTime={stopTime}
               pausedTime={pausedTime}
-              isPaused={!startTime}
+              isPaused={this.props.isPaused || !startTime}
               onStart={onStartClock}
               onPause={onPauseClock}
             />
