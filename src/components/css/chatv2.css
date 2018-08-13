@@ -49,10 +49,10 @@
 }
 
 .chatv2--message {
+  display: inline-block;
   font-size: 15px;
   padding-left: 20px;
   word-wrap: break-word;
-  display: flex;
   align-items: center;
 }
 
