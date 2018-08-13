@@ -18,8 +18,10 @@ export default class GameV2 extends Component {
   }
 
   componentDidMount() {
+    const screenWidth = window.innerWidth - 1; // this is important for mobile to fit on screen
+    // with body { overflow: hidden }, it should disable swipe-to-scroll on iOS safari)
     this.setState({
-      screenWidth: window.innerWidth,
+      screenWidth,
     });
   }
 
