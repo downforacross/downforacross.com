@@ -30,6 +30,7 @@ export default class WelcomeV2 extends Component {
       search: '',
     };
     this.loading = false;
+    this.mobile = isMobile();
   }
 
   componentDidMount() {
@@ -57,6 +58,11 @@ export default class WelcomeV2 extends Component {
   get done() {
     const { pages, puzzles } = this.state;
     return puzzles.length < pages * this.puzzleList.pageSize;
+  }
+
+  get showingSidebar() {
+    // eventually, allow mobile to toggle sidebar
+    return !this.mobile;
   }
 
   nextPage = () => {
@@ -196,10 +202,12 @@ export default class WelcomeV2 extends Component {
           <Nav v2/>
         </div>
         <Flex grow={1} basis={1}>
-          <Flex className='welcomev2--sidebar' column shrink={0} style={{justifyContent: 'space-between'}}>
-            { this.renderFilters() }
-            { this.renderQuickUpload() }
-          </Flex>
+          { this.showingSidebar && (
+            <Flex className='welcomev2--sidebar' column shrink={0} style={{justifyContent: 'space-between'}}>
+              { this.renderFilters() }
+              { !this.mobile && this.renderQuickUpload() }
+            </Flex>
+          )}
           <Flex className='welcomev2--main' column grow={1}>
             { this.renderSearch() }
             { this.renderPuzzles() }
