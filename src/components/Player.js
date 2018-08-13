@@ -1,6 +1,7 @@
 import './css/player.css';
 
 import React, { Component } from 'react';
+import Flex from 'react-flexview';
 
 import { lazy } from '../jsUtils';
 
@@ -213,16 +214,16 @@ export default class Player extends Component {
 
   renderMobileClueBar() {
     return (
-      <div className='player--mobile--clue-bar'>
+      <Flex className="player--mobile--clue-bar">
         <div className='player--mobile--clue-bar--number'>
-          <Clue text={this.getClueBarText()}/>
+          <Clue text={this.getClueBarAbbreviation()}/>
         </div>
-        <div className='player--mobile--clue-bar--text'>
+        <Flex className='player--mobile--clue-bar--text' grow={1}>
           <Clue text={this.getClueBarText()}/>
-        </div>
+        </Flex>
         <i className='player--mobile--typing-hint fa fa-6 fa-keyboard-o'>
         </i>
-      </div>
+      </Flex>
     );
   }
 
