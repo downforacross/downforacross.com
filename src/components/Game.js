@@ -153,6 +153,7 @@ export default class GameV2 extends Component {
   renderToolbar() {
     if (!this.game) return;
     const { clock } = this.game;
+    const { mobile } = this.props;
     const { pencilMode } = this.state;
     const {
       lastUpdated: startTime,
@@ -162,7 +163,7 @@ export default class GameV2 extends Component {
     return (
       <Toolbar
         v2={true}
-        mobile={false}
+        mobile={mobile}
         startTime={startTime}
         pausedTime={pausedTime}
         isPaused={isPaused}
