@@ -145,7 +145,7 @@ export default class GridControls extends Component {
       ' ': 'space',
     };
 
-    const { onPressEnter, onPressPeriod } = this.props;
+    const { onPressEnter, onPressPeriod, onPressEscape } = this.props;
     if (ev.key in actionKeys) {
       ev.preventDefault();
       ev.stopPropagation();
@@ -158,6 +158,8 @@ export default class GridControls extends Component {
       ev.preventDefault();
       ev.stopPropagation();
       onPressEnter && onPressEnter();
+    } else if (ev.key === 'Escape') {
+      onPressEscape && onPressEscape();
     } else {
       const letter = ev.key.toUpperCase();
       if (!ev.metaKey && !ev.ctrlKey && this.validLetter(letter)) {

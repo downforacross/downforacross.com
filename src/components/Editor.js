@@ -204,6 +204,10 @@ export default class Editor extends Component {
     this.refs.clue && this.refs.clue.startEditing();
   }
 
+  focus() {
+    this.focusGrid();
+  }
+
   /* Render */
 
   renderLeft() {
@@ -220,7 +224,7 @@ export default class Editor extends Component {
               value={this.props.clues[direction][this.selectedClueNumber] || ''}
               onChange={this.handleChangeClue}
               onBlur={() => this.focusGrid()}
-              disabled={!this.selectedIsWhite || !this.selectedClueNumber}
+              hidden={!this.selectedIsWhite || !this.selectedClueNumber}
             />
           </div>
         </div>
@@ -258,6 +262,7 @@ export default class Editor extends Component {
           onSetDirection={this.handleSetDirection}
           onSetSelected={this.handleSetSelected}
           onPressEnter={() => this.setState({ editingClue: true }, this.focusClue.bind(this))}
+          onPressEscape={() => this.props.onUnfocus()}
           onPressPeriod={this.handlePressPeriod}
           updateGrid={this.handleUpdateGrid}
           grid={this.props.grid}
@@ -281,7 +286,7 @@ export default class Editor extends Component {
                           ref={'clues--list--'+dir}>
                           {
                             this.props.clues[dir].map((clue, i) => clue !== undefined && (
-                              <Flex shrink={0} key={i}
+                              <Flex grow={1} shrink={0} key={i}
                                 className={
                                   (this.isClueSelected(dir, i)
                                     ? 'selected '
@@ -298,10 +303,10 @@ export default class Editor extends Component {
                                     : null
                                 }
                                 onClick={() => {this.handleSelectClue(dir, i)}}>
-                                <Flex className='editor--main--clues--list--scroll--clue--number'>
+                                <Flex className='editor--main--clues--list--scroll--clue--number' shrink={0}>
                                   {i}
                                 </Flex>
-                                <Flex className='editor--main--clues--list--scroll--clue--text'>
+                                <Flex className='editor--main--clues--list--scroll--clue--text' shrink={1}>
                                   {clue}
                                 </Flex>
                               </Flex>

@@ -72,7 +72,6 @@ export const makeClues = (cluesBySquare, grid) => {
     across: [],
     down: [],
   };
-  console.log(grid, cluesBySquare);
   cluesBySquare.forEach(({r, c, dir, value}) => {
     const num = grid[r][c].number;
     if (num) {

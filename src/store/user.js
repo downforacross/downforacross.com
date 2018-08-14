@@ -69,7 +69,6 @@ export default class User extends EventEmitter {
   // write methods
   joinComposition(cid, { title, author, published = false }) {
     // safe to call this multiple times
-    console.log('join', cid);
     return this.ref
       .child('compositions')
       .child(cid)

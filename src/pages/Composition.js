@@ -33,6 +33,10 @@ export default class Composition extends Component {
     return this.historyWrapper.getSnapshot();
   }
 
+  get showingChat() {
+    return this.historyWrapper && this.historyWrapper.createEvent;
+  }
+
   initializeUser() {
     this.user = getUser();
     this.user.onAuth(() => {
@@ -121,8 +125,17 @@ export default class Composition extends Component {
   handleUploadFail = () => {
   }
 
-  // ================
-  // Render Methods
+  handleChat = (username, id, message) => {
+    this.compositionModel.chat(username, id, message)
+  }
+
+  handleUnfocusEditor = () => {
+    this.chat && this.chat.focus();
+  }
+
+  handleUnfocusChat = () => {
+    this.editor && this.editor.focus();
+  }
 
   getCellSize() {
     return 30 * 15 / this.composition.grid[0].length;
@@ -141,7 +154,7 @@ export default class Composition extends Component {
     const clues = makeClues(this.composition.clues, grid);
     return (
       <Editor
-        ref='editor'
+        ref={c => {this.editor = c;}}
         size={this.getCellSize()}
         grid={grid}
         clues={clues}
@@ -150,24 +163,22 @@ export default class Composition extends Component {
         onChange={this.handleChange}
         onFlipColor={this.handleFlipColor}
         myColor={this.color}
+        onUnfocus={this.handleUnfocusEditor}
       />
     );
   }
 
   renderChat() {
-    if (!this.gameModel || !this.gameModel.attached) {
-      return;
-    }
-
     const { id, color } = this.user;
     return (
       <ChatV2
         ref={c => {this.chat = c;}}
+        info={this.composition.info}
+        data={this.composition.chat}
         id={id}
         myColor={color}
-        historyWrapper={this.historyWrapper}
-        gameModel={this.gameModel}
-        onPressEnter={this.handlePressEnter}
+        onChat={this.handleChat}
+        onUnfocus={this.handleUnfocusChat}
       />
     );
   }

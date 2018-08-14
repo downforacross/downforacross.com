@@ -1,31 +1,68 @@
 import './css/editableSpan.css';
 import React, { Component } from 'react';
+import Caret from '../utils/caret';
+import _ from 'lodash';
 
 export default class EditableSpan extends Component {
   constructor() {
     super();
-    this.state = {
-      editing: false
-    };
     this.span = React.createRef();
+    this.prevPosition = 0;
+    this.focused = false;
   }
 
   startEditing() {
-    this.setState({ editing: true}, () => {
-      this.refs.input && this.refs.input.focus();
-    });
+    this.span.current && this.span.current.focus();
   }
 
   stopEditing() {
-    this.setState({ editing: false});
     this.props.onBlur && this.props.onBlur();
   }
 
-  shouldComponentUpdate(prevProps) {
-    return true;
+  handleFocus = () => {
+    this.focused = true;
+  }
+
+  handleBlur = () => {
+    this.focused = false;
+  }
+
+  get displayValue() {
+    const { value = '(blank)' } = this.props;
+    let result = value;
+    const nbsp = String.fromCharCode('160');
+    while (result.indexOf(' ') !== -1) {
+      result = result.replace(' ', nbsp);
+    }
+    return result;
+  }
+
+  get caret() {
+    if (!this.focused) return new Caret();
+    return new Caret(this.span.current && this.span.current.childNodes[0]);
+  }
+
+  componentDidMount() {
+    this.text = this.displayValue;
+  }
+
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    return {
+      start: this.caret.startPosition,
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.value !== this.props.value) {
+      this.text = this.displayValue;
+      if (snapshot.start !== undefined && snapshot.start !== this.caret.startPosition) {
+        this.caret.startPosition = snapshot.start;
+      }
+    }
   }
 
   get text() {
+    if (this.props.hidden) return '';
     let result = this.span.current.textContent;
     const nbsp = String.fromCharCode('160');
     while (result.indexOf(nbsp) !== -1) {
@@ -34,68 +71,36 @@ export default class EditableSpan extends Component {
     return result;
   }
 
-  handleKeyUp = (e) => {
-    if (e.key === 'Enter') {
-      this.stopEditing();
-    } else {
-      this.props.onChange(this.text);
-    }
+  set text(val) {
+    if (this.props.hidden) return;
+    if (this.text === val) return;
+    // set text while retaining cursor position
+    this.span.current.innerHTML = val;
   }
 
   handleKeyDown = (e) => {
     e.stopPropagation();
+    if (e.key === 'Enter' || e.key === 'Escape') {
+      this.stopEditing();
+    }
   }
 
+  handleKeyUp = _.debounce((e) => {
+    this.props.onChange(this.text);
+  }, 500)
+
   render() {
-    const { value = '' } = this.props;
-    const { editing } = this.state;
-    const displayValue = value === '' ? '(blank)' : value;
-    return (
-      <span className={'editable-span' + (editing ? ' editing' : '')}
-        ref={this.span}
-        contentEditable={true}
-        onKeyDown={this.handleKeyDown}
-        onKeyUp={this.handleKeyUp}>
-        {displayValue}
-      </span>
-    );
+    const { hidden } = this.props;
+    if (hidden) return null;
 
     return (
-      <span>{this.state.editing
-          ? (
-            <span className='editable-span on'>
-              <input
-                ref='input'
-                className='text'
-                value={this.props.value}
-                onChange={(e) => this.props.onChange(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    this.stopEditing();
-                  }
-                }}
-                size={this.props.value.length + 2 }
-              />
-              <i
-                className='fa fa-check-square-o'
-                onClick={this.stopEditing.bind(this)}
-                style={{ cursor: 'pointer' }}
-              />
-            </span>
-          )
-          : (
-            <span className='editable-span off'>
-              <span className='text'>
-                {this.props.value}
-              </span>
-              {!this.props.disabled && <i
-                className='fa fa-pencil-square-o'
-                onClick={this.startEditing.bind(this)}
-                style={{ cursor: 'pointer' }}
-              />}
-            </span>
-          )
-      }</span>
+      <div className={'editable-span'}
+        ref={this.span}
+        contentEditable={true}
+        onFocus={this.handleFocus}
+        onBlur={this.handleBlur}
+        onKeyDown={this.handleKeyDown}
+        onKeyUp={this.handleKeyUp}/>
     );
   }
 }

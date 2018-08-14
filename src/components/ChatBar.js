@@ -10,7 +10,7 @@ export default class ChatBar extends React.Component {
     this.input = React.createRef();
   }
 
-  handleKeyPress = (ev) => {
+  handleKeyDown = (ev) => {
     const {
       onPressEnter,
     } = this.props;
@@ -28,6 +28,8 @@ export default class ChatBar extends React.Component {
       } else {
         this.props.onUnfocus();
       }
+    } else if (ev.key === 'Escape') {
+      this.props.onUnfocus();
     }
   }
 
@@ -53,7 +55,7 @@ export default class ChatBar extends React.Component {
           placeholder='[Enter] to chat'
           value={this.state.message}
           onChange={this.handleChange}
-          onKeyPress={this.handleKeyPress}
+          onKeyDown={this.handleKeyDown}
         />
       </div>
     );
