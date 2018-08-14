@@ -86,12 +86,20 @@ export default class GameV2 extends Component {
     return !this.state.mobile || this.state.mode === 'chat';
   }
 
+  get game() {
+    return this.historyWrapper.getSnapshot();
+  }
+
+  handleChat = (username, id, message) => {
+    this.gameModel.chat(username, id, message)
+  }
+
   handleUnfocusGame = () => {
     this.chat && this.chat.focus();
   }
 
   handleUnfocusChat = () => {
-    this.game && this.game.focus();
+    this.gameComponent && this.gameComponent.focus();
   }
 
   handleUpdate = _.debounce(() => {
@@ -101,15 +109,14 @@ export default class GameV2 extends Component {
   });
 
   handleChange = _.debounce(({isEdit = false} = {}) => {
-    const game = this.historyWrapper.getSnapshot();
     if (isEdit) {
       this.user.joinGame(this.state.gid, {
-        pid: game.pid,
+        pid: this.game.pid,
         solved: false,
         v2: true,
       });
     }
-    if (game.solved) {
+    if (this.game.solved) {
       this.user.markSolved(this.state.gid);
     }
   });
@@ -126,7 +133,7 @@ export default class GameV2 extends Component {
     const { id, color } = this.user;
     return (
       <Game
-        ref={c => {this.game = c;}}
+        ref={c => {this.gameComponent = c;}}
         id={id}
         myColor={color}
         historyWrapper={this.historyWrapper}
@@ -147,10 +154,11 @@ export default class GameV2 extends Component {
     return (
       <ChatV2
         ref={c => {this.chat = c;}}
+        info={this.game.info}
+        data={this.game.chat}
         id={id}
         myColor={color}
-        historyWrapper={this.historyWrapper}
-        gameModel={this.gameModel}
+        onChat={this.handleChat}
         onUnfocus={this.handleUnfocusChat}
       />
     );

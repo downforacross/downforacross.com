@@ -19,21 +19,10 @@ export default class Chat extends Component {
     this.chatBar = React.createRef();
   }
 
-  get game() {
-    if (!this.props.historyWrapper) return;
-    return this.props.historyWrapper.getSnapshot();
-  }
-
-  get messages() {
-    if (!this.game) return [];
-    if (!this.game.chat) return [];
-    return this.game.chat.messages || [];
-  }
-
   handleSendMessage = (message) => {
     const { username } = this.state;
     const { id } = this.props;
-    this.props.gameModel.chat(username, id, message);
+    this.props.onChat(username, id, message);
   }
 
   handleUsernameInputKeyPress = (ev) => {
@@ -61,8 +50,8 @@ export default class Chat extends Component {
   }
 
   renderChatHeader() {
-    if (!this.game) return null;
-    const { title, author, type } = this.game.info || {};
+    const { info = {} } = this.props;
+    const { title, author, type } = info;
 
     return (
       <div className='chatv2--header'>
@@ -126,6 +115,9 @@ export default class Chat extends Component {
   }
 
   render() {
+    const {
+      messages = [],
+    } = this.props.data;
     return (
       <div className='chatv2'>
         {this.renderChatHeader()}
@@ -140,7 +132,7 @@ export default class Chat extends Component {
           }
           className='chatv2--messages'>
           {
-            this.messages.map((message, i) => (
+            messages.map((message, i) => (
               <div key={i}>{this.renderMessage(message)}</div>
             ))
           }
