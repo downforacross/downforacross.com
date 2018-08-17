@@ -127,6 +127,9 @@ export default class Composition extends EventEmitter {
     });
   }
 
+  export() {
+  }
+
   initialize(rawComposition = {}) {
     const {
       info = {

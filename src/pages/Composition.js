@@ -59,7 +59,6 @@ export default class Composition extends Component {
       this.handleUpdate();
     });
     this.compositionModel.attach();
-    console.log('attached')
   }
 
   componentDidMount() {
@@ -136,7 +135,6 @@ export default class Composition extends Component {
   }
 
   handleUpdateAuthor = (author) => {
-    console.log('update author', author);
     this.compositionModel.updateAuthor(author);
   }
 
