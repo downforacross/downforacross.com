@@ -15,8 +15,9 @@ import Game from '../components/Game';
 import ChatV2 from '../components/ChatV2';
 import EditableSpan from '../components/EditableSpan';
 import redirect from '../redirect';
-import { isMobile } from '../jsUtils';
+import { downloadBlob, isMobile } from '../jsUtils';
 import { makeGridFromComposition, makeClues, convertCluesForComposition, convertGridForComposition } from '../gameUtils';
+import format from '../format';
 
 export default class Composition extends Component {
   constructor(props) {
@@ -68,6 +69,14 @@ export default class Composition extends Component {
 
   componentWillUnmount() {
     if (this.compositionModel) this.compositionModel.detach();
+  }
+
+  get title() {
+    if (!this.compositionModel || !this.compositionModel.attached) {
+      return;
+    }
+    const info = this.composition.info;
+    return `Compose: ${info.title}`;
   }
 
   handlePressEnter = (el) => {
@@ -127,15 +136,18 @@ export default class Composition extends Component {
   }
 
   handleChat = (username, id, message) => {
-    this.compositionModel.chat(username, id, message)
+    this.compositionModel.chat(username, id, message);
+    this.handleChange();
   }
 
   handleUpdateTitle = (title) => {
     this.compositionModel.updateTitle(title);
+    this.handleChange();
   }
 
   handleUpdateAuthor = (author) => {
     this.compositionModel.updateAuthor(author);
+    this.handleChange();
   }
 
   handleUnfocusHeader = () => {
@@ -148,6 +160,11 @@ export default class Composition extends Component {
 
   handleUnfocusChat = () => {
     this.editor && this.editor.focus();
+  }
+
+  handleExportClick = () => {
+    const byteArray = format().fromComposition(this.composition).toPuz();
+    downloadBlob(byteArray, 'download.puz');
   }
 
   getCellSize() {
@@ -215,15 +232,6 @@ export default class Composition extends Component {
     );
   }
 
-  get title() {
-    if (!this.compositionModel || !this.compositionModel.attached) {
-      return;
-    }
-    console.log(this.composition);
-    const info = this.composition.info;
-    return `Compose: ${info.title}`;
-  }
-
   render() {
     const style = {
       padding: 20,
@@ -252,6 +260,9 @@ export default class Composition extends Component {
               fail={this.handleUploadFail}
               v2
             />
+            <button onClick={this.handleExportClick}>
+              Export to puz
+            </button>
           </Flex>
         </Flex>
       </Flex>

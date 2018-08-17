@@ -117,7 +117,20 @@ function isMobile() {
   }
 }
 
+// from https://jsfiddle.net/koldev/cW7W5/
+function downloadBlob(data, fileName) {
+  var a = document.createElement("a");
+  document.body.appendChild(a);
+  a.style = "display: none";
+  var blob = new Blob([data]),
+      url = window.URL.createObjectURL(blob);
+  a.href = url;
+  a.download = fileName;
+  a.click();
+  window.URL.revokeObjectURL(url);
+}
 
 
-export { hasShape, toArr, lazy, rand_int, rand_color, pure, isAncestor, isMobile };
+export { hasShape, toArr, lazy, rand_int, rand_color, pure, isAncestor, isMobile, downloadBlob };
+
 

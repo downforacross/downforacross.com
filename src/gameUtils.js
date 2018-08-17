@@ -78,7 +78,8 @@ export const makeClues = (cluesBySquare, grid) => {
       result[dir][num] = value;
     }
   });
-  return result;
+  const alignedResult = new Grid(grid).alignClues(result);
+  return alignedResult;
 };
 
 export const convertCluesForComposition = (clues, gridObject) => {
@@ -89,7 +90,6 @@ export const convertCluesForComposition = (clues, gridObject) => {
       if (value) {
         const cell = gridObject.getCellByNumber(i);
         if (!cell) {
-          debugger;
           return;
         }
         const { r, c } = cell;
