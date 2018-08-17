@@ -81,6 +81,7 @@ export default class EditableSpan extends Component {
   handleKeyDown = (e) => {
     e.stopPropagation();
     if (e.key === 'Enter' || e.key === 'Escape') {
+      e.preventDefault();
       this.stopEditing();
     }
   }
@@ -94,7 +95,7 @@ export default class EditableSpan extends Component {
     if (hidden) return null;
 
     return (
-      <div className={'editable-span'}
+      <div className={'editable-span ' + (this.props.className || '')}
         ref={this.span}
         contentEditable={true}
         onFocus={this.handleFocus}

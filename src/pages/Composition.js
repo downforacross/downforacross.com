@@ -1,4 +1,5 @@
 import 'react-flexview/lib/flexView.css'
+import './css/composition.css';
 
 import React, { Component } from 'react';
 import Nav from '../components/Nav';
@@ -12,6 +13,7 @@ import { CompositionModel, getUser } from '../store';
 import ComposeHistoryWrapper from '../utils/ComposeHistoryWrapper';
 import Game from '../components/Game';
 import ChatV2 from '../components/ChatV2';
+import EditableSpan from '../components/EditableSpan';
 import redirect from '../redirect';
 import { isMobile } from '../jsUtils';
 import { makeGridFromComposition, makeClues, convertCluesForComposition, convertGridForComposition } from '../gameUtils';
@@ -129,6 +131,19 @@ export default class Composition extends Component {
     this.compositionModel.chat(username, id, message)
   }
 
+  handleUpdateTitle = (title) => {
+    this.compositionModel.updateTitle(title);
+  }
+
+  handleUpdateAuthor = (author) => {
+    console.log('update author', author);
+    this.compositionModel.updateAuthor(author);
+  }
+
+  handleUnfocusHeader = () => {
+    this.chat && this.chat.focus();
+  }
+
   handleUnfocusEditor = () => {
     this.chat && this.chat.focus();
   }
@@ -168,11 +183,30 @@ export default class Composition extends Component {
     );
   }
 
+  renderChatHeader() {
+    const { title, author, type } = this.composition.info;
+
+    return (
+      <div className='chatv2--header'>
+        <EditableSpan className='chatv2--header--title'
+          onChange={this.handleUpdateTitle}
+          onBlur={this.handleUnfocusHeader}
+          value={title}/>
+
+        <EditableSpan className='chatv2--header--subtitle'
+          onChange={this.handleUpdateAuthor}
+          onBlur={this.handleUnfocusHeader}
+          value={author}/>
+      </div>
+    );
+  }
+
   renderChat() {
     const { id, color } = this.user;
     return (
       <ChatV2
         ref={c => {this.chat = c;}}
+        header={this.renderChatHeader()}
         info={this.composition.info}
         data={this.composition.chat}
         id={id}
@@ -187,6 +221,7 @@ export default class Composition extends Component {
     if (!this.compositionModel || !this.compositionModel.attached) {
       return;
     }
+    console.log(this.composition);
     const info = this.composition.info;
     return `Compose: ${info.title}`;
   }

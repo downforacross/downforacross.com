@@ -133,7 +133,7 @@ export default class Composition extends EventEmitter {
         title: 'Untitled',
         author: 'Anonymous',
       },
-      grid = _.range(5).map(() => _.range(5).map(() => ({
+      grid = _.range(6).map(() => _.range(6).map(() => ({
         value: '',
       }))),
       clues = [],

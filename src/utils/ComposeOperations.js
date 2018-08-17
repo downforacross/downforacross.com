@@ -139,6 +139,34 @@ const reducers = {
     };
   },
 
+  updateTitle: (composition, params) => {
+    let { info } = composition;
+    const {
+      text,
+    } = params;
+    return {
+      ...composition,
+      info: {
+        ...info,
+        title: text,
+      },
+    };
+  },
+
+  updateAuthor: (composition, params) => {
+    let { info } = composition;
+    const {
+      text,
+    } = params;
+    return {
+      ...composition,
+      info: {
+        ...info,
+        author: text,
+      },
+    };
+  },
+
 
   chat: (composition, params) => {
     let { chat } = composition;

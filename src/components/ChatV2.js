@@ -50,6 +50,7 @@ export default class Chat extends Component {
   }
 
   renderChatHeader() {
+    if (this.props.header) return this.props.header;
     const { info = {} } = this.props;
     const { title, author, type } = info;
 

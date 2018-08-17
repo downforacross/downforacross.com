@@ -10,7 +10,7 @@ export default class Hints extends Component {
     this.state = {
       pattern: 'loading...',
       list: [],
-      hidden: false,
+      hidden: true,
     };
     this.scores = {};
   }

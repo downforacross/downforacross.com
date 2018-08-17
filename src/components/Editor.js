@@ -286,7 +286,7 @@ export default class Editor extends Component {
                           ref={'clues--list--'+dir}>
                           {
                             this.props.clues[dir].map((clue, i) => clue !== undefined && (
-                              <Flex grow={1} shrink={0} key={i}
+                              <Flex shrink={0} key={i}
                                 className={
                                   (this.isClueSelected(dir, i)
                                     ? 'selected '
