@@ -325,8 +325,8 @@ asynckit@^0.4.0:
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
 
 atob@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.1.tgz#ae2d5a729477f289d60dd7f96a6314a22dd6c22a"
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
 
 attr-accept@^1.0.3:
   version "1.1.0"
@@ -6150,9 +6150,9 @@ punycode@^1.2.4, punycode@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-1.4.1.tgz#c0d5a63b2718800ad8e1eb0fa5269c84dd41845e"
 
-puzjs@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/puzjs/-/puzjs-1.0.1.tgz#a706ed9de2e5dcff2fe8ff05c5162d67608c2af9"
+puzjs@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/puzjs/-/puzjs-1.0.2.tgz#8e7da125c53f346ccbe5285bd5e1e4c196fa9d43"
   dependencies:
     gulp "^3.9.1"
 
