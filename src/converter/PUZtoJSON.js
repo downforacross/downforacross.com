@@ -156,7 +156,7 @@ export default function PUZtoJSON(buffer) {
   function readString() {
     let result = "";
     let b = bytes[ibyte++];
-    while (b !== 0) {
+    while (ibyte < bytes.length && b !== 0) {
       result += String.fromCharCode(b);
       b = bytes[ibyte++];
     }

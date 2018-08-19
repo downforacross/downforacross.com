@@ -40,8 +40,8 @@ function LogIn({ user }) {
   }
 }
 
-export default function Nav({mobile, v2, secret}) {
-  if (mobile) return null; // no nav for mobile
+export default function Nav({hidden, v2, secret}) {
+  if (hidden) return null; // no nav for mobile
   if (secret) {
     return (
       <div className='nav'>

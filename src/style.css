@@ -11,3 +11,9 @@ html, body, #root, .router-wrapper {
   font-family: "avenir next", avenir, 'Nunito', "helvetica neue", "Helvetica", "arial", sans-serif;
 }
 
+@media only screen and (max-device-width: 480px) {
+  body {
+    overflow: hidden;
+  }
+}
+

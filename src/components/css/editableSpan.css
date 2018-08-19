@@ -1,0 +1,11 @@
+.editable-span {
+}
+
+.editable-span:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.editable-span:focus {
+  background-color: rgba(255, 255, 255, 0.8);
+  outline: none;
+}

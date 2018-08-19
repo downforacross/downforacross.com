@@ -1,4 +1,4 @@
-import firebase, { db } from './firebase';
+import firebase, { db, SERVER_TIME } from './firebase';
 import getLocalId from '../localAuth';
 import EventEmitter from 'events';
 import { getTime } from '../actions';
@@ -59,9 +59,28 @@ export default class User extends EventEmitter {
       );
   }
 
+  listCompositions() {
+    return this.ref.child('compositions').once('value')
+      .then(snapshot =>
+        snapshot.val()
+      );
+  }
 
   // write methods
-  joinGame(gid, {pid, solved = false, v2 = false}) {
+  joinComposition(cid, { title, author, published = false }) {
+    // safe to call this multiple times
+    return this.ref
+      .child('compositions')
+      .child(cid)
+      .set({
+        title,
+        author,
+        published,
+        updateTime: SERVER_TIME,
+      });
+  }
+
+  joinGame(gid, {pid = -1, solved = false, v2 = false}) {
     const time = getTime();
     // safe to call this multiple times
     return this.ref
@@ -81,13 +100,17 @@ export default class User extends EventEmitter {
       .child('history')
       .child(gid)
       .transaction(item => {
-      if (!item) return null;
+        if (!item) {
+          // don't mark un-joined games as solved
+          return null;
+        }
       return {
         ...item,
         solved: true,
       }
     });
   }
+
   recordUsername(username) {
     this.ref
       .child('names')

@@ -1,9 +1,48 @@
+
 {
   "rules": {
-    ".read": true,
     ".write": true,
     "game": {
-      ".indexOn": ["pid"]
+      ".indexOn": ["pid"],
+      "$gid": {
+        ".read": true,
+        ".write": true
+      },
+      ".read": "auth!==null"
+    },
+    "puzzle": {
+      ".read": true,
+      ".write": true
+
+    },
+    "puzzlelist": {
+      ".read": true,
+      ".write": true
+    },
+    "counters":
+    {
+      ".read": true,
+      ".write": true
+    },
+    "user": {
+      ".read": true,
+      ".write": true
+    },
+    "cursors": {
+      ".read": true,
+      ".write": true
+    },
+    "history": {
+      ".read": true,
+      ".write": true
+    },
+    "composition": {
+      ".read": true,
+      ".write": true
+    },
+    "myCompositions": {
+      ".read": true,
+      ".write": true
     }
   }
 }

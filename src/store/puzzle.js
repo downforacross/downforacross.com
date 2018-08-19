@@ -1,5 +1,6 @@
-import { db } from './firebase';
 import EventEmitter from 'events';
+
+import { db } from './firebase';
 import { makeGame } from '../gameUtils';
 
 // a wrapper class that models Puzzle
@@ -12,8 +13,7 @@ export default class Puzzle extends EventEmitter {
   }
 
   attach() {
-    console.log('attach', this.ref);
-    this.ref.once('value', snapshot => {
+    this.ref.on('value', snapshot => {
       this.data = snapshot.val();
       this.emit('ready');
     });
@@ -31,14 +31,12 @@ export default class Puzzle extends EventEmitter {
 
   // return list of games that were played off this puzzle
   // includes beta games, but not solo games
-  listGames(cbk) {
-    console.log('list games', this.pid);
-    db.ref('game')
+  listGames(limit = 100) {
+    return db.ref('/game')
       .orderByChild('pid')
       .equalTo(this.pid)
-      .once('value').then(snapshot => {
-      const games = snapshot.val();
-      cbk(games);
-    });
+      .limitToLast(limit)
+      .once('value')
+      .then(snapshot => snapshot.val());
   }
 }

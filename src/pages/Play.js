@@ -29,9 +29,10 @@ export default class Play extends Component {
   get pid() {
     return parseInt(this.props.match.params.pid);
   }
+
   componentDidUpdate() {
     const games = this.games;
-    const shouldAutocreate = (games && games.length === 0 && !this.state.creating);
+    const shouldAutocreate = (!this.state.creating && (!games || (games && games.length === 0)));
     if (shouldAutocreate) {
       this.create();
       return;
@@ -76,7 +77,7 @@ export default class Play extends Component {
       const game = new GameModel(`/game/${gid}`);
       const puzzle = new PuzzleModel(`/puzzle/${this.pid}`);
       puzzle.attach();
-      puzzle.on('ready', () => {
+      puzzle.once('ready', () => {
         const rawGame = puzzle.toGame();
         game.initialize(rawGame);
         const redirect = url => {
@@ -94,18 +95,18 @@ export default class Play extends Component {
   }
 
   renderMain() {
-    if (!this.games) {
-      return (
-        <div style={{padding: 20}}>
-          Loading...
-        </div>
-      );
-    }
-
     if (this.state.creating) {
       return (
         <div style={{padding: 20}}>
           Creating game...
+        </div>
+      );
+    }
+
+    if (!this.games) {
+      return (
+        <div style={{padding: 20}}>
+          Loading...
         </div>
       );
     }

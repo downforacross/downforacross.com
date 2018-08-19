@@ -1,5 +1,5 @@
 import './css/editor.css';
-
+import Flex from 'react-flexview';
 import React, { Component } from 'react';
 import Grid from './Grid';
 import GridControls from './GridControls';
@@ -54,101 +54,99 @@ window.cancelIdleCallback =
 
 
 export default class Editor extends Component {
-
-  constructor(props) {
+  constructor() {
     super();
-    this.props = props;
-    const grid = gameUtils.makeGrid(props.grid, true);
     this.state = {
-      selected: grid.fixSelect({ r: 0, c: 0 }),
+      selected: {
+        r: 0,
+        c: 0,
+      },
       direction: 'across',
     };
-
-    if (!this.isValidDirection(this.state.direction, this.state.selected)) {
-      this.state.setState({
-        direction: 'down'
-      });
-    }
-
-    // for deferring scroll-to-clue actions
     this.prvNum = {};
     this.prvIdleID = {};
   }
 
   get grid() {
-    return new GridObject(this.props.grid);
-  }
-
-  componentWillReceiveProps(props) {
-    this.props = props;
-    let { r, c } = this.state.selected;
-    while (!this.grid.isWhite(r, c)) {
-      if (c < this.props.grid[0].length) {
-        c += 1;
-      } else if (r < this.props.grid.length) {
-        r += 1;
-        c = 0;
-      } else {
-        r = 0;
-        c = 0;
-      }
-    }
-    this.setSelected({r, c});
+    const grid = new GridObject(this.props.grid);
+    grid.assignNumbers();
+    return grid;
   }
 
   /* Callback fns, to be passed to child components */
 
-  isValidDirection(direction, selected) {
-    return this.grid.getParent(selected.r, selected.c, direction) !== 0;
-  }
+  canSetDirection = () => (
+    true
+  )
 
-  canSetDirection(direction) {
-    return this.isValidDirection(direction, this.state.selected);
-  }
-
-  setDirection(direction) {
+  handleSetDirection = (direction) => {
     this.setState({
       direction: direction
     });
   }
 
-  setSelected(selected) {
-    if (this.isValidDirection(this.state.direction, selected)) {
-      if (selected.r !== this.state.selected.r || selected.c !== this.state.selected.c) {
-        this.setState({
-          selected: selected,
-        });
-      }
-    } else if (this.isValidDirection(gameUtils.getOppositeDirection(this.state.direction), selected)) {
-      this.setState({
-        selected: selected,
-        direction: gameUtils.getOppositeDirection(this.state.direction)
-      });
-    }
+  handleSetSelected = (selected) => {
+    this.setState({
+      selected,
+    });
   }
 
-  changeDirection() {
-    if (this.grid.getParent(this.state.selected.r, this.state.selected.c, gameUtils.getOppositeDirection(this.state.direction))) {
-      this.setDirection(gameUtils.getOppositeDirection(this.state.direction));
-    }
+  handleChangeDirection = () => {
+    this.setState({
+      direction: gameUtils.getOppositeDirection(this.state.direction),
+    });
   }
 
-  selectClue(direction, number) {
+  handleSelectClue = (direction, number) => {
     this.refs.gridControls.selectClue(direction, number);
+  }
+
+  handleUpdateGrid = (r, c, value) => {
+    this.props.onUpdateGrid(r, c, value);
+    this.props.onChange();
+  }
+
+  handlePressPeriod = () => {
+    const { selected } = this.state;
+    this.props.onFlipColor(selected.r, selected.c);
+    this.props.onChange();
+  }
+
+  handleChangeClue = value => {
+    const { selected, direction } = this.state;
+    this.props.onUpdateClue(this.selectedParent.r, this.selectedParent.c, direction, value)
+    this.props.onChange();
   }
 
   /* Helper functions used when rendering */
 
-  getClueBarAbbreviation() {
-    return this.getSelectedClueNumber() + this.state.direction.substr(0, 1).toUpperCase();
+  get selectedIsWhite() {
+    const { selected } = this.state;
+    return this.grid.isWhite(selected.r, selected.c);
   }
 
-  getSelectedClueNumber() {
-    return this.grid.getParent(this.state.selected.r, this.state.selected.c, this.state.direction);
+  get clueBarAbbreviation() {
+    const { direction } = this.state;
+    if (!this.selectedIsWhite) return;
+    if (!this.selectedClueNumber) return;
+    return this.selectedClueNumber + direction.substr(0, 1).toUpperCase();
   }
 
-  getHalfSelectedClueNumber() {
-    return this.grid.getParent(this.state.selected.r, this.state.selected.c, gameUtils.getOppositeDirection(this.state.direction));
+  get selectedClueNumber() {
+    const { selected, direction } = this.state;
+    if (!this.selectedIsWhite) return;
+    return this.grid.getParent(selected.r, selected.c, direction);
+  }
+
+  get halfSelectedClueNumber() {
+    const { selected, direction } = this.state;
+    if (!this.selectedIsWhite) return;
+    return this.grid.getParent(selected.r, selected.c, gameUtils.getOppositeDirection(direction));
+  }
+
+  get selectedParent() {
+    if (!this.selectedIsWhite) return;
+    return this.grid.getCellByNumber(this.selectedClueNumber);
   }
 
   isClueFilled(direction, number) {
@@ -157,11 +155,11 @@ export default class Editor extends Component {
   }
 
   isClueSelected(direction, number) {
-    return direction === this.state.direction && number === this.getSelectedClueNumber();
+    return direction === this.state.direction && number === this.selectedClueNumber;
   }
 
   isClueHalfSelected(direction, number) {
-    return direction !== this.state.direction && number === this.getHalfSelectedClueNumber();
+    return direction !== this.state.direction && number === this.halfSelectedClueNumber;
   }
 
   isHighlighted(r, c) {
@@ -206,25 +204,27 @@ export default class Editor extends Component {
     this.refs.clue && this.refs.clue.startEditing();
   }
 
-  canFlipColor(r, c) {
-    return this.state.selected.r !== r || this.state.selected.c !== c;
+  focus() {
+    this.focusGrid();
   }
 
   /* Render */
 
   renderLeft() {
+    const { selected, direction } = this.state;
     return (
       <div className='editor--main--left'>
         <div className='editor--main--clue-bar'>
           <div className='editor--main--clue-bar--number'>
-            { this.getClueBarAbbreviation() }
+            { this.clueBarAbbreviation }
           </div>
           <div className='editor--main--clue-bar--text'>
             <EditableSpan
               ref='clue'
-              value={this.props.clues[this.state.direction][this.getSelectedClueNumber()]}
-              onChange={value => this.props.updateClues(this.state.direction, this.getSelectedClueNumber(), value)}
+              value={this.props.clues[direction][this.selectedClueNumber] || ''}
+              onChange={this.handleChangeClue}
               onBlur={() => this.focusGrid()}
+              hidden={!this.selectedIsWhite || !this.selectedClueNumber}
             />
           </div>
         </div>
@@ -235,14 +235,13 @@ export default class Editor extends Component {
             ref='grid'
             size={this.props.size}
             grid={this.props.grid}
-            selected={this.state.selected}
-            direction={this.state.direction}
-            onSetSelected={this.setSelected.bind(this)}
-            onChangeDirection={this.changeDirection.bind(this)}
-            canFlipColor={this.canFlipColor.bind(this)}
-            onFlipColor={this.props.onFlipColor.bind(this)}
+            selected={selected}
+            direction={direction}
+            onSetSelected={this.handleSetSelected}
+            onChangeDirection={this.handleChangeDirection}
             myColor={this.props.myColor}
             references={[]}
+            editMode
           />
         </div>
       </div>
@@ -250,82 +249,87 @@ export default class Editor extends Component {
   }
 
   render() {
+    const { selected, direction } = this.state;
     return (
-      <div className='editor--main--wrapper'>
+      <Flex className='editor--main--wrapper'>
         <GridControls
           ref='gridControls'
           ignore='input'
-          selected={this.state.selected}
-          direction={this.state.direction}
-          canSetDirection={this.canSetDirection.bind(this)}
-          onSetDirection={this.setDirection.bind(this)}
-          onSetSelected={this.setSelected.bind(this)}
+          selected={selected}
+          editMode
+          direction={direction}
+          canSetDirection={this.canSetDirection}
+          onSetDirection={this.handleSetDirection}
+          onSetSelected={this.handleSetSelected}
           onPressEnter={() => this.setState({ editingClue: true }, this.focusClue.bind(this))}
-          updateGrid={this.props.updateGrid}
+          onPressEscape={() => this.props.onUnfocus()}
+          onPressPeriod={this.handlePressPeriod}
+          updateGrid={this.handleUpdateGrid}
           grid={this.props.grid}
-          clues={this.props.clues}
-        >
+          clues={this.props.clues} >
 
-        <div className='editor--main'>
-          {this.renderLeft()}
-          <div className='editor--right'>
-            <div className='editor--main--clues'>
-              {
-                // Clues component
-                ['across', 'down'].map((dir, i) => (
-                  <div key={i} className='editor--main--clues--list'>
-                    <div className='editor--main--clues--list--title'>
-                      {dir.toUpperCase()}
-                    </div>
+          <Flex className='editor--main'>
+            {this.renderLeft()}
+            <Flex className='editor--right' column>
+              <Flex className='editor--main--clues' grow={1}>
+                {
+                  // Clues component
+                  ['across', 'down'].map((dir, i) => (
+                    <Flex key={i} className='editor--main--clues--list'>
+                      <Flex className='editor--main--clues--list--title'>
+                        {dir.toUpperCase()}
+                      </Flex>
 
-                    <div
-                      className={'editor--main--clues--list--scroll ' + dir}
-                      ref={'clues--list--'+dir}>
-                      {
-                        this.props.clues[dir].map((clue, i) => clue !== undefined && (
-                          <div key={i}
-                            className={
-                              (this.isClueSelected(dir, i)
-                                ? 'selected '
-                                : (this.isClueHalfSelected(dir, i)
-                                  ? 'half-selected '
-                                  : ' ')
-                              )
-                                + 'editor--main--clues--list--scroll--clue'
-                            }
-                            ref={
-                              (this.isClueSelected(dir, i) ||
-                                this.isClueHalfSelected(dir, i))
-                                ? this.scrollToClue.bind(this, dir, i)
-                                : null
-                            }
-                            onClick={this.selectClue.bind(this, dir, i)}>
-                            <div className='editor--main--clues--list--scroll--clue--number'>
-                              {i}
-                            </div>
-                            <div className='editor--main--clues--list--scroll--clue--text'>
-                              {clue}
-                            </div>
-                          </div>
-                        ))
-                      }
-                    </div>
-                  </div>
-                ))
-              }
-            </div>
+                      <Flex column grow={1}>
+                        <Flex column grow={1} basis={1}
+                          className={'editor--main--clues--list--scroll ' + dir}
+                          ref={'clues--list--'+dir}>
+                          {
+                            this.props.clues[dir].map((clue, i) => clue !== undefined && (
+                              <Flex shrink={0} key={i}
+                                className={
+                                  (this.isClueSelected(dir, i)
+                                    ? 'selected '
+                                    : (this.isClueHalfSelected(dir, i)
+                                      ? 'half-selected '
+                                      : ' ')
+                                  )
+                                    + 'editor--main--clues--list--scroll--clue'
+                                }
+                                ref={
+                                  (this.isClueSelected(dir, i) ||
+                                    this.isClueHalfSelected(dir, i))
+                                    ? this.scrollToClue.bind(this, dir, i)
+                                    : null
+                                }
+                                onClick={() => {this.handleSelectClue(dir, i)}}>
+                                <Flex className='editor--main--clues--list--scroll--clue--number' shrink={0}>
+                                  {i}
+                                </Flex>
+                                <Flex className='editor--main--clues--list--scroll--clue--text' shrink={1}>
+                                  {clue}
+                                </Flex>
+                              </Flex>
+                            ))
+                          }
+                        </Flex>
+                      </Flex>
+                    </Flex>
+                  ))
+                }
+              </Flex>
 
-            <div className='editor--right--hints'>
-              <Hints
-                grid={this.props.grid}
-                num={this.getSelectedClueNumber()}
-                direction={this.state.direction}
-              />
-            </div>
-          </div>
-        </div>
-      </GridControls>
-    </div>
+              {<Flex className='editor--right--hints'>
+                <Hints
+                  grid={this.props.grid}
+                  num={this.selectedClueNumber}
+                  direction={direction}
+                />
+              </Flex>}
+            </Flex>
+          </Flex>
+        </GridControls>
+      </Flex>
     );
   }
 }

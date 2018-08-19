@@ -8,6 +8,7 @@ import Nav from '../components/Nav';
 import Upload from '../components/Upload';
 import { getUser, PuzzlelistModel } from '../store';
 import PuzzleList from '../components/PuzzleList';
+import { isMobile } from '../jsUtils';
 
 export default class WelcomeV2 extends Component {
 
@@ -29,6 +30,7 @@ export default class WelcomeV2 extends Component {
       search: '',
     };
     this.loading = false;
+    this.mobile = isMobile();
   }
 
   componentDidMount() {
@@ -56,6 +58,11 @@ export default class WelcomeV2 extends Component {
   get done() {
     const { pages, puzzles } = this.state;
     return puzzles.length < pages * this.puzzleList.pageSize;
+  }
+
+  get showingSidebar() {
+    // eventually, allow mobile to toggle sidebar
+    return !this.mobile;
   }
 
   nextPage = () => {
@@ -131,13 +138,16 @@ export default class WelcomeV2 extends Component {
     const groupStyle = {
       padding: 20,
     };
+    const inputStyle = {
+      margin: 'unset',
+    };
 
     const checkboxGroup = (header, items, handleChange) => (
       <Flex column style={groupStyle} className='checkbox-group'>
         <span style={headerStyle}>{header}</span>
         {_.keys(items).map((name, i) => (
           <label key={i} onMouseDown={e => {e.preventDefault();}}>
-            <input type="checkbox" checked={items[name]} onChange={e => {
+            <input type="checkbox" style={inputStyle} checked={items[name]} onChange={e => {
               handleChange(header, name, e.target.checked);
             }}/>
             <div className='checkmark'/>
@@ -157,16 +167,26 @@ export default class WelcomeV2 extends Component {
 
   renderSearch() {
     const { search } = this.state;
+    const style = {
+      fontSize: 16,
+      padding: 5,
+      width: 735,
+      borderRadius: 3,
+      border: '2px solid silver',
+    };
     return (
-      <Flex>
-        <input placeholder='Search' onInput={this.handleSearchInput} val={search}/>
+      <Flex style={{
+        padding: 25,
+        borderBottom: '2px solid #6AA9F4',
+      }} shrink={0}>
+        <input placeholder='Search' onInput={this.handleSearchInput} val={search} style={style}/>
       </Flex>
     );
   }
 
   renderQuickUpload() {
     return (
-      <Flex column className="quickplay">
+      <Flex className="quickplay" style={{width: 200}}>
         <Upload v2/>
       </Flex>
     );
@@ -182,12 +202,14 @@ export default class WelcomeV2 extends Component {
           <Nav v2/>
         </div>
         <Flex grow={1} basis={1}>
-          <Flex className='welcomev2--sidebar' column shrink={0} style={{justifyContent: 'space-between'}}>
-            { this.renderFilters() }
+          { this.showingSidebar && (
+            <Flex className='welcomev2--sidebar' column shrink={0} style={{justifyContent: 'space-between'}}>
+              { this.renderFilters() }
+              { !this.mobile && this.renderQuickUpload() }
+            </Flex>
+          )}
+          <Flex className='welcomev2--main' column grow={1}>
             { this.renderSearch() }
-            { this.renderQuickUpload() }
-          </Flex>
-          <Flex className='welcomev2--main'>
             { this.renderPuzzles() }
           </Flex>
         </Flex>

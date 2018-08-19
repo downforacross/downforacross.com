@@ -52,6 +52,68 @@ export const makeGrid = (textGrid, fillWithSol) => {
   return grid;
 };
 
+export const makeGridFromComposition = (compositionGrid) => {
+  const newGridArray = compositionGrid.map(row =>
+    row.map(({value, pencil}) => ({
+      black: value === '.',
+      value: value === '.' ? '' : value,
+      pencil,
+      number: null
+    }))
+  );
+  const grid = new Grid(newGridArray);
+  grid.assignNumbers();
+  return grid;
+};
+
+
+export const makeClues = (cluesBySquare, grid) => {
+  const result = {
+    across: [],
+    down: [],
+  };
+  cluesBySquare.forEach(({r, c, dir, value}) => {
+    const num = grid[r][c].number;
+    if (num) {
+      result[dir][num] = value;
+    }
+  });
+  const alignedResult = new Grid(grid).alignClues(result);
+  return alignedResult;
+};
+
+export const convertCluesForComposition = (clues, gridObject) => {
+  const alignedClues = gridObject.alignClues(clues);
+  const result = [];
+  ['across', 'down'].forEach(dir => {
+    alignedClues[dir].forEach((value, i) => {
+      if (value) {
+        const cell = gridObject.getCellByNumber(i);
+        if (!cell) {
+          return;
+        }
+        const { r, c } = cell;
+        result.push({
+          dir,
+          r,
+          c,
+          value,
+        });
+      }
+    });
+  });
+  return result;
+};
+
+export const convertGridForComposition = (grid) => {
+  return grid.map(row => row.map(value => ({
+    value,
+  })));
+};
+
+
+
+
 export const makeGame = (gid, name, puzzle) => {
   const grid = makeGrid(puzzle.grid);
   const clues = grid.alignClues(puzzle.clues);
@@ -111,10 +173,19 @@ export const getReferencedClues = (str, clues) => {
       str = str.substr(b + 'down'.length);
     }
   }
-  if (str.indexOf('starred clues') !== -1) {
+
+  const referencesStars = (
+    str.indexOf('starred') !== -1 &&
+    ( str.indexOf('clue') !== -1 ||
+      str.indexOf('entry') !== -1 ||
+      str.indexOf('entries') !== -1
+    )
+  );
+  if (referencesStars) {
     ['down', 'across'].forEach(dir => {
       clues[dir].forEach((clueText, i) => {
-        if (clueText.startsWith('*')) {
+        const hasStar = clueText.trim().startsWith('*') || clueText.trim().endsWith('*');
+        if (hasStar) {
           res.push({
             ori: dir,
             num: i,

@@ -49,10 +49,11 @@
 }
 
 .chatv2--message {
+  display: inline-block;
   font-size: 15px;
-  display: block;
   padding-left: 20px;
   word-wrap: break-word;
+  align-items: center;
 }
 
 .chatv2--message--sender {
@@ -62,6 +63,10 @@
 
 .chatv2--message--text {
   margin-left: 5px;
+}
+
+.big .chatv2--message--text {
+  font-size: 200%;
 }
 
 .chatv2--bar {

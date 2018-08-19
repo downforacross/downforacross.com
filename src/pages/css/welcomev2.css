@@ -10,20 +10,6 @@
   flex-direction: row;
 }
 
-.welcomev2--browse--filter {
-  flex: 1;
-  padding: 15px 15px 15px 15px;
-  border-right: 1px solid #9B9B9B;
-  display: flex;
-  flex-direction: column;
-  display: none;
-}
-
-.welcomev2--browse--filter--header {
-  font-size: 20px;
-  margin-left: 3px;
-}
-
 .welcomev2--browse--puzzlelist--wrapper {
   flex: 6;
   height: 100%;
@@ -42,8 +28,8 @@
 }
 
 .welcomev2--main {
-  border-left: 1px solid gray;
-  padding: 10px;
+  border-left: 2px solid #6AA9F4;
+  /* padding: 10px; */
   overflow: hidden;
 }
 
@@ -77,7 +63,7 @@
   top: 3px;
   margin-right: 10px;
   background-color: white !important;
-  outline: 1px solid gray;
+  border: 1px solid gray;
 }
 
 .filters input {
@@ -104,16 +90,14 @@
 
 .quickplay {
   padding-top: 10px;
-  border-top: 1px solid gray;
+  border-top: 2px solid #6AA9F4;
 }
 
 .entryv2 {
   cursor: pointer;
   white-space: nowrap;
-  margin-right: 20px;
-  margin-top: 20px;
+  /* margin-right: 25px; */
   position: relative;
-  overflow: hidden;
   display: block;
   border: 1px solid silver;
   border-radius: 3px;
@@ -121,25 +105,32 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 10px;
+  padding: 15px;
   font-size: 15px;
   width: 330px;
 }
 
 .entryv2--top--left {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 400;
   color: rgba(0, 0, 0, 0.7);
-  margin-left: 10px;
-  margin-right: 10px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /* margin-left: 10px; */
+  /* margin-right: 10px; */
+  padding: 10px;
+  padding-bottom: 0;
+  justify-content: space-between;
 }
 
 .entryv2--main {
-  overflow: hidden;
-  text-overflow: ellipsis;
+  padding-top: 0px;
   padding: 10px;
+}
+
+.entryv2--icon {
+  position: relative;
+  z-index: 1;
+  bottom: 15px;
+  left: 15px;
 }
 
 .entryv2.started {
@@ -236,3 +227,12 @@
     background: #F0F0F0;
 }
 
+input::placeholder {
+  color: silver;
+  font-weight: 200;
+}
+
+p {
+  margin-top: unset;
+  margin-bottom: unset;
+}

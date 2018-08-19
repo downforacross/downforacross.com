@@ -18,8 +18,10 @@ export default class GameV2 extends Component {
   }
 
   componentDidMount() {
+    const screenWidth = window.innerWidth - 1; // this is important for mobile to fit on screen
+    // with body { overflow: hidden }, it should disable swipe-to-scroll on iOS safari)
     this.setState({
-      screenWidth: window.innerWidth,
+      screenWidth,
     });
   }
 
@@ -49,7 +51,7 @@ export default class GameV2 extends Component {
     const { id, myColor } = this.props;
     const { pencilMode } = this.state;
     this.gameModel.updateCell(r, c, id, myColor, pencilMode, value);
-    this.props.onChange();
+    this.props.onChange({isEdit: true});
   }
 
   handleUpdateCursor = ({r, c}) => {
@@ -92,8 +94,14 @@ export default class GameV2 extends Component {
     });
   }
 
+  handleRefocus = () => {
+    this.focus();
+  }
+
+  handlePressPeriod = this.handleTogglePencil
+
   handlePressEnter = () => {
-    this.props.onPressEnter(this);
+    this.props.onUnfocus();
   }
 
   focus() {
@@ -104,6 +112,7 @@ export default class GameV2 extends Component {
     const {
       id,
       myColor,
+      mobile,
     } = this.props;
     if (!this.game) {
       return (
@@ -137,7 +146,8 @@ export default class GameV2 extends Component {
         updateGrid={this.handleUpdateGrid}
         updateCursor={this.handleUpdateCursor}
         onPressEnter={this.handlePressEnter}
-        mobile={false}
+        onPressPeriod={this.handlePressPeriod}
+        mobile={mobile}
       />
     );
   }
@@ -145,6 +155,7 @@ export default class GameV2 extends Component {
   renderToolbar() {
     if (!this.game) return;
     const { clock } = this.game;
+    const { mobile } = this.props;
     const { pencilMode } = this.state;
     const {
       lastUpdated: startTime,
@@ -154,7 +165,7 @@ export default class GameV2 extends Component {
     return (
       <Toolbar
         v2={true}
-        mobile={false}
+        mobile={mobile}
         startTime={startTime}
         pausedTime={pausedTime}
         isPaused={isPaused}
@@ -166,17 +177,19 @@ export default class GameV2 extends Component {
         onReveal={this.handleReveal}
         onReset={this.handleReset}
         onTogglePencil={this.handleTogglePencil}
+        onRefocus={this.handleRefocus}
       />
     );
   }
 
   render() {
+    const padding = this.props.mobile ? 0 : 20;
     return (
       <Flex column>
         {this.renderToolbar()}
         <div
           style={{
-            padding: 20,
+            padding,
           }}>
           {this.renderPlayer()}
         </div>

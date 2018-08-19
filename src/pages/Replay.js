@@ -2,6 +2,7 @@ import './css/replay.css';
 
 import React, { Component } from 'react';
 import Flex from 'react-flexview';
+import { Helmet } from 'react-helmet';
 import _ from 'lodash';
 
 import HistoryWrapper from '../utils/historyWrapper';
@@ -232,7 +233,7 @@ export default class Replay extends Component {
       position: 0,
     };
     this.followCursor = -1;
-    this.historyWrapper = new HistoryWrapper([]);
+    this.historyWrapper = null;
   }
 
   handleSetPosition = position => {
@@ -246,6 +247,7 @@ export default class Replay extends Component {
   get game() {
     // compute the game state corresponding to current playback time
     const { position } = this.state;
+    if (!this.historyWrapper) return null;
     return this.historyWrapper.getSnapshotAt(position);
   }
 
@@ -590,10 +592,20 @@ export default class Replay extends Component {
     );
   }
 
+  getPuzzleTitle() {
+    if (!this.historyWrapper) return '';
+    const game = this.historyWrapper.getSnapshot();
+    if (!game || !game.info) return '';
+    return game.info.title;
+  }
+
   render() {
     return (
       <Flex column className='replay'>
-        <Nav mobile={false} />
+        <Nav v2/>
+        <Helmet>
+          <title>{`Replay ${this.gid}: ${this.getPuzzleTitle()}`}</title>
+        </Helmet>
         <div style={{
           paddingLeft: 30,
           paddingTop: 20,

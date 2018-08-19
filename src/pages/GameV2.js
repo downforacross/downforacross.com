@@ -9,14 +9,18 @@ import Flex from 'react-flexview';
 import { GameModel, getUser } from '../store';
 import HistoryWrapper from '../utils/historyWrapper';
 import Game from '../components/Game';
+import MobilePanel from '../components/MobilePanel';
 import ChatV2 from '../components/ChatV2';
 import redirect from '../redirect';
+import { isMobile } from '../jsUtils';
 
 export default class GameV2 extends Component {
   constructor(props) {
     super();
     this.state = {
       gid: undefined,
+      mobile: isMobile(),
+      mode: 'game',
     };
     this.initializeUser();
   }
@@ -34,8 +38,7 @@ export default class GameV2 extends Component {
   initializeUser() {
     this.user = getUser();
     this.user.onAuth(() => {
-      // const id = this.user.id;
-      // const color = this.user.color;
+      this.forceUpdate();
     });
   }
 
@@ -43,11 +46,19 @@ export default class GameV2 extends Component {
     if (this.gameModel) this.gameModel.detach();
     this.gameModel = new GameModel(`/game/${this.state.gid}`);
     this.historyWrapper = new HistoryWrapper();
-    this.gameModel.addListener('event', event => {
+    this.gameModel.on('createEvent', event => {
+      if (!event.params || event.params.type) {
+        redirect(`/game/${this.state.gid}`, 'Redirecting to old site...');
+      }
+      this.historyWrapper.setCreateEvent(event);
+      this.handleUpdate();
+    });
+    this.gameModel.on('event', event => {
       if (!event.params || event.params.type) {
         redirect(`/game/${this.state.gid}`, 'Redirecting to old site...');
       }
       this.historyWrapper.addEvent(event);
+      this.handleChange();
       this.handleUpdate();
     });
     this.gameModel.attach();
@@ -67,12 +78,28 @@ export default class GameV2 extends Component {
     }
   }
 
-  handlePressEnter = (el) => {
-    if (el === this.chat) {
-      this.game && this.game.focus();
-    } else if (el === this.game) {
-      this.chat && this.chat.focus();
-    }
+  get showingGame() {
+    return !this.state.mobile || this.state.mode === 'game';
+  }
+
+  get showingChat() {
+    return !this.state.mobile || this.state.mode === 'chat';
+  }
+
+  get game() {
+    return this.historyWrapper.getSnapshot();
+  }
+
+  handleChat = (username, id, message) => {
+    this.gameModel.chat(username, id, message)
+  }
+
+  handleUnfocusGame = () => {
+    this.chat && this.chat.focus();
+  }
+
+  handleUnfocusChat = () => {
+    this.gameComponent && this.gameComponent.focus();
   }
 
   handleUpdate = _.debounce(() => {
@@ -81,16 +108,16 @@ export default class GameV2 extends Component {
     leading: true,
   });
 
-  handleChange = _.debounce(() => {
-    const game = this.historyWrapper.getSnapshot();
-    if (game.solved) {
-      this.user.markSolved(this.state.gid);
-    } else {
+  handleChange = _.debounce(({isEdit = false} = {}) => {
+    if (isEdit) {
       this.user.joinGame(this.state.gid, {
-        pid: game.pid,
+        pid: this.game.pid,
         solved: false,
         v2: true,
       });
+    }
+    if (this.game.solved) {
+      this.user.markSolved(this.state.gid);
     }
   });
 
@@ -98,27 +125,28 @@ export default class GameV2 extends Component {
   // Render Methods
 
   renderGame() {
-    if (!this.gameModel) {
+    if (!this.gameModel || !this.gameModel.attached) {
       return;
     }
 
+    const { mobile } = this.state;
     const { id, color } = this.user;
     return (
       <Game
-        ref={c => {this.game = c;}}
+        ref={c => {this.gameComponent = c;}}
         id={id}
         myColor={color}
         historyWrapper={this.historyWrapper}
         gameModel={this.gameModel}
-        onPressEnter={this.handlePressEnter}
+        onUnfocus={this.handleUnfocusGame}
         onChange={this.handleChange}
-
+        mobile={mobile}
       />
     );
   }
 
   renderChat() {
-    if (!this.gameModel) {
+    if (!this.gameModel || !this.gameModel.attached) {
       return;
     }
 
@@ -126,17 +154,20 @@ export default class GameV2 extends Component {
     return (
       <ChatV2
         ref={c => {this.chat = c;}}
+        info={this.game.info}
+        data={this.game.chat}
         id={id}
         myColor={color}
-        historyWrapper={this.historyWrapper}
-        gameModel={this.gameModel}
-        onPressEnter={this.handlePressEnter}
+        onChat={this.handleChat}
+        onUnfocus={this.handleUnfocusChat}
       />
     );
   }
 
   getPuzzleTitle() {
-    if (!this.historyWrapper) return '';
+    if (!this.gameModel || !this.gameModel.attached) {
+      return;
+    }
     const game = this.historyWrapper.getSnapshot();
     if (!game || !game.info) return '';
     return game.info.title;
@@ -153,13 +184,14 @@ export default class GameV2 extends Component {
         <Helmet>
           <title>{this.getPuzzleTitle()}</title>
         </Helmet>
-        <Nav v2/>
+        <Nav v2 hidden={this.state.mobile}/>
+        <MobilePanel/>
         <Flex className='room--main' grow={1}>
           <Flex column shrink={0}>
-            { this.renderGame() }
+            { this.showingGame && this.renderGame() }
           </Flex>
           <Flex grow={1}>
-            { this.renderChat() }
+            { this.showingChat && this.renderChat() }
           </Flex>
         </Flex>
       </Flex>

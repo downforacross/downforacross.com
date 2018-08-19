@@ -1,15 +1,14 @@
-import { db, SERVER_TIME } from './firebase';
+import _ from 'lodash';
 import EventEmitter from 'events';
 
-import Puzzle from './puzzle';
+import { db, SERVER_TIME } from './firebase';
 
-// a wrapper class that models Game
-
-const CURRENT_VERSION = 1.0;
-export default class Game extends EventEmitter {
+// a wrapper class that models Composition
+//
+export const CURRENT_VERSION = 1.0;
+export default class Composition extends EventEmitter {
   constructor(path) {
     super();
-    this.path = path;
     this.ref = db.ref(path);
     this.events = this.ref.child('events');
     this.createEvent = null;
@@ -20,9 +19,8 @@ export default class Game extends EventEmitter {
     this.events.on('child_added', snapshot => {
       const event = snapshot.val();
       if (event.type === 'create') {
-        this.attached = true;
         this.createEvent = event;
-        this.subscribeToPuzzle();
+        this.attached = true;
         this.emit('createEvent', event);
       } else {
         this.emit('event', event);
@@ -34,38 +32,40 @@ export default class Game extends EventEmitter {
     this.events.off('child_added');
   }
 
-  subscribeToPuzzle() {
-    if (!this.createEvent) return;
-    const { pid } = this.createEvent.params;
-    if (!pid) return;
-    const puzzle = new Puzzle(`/puzzle/${pid}`, pid);
-    puzzle.on('ready', () => {
-      const event = {
-        ...this.createEvent,
-        params: {
-          ...this.createEvent.params,
-          game: puzzle.toGame(),
-        },
-      };
-      this.createEvent = event;
-      this.emit('createEvent', event);
-    });
-    puzzle.attach();
-  }
-
-  updateCell(r, c, id, color, pencil, value) {
+  updateCellText(r, c, value) {
     this.events.push({
       timestamp: SERVER_TIME,
-      type: 'updateCell',
+      type: 'updateCellText',
       params: {
         cell: {r, c},
         value,
-        color,
-        pencil,
-        id,
       },
     });
   }
+
+  updateCellColor(r, c, color) {
+    this.events.push({
+      timestamp: SERVER_TIME,
+      type: 'updateCellColor',
+      params: {
+        cell: {r, c},
+        color,
+      },
+    });
+  }
+
+  updateClue(r, c, dir, value) {
+    this.events.push({
+      timestamp: SERVER_TIME,
+      type: 'updateClue',
+      params: {
+        cell: {r, c},
+        dir,
+        value,
+      },
+    });
+  }
+
 
   updateCursor(r, c, id, color) {
     this.events.push({
@@ -80,43 +80,22 @@ export default class Game extends EventEmitter {
     });
   }
 
-  updateClock(action) {
+  updateTitle(text) {
     this.events.push({
       timestamp: SERVER_TIME,
-      type: 'updateClock',
+      type: 'updateTitle',
       params: {
-        action,
-        timestamp: SERVER_TIME,
+        text,
       },
     });
   }
 
-  check(scope) {
+  updateAuthor(text) {
     this.events.push({
       timestamp: SERVER_TIME,
-      type: 'check',
+      type: 'updateAuthor',
       params: {
-        scope,
-      },
-    });
-  }
-
-  reveal(scope) {
-    this.events.push({
-      timestamp: SERVER_TIME,
-      type: 'reveal',
-      params: {
-        scope,
-      },
-    });
-  }
-
-  reset(scope) {
-    this.events.push({
-      timestamp: SERVER_TIME,
-      type: 'reset',
-      params: {
-        scope,
+        text,
       },
     });
   }
@@ -133,50 +112,60 @@ export default class Game extends EventEmitter {
     });
   }
 
-  initialize(rawGame) {
+  import(filename, contents) {
+    const {info, grid, circles, clues} = contents;
+    this.events.push({
+      timestamp: SERVER_TIME,
+      type: 'updateComposition',
+      params: {
+        filename, // unused, for now
+        info,
+        grid,
+        circles,
+        clues,
+      },
+    });
+  }
+
+  initialize(rawComposition = {}) {
     const {
-      info = {},
-      grid = [ [ {} ] ],
-      solution = [ [ '' ] ],
+      info = {
+        title: 'Untitled',
+        author: 'Anonymous',
+      },
+      grid = _.range(6).map(() => _.range(6).map(() => ({
+        value: '',
+      }))),
+      clues = [],
       circles = [],
       chat = { messages: [] },
       cursor = {},
-      clues = {},
-      clock = {
-        lastUpdated: 0,
-        totalTime: 0,
-        paused: true,
-      },
-      solved = false,
-      pid,
-    } = rawGame;
+    } = rawComposition;
 
     // TODO validation
 
-    const game = {
+    const composition = {
       info,
       grid,
-      solution,
+      clues,
       circles,
       chat,
       cursor,
-      clues,
-      clock,
-      solved,
     };
     const version = CURRENT_VERSION;
     // nuke existing events
-    this.events.set({}).then(() => {
-      this.events.push({
+    return this.events.set({}).then(() => {
+      return this.events.push({
         timestamp: SERVER_TIME,
         type: 'create',
         params: {
-          pid,
           version,
-          game,
+          composition,
         },
       });
+    }).then(() => {
+      return this.ref.child('published').set(false);
     });
-    this.ref.child('pid').set(pid);
   }
 }
+

@@ -24,6 +24,11 @@ export default class Grid extends React.PureComponent {
     return new GridObject(this.props.grid);
   }
 
+  get selectedIsWhite() {
+    const { selected } = this.props;
+    return this.grid.isWhite(selected.r, selected.c);
+  }
+
   isSelected(r, c) {
     const { selected } = this.props;
     return r === selected.r && c === selected.c;
@@ -42,6 +47,7 @@ export default class Grid extends React.PureComponent {
   }
 
   isHighlighted(r, c) {
+    if (!this.selectedIsWhite) return false;
     const { selected, direction } = this.props;
     const selectedParent = this.grid.getParent(selected.r, selected.c, direction);
     return (
@@ -58,6 +64,7 @@ export default class Grid extends React.PureComponent {
   }
 
   handleClick(r, c) {
+    if (!this.grid.isWhite(r, c) && !this.props.editMode) return;
     if (this.isSelected(r, c)) {
       this.props.onChangeDirection();
     } else {

@@ -8,15 +8,16 @@ export default class Hints extends Component {
   constructor() {
     super();
     this.state = {
-      pattern: 'loading...',
       list: [],
-      hidden: false,
+      hidden: true,
     };
     this.scores = {};
   }
 
-  componentWillReceiveProps(props) {
-    this.startComputing();
+  componentDidUpdate(prevProps, prevState) {
+    if (!this.hidden) {
+      this.startComputing();
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -78,10 +79,8 @@ export default class Hints extends Component {
     }
     this.computing = true;
     requestIdleCallback(() => {
-      const pattern = this.getPattern();
-      findMatches(pattern, matches => {
+      findMatches(this.pattern, matches => {
         this.setState({
-          pattern: pattern,
           list: matches,
         });
         this.scores = {}; // reset
@@ -91,7 +90,7 @@ export default class Hints extends Component {
     });
   }
 
-  getPattern() {
+  get pattern() {
     return getPatterns(this.props.grid)[this.props.direction][this.props.num];
   }
 
@@ -111,7 +110,7 @@ export default class Hints extends Component {
           }}
         >
           <span style={{float:'left'}}>
-            Pattern: {this.state.pattern}
+            Pattern: {this.pattern}
           </span>
           <span style={{float:'right'}}>
             Matches: {this.state.list.length}

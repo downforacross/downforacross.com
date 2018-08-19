@@ -60,6 +60,10 @@ export default class GridControls extends Component {
     this.setSelected(firstEmptyCell || clueRoot);
   }
 
+  isSelectable(r, c) {
+    return this.props.editMode || this.grid.isWhite(r, c);
+  }
+
   // factored out handleAction for mobileGridControls
   handleAction(action, shiftKey) {
     const moveSelectedBy = (dr, dc) => () => {
@@ -72,8 +76,7 @@ export default class GridControls extends Component {
       step();
       safe_while(() => (
         this.grid.isInBounds(r, c)
-        && !this.grid.isWhite(r, c)
-      ), step);
+        && !this.isSelectable(r, c)      ), step);
       if (this.grid.isInBounds(r, c)) {
         this.setSelected({ r, c });
       }
@@ -142,15 +145,21 @@ export default class GridControls extends Component {
       ' ': 'space',
     };
 
-    const { onPressEnter } = this.props;
+    const { onPressEnter, onPressPeriod, onPressEscape } = this.props;
     if (ev.key in actionKeys) {
       ev.preventDefault();
       ev.stopPropagation();
       this.handleAction(actionKeys[ev.key], ev.shiftKey);
+    } else if (ev.key === '.') {
+      ev.preventDefault();
+      ev.stopPropagation();
+      onPressPeriod && onPressPeriod();
     } else if (ev.key === 'Enter') {
       ev.preventDefault();
       ev.stopPropagation();
       onPressEnter && onPressEnter();
+    } else if (ev.key === 'Escape') {
+      onPressEscape && onPressEscape();
     } else {
       const letter = ev.key.toUpperCase();
       if (!ev.metaKey && !ev.ctrlKey && this.validLetter(letter)) {

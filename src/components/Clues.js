@@ -1,5 +1,5 @@
 import './css/clues.css';
-
+import Clue from './ClueText';
 import React, { Component } from 'react';
 
 export default class Clues extends Component{
@@ -71,7 +71,7 @@ export default class Clues extends Component{
                                 {i}
                               </div>
                               <div className='clues--list--scroll--clue--text'>
-                                {clue}
+                                <Clue text={clue}/>
                                 {
                                   showClueLengths
                                     ?  <span className='clues--list--scroll--clue--hint'>

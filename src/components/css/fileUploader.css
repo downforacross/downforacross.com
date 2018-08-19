@@ -8,7 +8,6 @@
 .file-uploader--wrapper {
   background-color: #FAFAFA;
   outline: 2px dashed #AAA;
-  outline-offset: -10px;
   width: 100%;
   flex: 1;
 }
@@ -22,7 +21,7 @@
 }
 
 .file-uploader--box--icon {
-  fill: #AAA;
+  fill: #6AA9F4;
   cursor: pointer;
   text-align: center;
   margin-top: 40px;

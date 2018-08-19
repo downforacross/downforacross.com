@@ -1,15 +1,14 @@
 import './css/cell.css';
-import { getTime } from '../actions';
 
 import React, { Component } from 'react';
+import _ from 'lodash';
 
+import { getTime } from '../actions';
 /*
  * Summary of Cell component
  *
  * Props: { black, selected, highlighted, bad, good, helped,
  *          value, onClick, cursor }
- *
- * State: {}
  *
  * Children: []
  *
@@ -20,10 +19,7 @@ import React, { Component } from 'react';
 export default class Cell extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
-    if(['black', 'selected', 'highlighted', 'bad', 'good', 'helped', 'revealed', 'value', 'number', 'myColor', 'referenced'].some(attr => this.props[attr] !== nextProps[attr])) {
-      return true;
-    }
-
+    if (!_.isEqual(_.omit(nextProps, 'cursors'), _.omit(this.props, 'cursors'))) return true;
     const { cursors } = this.props;
     if (nextProps.cursors.length !== cursors.length) {
       return true;
@@ -89,13 +85,17 @@ export default class Cell extends Component {
     } = this.props;
     if (black) {
       return (
-        <div className='cell black'>
-          { this.renderFlipButton() }
-        </div>
+        <div className={'cell black ' + (selected ? 'selected' : '')}
+        style={selected
+            ? { borderColor: myColor }
+            : undefined
+        }
+        onClick={onClick}
+        />
       );
     }
 
-    let val = value;
+    let val = value || '';
 
     let l = Math.max(1, val.length);
     return (

@@ -1,18 +1,20 @@
 .upload {
   display: flex;
   flex-direction: column;
+  padding: 20px;
 }
 
 .upload--main {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  /* width: 150px; [> TODO: remove this non-flex layout <] */
 }
 
 .upload--main--upload {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  /* flex-basis: 150px; */
 }
 
 .upload--main--upload--title {
@@ -33,6 +35,7 @@
 }
 
 .upload--success {
+  margin-top: 10px;
   font-size: 12px;
   text-align: center;
 }
