@@ -131,6 +131,43 @@ export default class Chat extends Component {
     );
   }
 
+  color(string) {
+    if (string.length > 1){
+      return (
+        <span style={{color:'blue'}}>{string}</span>
+      );      
+    } else {
+      return (
+        <span>{string}</span>
+      );      
+    }
+  }
+
+  something(text){
+    let stuff = []
+    let z = 0
+    while(z < text.length) {
+      if (text[z] != '@') {
+        stuff.push(text[z])
+        z += 1
+      } else {
+        stuff.push(text.substr(z, z+4))
+        z += 4
+      }
+    }
+    return <span className='chatv2--message--text'> {stuff.map(this.color)} </span>;
+  }
+
+  renderSomething(message, i){
+    return (
+      <div key={i} className='chatv2--message'>
+        <span className='chatv2--message--sender'>{message.sender}</span>
+        {':'}
+        {this.something(message.text)}
+      </div>
+    );
+  }
+
   render() {
     return (
       <div className='chatv2'>
@@ -150,7 +187,7 @@ export default class Chat extends Component {
               <div key={i} className='chatv2--message'>
                 <span className='chatv2--message--sender'>{message.sender}</span>
                 {':'}
-                <span className='chatv2--message--text'>{message.text}</span>
+                {this.something(message.text)}
               </div>
             ))
           }
