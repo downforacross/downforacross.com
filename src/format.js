@@ -20,7 +20,7 @@ const infoToMeta = info => {
 
 const gridToTextGrid = grid => {
   return grid.map(row => row.map(cell => (
-    cell.value
+    cell.black ? '.' : cell.value
   )));
 };
 
@@ -73,9 +73,7 @@ const f = () => ({
         unalignedClues[dir][num] = value;
       }
     });
-    console.log(unalignedClues);
     const clues = new GridObject(grid).alignClues(unalignedClues);
-    console.log(clues);
 
     return intermediate({
       info,

@@ -49,7 +49,6 @@ export default class Composition extends Component {
 
   initializeComposition() {
     this.compositionModel = new CompositionModel(`/composition/${this.cid}`);
-    console.log('initialize composition');
     this.historyWrapper = new ComposeHistoryWrapper();
     this.compositionModel.on('createEvent', event => {
       this.historyWrapper.setCreateEvent(event);
