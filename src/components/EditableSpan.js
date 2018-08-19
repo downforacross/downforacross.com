@@ -19,29 +19,6 @@ export default class EditableSpan extends Component {
     this.props.onBlur && this.props.onBlur();
   }
 
-  handleFocus = () => {
-    this.focused = true;
-  }
-
-  handleBlur = () => {
-    this.focused = false;
-  }
-
-  get displayValue() {
-    const { value = '(blank)' } = this.props;
-    let result = value;
-    const nbsp = String.fromCharCode('160');
-    while (result.indexOf(' ') !== -1) {
-      result = result.replace(' ', nbsp);
-    }
-    return result;
-  }
-
-  get caret() {
-    if (!this.focused) return new Caret();
-    return new Caret(this.span.current && this.span.current.childNodes[0]);
-  }
-
   componentDidMount() {
     this.text = this.displayValue;
   }
@@ -54,11 +31,21 @@ export default class EditableSpan extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.value !== this.props.value) {
-      this.text = this.displayValue;
+      // this.text = this.displayValue;
       if (snapshot.start !== undefined && snapshot.start !== this.caret.startPosition) {
         this.caret.startPosition = snapshot.start;
       }
     }
+  }
+
+  get displayValue() {
+    const { value = '(blank)' } = this.props;
+    let result = value;
+    const nbsp = String.fromCharCode('160');
+    while (result.indexOf(' ') !== -1) {
+      result = result.replace(' ', nbsp);
+    }
+    return result;
   }
 
   get text() {
@@ -76,6 +63,19 @@ export default class EditableSpan extends Component {
     if (this.text === val) return;
     // set text while retaining cursor position
     this.span.current.innerHTML = val;
+  }
+
+  handleFocus = () => {
+    this.focused = true;
+  }
+
+  handleBlur = () => {
+    this.focused = false;
+  }
+
+  get caret() {
+    if (!this.focused) return new Caret();
+    return new Caret(this.span.current && this.span.current.childNodes[0]);
   }
 
   handleKeyDown = (e) => {
