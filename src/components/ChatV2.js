@@ -1,28 +1,54 @@
 import './css/chatv2.css';
 
 import React, { Component } from 'react';
-import emoji from 'node-emoji';
-import nameGenerator from '../nameGenerator';
-import ChatBar from './ChatBar';
 
-const isEmojis = str => {
-  const res = str.match(/[A-Za-z,.0-9!-]/g);
-  return !res;
-};
+import nameGenerator from '../nameGenerator';
 
 export default class Chat extends Component {
   constructor() {
     super();
     this.state = {
       username: nameGenerator(),
+      message: '',
     };
-    this.chatBar = React.createRef();
   }
 
-  handleSendMessage = (message) => {
-    const { username } = this.state;
+  get game() {
+    if (!this.props.historyWrapper) return;
+    return this.props.historyWrapper.getSnapshot();
+  }
+
+  get messages() {
+    if (!this.game) return [];
+    if (!this.game.chat) return [];
+    return this.game.chat.messages || [];
+  }
+
+  sendChatMessage() {
+    const { username, message } = this.state;
     const { id } = this.props;
-    this.props.onChat(username, id, message);
+    this.props.gameModel.chat(username, id, message);
+  }
+
+  handleKeyPress = (ev) => {
+    const {
+      onPressEnter,
+    } = this.props;
+    const {
+      message,
+      username,
+    } = this.state;
+
+    if (ev.key === 'Enter') {
+      ev.stopPropagation();
+      ev.preventDefault();
+      if (username.length > 0 && message.length > 0) {
+        this.sendChatMessage();
+        this.setState({message: ''});
+      } else {
+        onPressEnter(this);
+      }
+    }
   }
 
   handleUsernameInputKeyPress = (ev) => {
@@ -33,26 +59,22 @@ export default class Chat extends Component {
     }
   }
 
+  handleChange = (ev) => {
+    this.setState({message: ev.target.value});
+  }
+
   handleChangeUsername = (ev) => {
     const username = ev.target.value;
     this.setState({ username });
   }
 
-  handleUnfocus = () => {
-    this.props.onUnfocus();
-  }
-
   focus() {
-    const chatBar = this.chatBar.current;
-    if (chatBar) {
-      chatBar.focus();
-    }
+    this.refs.input && this.refs.input.focus();
   }
 
   renderChatHeader() {
-    if (this.props.header) return this.props.header;
-    const { info = {} } = this.props;
-    const { title, author, type } = info;
+    if (!this.game) return null;
+    const { title, author, type } = this.game.info || {};
 
     return (
       <div className='chatv2--header'>
@@ -96,29 +118,57 @@ export default class Chat extends Component {
       return null;
     }
     return (
-      <ChatBar ref={this.chatBar}
-        placeHolder='[Enter] to chat'
-        onSendMessage={this.handleSendMessage}
-        onUnfocus={this.handleUnfocus}/>
+      <div className='chatv2--bar'>
+        <input
+          ref='input'
+          className='chatv2--bar--input'
+          placeholder='[Enter] to chat'
+          value={this.state.message}
+          onChange={this.handleChange}
+          onKeyPress={this.handleKeyPress}
+        />
+      </div>
     );
   }
 
-  renderMessage(message) {
-    const { sender, text } = message;
-    const big = text.length <= 10 && isEmojis(text);
+  color(string) {
+    if (string.length > 1){
+      return (
+        <span style={{color:'blue'}}>{string}</span>
+      );      
+    } else {
+      return (
+        <span>{string}</span>
+      );      
+    }
+  }
+
+  something(text){
+    let stuff = []
+    let z = 0
+    while(z < text.length) {
+      if (text[z] != '@') {
+        stuff.push(text[z])
+        z += 1
+      } else {
+        stuff.push(text.substr(z, z+4))
+        z += 4
+      }
+    }
+    return <span className='chatv2--message--text'> {stuff.map(this.color)} </span>;
+  }
+
+  renderSomething(message, i){
     return (
-      <div className={'chatv2--message' + (big ? ' big' : '')}>
+      <div key={i} className='chatv2--message'>
         <span className='chatv2--message--sender'>{message.sender}</span>
         {':'}
-        <span className={'chatv2--message--text'}>{emoji.emojify(message.text)}</span>
+        {this.something(message.text)}
       </div>
     );
   }
 
   render() {
-    const {
-      messages = [],
-    } = this.props.data;
     return (
       <div className='chatv2'>
         {this.renderChatHeader()}
@@ -133,8 +183,12 @@ export default class Chat extends Component {
           }
           className='chatv2--messages'>
           {
-            messages.map((message, i) => (
-              <div key={i}>{this.renderMessage(message)}</div>
+            this.messages.map((message, i) => (
+              <div key={i} className='chatv2--message'>
+                <span className='chatv2--message--sender'>{message.sender}</span>
+                {':'}
+                {this.something(message.text)}
+              </div>
             ))
           }
         </div>
