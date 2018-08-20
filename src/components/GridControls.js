@@ -112,6 +112,7 @@ export default class GridControls extends Component {
       'down': setDirection('down', moveSelectedBy(1, 0)),
       'right': setDirection('across', moveSelectedBy(0, 1)),
       'backspace': this.backspace.bind(this),
+      'delete': this.delete.bind(this),
       'tab': this.selectNextClue.bind(this),
       'space': flipDirection,
     };
@@ -141,6 +142,7 @@ export default class GridControls extends Component {
       'ArrowDown': 'down',
       'ArrowRight': 'right',
       'Backspace': 'backspace',
+      'Delete': 'delete',
       'Tab': 'tab',
       ' ': 'space',
     };
@@ -220,7 +222,6 @@ export default class GridControls extends Component {
     }
   }
 
-
   typeLetter(letter, isRebus) {
     const { r, c } = this.props.selected;
     const value = this.props.grid[r][c].value;
@@ -230,16 +231,21 @@ export default class GridControls extends Component {
     this.props.updateGrid(r, c, isRebus ? ((value || '').substr(0, 10) + letter) : letter);
   }
 
-  backspace(shouldStay) {
+  // Returns true if the letter was successfully deleted
+  delete() {
     let { r, c } = this.props.selected;
     if (this.props.grid[r][c].value !== '') {
       this.props.updateGrid(r, c, '');
-    } else {
-      if (!shouldStay) {
-        const cell = this.goToPreviousCell();
-        if (cell) {
-          this.props.updateGrid(cell.r, cell.c, '');
-        }
+      return true;
+    }
+    return false;
+  }
+
+  backspace(shouldStay) {
+    if (!this.delete() && !shouldStay){
+      const cell = this.goToPreviousCell();
+      if (cell) {
+        this.props.updateGrid(cell.r, cell.c, '');
       }
     }
   }
