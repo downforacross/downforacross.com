@@ -127,6 +127,19 @@ export default class Composition extends EventEmitter {
     });
   }
 
+  updateDimensions(width, height, {fromX = 'right', fromY = 'down'} = {}) {
+    this.events.push({
+      timestamp: SERVER_TIME,
+      type: 'updateDimensions',
+      params: {
+        width,
+        height,
+        fromX,
+        fromY,
+      },
+    });
+  }
+
   initialize(rawComposition = {}) {
     const {
       info = {
