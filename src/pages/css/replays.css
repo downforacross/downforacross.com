@@ -1,5 +1,5 @@
 .replays {
-  font-family: "Avenir Next", "Avenir", "sans serif";
+  font-family: "avenir next", avenir, 'Nunito', "helvetica neue", "Helvetica", "arial", sans-serif;
   height: 100%;
   width: 100%;
   min-width: min-content;
@@ -28,6 +28,32 @@
   user-select: none;
 }
 
+.replays .limit--container {
+  margin: 35px 0 0 0;
+}
+
+.replays .limit--text {
+  margin-right: 10px;
+}
+
+.replays .limit--button {
+  margin: 0 5px 0 5px;
+  text-align: left;
+  border-radius: 3px;
+  padding: 8px 15px 8px 15px;
+  border-top: 1px solid #CCC;
+  border-left: 1px solid #CCC;
+  border-bottom: 1px solid #CCC;
+  border-right: 1px solid #CCC;
+  cursor: pointer;
+}
+
+.replays .limit--button:hover {
+  transition: all ease-in 0.2s;
+  color: #111;
+  background-color: #DDDDDD;
+}
+
 .replays .scrub.active {
   color: #4d4dff;
   font-weight: bold;
@@ -46,13 +72,29 @@
   font-weight: 500;
 }
 
-
 .replays .main-table{
   table-layout: auto;
+  border-collapse: collapse;
   width: 100%;
+}
 
+.replays .main-table tr {
+  text-align: center; 
+}
+
+.replays .main-table tr:hover {
+  background-color:#A7D8FF;
 }
 
 .replays .main-table td {
- border-bottom: 1px solid #E2E2E2;
+  border-bottom: 1px solid #E2E2E2;
+  padding: 12px 0 12px 0;
+}
+
+.replays .main-table td a {
+  text-decoration: none;
+}
+
+.replays .main-table td a:hover {
+  text-decoration: underline;
 }
