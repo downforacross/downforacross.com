@@ -241,12 +241,12 @@ export default class Replays extends Component {
         <Helmet>
           <title>{this.pid ? `Replays ${this.pid}: ${this.getPuzzleTitle()}` : `Last ${limit} games`}</title>
         </Helmet>
-        <Flex shrink={0} hAlignContent='center'>
-          Limit: { limit }
+        <Flex className='limit--container' shrink={0} hAlignContent='center' vAlignContent='center'>
+          <span className='limit--text'>Limit: { limit }</span>
           &nbsp;
-          <button onClick={() => {this.setState({limit: limit + 10})}}>+</button>
+          <button className='limit--button' onClick={() => {this.setState({limit: limit + 10})}}>+</button>
           &nbsp;
-          <button onClick={() => {this.setState({limit: limit + 50})}}>++</button>
+          <button className='limit--button' onClick={() => {this.setState({limit: limit + 50})}}>++</button>
         </Flex>
         <div
           style={{
