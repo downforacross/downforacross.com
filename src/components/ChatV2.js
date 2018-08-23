@@ -106,15 +106,23 @@ export default class Chat extends Component {
   renderMessageText(text) {
     text = emoji.emojify(text);
 
+    // TODO rewrite this logic using regex, probably
+    // this messes up emojis which have length > 1, since it splits them up into multiple spans
     let stuff = []
     let z = 0
-    while(z < text.length) {
-      if (text[z] != '@') {
-        stuff.push(text[z])
-        z += 1
-      } else {
-        stuff.push(text.substr(z, z+4))
-        z += 4
+
+    // HACK: for now, only chunk into characters when there's at least one @ symbol
+    if (text.indexOf('@') === -1) {
+      stuff.push(text);
+    } else {
+      while(z < text.length) {
+        if (text[z] != '@') {
+          stuff.push(text[z])
+          z += 1
+        } else {
+          stuff.push(text.substr(z, z+4))
+          z += 4
+        }
       }
     }
 
