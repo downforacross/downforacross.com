@@ -2,10 +2,9 @@ TODO: make this more informative
 
 # Running the webserver
 
-- `npm install`
-- `npm install -g create-react-app`
-- `npm start`
-- Go to `http://localhost:3000/`
+- `yarn`
+- `yarn global add create-react-app`
+- `yarn start`
 
 ## Tutorials & Resources:
 - https://firebase.google.com/docs/database/web/start (intro to firebase realtime database)
