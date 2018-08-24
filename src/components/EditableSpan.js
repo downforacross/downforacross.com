@@ -21,7 +21,7 @@ export default class EditableSpan extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.value !== this.props.value) {
+    if (prevProps.key !== this.props.key) {
       this.text = this.displayValue;
       if (snapshot.start !== undefined && snapshot.start !== this.caret.startPosition) {
         this.caret.startPosition = snapshot.start;

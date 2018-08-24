@@ -222,6 +222,7 @@ export default class Editor extends Component {
           <div className='editor--main--clue-bar--text'>
             <EditableSpan
               ref='clue'
+              key={`${direction}${this.selectedClueNumber}`}
               value={this.props.clues[direction][this.selectedClueNumber] || ''}
               onChange={this.handleChangeClue}
               onUnfocus={() => this.focusGrid()}
