@@ -11,6 +11,7 @@ export default class EditableSpan extends Component {
     this.focused = false;
   }
   componentDidMount() {
+    console.log(this.displayValue);
     this.text = this.displayValue;
   }
 
@@ -22,7 +23,8 @@ export default class EditableSpan extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.key_ !== this.props.key_) {
+    console.log(this.displayValue);
+    if (prevProps.key_ !== this.props.key_ || !this.focused) {
       this.text = this.displayValue;
       if (snapshot.start !== undefined && snapshot.start !== this.caret.startPosition) {
         this.caret.startPosition = snapshot.start;
