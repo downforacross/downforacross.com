@@ -219,11 +219,13 @@ export default class Composition extends Component {
     return (
       <div className='chatv2--header'>
         <EditableSpan className='chatv2--header--title'
+          key_='title'
           onChange={this.handleUpdateTitle}
           onBlur={this.handleUnfocusHeader}
           value={title}/>
 
         <EditableSpan className='chatv2--header--subtitle'
+          key_='author'
           onChange={this.handleUpdateAuthor}
           onBlur={this.handleUnfocusHeader}
           value={author}/>

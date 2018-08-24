@@ -17,15 +17,17 @@ export default class EditableSpan extends Component {
   getSnapshotBeforeUpdate(prevProps, prevState) {
     return {
       start: this.caret.startPosition,
+      focused: this.focused,
     }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.key !== this.props.key) {
+    if (prevProps.key_ !== this.props.key_) {
       this.text = this.displayValue;
       if (snapshot.start !== undefined && snapshot.start !== this.caret.startPosition) {
         this.caret.startPosition = snapshot.start;
       }
+      if (snapshot.focused) this.focus();
     }
   }
 
@@ -45,6 +47,7 @@ export default class EditableSpan extends Component {
 
   get text() {
     if (this.props.hidden) return '';
+    if (!this.span.current) return '';
     let result = this.span.current.textContent;
     const nbsp = String.fromCharCode('160');
     while (result.indexOf(nbsp) !== -1) {
@@ -74,6 +77,9 @@ export default class EditableSpan extends Component {
   }
 
   handleKeyDown = (e) => {
+    if (e.key === 'Tab') {
+      return;
+    }
     e.stopPropagation();
     if (e.key === 'Enter' || e.key === 'Escape') {
       e.preventDefault();
