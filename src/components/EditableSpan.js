@@ -10,15 +10,6 @@ export default class EditableSpan extends Component {
     this.prevPosition = 0;
     this.focused = false;
   }
-
-  startEditing() {
-    this.span.current && this.span.current.focus();
-  }
-
-  stopEditing() {
-    this.props.onBlur && this.props.onBlur();
-  }
-
   componentDidMount() {
     this.text = this.displayValue;
   }
@@ -36,6 +27,10 @@ export default class EditableSpan extends Component {
         this.caret.startPosition = snapshot.start;
       }
     }
+  }
+
+  focus() {
+    this.span.current && this.span.current.focus();
   }
 
   get displayValue() {
@@ -82,7 +77,7 @@ export default class EditableSpan extends Component {
     e.stopPropagation();
     if (e.key === 'Enter' || e.key === 'Escape') {
       e.preventDefault();
-      this.stopEditing();
+      this.props.onUnfocus();
     }
   }
 

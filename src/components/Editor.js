@@ -202,7 +202,7 @@ export default class Editor extends Component {
   }
 
   focusClue() {
-    this.refs.clue && this.refs.clue.startEditing();
+    this.refs.clue && this.refs.clue.focus();
   }
 
   focus() {
@@ -224,7 +224,7 @@ export default class Editor extends Component {
               ref='clue'
               value={this.props.clues[direction][this.selectedClueNumber] || ''}
               onChange={this.handleChangeClue}
-              onBlur={() => this.focusGrid()}
+              onUnfocus={() => this.focusGrid()}
               hidden={!this.selectedIsWhite || !this.selectedClueNumber}
             />
           </div>
