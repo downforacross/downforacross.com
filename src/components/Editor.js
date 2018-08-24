@@ -89,6 +89,7 @@ export default class Editor extends Component {
     this.setState({
       selected,
     });
+    this.props.onUpdateCursor(selected);
   }
 
   handleChangeDirection = () => {
@@ -235,6 +236,7 @@ export default class Editor extends Component {
             ref='grid'
             size={this.props.size}
             grid={this.props.grid}
+            cursors={this.props.cursors}
             selected={selected}
             direction={direction}
             onSetSelected={this.handleSetSelected}

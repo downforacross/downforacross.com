@@ -78,6 +78,12 @@ export default class Composition extends Component {
     return `Compose: ${info.title}`;
   }
 
+  get otherCursors() {
+    return _.filter(this.composition.cursors, ({id}) => (
+      id !== this.user.id
+    ));
+  }
+
   handlePressEnter = (el) => {
     if (el === this.chat) {
       this.game && this.game.focus();
@@ -166,6 +172,12 @@ export default class Composition extends Component {
     downloadBlob(byteArray, 'download.puz');
   }
 
+  handleUpdateCursor = (selected) => {
+    const { r, c } = selected;
+    const { id, color } = this.user;
+    this.compositionModel.updateCursor(r, c, id, color);
+  }
+
   getCellSize() {
     return 30 * 15 / this.composition.grid[0].length;
   }
@@ -181,17 +193,21 @@ export default class Composition extends Component {
     const gridObject = makeGridFromComposition(this.composition.grid);
     const grid = gridObject.grid;
     const clues = makeClues(this.composition.clues, grid);
+    const cursors = this.otherCursors;
+
     return (
       <Editor
         ref={c => {this.editor = c;}}
         size={this.getCellSize()}
         grid={grid}
         clues={clues}
+        cursors={cursors}
         onUpdateGrid={this.handleUpdateGrid}
         onUpdateClue={this.handleUpdateClue}
+        onUpdateCursor={this.handleUpdateCursor}
         onChange={this.handleChange}
         onFlipColor={this.handleFlipColor}
-        myColor={this.color}
+        myColor={this.user.color}
         onUnfocus={this.handleUnfocusEditor}
       />
     );
