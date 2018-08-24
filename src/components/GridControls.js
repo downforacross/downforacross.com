@@ -164,6 +164,7 @@ export default class GridControls extends Component {
       onPressEscape && onPressEscape();
     } else {
       const letter = ev.key.toUpperCase();
+      if (this.props.frozen) return;
       if (!ev.metaKey && !ev.ctrlKey && this.validLetter(letter)) {
         ev.preventDefault();
         ev.stopPropagation();

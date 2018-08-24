@@ -62,6 +62,7 @@ export default class Editor extends Component {
         c: 0,
       },
       direction: 'across',
+      frozen: false,
     };
     this.prvNum = {};
     this.prvIdleID = {};
@@ -117,6 +118,12 @@ export default class Editor extends Component {
     const { selected, direction } = this.state;
     this.props.onUpdateClue(this.selectedParent.r, this.selectedParent.c, direction, value)
     this.props.onChange();
+  }
+
+  handleToggleFreeze = () => {
+    this.setState({
+      frozen: !this.state.frozen,
+    });
   }
 
   /* Helper functions used when rendering */
@@ -247,12 +254,18 @@ export default class Editor extends Component {
             editMode
           />
         </div>
+        <Flex className='editor--freeze'
+          style={{ cursor: 'pointer', borderRadius: 5, padding: 10, border: '1px solid #6AA9F4', fontWeight: 'bold', color: '#6AA9F4', marginTop: 30, justifySelf: 'center' }}
+          hAlignContent='center'
+          onClick={this.handleToggleFreeze}>
+          {this.state.frozen ? 'Unfreeze Grid' : 'Freeze Grid'}
+        </Flex>
       </div>
     );
   }
 
   render() {
-    const { selected, direction } = this.state;
+    const { selected, direction, frozen } = this.state;
     return (
       <Flex className='editor--main--wrapper'>
         <GridControls
@@ -260,6 +273,7 @@ export default class Editor extends Component {
           ignore='input'
           selected={selected}
           editMode
+          frozen={frozen}
           direction={direction}
           canSetDirection={this.canSetDirection}
           onSetDirection={this.handleSetDirection}
@@ -321,7 +335,6 @@ export default class Editor extends Component {
                   ))
                 }
               </Flex>
-
               {<Flex className='editor--right--hints'>
                 <Hints
                   grid={this.props.grid}
