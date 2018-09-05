@@ -60,7 +60,9 @@ export default class Chat extends Component {
 
     return (
       <div className='chatv2--header'>
-        <button onClick={this.handleToggleChat}>Back to game</button>
+        { this.props.mobile &&
+          <button onClick={this.handleToggleChat}>Back to game</button>
+        }
         <div className='chatv2--header--title'>
           { title }
         </div>
