@@ -42,6 +42,10 @@ export default class Chat extends Component {
     this.props.onUnfocus();
   }
 
+  handleToggleChat = () => {
+    this.props.onToggleChat();
+  }
+
   focus() {
     const chatBar = this.chatBar.current;
     if (chatBar) {
@@ -56,6 +60,7 @@ export default class Chat extends Component {
 
     return (
       <div className='chatv2--header'>
+        <button onClick={this.handleToggleChat}>Back to game</button>
         <div className='chatv2--header--title'>
           { title }
         </div>

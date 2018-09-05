@@ -94,6 +94,10 @@ export default class GameV2 extends Component {
     });
   }
 
+  handleToggleChat = () => {
+    this.props.onToggleChat();
+  }
+
   handleRefocus = () => {
     this.focus();
   }
@@ -177,7 +181,9 @@ export default class GameV2 extends Component {
         onReveal={this.handleReveal}
         onReset={this.handleReset}
         onTogglePencil={this.handleTogglePencil}
+        onToggleChat={this.handleToggleChat}
         onRefocus={this.handleRefocus}
+        onToggleChat={this.handleToggleChat}
       />
     );
   }

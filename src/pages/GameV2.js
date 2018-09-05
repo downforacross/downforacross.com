@@ -90,6 +90,11 @@ export default class GameV2 extends Component {
     return this.historyWrapper.getSnapshot();
   }
 
+  handleToggleChat = () => {
+    const toggledMode = this.state.mode === 'game' ? 'chat' : 'game';
+    this.setState({ mode: toggledMode });
+  }
+
   handleChat = (username, id, message) => {
     this.gameModel.chat(username, id, message)
   }
@@ -140,6 +145,7 @@ export default class GameV2 extends Component {
         gameModel={this.gameModel}
         onUnfocus={this.handleUnfocusGame}
         onChange={this.handleChange}
+        onToggleChat={this.handleToggleChat}
         mobile={mobile}
       />
     );
@@ -160,6 +166,7 @@ export default class GameV2 extends Component {
         myColor={color}
         onChat={this.handleChat}
         onUnfocus={this.handleUnfocusChat}
+        onToggleChat={this.handleToggleChat}
       />
     );
   }
