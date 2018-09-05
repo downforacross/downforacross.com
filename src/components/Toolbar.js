@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 
 import Clock from './Clock';
 import ActionMenu from './ActionMenu';
+import Flex from 'react-flexview';
 
 export default class Toolbar extends Component {
 
@@ -142,7 +143,7 @@ export default class Toolbar extends Component {
     if (mobile) {
       return (
         <div className='toolbar--mobile'>
-          <div className='toolbar--mobile--top'>
+          <Flex className='toolbar--mobile--top'>
             <Clock
               v2={this.props.v2}
               startTime={startTime}
@@ -168,7 +169,7 @@ export default class Toolbar extends Component {
                 : null
             }
             { this.renderChatButton() }
-          </div>
+          </Flex>
         </div>
       );
 

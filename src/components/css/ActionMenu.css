@@ -27,7 +27,7 @@
 
 .action-menu--list--action {
   text-align: left;
-  padding: 15px 15px 15px 15px;
+  padding: 15px;
   border-left: 1px solid #CCC;
   border-bottom: 1px solid #CCC;
   border-right: 1px solid #CCC;
@@ -37,4 +37,12 @@
 .action-menu--list--action:hover {
   color: #111;
   background-color: #DDDDDD;
+}
+
+.toolbar--mobile--top .action-menu--button {
+  font-size: 12px;
+}
+
+.toolbar--mobile--top .action-menu--list--action {
+  padding: 5px;
 }

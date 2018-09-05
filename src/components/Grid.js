@@ -124,7 +124,11 @@ export default class Grid extends React.PureComponent {
                     >
                       <Cell
                         {...cell}
-                        onClick={this.handleClick.bind(this, r, c)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          this.handleClick(r, c)
+                        }}
                         canFlipColor={this.props.canFlipColor && this.props.canFlipColor(r, c)}
                         onFlipColor={() => {
                           this.props.onFlipColor && this.props.onFlipColor(r, c);
