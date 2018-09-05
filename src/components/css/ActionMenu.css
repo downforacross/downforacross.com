@@ -39,10 +39,6 @@
   background-color: #DDDDDD;
 }
 
-.toolbar--mobile--top .action-menu--button {
-  font-size: 12px;
-}
-
 .toolbar--mobile--top .action-menu--list--action {
   padding: 5px;
 }

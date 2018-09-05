@@ -14,7 +14,7 @@
   text-align: center;
 }
 
-.toolbar button {
+.toolbar button, .toolbar--mobile button {
   color: #666;
   font-size: 14px;
   padding: 7px 10px 7px 10px;
@@ -25,7 +25,12 @@
   cursor: pointer;
 }
 
-.toolbar button:hover {
+.toolbar--mobile button {
+  font-size: 12px;
+  padding: 0px;
+}
+
+.toolbar button:hover, .toolbar--mobile button:hover {
   background-color: #F2F2F2;
 }
 
