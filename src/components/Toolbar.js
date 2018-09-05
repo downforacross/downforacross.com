@@ -19,6 +19,11 @@ export default class Toolbar extends Component {
     this.props.onTogglePencil();
   }
 
+  handleToggleChat = (e) => {
+    e.preventDefault();
+    this.props.onToggleChat();
+  }
+
   renderClockControl() {
     const {
       startTime,
@@ -79,6 +84,12 @@ export default class Toolbar extends Component {
           'Puzzle': this.reset.bind(this, 'puzzle'),
           'Puzzle and Timer': this.resetPuzzleAndTimer.bind(this)
         }} />
+    );
+  }
+
+  renderChatButton() {
+    return (
+      <button onClick={this.handleToggleChat}>Chat</button>
     );
   }
 
@@ -154,6 +165,7 @@ export default class Toolbar extends Component {
                 ? this.renderResetMenu()
                 : null
             }
+            { this.renderChatButton() }
           </div>
         </div>
       );
