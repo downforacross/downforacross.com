@@ -157,6 +157,7 @@ export default class GameV2 extends Component {
     }
 
     const { id, color } = this.user;
+    const { mobile } = this.state;
     return (
       <ChatV2
         ref={c => {this.chat = c;}}
@@ -167,6 +168,7 @@ export default class GameV2 extends Component {
         onChat={this.handleChat}
         onUnfocus={this.handleUnfocusChat}
         onToggleChat={this.handleToggleChat}
+        mobile={mobile}
       />
     );
   }
