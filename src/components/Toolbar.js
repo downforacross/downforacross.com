@@ -33,11 +33,13 @@ export default class Toolbar extends Component {
     return (
       startTime
       ? <button className='toolbar--btn pause'
+        tabIndex={-1}
         onMouseDown={this.handleMouseDown}
         onClick={onPauseClock} >
         Pause Clock
       </button>
       : <button className='toolbar--btn start'
+        tabIndex={-1}
         onMouseDown={this.handleMouseDown}
         onClick={onStartClock} >
         Start Clock

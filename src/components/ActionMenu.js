@@ -47,7 +47,9 @@ export default class ActionMenu extends Component {
         className={ (this.state.active ? 'active ' : '') + 'action-menu'}
         onBlur={this.onBlur.bind(this)}>
         <button
+          tabIndex={-1}
           className='action-menu--button'
+          onMouseDown={e => { e.preventDefault(); }}
           onClick={this.onClick.bind(this)} >
           {this.props.label}
         </button>

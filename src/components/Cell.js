@@ -132,7 +132,11 @@ export default class Cell extends Component {
             : null
         }
         onClick={onClick}
+        onTouchStart={e => {
+          e.preventDefault();
+        }}
         onTouchMove={e => {
+          e.preventDefault();
           if (e.touches.length >= 1) {
             window.lastZoomed = getTime();
           } else {
