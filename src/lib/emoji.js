@@ -16,6 +16,7 @@ const getScore = (emoji, pattern) => {
   if (idx !== -1) {
     const prevChar = emoji[idx - 1];
     if (prevChar === '_') return 40;
+    if (prevChar === '-') return 30;
     return 10;
   }
   return 0;

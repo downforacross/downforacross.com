@@ -74,7 +74,7 @@ export default class ChatBar extends React.Component {
     const lastWord = words[words.length - 1];
     if (lastWord.startsWith(':')) {
       const pattern = lastWord.substring(1);
-      if (pattern.match(/^[a-zA-Z_]*$/)) {
+      if (pattern.match(/^[a-zA-Z_-]*$/)) {
         if (pattern !== this.state.escapedEmoji) {
           return pattern;
         }
