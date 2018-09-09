@@ -12,11 +12,13 @@ const isEmojis = str => {
   return !res;
 };
 
+const usernameKey = `username_${window.location.href}`;
 export default class Chat extends Component {
   constructor() {
     super();
+    const username = localStorage.getItem(usernameKey) || nameGenerator();
     this.state = {
-      username: nameGenerator(),
+      username,
     };
     this.chatBar = React.createRef();
   }
@@ -25,6 +27,7 @@ export default class Chat extends Component {
     const { username } = this.state;
     const { id } = this.props;
     this.props.onChat(username, id, message);
+    localStorage.setItem(usernameKey, username);
   }
 
   handleUsernameInputKeyPress = (ev) => {
@@ -36,7 +39,7 @@ export default class Chat extends Component {
   }
 
   handleChangeUsername = (ev) => {
-    const username = ev.target.value;
+    const username = ev.target.value || nameGenerator();
     this.setState({ username });
   }
 
