@@ -1,7 +1,8 @@
 import './css/chatv2.css';
 
 import React, { Component } from 'react';
-import emoji from 'node-emoji';
+import Emoji from './Emoji';
+import * as emojiLib from '../lib/emoji';
 import nameGenerator from '../nameGenerator';
 import ChatBar from './ChatBar';
 
@@ -111,34 +112,52 @@ export default class Chat extends Component {
   }
 
   renderMessageText(text) {
-    text = emoji.emojify(text);
-
-    // TODO rewrite this logic using regex, probably
-    // this messes up emojis which have length > 1, since it splits them up into multiple spans
-    let stuff = []
-    let z = 0
-
-    // HACK: for now, only chunk into characters when there's at least one @ symbol
-    if (text.indexOf('@') === -1) {
-      stuff.push(text);
-    } else {
-      while(z < text.length) {
-        if (text[z] != '@') {
-          stuff.push(text[z])
-          z += 1
-        } else {
-          stuff.push(text.substr(z, z+4))
-          z += 4
+    const words = text.split(' ');
+    const tokens = [];
+    words.forEach(word => {
+      if (word.startsWith(':') && word.endsWith(':')) {
+        const emoji = word.substring(1, word.length - 1)
+        const emojiData = emojiLib.get(emoji);
+        if (emojiData) {
+          tokens.push({
+            type: 'emoji',
+            data: emoji,
+          });
+          return;
         }
       }
-    }
 
-    const color = s => (
-      <span style={{ color: s[0] === '@' ? 'blue' : 'initial'}}>{s}</span>
-    );
+      if (word.startsWith('@')) {
+        const pattern = word.substring(1);
+        if (pattern.match(/^\d+-?\s?(a(cross)?|d(own)?)$/i)) {
+          tokens.push({
+            type: 'clueref',
+            data: '@' + pattern,
+          });
+          return;
+        }
+      }
+
+      if (tokens.length && tokens[tokens.length - 1].type === 'text') {
+        tokens[tokens.length - 1].data += ' ' + word;
+      } else {
+        tokens.push({
+          type: 'text',
+          data: word,
+        });
+      }
+    });
 
     return (
-      <span className={'chatv2--message--text'}>{stuff.map(color)}</span>
+      <span className={'chatv2--message--text'}>
+        {tokens.map(token => (
+          token.type === 'emoji'
+          ? <Emoji emoji={token.data}/>
+          : token.type === 'clueref'
+          ? token.data // for now, don't do anything special to cluerefs
+          : token.data
+        ))}
+      </span>
     );
   }
 
