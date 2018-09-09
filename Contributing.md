@@ -2,6 +2,7 @@ TODO: make this more informative
 
 # Running the webserver
 
+- Install [yarn](https://yarnpkg.com/en/docs/install/#mac-stable)
 - `git clone https://github.com/downforacross/downforacross.com` && `cd downforacross.com`
 - `yarn`
 - `yarn global add create-react-app`
