@@ -4,7 +4,7 @@ import Flex from 'react-flexview';
 import * as emojiLib from '../lib/emoji';
 
 export default () => {
-  const pattern = 'he';
+  const pattern = 'par';
   const matches = emojiLib.findMatches(pattern);
   // ['heart', 'hearts', 'wheel_of_dharma'];
     return (

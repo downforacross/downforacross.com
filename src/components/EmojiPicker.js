@@ -216,7 +216,6 @@ export default class EmojiPicker extends React.Component {
       color: isSelected ? 'white' : 'inherit',
       cursor: 'pointer',
       padding: 8,
-      lineHeight: '10px',
       borderRadius: 13,
       marginRight: 20,
     };

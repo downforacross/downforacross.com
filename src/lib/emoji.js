@@ -1,7 +1,13 @@
-import defaultEmojis from './emojiPackDefault';
+import defaultPack from './emojiPacks/default';
+import partyParrot from './emojiPacks/partyParrot';
 import _ from 'lodash';
 
-const allEmojis = _.keys(defaultEmojis);
+// spread in reverse-order of priority, in case of name collisions
+const allEmojiData = {
+  ...defaultPack,
+  ...partyParrot,
+};
+const allEmojis = _.keys(allEmojiData);
 
 const getScore = (emoji, pattern) => {
   if (emoji === pattern) return 60;
@@ -32,5 +38,5 @@ export const findMatches = (pattern) => {
 }
 
 export const get = (emoji) => {
-  return defaultEmojis[emoji];
+  return allEmojiData[emoji];
 }
