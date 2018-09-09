@@ -2,6 +2,7 @@ TODO: make this more informative
 
 # Running the webserver
 
+- `git clone https://github.com/downforacross/downforacross.com` && `cd downforacross.com`
 - `yarn`
 - `yarn global add create-react-app`
 - `yarn start`
