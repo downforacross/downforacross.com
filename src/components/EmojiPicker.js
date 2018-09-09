@@ -83,6 +83,8 @@ export default class EmojiPicker extends React.Component {
 
   handleMouseDown = (e) => {
     this.props.onConfirm(this.state.selectedEmoji);
+    e.preventDefault();
+    e.stopPropagation();
   }
 
   handleMouseEnterSpan = (e) => {
