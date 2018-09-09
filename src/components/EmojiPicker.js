@@ -98,10 +98,12 @@ export default class EmojiPicker extends React.Component {
     const { matches }  = this.props;
     if (!selectedEmoji || !matches.length) return;
     const key = e.key;
+    const shiftKey = e.shiftKey;
 
     const next = () => {
+      const offset = shiftKey ? matches.length - 1 : 1;
       const idx = matches.indexOf(selectedEmoji);
-      const nextEmoji = matches[(idx + 1) % matches.length];
+      const nextEmoji = matches[(idx + offset) % matches.length];
       this.selectEmoji(nextEmoji);
       this.scrollEmojiIntoView(nextEmoji);
     };
@@ -158,7 +160,6 @@ export default class EmojiPicker extends React.Component {
     const escape = () => {
       this.props.onEscape();
     };
-    console.log(key);
 
     const actions = {
       Tab: next,
@@ -171,7 +172,7 @@ export default class EmojiPicker extends React.Component {
     };
 
     if (actions[key]) {
-      actions[key]();
+      actions[key](shiftKey);
       e.preventDefault();
       e.stopPropagation();
     }
