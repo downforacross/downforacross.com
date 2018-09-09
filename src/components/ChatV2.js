@@ -5,6 +5,7 @@ import Emoji from './Emoji';
 import * as emojiLib from '../lib/emoji';
 import nameGenerator from '../nameGenerator';
 import ChatBar from './ChatBar';
+import _ from 'lodash';
 
 const isEmojis = str => {
   const res = str.match(/[A-Za-z,.0-9!-]/g);
@@ -115,6 +116,7 @@ export default class Chat extends Component {
     const words = text.split(' ');
     const tokens = [];
     words.forEach(word => {
+      if (word.length === 0) return;
       if (word.startsWith(':') && word.endsWith(':')) {
         const emoji = word.substring(1, word.length - 1)
         const emojiData = emojiLib.get(emoji);
@@ -148,14 +150,18 @@ export default class Chat extends Component {
       }
     });
 
+    const bigEmoji = (tokens.length <= 3 && _.every(tokens, token => token.type === 'emoji'));
     return (
       <span className={'chatv2--message--text'}>
         {tokens.map(token => (
-          token.type === 'emoji'
-          ? <Emoji emoji={token.data}/>
-          : token.type === 'clueref'
-          ? token.data // for now, don't do anything special to cluerefs
-          : token.data
+          <React.Fragment>
+            {token.type === 'emoji'
+            ? <Emoji emoji={token.data} big={bigEmoji}/>
+            : token.type === 'clueref'
+            ? token.data // for now, don't do anything special to cluerefs
+            : token.data}
+            {token.type !== 'emoji' && ' '}
+          </React.Fragment>
         ))}
       </span>
     );

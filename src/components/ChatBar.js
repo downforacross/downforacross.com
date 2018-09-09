@@ -3,6 +3,7 @@ import EmojiPicker from '../components/EmojiPicker';
 import Emoji from '../components/Emoji';
 import * as emojiLib from '../lib/emoji';
 
+const MAX_EMOJIS = 150;
 export default class ChatBar extends React.Component {
   constructor() {
     super();
@@ -94,7 +95,7 @@ export default class ChatBar extends React.Component {
           disableKeyListener
           ref={this.emojiPicker}
           pattern={this.emojiPattern}
-          matches={emojiLib.findMatches(this.emojiPattern)}
+          matches={emojiLib.findMatches(this.emojiPattern).slice(0, MAX_EMOJIS)}
           onConfirm={this.handleConfirmEmoji}
           onEscape={this.handleEscapeEmoji}
         />

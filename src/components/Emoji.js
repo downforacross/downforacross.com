@@ -1,22 +1,25 @@
 import React from 'react';
 import * as emojiLib from '../lib/emoji';
+import _ from 'lodash';
 
-export default ({emoji}) => {
+export default ({emoji, big}) => {
   const data = emojiLib.get(emoji);
   if (!data) return null;
 
+  const size = big ? 60 : 22;
   const imgStyle = {
     verticalAlign: 'middle',
     border: 0,
     top: 0,
     left: 0,
-    height: 22,
+    height: size,
     // position: 'absolute',
   };
   const spanStyle = {
     position: 'relative',
-    height: 22,
-    width: 22,
+    height: size,
+    width: size,
+    fontSize: `${size / 22 * 100}%`,
     display: 'inline-block',
     textAlign: 'center',
   };
