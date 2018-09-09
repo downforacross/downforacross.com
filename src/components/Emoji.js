@@ -25,12 +25,12 @@ export default ({emoji, big}) => {
   };
   if (data.url) {
     return (
-      <span style={spanStyle}><img style={imgStyle} src={data.url}/></span>
+      <span title={emoji} style={spanStyle}><img style={imgStyle} src={data.url}/></span>
     );
   }
 
   // otherwise, expect a web-friendly str
   return (
-    <span style={spanStyle}>{data}</span>
+    <span style={spanStyle} title={emoji}>{data}</span>
   );
 };
