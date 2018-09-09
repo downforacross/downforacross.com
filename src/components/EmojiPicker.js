@@ -20,17 +20,24 @@ export default class EmojiPicker extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
+    let { selectedEmoji } = prevState;
+    const { matches } = nextProps;
+    if (!selectedEmoji || matches.indexOf(selectedEmoji) === -1) {
+      selectedEmoji = matches[0];
+    }
     return {
       ...prevState,
-      selectedEmoji: prevState.selectedEmoji || nextProps.matches[0],
+      selectedEmoji,
     };
   }
 
   componentDidMount() {
+    if (this.props.disableKeyListener) return;
     window.addEventListener('keydown', this.handleKeyDown);
   }
 
   componentWillUnmount() {
+    if (this.props.disableKeyListener) return;
     window.removeEventListener('keydown', this.handleKeyDown);
   }
 
@@ -89,6 +96,7 @@ export default class EmojiPicker extends React.Component {
   handleKeyDown = (e) => {
     const { selectedEmoji }  = this.state;
     const { matches }  = this.props;
+    if (!selectedEmoji || !matches.length) return;
     const key = e.key;
 
     const next = () => {
@@ -150,6 +158,7 @@ export default class EmojiPicker extends React.Component {
     const escape = () => {
       this.props.onEscape();
     };
+    console.log(key);
 
     const actions = {
       Tab: next,
@@ -214,7 +223,7 @@ export default class EmojiPicker extends React.Component {
       this.emojiRefs[emoji] = React.createRef();
     }
     return (
-      <span style={style} ref={this.emojiRefs[emoji]}
+      <span style={style} ref={this.emojiRefs[emoji]} key={emoji}
         data-emoji={emoji}
         onMouseMove={this.handleMouseEnterSpan}>
         <Emoji emoji={emoji}/>
