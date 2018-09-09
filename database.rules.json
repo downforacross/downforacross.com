@@ -13,14 +13,12 @@
     "puzzle": {
       ".read": true,
       ".write": true
-
     },
     "puzzlelist": {
       ".read": true,
       ".write": true
     },
-    "counters":
-    {
+    "counters": {
       ".read": true,
       ".write": true
     },

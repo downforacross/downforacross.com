@@ -1,6 +1,7 @@
 import {
   Welcome, WelcomeV2, Game, GameV2, Compose, Solo, Account, Replay, ReplaySolo, Room, Replays, Play, ReplayV2, Composition
 } from './pages/index';
+import Testing from './pages/Testing';
 
 import ReactDOM from 'react-dom';
 import React from 'react';
@@ -38,6 +39,7 @@ ReactDOM.render(
       <Route path="/account" component={Account}/>
       <Route exact path="/compose" component={Compose}/>
       <Route exact path="/composition/:cid" component={Composition}/>
+      <Route exact path="/secret_testing" component={Testing}/>
     </div>
   </Router>,
   document.getElementById('root')
