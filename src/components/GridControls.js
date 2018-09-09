@@ -224,6 +224,7 @@ export default class GridControls extends Component {
   }
 
   typeLetter(letter, isRebus) {
+    if (letter === '/') isRebus = true;
     const { r, c } = this.props.selected;
     const value = this.props.grid[r][c].value;
     if (!isRebus) {
