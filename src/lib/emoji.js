@@ -1,4 +1,5 @@
 import defaultPack from './emojiPacks/default';
+import custom from './emojiPacks/custom';
 import partyParrot from './emojiPacks/partyParrot';
 import _ from 'lodash';
 
@@ -6,6 +7,7 @@ import _ from 'lodash';
 const allEmojiData = {
   ...defaultPack,
   ...partyParrot,
+  ...custom,
 };
 const allEmojis = _.keys(allEmojiData);
 
@@ -26,14 +28,15 @@ const getScore = (emoji, pattern) => {
 export const findMatches = (pattern) => {
   return _.orderBy(
     (allEmojis
-      .map(emoji => ({
+      .map((emoji, i) => ({
         emoji,
-        score: getScore(emoji, pattern)
+        score: getScore(emoji, pattern),
+        index: i,
       }))
       .filter(({score}) => score > 0)
     ),
-    ['score', 'emoji'],
-    ['desc', 'asc'],
+    ['score', 'index'],
+    ['desc', 'desc'],
   )
     .map(({emoji}) => emoji);
 }

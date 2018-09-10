@@ -60,6 +60,11 @@ export default class ChatBar extends React.Component {
     this.setState({
       escapedEmoji: this.emojiPattern,
     });
+    setTimeout(() => {
+      this.setState({
+        escapedEmoji: null,
+      });
+    }, 5000);
   }
 
   focus() {
