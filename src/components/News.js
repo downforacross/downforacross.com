@@ -1,11 +1,12 @@
 import './css/news.css';
 import React from 'react';
+import Emoji from './Emoji';
 
 const NEWS_ITEMS = [
   {
-    date: '08/01/2016',
-    message: <span>We've got a whole bunch of new features. Check them out <a href='/beta'>here</a>!</span>,
-    hidden: true,
+    date: '09/01/2016',
+    message: <span>Interested in testing out new features? Check out DFAC <a href="/beta">beta</a>! Any <a href="https://docs.google.com/forms/d/e/1FAIpQLSdVg3TyUfQkR9WggQw1YFbMeVATczq8gkwf1yXCKCn4LLKN_Q/viewform">feedback</a> helps <Emoji emoji="prickly_pear_enthusiastic"/> </span>,
+    hidden: false,
   },
   {
     date: '12/25/2017',

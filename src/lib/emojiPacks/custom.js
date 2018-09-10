@@ -32,6 +32,6 @@ export default {
     url: 'https://img.buzzfeed.com/buzzfeed-static/static/2015-03/5/18/enhanced/webdr02/enhanced-25477-1425599139-2.jpg?downsize=715:*&output-format=auto&output-quality=auto',
   },
   'prickly_pear_enthusiastic': {
-    url: 'https://img.buzzfeed.com/buzzfeed-static/static/2015-03/5/18/enhanced/webdr14/enhanced-4505-1425597885-17.jpg?downsize=715:*&output-format=auto&output-quality=auto',
+    url: 'https://i.imgur.com/UczCbsJ.png',
   },
 };

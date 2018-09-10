@@ -156,8 +156,8 @@ export default class Chat extends Component {
     const bigEmoji = (tokens.length <= 3 && _.every(tokens, token => token.type === 'emoji'));
     return (
       <span className={'chatv2--message--text'}>
-        {tokens.map(token => (
-          <React.Fragment>
+        {tokens.map((token, i) => (
+          <React.Fragment key={i}>
             {token.type === 'emoji'
             ? <Emoji emoji={token.data} big={bigEmoji}/>
             : token.type === 'clueref'
