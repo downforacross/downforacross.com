@@ -100,6 +100,13 @@ export default class WelcomeV2 extends Component {
     );
   }
 
+  handleCreatePuzzle = () => {
+    this.setState({
+      pages: 0,
+    });
+    this.nextPage();
+  }
+
   handleFilterChange = (header, name, on) => {
     const { sizeFilter, statusFilter } = this.state;
     if (header === 'Size') {
@@ -187,7 +194,7 @@ export default class WelcomeV2 extends Component {
   renderQuickUpload() {
     return (
       <Flex className="quickplay" style={{width: 200}}>
-        <Upload v2/>
+        <Upload v2 onCreate={this.handleCreatePuzzle}/>
       </Flex>
     );
   }

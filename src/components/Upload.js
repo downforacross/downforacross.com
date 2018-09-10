@@ -19,6 +19,7 @@ export default class Upload extends Component {
     const { puzzle } = this.state;
     actions.createPuzzle(puzzle, puzzle => {
       this.setState({ puzzle: null });
+      this.props.onCreate && this.props.onCreate();
     });
   }
 
