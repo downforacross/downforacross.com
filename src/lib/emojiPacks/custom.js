@@ -1,5 +1,5 @@
-import _ from 'lodash';
-const emojis = {
+import { parseRawUrls } from '../common';
+export default parseRawUrls({
   rilakkuma: 'http://www.stickpng.com/assets/thumbs/5a67a25201d15068bdfe87c9.png',
   rilakkuma1: 'https://i.pinimg.com/originals/1b/c3/3b/1bc33bdfd0ec831221b6ba454419001c.png',
   'rilakkuma_and_friends': 'http://www.stickpng.com/assets/images/5a67a15c01d15068bdfe87bb.png',
@@ -21,11 +21,4 @@ const emojis = {
   'prickly_pear_enthusiastic': 'https://i.imgur.com/UczCbsJ.png',
   'prickly_pear_barf': 'https://img.buzzfeed.com/buzzfeed-static/static/2015-03/5/18/enhanced/webdr11/enhanced-21802-1425598766-12.jpg?downsize=715:*&output-format=auto&output-quality=auto',
   'prickly_pear_barf': 'https://img.buzzfeed.com/buzzfeed-static/static/2015-03/5/18/enhanced/webdr11/enhanced-21802-1425598766-12.jpg?downsize=715:*&output-format=auto&output-quality=auto',
-};
-
-export default _.reduce(_.keys(emojis), (r, key) => ({
-  ...r,
-  [key]: {
-    url: emojis[key],
-  },
-}), {});
+});
