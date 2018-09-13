@@ -4,7 +4,7 @@ import Emoji from './Emoji';
 
 const NEWS_ITEMS = [
   {
-    date: '09/01/2016',
+    date: '09/01/2018',
     message: <span>Interested in testing out new features? Check out DFAC <a href="/beta">beta</a>! Any <a href="https://docs.google.com/forms/d/e/1FAIpQLSdVg3TyUfQkR9WggQw1YFbMeVATczq8gkwf1yXCKCn4LLKN_Q/viewform">feedback</a> helps <Emoji emoji="prickly_pear_enthusiastic"/> </span>,
     hidden: false,
   },
