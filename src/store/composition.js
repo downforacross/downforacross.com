@@ -137,6 +137,15 @@ export default class Composition extends EventEmitter {
     });
   }
 
+  clearPencil() {
+    this.events.push({
+      timestamp: SERVER_TIME,
+      type: 'clearPencil',
+      params: {
+      },
+    });
+  }
+
   updateDimensions(width, height, {fromX = 'right', fromY = 'down'} = {}) {
     this.events.push({
       timestamp: SERVER_TIME,

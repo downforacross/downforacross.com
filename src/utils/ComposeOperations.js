@@ -87,6 +87,21 @@ const reducers = {
     };
   },
 
+  clearPencil: (composition) => {
+    let { grid } = composition;
+    grid = _.map(grid, row => (
+      row.map(cell => ({
+        ...cell,
+        pencil: cell.value === '.' ? null : false,
+        value: cell.pencil ? '' : cell.value,
+      }))
+    ));
+    return {
+      ...composition,
+      grid,
+    };
+  },
+
   updateCellText: (composition, params) => {
     let { grid } = composition;
     const {

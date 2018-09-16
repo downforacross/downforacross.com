@@ -186,6 +186,10 @@ export default class Composition extends Component {
     this.compositionModel.setGrid(grid)
   }
 
+  handleClearPencil = () => {
+    this.compositionModel.clearPencil()
+  }
+
   getCellSize() {
     return 30 * 15 / this.composition.grid[0].length;
   }
@@ -212,6 +216,7 @@ export default class Composition extends Component {
         cursors={cursors}
         onUpdateGrid={this.handleUpdateGrid}
         onAutofill={this.handleAutofill}
+        onClearPencil={this.handleClearPencil}
         onUpdateClue={this.handleUpdateClue}
         onUpdateCursor={this.handleUpdateCursor}
         onChange={this.handleChange}

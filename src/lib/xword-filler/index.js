@@ -49,6 +49,7 @@ export const fillGrid = (partialGrid, wordlist = DEFAULT_WORDLIST) => {
     row.map(cell => ({
       ...cell,
       value: cell.value === '' ? '?' : cell.value,
+      pencil: cell.value === '',
     }))
   ));
   return grid
