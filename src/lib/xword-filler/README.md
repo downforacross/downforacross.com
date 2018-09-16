@@ -57,14 +57,14 @@ Since the search space is large (e.g. for a 7x7 grid, 26^49 possible ways to fil
 
 *Work in Progress* 
 
-We use the followig heuristic to rank candidate partial-grids:
+We use the following **grid heuristic** to rank candidate partial-grids:
 - For each entry in the grid, we assign a *fillability* score to it.
 - Fillability of a partially filled entry is some function of the number of matches it has.
 - The overall heurisitic of the grid is an aggregation of the fillabilities.
 
 This heuristic is a measure of how much flexibility the unfilled parts of the grid have.
 
-We use the following policy heuristic to hint the search algorithm the best place to iterate.
+We use the following **entry heuristic** to hint the search algorithm the best entry to iterate on when deepening the search.
 - For each entry, compute the fillability and report that as its constrained-ness.
 
 This heuristic describes how constrained each entry is within a grid.
