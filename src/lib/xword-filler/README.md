@@ -42,6 +42,9 @@ Then a grid containing words "EGG", "HOUSE", and "OLEO" (note: it's actually imp
 
 ## API
 
+`fillGrid(partialGrid, wordlist)`
+**partialGrid**: *rows* by *cols* array of `Cell` types, where `Cell` is an object of shape `{value, pencil}`
+**wordlist**: The pre-randomized word list to use. Should be of shape `{[word]: { score, stdev }}`. Defaults to `DEFAULT_WORDLIST`.
 TODO.
 
 If it's impossible to find a satisfactory fill of the grid (without resorting to inventing new english words), we will indicate this fact, somehow.
