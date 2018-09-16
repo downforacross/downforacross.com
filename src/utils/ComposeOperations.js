@@ -40,6 +40,23 @@ const reducers = {
     };
   },
 
+  updateGrid: (composition, params) => {
+    // equivalent to create, but there can only be one create
+    const {
+      grid = [ [ {} ] ],
+      circles = [],
+      clues = [],
+    } = params;
+
+    return {
+      ...composition,
+      grid,
+      circles,
+      clues,
+    };
+  },
+
+
   updateCursor: (composition, params) => {
     let {
       cursors = [],

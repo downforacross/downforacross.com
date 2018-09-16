@@ -120,6 +120,11 @@ export default class Editor extends Component {
     this.props.onChange();
   }
 
+  handleAutofill = () => {
+    this.props.onAutofill()
+  }
+
+
   handleToggleFreeze = () => {
     this.setState({
       frozen: !this.state.frozen,
@@ -259,6 +264,12 @@ export default class Editor extends Component {
           hAlignContent='center'
           onClick={this.handleToggleFreeze}>
           {this.state.frozen ? 'Unfreeze Grid' : 'Freeze Grid'}
+        </Flex>
+        <Flex className='editor--autofill'
+          style={{ cursor: 'pointer', borderRadius: 5, padding: 10, border: '1px solid #6AA9F4', fontWeight: 'bold', color: '#6AA9F4', marginTop: 30, justifySelf: 'center' }}
+          hAlignContent='center'
+          onClick={this.handleAutofill}>
+          {'Autofill Grid'}
         </Flex>
       </div>
     );

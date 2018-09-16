@@ -18,6 +18,7 @@ import redirect from '../redirect';
 import { downloadBlob, isMobile } from '../jsUtils';
 import { makeGridFromComposition, makeClues, convertCluesForComposition, convertGridForComposition } from '../gameUtils';
 import format from '../format';
+import * as xwordFiller from '../lib/xword-filler';
 
 export default class Composition extends Component {
   constructor(props) {
@@ -178,6 +179,13 @@ export default class Composition extends Component {
     this.compositionModel.updateCursor(r, c, id, color);
   }
 
+  handleAutofill = () => {
+    console.log('c.grid', this.composition.grid);
+    const grid = xwordFiller.fillGrid(this.composition.grid);
+    console.log('grid', grid);
+    this.compositionModel.setGrid(grid)
+  }
+
   getCellSize() {
     return 30 * 15 / this.composition.grid[0].length;
   }
@@ -203,6 +211,7 @@ export default class Composition extends Component {
         clues={clues}
         cursors={cursors}
         onUpdateGrid={this.handleUpdateGrid}
+        onAutofill={this.handleAutofill}
         onUpdateClue={this.handleUpdateClue}
         onUpdateCursor={this.handleUpdateCursor}
         onChange={this.handleChange}
