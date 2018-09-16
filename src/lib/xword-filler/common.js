@@ -15,7 +15,6 @@ import _ from 'lodash';
 //   "LATHE"
 // ]
 
-
 class BucketedWordlist {
   constructor(scoredWordlist) {
     this.makeBuckets(scoredWordlist)

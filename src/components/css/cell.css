@@ -79,7 +79,7 @@ div:focus .cell.referenced {
 }
 
 .cell.pencil .cell--value {
-  color: pink;
+  color: red;
 }
 
 .cell.bad .cell--value {

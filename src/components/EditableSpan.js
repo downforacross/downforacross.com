@@ -1,9 +1,9 @@
 import './css/editableSpan.css';
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import Caret from '../utils/caret';
 import _ from 'lodash';
 
-export default class EditableSpan extends Component {
+export default class EditableSpan extends PureComponent {
   constructor() {
     super();
     this.span = React.createRef();
@@ -11,7 +11,6 @@ export default class EditableSpan extends Component {
     this.focused = false;
   }
   componentDidMount() {
-    console.log(this.displayValue);
     this.text = this.displayValue;
   }
 
@@ -23,7 +22,6 @@ export default class EditableSpan extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log(this.displayValue);
     if (prevProps.key_ !== this.props.key_ || !this.focused) {
       this.text = this.displayValue;
       if (snapshot.start !== undefined && snapshot.start !== this.caret.startPosition) {

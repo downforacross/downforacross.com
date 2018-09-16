@@ -53,6 +53,7 @@ export const makeGrid = (textGrid, fillWithSol) => {
 };
 
 export const makeGridFromComposition = (compositionGrid) => {
+  console.log(compositionGrid);
   const newGridArray = compositionGrid.map(row =>
     row.map(({value, pencil}) => ({
       black: value === '.',
