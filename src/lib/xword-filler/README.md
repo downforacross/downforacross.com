@@ -1,5 +1,17 @@
 # xword-filler
 
+## API
+
+`fillGrid(partialGrid, wordlist)`
+
+**partialGrid**: *rows* by *cols* array of `Cell` types, where `Cell` is an object of shape `{value, pencil}`
+
+**wordlist**: The pre-randomized word list to use. Should be of shape `{[word]: { score, stdev }}`. Defaults to `DEFAULT_WORDLIST`.
+
+**returns**: `grid`, which has the same shape as `partialGrid`. New cells will be `pencil: true`.
+
+If it's impossible to find a satisfactory fill of the grid (without resorting to inventing new english words), we will return a `grid` with empty cells.
+
 ## Overview
 Given an input grid, e.g. 
 ```
@@ -40,14 +52,25 @@ ALOE (3)
 Then a grid containing words "EGG", "HOUSE", and "OLEO" (note: it's actually impossible to actually fill a grid with exactly just 3 words) will be
 `5 + 4 + 2 = 11`.
 
-## API
+## How do we do the search?
+Since the search space is large (e.g. for a 7x7 grid, 26^49 possible ways to fill it with english letters), we aggressively prune the search.
 
-`fillGrid(partialGrid, wordlist)`
+*Work in Progress* 
 
-**partialGrid**: *rows* by *cols* array of `Cell` types, where `Cell` is an object of shape `{value, pencil}`
+We use the followig heuristic to rank candidate partial-grids:
+- For each entry in the grid, we assign a *fillability* score to it.
+- Fillability of a partially filled entry is some function of the number of matches it has.
+- The overall heurisitic of the grid is an aggregation of the fillabilities.
 
-**wordlist**: The pre-randomized word list to use. Should be of shape `{[word]: { score, stdev }}`. Defaults to `DEFAULT_WORDLIST`.
+This heuristic is a measure of how much flexibility the unfilled parts of the grid have.
 
-**returns**: `grid`, which has the same shape as `partialGrid`. New cells will be `pencil: true`.
+We use the following policy heuristic to hint the search algorithm the best place to iterate.
+- For each entry, compute the fillability and report that as its constrained-ness.
 
-If it's impossible to find a satisfactory fill of the grid (without resorting to inventing new english words), we will return a `grid` with empty cells.
+This heuristic describes how constrained each entry is within a grid.
+
+The search algorithm will be a variant of beam search, with K ~ 100, C ~ 3.
+- Maintain a list of K candidate grids
+- For each grid, generate a list of C children grids (by using the constrained-ness heuristic to pick, for each candidate, an entry to iterate through the matches of)
+- Of the C * K resulting children grids, select the best K (by using the fillability-heuristic) of them to be the next iteration's candidate grids
+
