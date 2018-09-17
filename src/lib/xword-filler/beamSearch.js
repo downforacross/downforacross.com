@@ -23,9 +23,9 @@ const getChildrenCandidates = (candidate, scoredWordlist) => {
   const { entry } = sortedEntries[0];
   const pattern = candidate.getPattern(entry);
   const matches = getTopMatches(pattern, scoredWordlist, BEAM_SEARCH_PARAMS.C);
-  if (!matches) {
-    // TODO handle the case where you're screwed
-    return [candidate];
+  if (matches.length === 0) {
+    // TODO handle the case where you're screwed better
+    return [];
   }
   return matches.map(word => {
     return candidate.setEntry(entry, word);
@@ -44,7 +44,10 @@ export default (initialState, scoredWordlist) => {
   // generate candidates using beam search
   let candidates = [initialState];
   const NUM_STEPS = 100; // make this big
+  let bestCandidate;
   for (let step = 0; step < NUM_STEPS; step += 1) {
+    if (!candidates.length) break;
+    bestCandidate = candidates[0];
     console.log('step', step);
     // console.log('candidates', candidates);
     // console.log('scores', _.map(candidates, candidate => candidate.computeHeuristic(scoredWordlist)));
@@ -61,7 +64,6 @@ export default (initialState, scoredWordlist) => {
     // console.log('next', nextCandidates);
     candidates = takeBestCandidates(nextCandidates, scoredWordlist);
   }
-  const bestCandidate = candidates[0];
   console.log('final candidate', bestCandidate);
   console.log('final candidate score', bestCandidate.computeHeuristic(scoredWordlist));
     /*
