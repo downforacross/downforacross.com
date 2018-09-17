@@ -18,54 +18,54 @@ import _ from 'lodash';
 class BucketedWordlist {
   constructor(scoredWordlist) {
     this.makeBuckets(scoredWordlist)
+    this.cache = {};
+  }
+
+  getKey(length, indices, vals) {
+    return `${length}${indices.join('')}${vals.join('')}`
+  }
+
+  storeWordInBucket(word, indices) {
+    const key = indices.length === 2
+      ? word.length.toString() + indices[0].toString() + indices[1].toString() + word[indices[0]] + word[indices[1]]
+      : this.getKey(word.length, indices, _.map(indices, idx => word[idx]));
+    if (!this.buckets[key]) {
+      this.buckets[key] = [];
+    }
+    this.buckets[key].push(word);
   }
 
   makeBuckets(scoredWordlist) {
-    this.bigBuckets = [];
-    this.buckets = [];
+    console.log('make buckets', scoredWordlist.length);
+    const time1 = Date.now();
+    this.buckets = {};
+    const words = _.sortBy(_.keys(scoredWordlist), word => -scoredWordlist[word]);
     _.forEach(_.keys(scoredWordlist), word => {
       const length = word.length;
-      _.range(length).forEach(idx => {
-        const val = word[idx];
-        this.buckets[length] = this.buckets[length] || []
-        this.buckets[length][idx] = this.buckets[length][idx] || {}
-        this.buckets[length][idx][val] = this.buckets[length][idx][val] || []
-        const bucket = this.buckets[length][idx][val];
-        bucket.push(word);
-      });
-      this.bigBuckets[length] = this.bigBuckets[length] || []
-      const bigBucket = this.bigBuckets[length];
-      bigBucket.push(word);
+      this.storeWordInBucket(word, []);
     });
-    this.bigBuckets = _.forEach(this.bigBuckets, (bucket, i) => (
-      this.bigBuckets[i] = _.sortBy(bucket, word => (
-        -scoredWordlist[word]
-      ))
-    ));
-    _.forEach(this.buckets, a => _.forEach(a, b => {
-      _.forEach(_.keys(b), val => (
-        b[val] = _.sortBy(b[val], word => (
-          -scoredWordlist[word]
-        ))
-      ))
-    }));
+    _.forEach(_.keys(scoredWordlist), word => {
+      const length = word.length;
+      _.range(length).forEach(i => {
+        this.storeWordInBucket(word, [i]);
+        _.range(i, length).forEach(j => {
+          this.storeWordInBucket(word, [i, j]);
+        });
+      });
+    });
+    const time2 = Date.now();
+    console.log('done in', (time2 - time1) / 1000);
   }
 
   getBucket(length, {
-    idx = -1,
-    val = null,
+    indices = [],
+    vals = [],
   } = {}) {
-    // if idx === -1, then return all words with length=length
-    // otherwise, also ensure word[idx] === val
-    if (idx === -1) {
-      return this.bigBuckets[length] || []
-    }
-    return ((this.buckets[length] || [])[idx] || [])[val] || []
+    const key = this.getKey(length, indices, vals);
+    return (this.buckets[key] || []);
   }
 
-  // TODO memoize this function
-  getMatches(pattern, limit=-1) {
-    console.log('getMatches', pattern, limit);
+  _getMatches(pattern, limit) {
     const length = pattern.length;
     // get list of indices that are constrained
     const constraints = _.filter(
@@ -73,17 +73,10 @@ class BucketedWordlist {
         pattern[idx] !== ' '
       )
     );
-    // check if pattern is all spaces
-    if (constraints.length === 0) {
-      if (limit === -1) {
-        return this.getBucket(length);
-      }
-      return this.getBucket(length).slice(0, limit);
-
-    }
+    const indices = constraints.slice(0, 2);
     const bucket = this.getBucket(length, {
-      idx: constraints[0],
-      val: pattern[constraints[0]],
+      indices: indices,
+      vals: _.map(indices, idx => pattern[idx]),
     });
     const result = [];
     for (let word of bucket) {
@@ -96,8 +89,15 @@ class BucketedWordlist {
         break;
       }
     }
-    console.log('DONE getMatches', result);
     return result;
+  }
+
+  getMatches(pattern, limit=-1) {
+    const cacheKey = `${pattern} ${limit}`
+    if (!this.cache[cacheKey]) {
+      this.cache[cacheKey] = this._getMatches(pattern, limit);
+    }
+    return this.cache[cacheKey];
   }
 }
 
@@ -119,10 +119,10 @@ export const getTopMatches = (pattern, scoredWordlist, C) => {
   return bucketedWordlist.getMatches(pattern, C);
 }
 
-// e.g. sum of top 10 best matches
 export const scoreMatches = (pattern, scoredWordlist) => {
 }
 
-// e.g. number of matches
-export const countMatches = (pattern, scoredWordlist)  =>{
+export const countMatches = (pattern, scoredWordlist) => {
+  const bucketedWordlist = getBucketedWordlist(scoredWordlist);
+  return bucketedWordlist.getMatches(pattern).length;
 }

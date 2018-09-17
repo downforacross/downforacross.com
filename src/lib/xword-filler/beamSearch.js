@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 const BEAM_SEARCH_PARAMS = {
   K: 100,
-  C: 3,
+  C: 20,
 };
 
 
@@ -13,15 +13,20 @@ const isCandidateComplete = (candidate) => {
 };
 
 const getChildrenCandidates = (candidate, scoredWordlist) => {
-  const entries = candidate.entries;
+  const entries = _.filter(candidate.entries, entry => (
+    !candidate.isEntryComplete(entry)
+  ));
   const sortedEntries = _.orderBy(entries.map(entry => ({
     entry,
     score: candidate.computeEntryHeuristic(entry, scoredWordlist),
-  })), ['score'], ['desc']);
-  console.log(sortedEntries);
+  })), ['score'], ['asc']);
   const { entry } = sortedEntries[0];
   const pattern = candidate.getPattern(entry);
   const matches = getTopMatches(pattern, scoredWordlist, BEAM_SEARCH_PARAMS.C);
+  if (!matches) {
+    // TODO handle the case where you're screwed
+    return [candidate];
+  }
   return matches.map(word => {
     return candidate.setEntry(entry, word);
   });
@@ -32,29 +37,33 @@ const takeBestCandidates = (candidates, scoredWordlist) => {
     candidate,
     score: candidate.computeHeuristic(scoredWordlist),
   })), ['score'], ['desc']);
-  console.log(sortedCandidates);
-  return sortedCandidates.map(({ candidate, score }) => candidate);
+  return sortedCandidates.map(({ candidate, score }) => candidate).slice(0, BEAM_SEARCH_PARAMS.K);
 }
 
 export default (initialState, scoredWordlist) => {
   // generate candidates using beam search
   let candidates = [initialState];
-  let bestCandidate = initialState;
-  const NUM_STEPS = 10; // make this big
+  const NUM_STEPS = 100; // make this big
   for (let step = 0; step < NUM_STEPS; step += 1) {
     console.log('step', step);
-    console.log('candidates', candidates);
+    // console.log('candidates', candidates);
+    // console.log('scores', _.map(candidates, candidate => candidate.computeHeuristic(scoredWordlist)));
+    let done = true;
     const nextCandidates = _.flatten(candidates.map(candidate => {
       if (isCandidateComplete(candidate)) {
         return [candidate];
       }
+      done = false;
       const children = getChildrenCandidates(candidate, scoredWordlist);
-      console.log(children);
       return children;
     }));
-    console.log('next', nextCandidates);
+    if (done) break;
+    // console.log('next', nextCandidates);
     candidates = takeBestCandidates(nextCandidates, scoredWordlist);
   }
+  const bestCandidate = candidates[0];
+  console.log('final candidate', bestCandidate);
+  console.log('final candidate score', bestCandidate.computeHeuristic(scoredWordlist));
     /*
   entries.across.forEach((entry) => {
     const pattern = candidate.getPattern(entry);

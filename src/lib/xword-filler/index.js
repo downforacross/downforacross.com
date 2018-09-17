@@ -27,6 +27,7 @@ const assignScores = (wordlist) => {
 const generateDefaultWordlist = () => {
   const result = {};
   _.forEach(window.nyt_words, (k) => {
+    if (k.length > 7) return;
     result[k] = {
       score: 0,
       stdev: 10,
