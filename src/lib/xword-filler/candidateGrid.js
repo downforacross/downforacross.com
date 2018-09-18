@@ -33,9 +33,11 @@ export const convertToCandidateGrid = (grid) => {
     ..._.values(entriesDict.down),
   ], _.identity);
 
-  const gridString = _.map(grid, r => (
-    _.map(r, ({value}) => value || ' ').join('')
-  )).join('')
+  const gridString = _.flatten(
+    _.map(grid, r => (
+      _.map(r, ({value}) => value || ' ')
+    ))
+  );
   const width = grid[0].length;
   const height = grid.length;
   return new CandidateGrid(gridString, width, height, entries);
@@ -43,7 +45,6 @@ export const convertToCandidateGrid = (grid) => {
 
 export default class CandidateGrid {
   constructor(gridString, width, height, entries) {
-    // note: this.grid is immutable
     this.gridString = gridString;
     this.entries = entries;
     /*this.s = _.map(this.grid, r => (
@@ -55,9 +56,11 @@ export default class CandidateGrid {
 
   // todo wrap this in a CandidateGrid object
   getPattern(entry) {
-    return entry.map(({r, c}) => (
-      this.getValue(r, c) || ' '
-    )).join('');
+    let result = '';
+    for (let i = 0; i < entry.length; i += 1) {
+      result += this.getValue(entry[i].r, entry[i].c);
+    }
+    return result;
   }
 
   // todo wrap this in a CandidateGrid object
@@ -66,17 +69,16 @@ export default class CandidateGrid {
   }
 
   setEntry(entry, word) {
-    const nextGridStringChars = this.gridString.split('');
+    const nextGridString = [...this.gridString];
     entry.forEach(({r, c}, i) => {
       // i is the index of the cell {r,c} in the actual word (b.c. down/across are consistent with row major ordering)
 
       // TODO replace this with a call to CandidateGrid.getChar(r, r)
       if (this.getValue(r, c) === ' ') {
-        nextGridStringChars[r * this.width + c] = word[i];
+        nextGridString[r * this.width + c] = word[i];
       }
     });
 
-    const nextGridString = nextGridStringChars.join('');
     return new CandidateGrid(nextGridString, this.width, this.height, this.entries);
   }
 

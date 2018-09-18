@@ -17,8 +17,9 @@ import _ from 'lodash';
 
 class BucketedWordlist {
   constructor(scoredWordlist) {
-    this.makeBuckets(scoredWordlist)
-    this.cache = {};
+    this.makeBuckets(scoredWordlist) // this grows to size 28889
+    this.cache = {}; // this grows to size 7142
+    window.b = this;
   }
 
   getKey(length, indices, vals) {
@@ -26,9 +27,7 @@ class BucketedWordlist {
   }
 
   storeWordInBucket(word, indices) {
-    const key = indices.length === 2
-      ? word.length.toString() + indices[0].toString() + indices[1].toString() + word[indices[0]] + word[indices[1]]
-      : this.getKey(word.length, indices, _.map(indices, idx => word[idx]));
+    const key = this.getKey(word.length, indices, _.map(indices, idx => word[idx]));
     if (!this.buckets[key]) {
       this.buckets[key] = [];
     }
@@ -46,12 +45,15 @@ class BucketedWordlist {
     });
     _.forEach(_.keys(scoredWordlist), word => {
       const length = word.length;
-      _.range(length).forEach(i => {
+      for (let i = 0; i < length; i += 1) {
         this.storeWordInBucket(word, [i]);
-        _.range(i, length).forEach(j => {
-          this.storeWordInBucket(word, [i, j]);
-        });
-      });
+        for (let j = i; j < length; j += 1) {
+          // inlining for speed
+          const key = length.toString() + i.toString() + j.toString() + word[i] + word[j];
+          if (!this.buckets[key]) this.buckets[key] = [];
+          this.buckets[key].push(word);
+        }
+      };
     });
     const time2 = Date.now();
     console.log('done in', (time2 - time1) / 1000);
