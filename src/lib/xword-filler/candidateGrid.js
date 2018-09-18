@@ -1,16 +1,57 @@
 import _ from 'lodash';
+import { makeGridFromComposition } from '../../gameUtils';
 import { getTopMatches, countMatches } from './common';
 
+export const convertFromCandidateGrid = (candidate) => {
+  return _.range(candidate.height).map(r => (
+    _.range(candidate.width).map(c => ({
+      value: candidate.gridString[r * candidate.width + c],
+      pencil: true, // todo fix
+    }))
+  ));
+}
+
+export const convertToCandidateGrid = (grid) => {
+  // precompute static properties of grid
+  const gridObject = makeGridFromComposition(grid);
+  gridObject.assignNumbers();
+  const entriesDict = {
+    across: [],
+    down: [],
+  };
+  gridObject.items().forEach(([r, c, value]) => {
+    if (value.black) return;
+    if (!value.parents) throw new Error(`cell has no parents: ${r} ${c} ${JSON.stringify(value)}`);
+    ['across', 'down'].forEach(orientation => {
+      const entry = entriesDict[orientation][value.parents[orientation]] || [];
+      entry.push({ r, c })
+      entriesDict[orientation][value.parents[orientation]] = entry;
+    });
+  });
+  const entries = _.filter([
+    ..._.values(entriesDict.across),
+    ..._.values(entriesDict.down),
+  ], _.identity);
+
+  const gridString = _.map(grid, r => (
+    _.map(r, ({value}) => value || ' ').join('')
+  )).join('')
+  const width = grid[0].length;
+  const height = grid.length;
+  return new CandidateGrid(gridString, width, height, entries);
+}
+
 export default class CandidateGrid {
-  constructor(grid, entries) {
+  constructor(gridString, width, height, entries) {
     // note: this.grid is immutable
-    this.grid = grid;
+    this.gridString = gridString;
     this.entries = entries;
     /*this.s = _.map(this.grid, r => (
       _.map(r, ({value}) => value).join('')
     )).join(',')*/
+    this.width = width;
+    this.height = height;
   }
-
 
   // todo wrap this in a CandidateGrid object
   getPattern(entry) {
@@ -21,21 +62,22 @@ export default class CandidateGrid {
 
   // todo wrap this in a CandidateGrid object
   getValue(r, c) {
-    return this.grid[r][c].value;
+    return this.gridString[r * this.width + c];
   }
 
   setEntry(entry, word) {
-    const nextGrid = this.grid.map(row => row.map(cell => ({...cell})));
+    const nextGridStringChars = this.gridString.split('');
     entry.forEach(({r, c}, i) => {
       // i is the index of the cell {r,c} in the actual word (b.c. down/across are consistent with row major ordering)
 
       // TODO replace this with a call to CandidateGrid.getChar(r, r)
-      if (this.getValue(r, c) === '') {
-        nextGrid[r][c].value = word[i];
-        nextGrid[r][c].pencil = true;
+      if (this.getValue(r, c) === ' ') {
+        nextGridStringChars[r * this.width + c] = word[i];
       }
     });
-    return new CandidateGrid(nextGrid, this.entries);
+
+    const nextGridString = nextGridStringChars.join('');
+    return new CandidateGrid(nextGridString, this.width, this.height, this.entries);
   }
 
   isEntryComplete(entry) {

@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import gaussian from 'gaussian';
-import { makeGridFromComposition } from '../../gameUtils';
-import CandidateGrid from './candidateGrid';
+import CandidateGrid, { convertToCandidateGrid, convertFromCandidateGrid } from './candidateGrid';
 import beamSearch from './beamSearch';
 import { getMatches } from './common';
 // randomize our word list, to introduce non-determinism early in the process.
@@ -42,35 +41,15 @@ const DEFAULT_WORDLIST = generateDefaultWordlist()
 export const fillGrid = (partialGrid, wordlist = DEFAULT_WORDLIST) => {
   const scoredWordlist = assignScores(wordlist)
 
-  // precompute static properties of grid
-  const gridObject = makeGridFromComposition(partialGrid);
-  gridObject.assignNumbers();
-  const entriesDict = {
-    across: [],
-    down: [],
-  };
-  gridObject.items().forEach(([r, c, value]) => {
-    if (value.black) return;
-    if (!value.parents) throw new Error(`cell has no parents: ${r} ${c} ${JSON.stringify(value)}`);
-    ['across', 'down'].forEach(orientation => {
-      const entry = entriesDict[orientation][value.parents[orientation]] || [];
-      entry.push({ r, c })
-      entriesDict[orientation][value.parents[orientation]] = entry;
-    });
-  });
-  const entries = _.filter([
-    ..._.values(entriesDict.across),
-    ..._.values(entriesDict.down),
-  ], _.identity);
-
-  const initialState = new CandidateGrid(partialGrid, entries);
+  const initialState = convertToCandidateGrid(partialGrid);
   const bestCandidate = beamSearch(initialState, scoredWordlist);
-  const grid = bestCandidate.grid.map(row => (
-    row.map(cell => ({
+  const grid = convertFromCandidateGrid(bestCandidate);
+  const resultGrid = grid.map((row, r) => (
+    row.map((cell, c) => ({
       ...cell,
-      value: cell.value === '' ? '?' : cell.value,
-      pencil: cell.pencil || cell.value === '',
+      value: cell.value === ' ' ? '?' : cell.value,
+      pencil: cell.value !== '.' && partialGrid[r][c].value !== cell.value,
     }))
   ));
-  return grid;
+  return resultGrid;
 }
