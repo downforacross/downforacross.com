@@ -27,12 +27,12 @@ const getChildrenCandidates = (candidate, scoredWordlist) => {
   });
 }
 
-const takeBestCandidates = (candidates, scoredWordlist) => {
+const takeBestCandidates = (candidates, scoredWordlist, K = BEAM_SEARCH_PARAMS.K) => {
   const sortedCandidates = _.orderBy(candidates.map(candidate => ({
     candidate,
     score: candidate.computeHeuristic(scoredWordlist),
   })), ['score'], ['desc']);
-  return sortedCandidates.map(({ candidate, score }) => candidate).slice(0, BEAM_SEARCH_PARAMS.K);
+  return sortedCandidates.map(({ candidate, score }) => candidate).slice(0, K);
 }
 
 export default (initialState, scoredWordlist) => {
@@ -43,16 +43,16 @@ export default (initialState, scoredWordlist) => {
   for (let step = 0; step < NUM_STEPS; step += 1) {
     if (!candidates.length) break;
     bestCandidate = candidates[0];
-    console.log('step', step);
+    console.log('step', step, bestCandidate.computeHeuristic(scoredWordlist, true));
     // console.log('candidates', candidates);
-    // console.log('scores', _.map(candidates, candidate => candidate.computeHeuristic(scoredWordlist)));
+    console.log('scores', _.map(candidates, candidate => candidate.computeHeuristic(scoredWordlist)));
     let done = true;
     const nextCandidates = _.flatten(candidates.map(candidate => {
       if (isCandidateComplete(candidate)) {
         return [candidate];
       }
       done = false;
-      const children = getChildrenCandidates(candidate, scoredWordlist);
+      const children = takeBestCandidates(getChildrenCandidates(candidate, scoredWordlist), scoredWordlist, 7);
       return children;
     }));
     if (done) break;

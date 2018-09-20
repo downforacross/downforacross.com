@@ -9,7 +9,7 @@ import { getMatches } from './common';
 const normal = gaussian(0, 1)
 
 const sample = (mean, stdev) => (
-  mean + normal.ppf(Math.random()) * stdev
+  Math.max(0.0001, mean + normal.ppf(Math.random()) * stdev)
 )
 
 // scoredWords: an object of shape { word: { score, stdev }, ... }
@@ -28,7 +28,7 @@ const generateDefaultWordlist = () => {
   _.forEach(window.nyt_words, (k) => {
     if (k.length > 7) return;
     result[k] = {
-      score: 0,
+      score: 30,
       stdev: 10,
     };
   });
@@ -48,7 +48,7 @@ export const fillGrid = (partialGrid, wordlist = DEFAULT_WORDLIST) => {
     row.map((cell, c) => ({
       ...cell,
       value: cell.value === ' ' ? '?' : cell.value,
-      pencil: cell.value !== '.' && partialGrid[r][c].value !== cell.value,
+      pencil: (cell.value !== '.' && partialGrid[r][c].value !== cell.value) || partialGrid[r][c].pencil,
     }))
   ));
   return resultGrid;

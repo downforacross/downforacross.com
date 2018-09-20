@@ -87,27 +87,37 @@ export default class CandidateGrid {
     return this.gridString.indexOf(' ') === -1;
   }
 
-  computeHeuristic(scoredWordlist) {
+  computeHeuristic(scoredWordlist, verbose = false) {
+    if (this.heuristic) return this.heuristic;
+    const seen = {};
     const entryScores = _.map(this.entries, entry => {
       const pattern = this.getPattern(entry);
-      if (countMatches(pattern, scoredWordlist) === 0) {
-        return -100;
+      if (pattern.indexOf(' ') === -1) {
+        if (seen[pattern]) {
+          return -1000;
+        }
+        seen[pattern] = true;
       }
-      return Math.log10(countMatches(pattern, scoredWordlist));
-      const topMatches = getTopMatches(pattern, scoredWordlist, 10);
-      return _.sum(_.map(topMatches, (word, i) => (
+      if (countMatches(pattern, scoredWordlist) === 0) {
+        return -1000;
+      }
+      const best = getTopMatches(pattern, scoredWordlist, 100);
+      const expectedScore = 0.1 * _.sum(best.map((word, i) => (
         scoredWordlist[word] * Math.pow(0.9, i)
-      )))
+      )));
+      const fillability = Math.log10(countMatches(pattern, scoredWordlist));
+      return Math.sqrt(expectedScore) + fillability;
     });
-    return _.sum(entryScores);
+    this.heuristic = _.sum(entryScores);
+    return this.heuristic;
   }
 
   computeEntryHeuristic(entry, scoredWordlist) {
     const pattern = this.getPattern(entry);
-    const topMatches = getTopMatches(pattern, scoredWordlist, 10);
-    return _.sum(_.map(topMatches, (word, i) => (
-      scoredWordlist[word] * Math.pow(0.9, i)
-    )))
+    if (countMatches(pattern, scoredWordlist) === 0) {
+      return -100;
+    }
+    return Math.log10(countMatches(pattern, scoredWordlist));
   }
 
   computeCellHeuristic(cell, scoredWordlist) {
