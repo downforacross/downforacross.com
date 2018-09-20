@@ -35,7 +35,6 @@ class BucketedWordlist {
   }
 
   makeBuckets(scoredWordlist) {
-    console.log('make buckets', scoredWordlist.length);
     const time1 = Date.now();
     this.buckets = {};
     const words = _.sortBy(_.keys(scoredWordlist), word => -scoredWordlist[word]);
@@ -56,7 +55,6 @@ class BucketedWordlist {
       };
     });
     const time2 = Date.now();
-    console.log('done in', (time2 - time1) / 1000);
   }
 
   getBucket(length, {
