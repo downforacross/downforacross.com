@@ -3,7 +3,7 @@ import { getTopMatches } from './common';
 import _ from 'lodash';
 
 const BEAM_SEARCH_PARAMS = {
-  K: 300,
+  K: 100,
   C: 10,
 };
 
