@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 const BEAM_SEARCH_PARAMS = {
   K: 300,
-  C: 20,
+  C: 10,
 };
 
 
@@ -24,7 +24,9 @@ const getChildrenCandidates = (candidate, scoredWordlist) => {
   const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
   return letters.map(letter => {
     return candidate.setCell(cell, letter);
-  });
+  }).filter(candidate => (
+    candidate.computeCellHeuristic(cell, scoredWordlist) >= 0
+  ));
 }
 
 const takeBestCandidates = (candidates, scoredWordlist, K = BEAM_SEARCH_PARAMS.K) => {
