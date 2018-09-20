@@ -123,6 +123,7 @@ export default class CandidateGrid {
   computeCellHeuristic(cell, scoredWordlist) {
     const entryAcross = this.entries[this.entryMap[cell].across];
     const entryDown = this.entries[this.entryMap[cell].down];
-    return this.computeEntryHeuristic(entryAcross, scoredWordlist) + this.computeEntryHeuristic(entryDown);
+    // console.log(entryAcross, entryDown);
+    return this.computeEntryHeuristic(entryAcross, scoredWordlist) + this.computeEntryHeuristic(entryDown, scoredWordlist);
   }
 }
