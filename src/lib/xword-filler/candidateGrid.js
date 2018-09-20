@@ -19,96 +19,85 @@ export const convertToCandidateGrid = (grid) => {
     across: [],
     down: [],
   };
+  const width = grid[0].length;
+  const height = grid.length;
+  let entryMap = [];
   gridObject.items().forEach(([r, c, value]) => {
     if (value.black) return;
     if (!value.parents) throw new Error(`cell has no parents: ${r} ${c} ${JSON.stringify(value)}`);
+    const cell = r * width + c;
+    entryMap[cell] = value.parents;
     ['across', 'down'].forEach(orientation => {
       const entry = entriesDict[orientation][value.parents[orientation]] || [];
-      entry.push({ r, c })
+      entry.push(cell);
       entriesDict[orientation][value.parents[orientation]] = entry;
     });
   });
-  const entries = _.filter([
-    ..._.values(entriesDict.across),
-    ..._.values(entriesDict.down),
-  ], _.identity);
+
+  const entries = [];
+  ['across', 'down'].forEach(orientation => {
+    entriesDict[orientation].forEach((obj) => {
+      obj.idx = entries.length;
+      entries.push(obj);
+    });
+  });
+  entryMap = entryMap.map(obj => ({
+    across: entriesDict.across[obj.across].idx,
+    down: entriesDict.down[obj.down].idx,
+  }));
 
   const gridString = _.flatten(
-    _.map(grid, r => (
-      _.map(r, ({value}) => value || ' ')
+    _.map(grid, row => (
+      _.map(row, ({value}) => value || ' ')
     ))
   );
-  const width = grid[0].length;
-  const height = grid.length;
-  return new CandidateGrid(gridString, width, height, entries);
+
+  return new CandidateGrid(gridString, width, height, entries, entryMap);
 }
 
 export default class CandidateGrid {
-  constructor(gridString, width, height, entries) {
+  constructor(gridString, width, height, entries, entryMap) {
     this.gridString = gridString;
     this.entries = entries;
-    /*this.s = _.map(this.grid, r => (
-      _.map(r, ({value}) => value).join('')
-    )).join(',')*/
     this.width = width;
     this.height = height;
+    this.entryMap = entryMap;
   }
 
   // todo wrap this in a CandidateGrid object
   getPattern(entry) {
     let result = '';
     for (let i = 0; i < entry.length; i += 1) {
-      result += this.getValue(entry[i].r, entry[i].c);
+      result += this.gridString[entry[i]];
     }
     return result;
   }
 
-  // todo wrap this in a CandidateGrid object
-  getValue(r, c) {
-    return this.gridString[r * this.width + c];
-  }
-
-  setEntry(entry, word) {
+  setCell(cell, value) {
     const nextGridString = [...this.gridString];
-    entry.forEach(({r, c}, i) => {
-      // i is the index of the cell {r,c} in the actual word (b.c. down/across are consistent with row major ordering)
-
-      // TODO replace this with a call to CandidateGrid.getChar(r, r)
-      if (this.getValue(r, c) === ' ') {
-        nextGridString[r * this.width + c] = word[i];
-      }
-    });
-
-    return new CandidateGrid(nextGridString, this.width, this.height, this.entries);
+    nextGridString[cell] = value;
+    return new CandidateGrid(nextGridString, this.width, this.height, this.entries, this.entryMap);
   }
 
-  isEntryComplete(entry) {
-    const pattern = this.getPattern(entry);
-    if (pattern.indexOf(' ') !== -1) {
-      return false;
-    }
-    return true;
+  isCellComplete(cell) {
+    return this.gridString[cell] !== ' ';
   }
 
   isComplete() {
-    // TODO check stuckness?
-    for (const entry of this.entries) {
-      const pattern = this.getPattern(entry);
-      if (pattern.indexOf(' ') !== -1) {
-        return false;
-      }
-    }
-    return true;
+    return this.gridString.indexOf(' ') === -1;
   }
 
   computeHeuristic(scoredWordlist) {
     const entryScores = _.map(this.entries, entry => {
       const pattern = this.getPattern(entry);
-      const numMatches = countMatches(pattern, scoredWordlist);
-      if (numMatches === 0) {
+      if (countMatches(pattern, scoredWordlist) === 0) {
         return -100;
       }
-      return Math.log10(numMatches);
+      return Math.log10(countMatches(pattern, scoredWordlist));
+      const topMatches = getTopMatches(pattern, scoredWordlist, 10);
+      return _.sum(_.map(topMatches, (word, i) => (
+        scoredWordlist[word] * Math.pow(0.9, i)
+      )))
     });
     return _.sum(entryScores);
   }
@@ -119,5 +108,11 @@ export default class CandidateGrid {
     return _.sum(_.map(topMatches, (word, i) => (
       scoredWordlist[word] * Math.pow(0.9, i)
     )))
+  }
+
+  computeCellHeuristic(cell, scoredWordlist) {
+    const entryAcross = this.entries[this.entryMap[cell].across];
+    const entryDown = this.entries[this.entryMap[cell].down];
+    return this.computeEntryHeuristic(entryAcross, scoredWordlist) + this.computeEntryHeuristic(entryDown);
   }
 }

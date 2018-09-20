@@ -13,22 +13,17 @@ const isCandidateComplete = (candidate) => {
 };
 
 const getChildrenCandidates = (candidate, scoredWordlist) => {
-  const entries = _.filter(candidate.entries, entry => (
-    !candidate.isEntryComplete(entry)
+  const cells = _.range(candidate.width * candidate.height).filter(cell => (
+    !candidate.isCellComplete(cell)
   ));
-  const sortedEntries = _.orderBy(entries.map(entry => ({
-    entry,
-    score: candidate.computeEntryHeuristic(entry, scoredWordlist),
+  const sortedCells = _.orderBy(cells.map(cell => ({
+    cell,
+    score: candidate.computeCellHeuristic(cell, scoredWordlist),
   })), ['score'], ['asc']);
-  const { entry } = sortedEntries[0];
-  const pattern = candidate.getPattern(entry);
-  const matches = getTopMatches(pattern, scoredWordlist, BEAM_SEARCH_PARAMS.C);
-  if (matches.length === 0) {
-    // TODO handle the case where you're screwed better
-    return [];
-  }
-  return matches.map(word => {
-    return candidate.setEntry(entry, word);
+  const { cell } = sortedCells[0];
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  return letters.map(letter => {
+    return candidate.setCell(cell, letter);
   });
 }
 
