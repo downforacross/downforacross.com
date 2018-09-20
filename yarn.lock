@@ -3270,6 +3270,10 @@ gauge@~2.7.3:
     strip-ansi "^3.0.1"
     wide-align "^1.1.0"
 
+gaussian@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/gaussian/-/gaussian-1.1.0.tgz#6d137a097d4dbfc20b52fb1cb5d61c4700edd771"
+
 gaze@^0.5.1:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/gaze/-/gaze-0.5.2.tgz#40b709537d24d1d45767db5a908689dfe69ac44f"

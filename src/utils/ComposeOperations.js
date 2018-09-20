@@ -40,6 +40,23 @@ const reducers = {
     };
   },
 
+  updateGrid: (composition, params) => {
+    // equivalent to create, but there can only be one create
+    const {
+      grid = [ [ {} ] ],
+      circles = [],
+      clues = [],
+    } = params;
+
+    return {
+      ...composition,
+      grid,
+      circles,
+      clues,
+    };
+  },
+
+
   updateCursor: (composition, params) => {
     let {
       cursors = [],
@@ -67,6 +84,21 @@ const reducers = {
     return {
       ...composition,
       cursors,
+    };
+  },
+
+  clearPencil: (composition) => {
+    let { grid } = composition;
+    grid = _.map(grid, row => (
+      row.map(cell => ({
+        ...cell,
+        pencil: cell.value === '.' ? null : false,
+        value: cell.pencil ? '' : cell.value,
+      }))
+    ));
+    return {
+      ...composition,
+      grid,
     };
   },
 

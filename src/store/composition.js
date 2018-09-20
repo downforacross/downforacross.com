@@ -127,6 +127,25 @@ export default class Composition extends EventEmitter {
     });
   }
 
+  setGrid(grid) {
+    this.events.push({
+      timestamp: SERVER_TIME,
+      type: 'updateGrid',
+      params: {
+        grid,
+      },
+    });
+  }
+
+  clearPencil() {
+    this.events.push({
+      timestamp: SERVER_TIME,
+      type: 'clearPencil',
+      params: {
+      },
+    });
+  }
+
   updateDimensions(width, height, {fromX = 'right', fromY = 'down'} = {}) {
     this.events.push({
       timestamp: SERVER_TIME,
