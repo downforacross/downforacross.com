@@ -1,9 +1,8 @@
 import Puzzlelist from './puzzlelist';
-import { db, SERVER_TIME } from './firebase';
+import {db, SERVER_TIME} from './firebase';
 import _ from 'lodash';
 
 export default class DemoPuzzleList extends Puzzlelist {
-
   getPages(pages, cbk) {
     const type = 'Daily Puzzle';
     const title = 'Test Puzzle';
@@ -16,12 +15,17 @@ export default class DemoPuzzleList extends Puzzlelist {
       description,
       private: false,
       info: {
-        title, author, description, type
+        title,
+        author,
+        description,
+        type,
       },
     };
-    cbk(_.range(20).map(i => ({
-      ...puz,
-      title: `Test ${i}`,
-    })));
+    cbk(
+      _.range(20).map((i) => ({
+        ...puz,
+        title: `Test ${i}`,
+      }))
+    );
   }
 }

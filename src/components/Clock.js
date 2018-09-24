@@ -1,13 +1,13 @@
 import './css/clock.css';
-import React, { Component } from 'react';
-import { getTime } from '../actions';
-import { MAX_CLOCK_INCREMENT } from '../timing';
+import React, {Component} from 'react';
+import {getTime} from '../actions';
+import {MAX_CLOCK_INCREMENT} from '../timing';
 
 export default class Clock extends Component {
   constructor() {
     super();
     this.state = {
-      clock: '00:00'
+      clock: '00:00',
     };
     this._togglePause = this.togglePause.bind(this);
   }
@@ -38,8 +38,10 @@ export default class Clock extends Component {
       clock += pausedTime;
     }
 
-    if (start && !this.props.isPaused) { // not paused
-      if (stop) { // finished
+    if (start && !this.props.isPaused) {
+      // not paused
+      if (stop) {
+        // finished
         clock += stop - start;
       } else if (this.isCapped) {
         clock += MAX_CLOCK_INCREMENT;
@@ -49,12 +51,14 @@ export default class Clock extends Component {
     }
 
     let secs = Math.floor(clock / 1000);
-    let mins = Math.floor(secs / 60); secs = secs % 60;
-    let hours = Math.floor(mins / 60); mins = mins % 60;
+    let mins = Math.floor(secs / 60);
+    secs = secs % 60;
+    let hours = Math.floor(mins / 60);
+    mins = mins % 60;
 
-    const str = (hours ? (hours + ':'):'') + pad2(mins) + ':' + pad2(secs);
+    const str = (hours ? hours + ':' : '') + pad2(mins) + ':' + pad2(secs);
     this.setState({
-      clock: str
+      clock: str,
     });
   }
 
@@ -71,7 +75,7 @@ export default class Clock extends Component {
   }
 
   togglePause() {
-    const { onPause, onStart } = this.props;
+    const {onPause, onStart} = this.props;
     if (this.isPaused) {
       onStart();
     } else {
@@ -80,15 +84,13 @@ export default class Clock extends Component {
   }
 
   render() {
-    const { clock } = this.state;
-    const clockStr = this.isPaused
-      ? '(' + clock + ')'
-      : clock;
-    const titleStr = this.isPaused
-      ? 'Click to unpause'
-      : 'Click to pause';
-    return <div className='clock' onClick={this._togglePause} title={titleStr}>
-      {clockStr}
-    </div>
+    const {clock} = this.state;
+    const clockStr = this.isPaused ? '(' + clock + ')' : clock;
+    const titleStr = this.isPaused ? 'Click to unpause' : 'Click to pause';
+    return (
+      <div className="clock" onClick={this._togglePause} title={titleStr}>
+        {clockStr}
+      </div>
+    );
   }
-};
+}

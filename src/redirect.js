@@ -6,5 +6,3 @@ export default (url, message) => {
   if (message) alert(message);
   window.location.replace(url);
 };
-
-

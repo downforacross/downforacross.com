@@ -5,7 +5,7 @@
   width: 100%;
   height: 100%;
   /* z-index: -1; */
-  transition: background-color .12s ease;
+  transition: background-color 0.12s ease;
   display: flex;
   flex-direction: column;
   user-select: none;
@@ -68,7 +68,6 @@ div:focus .cell.referenced {
   /* TODO */
 }
 
-
 .cell.selected {
   background-color: #4aeba1;
   /*background-color: #98ee99;*/
@@ -122,7 +121,7 @@ div:focus .cell.referenced {
 }
 
 .black .cell--flip {
-  color: #CCC;
+  color: #ccc;
 }
 
 .cell--value {

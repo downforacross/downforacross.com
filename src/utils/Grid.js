@@ -1,7 +1,6 @@
 import _ from 'lodash';
 
 export default class Grid {
-
   constructor(grid) {
     this.grid = grid;
     if (!grid) {
@@ -17,9 +16,9 @@ export default class Grid {
       across: [],
       down: [],
     };
-    this.values().forEach(cell => {
+    this.values().forEach((cell) => {
       if (cell && !cell.black) {
-        ['across', 'down'].forEach(dir => {
+        ['across', 'down'].forEach((dir) => {
           result[dir][cell.parents[dir]] = (result[dir][cell.parents[dir]] || 0) + 1;
         });
       }
@@ -59,10 +58,7 @@ export default class Grid {
 
   isSolved(solution) {
     for (const [r, c, cell] of this.items()) {
-      if (
-        solution[r][c] !== '.' &&
-        solution[r][c] !== cell.value
-      ) {
+      if (solution[r][c] !== '.' && solution[r][c] !== cell.value) {
         return false;
       }
     }
@@ -85,22 +81,19 @@ export default class Grid {
       r += 1;
     }
     if (this.isWriteable(r, c)) {
-      return { r, c };
+      return {r, c};
     } else {
       return undefined;
     }
   }
 
   getNextEmptyCell(r, c, direction, options = {}) {
-    let {
-      noWraparound = false,
-      skipFirst = false,
-    } = options;
+    let {noWraparound = false, skipFirst = false} = options;
 
     while (this.isWriteable(r, c)) {
       if (!this.isFilled(r, c)) {
         if (!skipFirst) {
-          return { r, c };
+          return {r, c};
         }
       }
       skipFirst = false;
@@ -128,7 +121,7 @@ export default class Grid {
 
       // recurse but not infinitely
       return this.getNextEmptyCell(r, c, direction, {
-        noWraparound: true
+        noWraparound: true,
       });
     }
     return undefined;
@@ -141,12 +134,12 @@ export default class Grid {
   getCellByNumber(number) {
     for (const [r, c, cell] of this.items()) {
       if (cell.number === number) {
-        return { r, c };
+        return {r, c};
       }
     }
   }
 
-  fixSelect({ r, c }, grid) {
+  fixSelect({r, c}, grid) {
     // Find the next valid white square in line order
     while (!this.isWhite(r, c)) {
       if (c + 1 < this.grid[r].length) {
@@ -155,17 +148,12 @@ export default class Grid {
         r += 1;
         c = 0;
       }
-    };
-    return { r, c }
+    }
+    return {r, c};
   }
 
   isInBounds(r, c) {
-    return (
-      r >= 0 &&
-      c >= 0 &&
-      r < this.grid.length &&
-      c < this.grid[r].length
-    );
+    return r >= 0 && c >= 0 && r < this.grid.length && c < this.grid[r].length;
   }
 
   isFilled(r, c) {
@@ -177,7 +165,7 @@ export default class Grid {
   }
 
   isWriteable(r, c) {
-    return (this.isInBounds(r, c) && this.isWhite(r, c));
+    return this.isInBounds(r, c) && this.isWhite(r, c);
   }
 
   getParent(r, c, direction) {
@@ -188,15 +176,9 @@ export default class Grid {
     if (!this.isWhite(r, c)) {
       return false;
     } else if (direction === 'across') {
-      return (
-        !this.isWriteable(r, c - 1) &&
-        this.isWriteable(r, c + 1)
-      );
+      return !this.isWriteable(r, c - 1) && this.isWriteable(r, c + 1);
     } else if (direction === 'down') {
-      return (
-        !this.isWriteable(r - 1, c) &&
-        this.isWriteable(r + 1, c)
-      );
+      return !this.isWriteable(r - 1, c) && this.isWriteable(r + 1, c);
     } else {
       throw new Error('Invalid direction: ' + direction);
     }
@@ -206,15 +188,9 @@ export default class Grid {
     if (!this.isWhite(r, c)) {
       return false;
     } else if (direction === 'across') {
-      return (
-        !this.isWriteable(r, c - 1) &&
-        !this.isWriteable(r, c + 1)
-      );
+      return !this.isWriteable(r, c - 1) && !this.isWriteable(r, c + 1);
     } else if (direction === 'down') {
-      return (
-        !this.isWriteable(r - 1, c) &&
-        !this.isWriteable(r + 1, c)
-      );
+      return !this.isWriteable(r - 1, c) && !this.isWriteable(r + 1, c);
     } else {
       throw new Error('Invalid direction: ' + direction);
     }
@@ -227,10 +203,7 @@ export default class Grid {
     for (const [r, c, cell] of this.items()) {
       if (!this.isWhite(r, c)) {
         continue;
-      } else if (
-        this.isStartOfClue(r, c, 'across') ||
-        this.isStartOfClue(r, c, 'down')
-      ) {
+      } else if (this.isStartOfClue(r, c, 'across') || this.isStartOfClue(r, c, 'down')) {
         cell.number = nextNumber;
         nextNumber += 1;
       } else {
@@ -238,20 +211,16 @@ export default class Grid {
       }
 
       cell.parents = {
-        across: (this.isStartOfClue(r, c, 'across')
+        across: this.isStartOfClue(r, c, 'across')
           ? cell.number
-          : (this.isSqueezedSquare(r, c, 'across')
+          : this.isSqueezedSquare(r, c, 'across')
             ? 0
-            : this.grid[r][c - 1].parents.across
-          )
-        ),
-        down: (this.isStartOfClue(r, c, 'down')
+            : this.grid[r][c - 1].parents.across,
+        down: this.isStartOfClue(r, c, 'down')
           ? cell.number
-          : (this.isSqueezedSquare(r, c, 'down')
+          : this.isSqueezedSquare(r, c, 'down')
             ? 0
-            : this.grid[r - 1][c].parents.down
-          )
-        )
+            : this.grid[r - 1][c].parents.down,
       };
     }
   }
@@ -259,7 +228,7 @@ export default class Grid {
   alignClues(clues) {
     const result = {
       across: [],
-      down: []
+      down: [],
     };
     for (const cell of this.values()) {
       for (const direction of ['across', 'down']) {
@@ -276,10 +245,6 @@ export default class Grid {
   }
 
   toTextGrid() {
-    return this.grid.map(
-      row => row.map(
-        cell => cell.black ? '.' : cell.value
-      )
-    );
+    return this.grid.map((row) => row.map((cell) => (cell.black ? '.' : cell.value)));
   }
 }

@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, {PureComponent} from 'react';
 import _ from 'lodash';
 import Entry from './Entry';
 
@@ -18,7 +18,7 @@ export default class PuzzleList extends PureComponent {
 
   get fullyScrolled() {
     if (!this.container.current) return false;
-    const { scrollTop, scrollHeight, clientHeight } = this.container.current;
+    const {scrollTop, scrollHeight, clientHeight} = this.container.current;
     const buffer = 600; // 600 pixels of buffer, i guess?
     return scrollTop + clientHeight + buffer > scrollHeight;
   }
@@ -30,23 +30,23 @@ export default class PuzzleList extends PureComponent {
       }
       this.props.onNextPage();
     }
-  }
+  };
 
   get isEmpty() {
-    const { sizeFilter, statusFilter } = this.props;
+    const {sizeFilter, statusFilter} = this.props;
     return !(_.some(_.values(sizeFilter)) && _.some(_.values(statusFilter)));
   }
 
-  accept = entry => {
-    const { sizeFilter, statusFilter, search } = this.props;
+  accept = (entry) => {
+    const {sizeFilter, statusFilter, search} = this.props;
     const size = {
       'Daily Puzzle': 'Standard',
       'Mini Puzzle': 'Mini',
     }[entry.info.type];
     const status = {
-      'undefined': 'New',
-      'solved': 'Complete',
-      'started': 'In progress',
+      undefined: 'New',
+      solved: 'Complete',
+      started: 'In progress',
     }[this.puzzleStatuses[entry.pid]];
 
     const matches = (str, expr) => {
@@ -63,12 +63,10 @@ export default class PuzzleList extends PureComponent {
   };
 
   get puzzles() {
-    const { puzzles } = this.props;
+    const {puzzles} = this.props;
     const list = [...puzzles]
       .reverse()
-      .filter(entry => (
-        entry && entry.info && !entry.private
-      ))
+      .filter((entry) => entry && entry.info && !entry.private)
       .filter(this.accept);
     if (!this.fullyScrolled) {
       return list.slice(0, 100);
@@ -78,7 +76,7 @@ export default class PuzzleList extends PureComponent {
   }
 
   get puzzleStatuses() {
-    const { userHistory } = this.props;
+    const {userHistory} = this.props;
     const puzzleStatuses = {};
     function setStatus(pid, solved) {
       if (solved) {
@@ -88,17 +86,17 @@ export default class PuzzleList extends PureComponent {
       }
     }
 
-    _.keys(userHistory).forEach(gid => {
+    _.keys(userHistory).forEach((gid) => {
       if (gid === 'solo') {
-        _.keys(userHistory.solo).forEach(uid => {
+        _.keys(userHistory.solo).forEach((uid) => {
           const soloGames = userHistory.solo[uid];
-          _.keys(soloGames).forEach(pid => {
-            let { solved } = soloGames[pid];
+          _.keys(soloGames).forEach((pid) => {
+            let {solved} = soloGames[pid];
             setStatus(pid, solved);
           });
         });
       } else {
-        let { pid, solved } = userHistory[gid];
+        let {pid, solved} = userHistory[gid];
         setStatus(pid, solved);
       }
     });
@@ -117,21 +115,20 @@ export default class PuzzleList extends PureComponent {
           // justifyContent: 'space-around',
           overflowY: 'auto',
         }}
-        onScroll={this.handleScroll}>
-        { this.puzzles
-          .map((entry, i) =>
-            <div key={i} style={{ marginLeft: 25, marginTop: 25}}>
-              <Entry { ...entry }
-                status={this.puzzleStatuses[entry.pid]}
-                lastUpdateTime={lastUpdateTime}
-                user={this.user}
-                onPlay={this.handlePlay}/>
-            </div>
-          )
-        }
+        onScroll={this.handleScroll}
+      >
+        {this.puzzles.map((entry, i) => (
+          <div key={i} style={{marginLeft: 25, marginTop: 25}}>
+            <Entry
+              {...entry}
+              status={this.puzzleStatuses[entry.pid]}
+              lastUpdateTime={lastUpdateTime}
+              user={this.user}
+              onPlay={this.handlePlay}
+            />
+          </div>
+        ))}
       </div>
     );
-
   }
 }
-

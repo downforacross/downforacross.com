@@ -1,10 +1,10 @@
 .toolbar {
   padding: 10px 10px 8px 50px;
   min-height: 20px;
-  border-top: 1px solid #E2E2E2;
-  border-left: 1px solid #E2E2E2;
-  border-right: 1px solid #E2E2E2;
-  border-bottom: 1px solid #E2E2E2;
+  border-top: 1px solid #e2e2e2;
+  border-left: 1px solid #e2e2e2;
+  border-right: 1px solid #e2e2e2;
+  border-bottom: 1px solid #e2e2e2;
 
   display: flex;
   flex-direction: row;
@@ -14,7 +14,8 @@
   text-align: center;
 }
 
-.toolbar button, .toolbar--mobile button {
+.toolbar button,
+.toolbar--mobile button {
   color: #666;
   font-size: 14px;
   padding: 7px 10px 7px 10px;
@@ -30,8 +31,9 @@
   padding: 0px;
 }
 
-.toolbar button:hover, .toolbar--mobile button:hover {
-  background-color: #F2F2F2;
+.toolbar button:hover,
+.toolbar--mobile button:hover {
+  background-color: #f2f2f2;
 }
 
 .toolbar--timer {
@@ -43,7 +45,7 @@
 }
 
 .toolbar--pencil.on .fa-pencil {
-  color: #6AA9F4 !important;
+  color: #6aa9f4 !important;
 }
 
 .toolbar--mobile--top {

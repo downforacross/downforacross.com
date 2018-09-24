@@ -1,9 +1,9 @@
 import './css/player.css';
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Flex from 'react-flexview';
 
-import { lazy } from '../jsUtils';
+import {lazy} from '../jsUtils';
 
 import GridObject from '../utils/Grid';
 
@@ -39,13 +39,12 @@ import * as gameUtils from '../gameUtils';
  **/
 
 export default class Player extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
       selected: {
         r: 0,
-        c: 0
+        c: 0,
       },
       direction: 'across',
       mobile: false,
@@ -70,7 +69,7 @@ export default class Player extends Component {
   }
 
   get selected() {
-    let { r, c } = this.state.selected;
+    let {r, c} = this.state.selected;
     while (!this.grid.isWhite(r, c)) {
       if (c < this.props.grid[0].length) {
         c += 1;
@@ -99,7 +98,7 @@ export default class Player extends Component {
   setDirection(direction) {
     if (this.isValidDirection(direction, this.selected)) {
       this.setState({
-        direction: direction
+        direction: direction,
       });
     }
   }
@@ -107,25 +106,31 @@ export default class Player extends Component {
   setSelected(selected) {
     if (this.isValidDirection(this.state.direction, selected)) {
       if (selected.r !== this.selected.r || selected.c !== this.selected.c) {
-        this.setState({
-          selected: selected,
-        }, () => {
-          this.props.updateCursor({
-            r: selected.r,
-            c: selected.c
-          });
-        });
+        this.setState(
+          {
+            selected: selected,
+          },
+          () => {
+            this.props.updateCursor({
+              r: selected.r,
+              c: selected.c,
+            });
+          }
+        );
       }
     } else if (this.isValidDirection(gameUtils.getOppositeDirection(this.state.direction), selected)) {
-      this.setState({
-        selected: selected,
-        direction: gameUtils.getOppositeDirection(this.state.direction)
-      }, () => {
-        this.props.updateCursor({
-          r: selected.r,
-          c: selected.c
-        });
-      });
+      this.setState(
+        {
+          selected: selected,
+          direction: gameUtils.getOppositeDirection(this.state.direction),
+        },
+        () => {
+          this.props.updateCursor({
+            r: selected.r,
+            c: selected.c,
+          });
+        }
+      );
     }
   }
 
@@ -152,7 +157,11 @@ export default class Player extends Component {
   }
 
   getHalfSelectedClueNumber() {
-    return this.grid.getParent(this.selected.r, this.selected.c, gameUtils.getOppositeDirection(this.state.direction));
+    return this.grid.getParent(
+      this.selected.r,
+      this.selected.c,
+      gameUtils.getOppositeDirection(this.state.direction)
+    );
   }
 
   isClueFilled(direction, number) {
@@ -179,7 +188,7 @@ export default class Player extends Component {
   /* Public functions, called by parent components */
 
   getAllSquares() {
-    return this.grid.keys().map(([r, c]) => ({ r, c }));
+    return this.grid.keys().map(([r, c]) => ({r, c}));
   }
 
   getSelectedAndHighlightedSquares() {
@@ -191,7 +200,7 @@ export default class Player extends Component {
   }
 
   getReferences() {
-    const { clues } = this.props;
+    const {clues} = this.props;
     const clueText = this.getClueBarText();
     return gameUtils.getReferencedClues(clueText, clues);
   }
@@ -206,7 +215,7 @@ export default class Player extends Component {
       lazy('scrollToClue' + dir, () => {
         const parent = el.offsetParent;
         if (parent) {
-          parent.scrollTop = el.offsetTop - (parent.offsetHeight * .4);
+          parent.scrollTop = el.offsetTop - parent.offsetHeight * 0.4;
         }
       });
     }
@@ -215,18 +224,16 @@ export default class Player extends Component {
   renderMobileClueBar() {
     return (
       <Flex className="player--mobile--clue-bar">
-        <div className='player--mobile--clue-bar--number'>
-          <Clue text={this.getClueBarAbbreviation()}/>
+        <div className="player--mobile--clue-bar--number">
+          <Clue text={this.getClueBarAbbreviation()} />
         </div>
-        <Flex className='player--mobile--clue-bar--text' grow={1}>
-          <Clue text={this.getClueBarText()}/>
+        <Flex className="player--mobile--clue-bar--text" grow={1}>
+          <Clue text={this.getClueBarText()} />
         </Flex>
-        <i className='player--mobile--typing-hint fa fa-6 fa-keyboard-o'>
-        </i>
+        <i className="player--mobile--typing-hint fa fa-6 fa-keyboard-o" />
       </Flex>
     );
   }
-
 
   /* Render */
   render() {
@@ -246,18 +253,15 @@ export default class Player extends Component {
       id,
     } = this.props;
 
-    const cursors = allCursors.filter(cursor => cursor.id !== id);
-    const {
-      direction,
-    } = this.state;
+    const cursors = allCursors.filter((cursor) => cursor.id !== id);
+    const {direction} = this.state;
     const selected = this.selected;
 
     if (mobile) {
       return (
-        <div className='player--mobile--wrapper mobile'>
-
+        <div className="player--mobile--wrapper mobile">
           <MobileGridControls
-            ref='mobileGridControls'
+            ref="mobileGridControls"
             onPressEnter={onPressEnter}
             onPressPeriod={onPressPeriod}
             selected={selected}
@@ -269,13 +273,12 @@ export default class Player extends Component {
             grid={grid}
             clues={clues}
           >
-            <div className='player--mobile'>
+            <div className="player--mobile">
+              {this.renderMobileClueBar()}
 
-              { this.renderMobileClueBar() }
-
-              <div className={'player--mobile--grid' + (frozen ? ' frozen' : '')} >
+              <div className={'player--mobile--grid' + (frozen ? ' frozen' : '')}>
                 <Grid
-                  ref='grid'
+                  ref="grid"
                   size={size}
                   grid={grid}
                   circles={circles}
@@ -289,8 +292,7 @@ export default class Player extends Component {
                 />
               </div>
 
-              { this.renderMobileClueBar() }
-
+              {this.renderMobileClueBar()}
             </div>
           </MobileGridControls>
         </div>
@@ -298,9 +300,9 @@ export default class Player extends Component {
     }
 
     return (
-      <div className='player--main--wrapper'>
+      <div className="player--main--wrapper">
         <GridControls
-          ref='gridControls'
+          ref="gridControls"
           onPressEnter={onPressEnter}
           onPressPeriod={onPressPeriod}
           selected={selected}
@@ -312,22 +314,18 @@ export default class Player extends Component {
           grid={grid}
           clues={clues}
         >
-          <div className='player--main'>
-            <div className='player--main--left'>
-              <div className='player--main--clue-bar'>
-                <div className='player--main--clue-bar--number'>
-                  { this.getClueBarAbbreviation() }
-                </div>
-                <div className='player--main--clue-bar--text'>
-                  <Clue text={this.getClueBarText()}/>
+          <div className="player--main">
+            <div className="player--main--left">
+              <div className="player--main--clue-bar">
+                <div className="player--main--clue-bar--number">{this.getClueBarAbbreviation()}</div>
+                <div className="player--main--clue-bar--text">
+                  <Clue text={this.getClueBarText()} />
                 </div>
               </div>
 
-              <div
-                className={'player--main--left--grid' + (frozen ? ' frozen' : '') + ' blurable'}
-              >
+              <div className={'player--main--left--grid' + (frozen ? ' frozen' : '') + ' blurable'}>
                 <Grid
-                  ref='grid'
+                  ref="grid"
                   size={size}
                   grid={grid}
                   circles={circles}
@@ -338,11 +336,12 @@ export default class Player extends Component {
                   cursors={cursors}
                   onSetSelected={this._setSelected}
                   myColor={myColor}
-                  onChangeDirection={this._changeDirection}/>
+                  onChangeDirection={this._changeDirection}
+                />
               </div>
             </div>
 
-            <div className='player--main--clues'>
+            <div className="player--main--clues">
               <Clues
                 clues={this.props.clues}
                 clueLengths={this.grid.clueLengths}

@@ -20,13 +20,8 @@ export default class ChatBar extends React.Component {
       this.emojiPicker.current.handleKeyDown(ev);
       return;
     }
-    const {
-      onPressEnter,
-    } = this.props;
-    const {
-      message,
-      username,
-    } = this.state;
+    const {onPressEnter} = this.props;
+    const {message, username} = this.state;
 
     if (ev.key === 'Enter') {
       ev.stopPropagation();
@@ -40,21 +35,21 @@ export default class ChatBar extends React.Component {
     } else if (ev.key === 'Escape') {
       this.props.onUnfocus();
     }
-  }
+  };
 
   handleChange = (ev) => {
     const message = ev.target.value;
-    this.setState({ message });
-  }
+    this.setState({message});
+  };
 
   handleConfirmEmoji = (emoji) => {
-    const { message } = this.state;
+    const {message} = this.state;
     const words = this.state.message.split(' ');
     const newMessage = [...words.slice(0, words.length - 1), `:${emoji}:`, ''].join(' ');
     this.setState({
       message: newMessage,
     });
-  }
+  };
 
   handleEscapeEmoji = () => {
     this.setState({
@@ -65,7 +60,7 @@ export default class ChatBar extends React.Component {
         escapedEmoji: null,
       });
     }, 5000);
-  }
+  };
 
   focus() {
     const input = this.input.current;
@@ -89,13 +84,15 @@ export default class ChatBar extends React.Component {
 
   renderEmojiPicker() {
     return (
-      <div style={{
-        position: 'absolute',
-        bottom: 50,
-        left: 0,
-        right: 0,
-        top: 'auto',
-      }}>
+      <div
+        style={{
+          position: 'absolute',
+          bottom: 50,
+          left: 0,
+          right: 0,
+          top: 'auto',
+        }}
+      >
         <EmojiPicker
           disableKeyListener
           ref={this.emojiPicker}
@@ -110,12 +107,12 @@ export default class ChatBar extends React.Component {
 
   render() {
     return (
-      <div className='chatv2--bar'>
+      <div className="chatv2--bar">
         {this.emojiPattern && this.renderEmojiPicker()}
         <input
           ref={this.input}
-          className='chatv2--bar--input'
-          placeholder='[Enter] to chat'
+          className="chatv2--bar--input"
+          placeholder="[Enter] to chat"
           value={this.state.message}
           onChange={this.handleChange}
           onKeyDown={this.handleKeyDown}

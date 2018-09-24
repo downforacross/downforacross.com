@@ -1,6 +1,6 @@
 import './css/editor.css';
 import Flex from 'react-flexview';
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Grid from './Grid';
 import GridControls from './GridControls';
 import EditableSpan from './EditableSpan';
@@ -11,24 +11,23 @@ import * as gameUtils from '../gameUtils';
 
 window.requestIdleCallback =
   window.requestIdleCallback ||
-  function (cb) {
+  function(cb) {
     var start = Date.now();
-    return setTimeout(function () {
+    return setTimeout(function() {
       cb({
         didTimeout: false,
-        timeRemaining: function () {
+        timeRemaining: function() {
           return Math.max(0, 50 - (Date.now() - start));
-        }
+        },
       });
     }, 1);
   };
 
 window.cancelIdleCallback =
   window.cancelIdleCallback ||
-  function (id) {
+  function(id) {
     clearTimeout(id);
   };
-
 
 /*
  * Summary of Editor component
@@ -51,7 +50,6 @@ window.cancelIdleCallback =
  * Potential parents (so far):
  * - Compose
  **/
-
 
 export default class Editor extends Component {
   constructor() {
@@ -76,86 +74,84 @@ export default class Editor extends Component {
 
   /* Callback fns, to be passed to child components */
 
-  canSetDirection = () => (
-    true
-  )
+  canSetDirection = () => true;
 
   handleSetDirection = (direction) => {
     this.setState({
-      direction: direction
+      direction: direction,
     });
-  }
+  };
 
   handleSetSelected = (selected) => {
     this.setState({
       selected,
     });
     this.props.onUpdateCursor(selected);
-  }
+  };
 
   handleChangeDirection = () => {
     this.setState({
       direction: gameUtils.getOppositeDirection(this.state.direction),
     });
-  }
+  };
 
   handleSelectClue = (direction, number) => {
     this.refs.gridControls.selectClue(direction, number);
-  }
+  };
 
   handleUpdateGrid = (r, c, value) => {
     this.props.onUpdateGrid(r, c, value);
     this.props.onChange();
-  }
+  };
 
   handlePressPeriod = () => {
-    const { selected } = this.state;
+    const {selected} = this.state;
     this.props.onFlipColor(selected.r, selected.c);
     this.props.onChange();
-  }
+  };
 
-  handleChangeClue = value => {
-    const { selected, direction } = this.state;
-    this.props.onUpdateClue(this.selectedParent.r, this.selectedParent.c, direction, value)
+  handleChangeClue = (value) => {
+    const {selected, direction} = this.state;
+    this.props.onUpdateClue(this.selectedParent.r, this.selectedParent.c, direction, value);
     this.props.onChange();
-  }
+  };
 
   handleAutofill = () => {
-    this.props.onAutofill()
-  }
+    this.props.onAutofill();
+  };
 
   handleClearPencil = () => {
-    this.props.onClearPencil()
-  }
+    this.props.onClearPencil();
+  };
 
   handleToggleFreeze = () => {
     this.setState({
       frozen: !this.state.frozen,
     });
-  }
+  };
 
   /* Helper functions used when rendering */
 
   get selectedIsWhite() {
-    const { selected } = this.state;
+    const {selected} = this.state;
     return this.grid.isWhite(selected.r, selected.c);
   }
 
   get clueBarAbbreviation() {
-    const { direction } = this.state;
+    const {direction} = this.state;
     if (!this.selectedIsWhite) return;
     if (!this.selectedClueNumber) return;
     return this.selectedClueNumber + direction.substr(0, 1).toUpperCase();
   }
 
   get selectedClueNumber() {
-    const { selected, direction } = this.state;
+    const {selected, direction} = this.state;
     if (!this.selectedIsWhite) return;
     return this.grid.getParent(selected.r, selected.c, direction);
   }
 
   get halfSelectedClueNumber() {
-    const { selected, direction } = this.state;
+    const {selected, direction} = this.state;
     if (!this.selectedIsWhite) return;
     return this.grid.getParent(selected.r, selected.c, gameUtils.getOppositeDirection(direction));
   }
@@ -179,7 +175,7 @@ export default class Editor extends Component {
   }
 
   isHighlighted(r, c) {
-    const { selected, direction } = this.state;
+    const {selected, direction} = this.state;
     const selectedParent = this.grid.getParent(selected.r, selected.c, direction);
     return (
       !this.isSelected(r, c) &&
@@ -189,7 +185,7 @@ export default class Editor extends Component {
   }
 
   isSelected(r, c) {
-    const { selected } = this.state;
+    const {selected} = this.state;
     return r === selected.r && c === selected.c;
   }
 
@@ -206,7 +202,7 @@ export default class Editor extends Component {
       this.prvIdleID[dir] = requestIdleCallback(() => {
         if (this.clueScroll === el.offsetTop) return;
         const parent = el.offsetParent;
-        parent.scrollTop = el.offsetTop - (parent.offsetHeight * .4);
+        parent.scrollTop = el.offsetTop - parent.offsetHeight * 0.4;
         this.clueScroll = el.offsetTop;
       });
     }
@@ -227,16 +223,14 @@ export default class Editor extends Component {
   /* Render */
 
   renderLeft() {
-    const { selected, direction } = this.state;
+    const {selected, direction} = this.state;
     return (
-      <div className='editor--main--left'>
-        <div className='editor--main--clue-bar'>
-          <div className='editor--main--clue-bar--number'>
-            { this.clueBarAbbreviation }
-          </div>
-          <div className='editor--main--clue-bar--text'>
+      <div className="editor--main--left">
+        <div className="editor--main--clue-bar">
+          <div className="editor--main--clue-bar--number">{this.clueBarAbbreviation}</div>
+          <div className="editor--main--clue-bar--text">
             <EditableSpan
-              ref='clue'
+              ref="clue"
               key_={`${direction}${this.selectedClueNumber}`}
               value={this.props.clues[direction][this.selectedClueNumber] || ''}
               onChange={this.handleChangeClue}
@@ -246,10 +240,9 @@ export default class Editor extends Component {
           </div>
         </div>
 
-        <div
-          className={'editor--main--left--grid blurable'}>
+        <div className={'editor--main--left--grid blurable'}>
           <Grid
-            ref='grid'
+            ref="grid"
             size={this.props.size}
             grid={this.props.grid}
             cursors={this.props.cursors}
@@ -262,23 +255,54 @@ export default class Editor extends Component {
             editMode
           />
         </div>
-        <Flex className='editor--freeze'
-          style={{ cursor: 'pointer', borderRadius: 5, padding: 10, border: '1px solid #6AA9F4', fontWeight: 'bold', color: '#6AA9F4', marginTop: 30, justifySelf: 'center' }}
-          hAlignContent='center'
-          onClick={this.handleToggleFreeze}>
+        <Flex
+          className="editor--freeze"
+          style={{
+            cursor: 'pointer',
+            borderRadius: 5,
+            padding: 10,
+            border: '1px solid #6AA9F4',
+            fontWeight: 'bold',
+            color: '#6AA9F4',
+            marginTop: 30,
+            justifySelf: 'center',
+          }}
+          hAlignContent="center"
+          onClick={this.handleToggleFreeze}
+        >
           {this.state.frozen ? 'Unfreeze Grid' : 'Freeze Grid'}
         </Flex>
         <Flex>
           <Flex
-            style={{ cursor: 'pointer', borderRadius: 5, padding: 10, border: '1px solid #6AA9F4', fontWeight: 'bold', color: '#6AA9F4', marginTop: 30, justifySelf: 'center' }}
-            hAlignContent='center'
-            onClick={this.handleAutofill}>
+            style={{
+              cursor: 'pointer',
+              borderRadius: 5,
+              padding: 10,
+              border: '1px solid #6AA9F4',
+              fontWeight: 'bold',
+              color: '#6AA9F4',
+              marginTop: 30,
+              justifySelf: 'center',
+            }}
+            hAlignContent="center"
+            onClick={this.handleAutofill}
+          >
             {'Autofill Grid'}
           </Flex>
-          <Flex 
-            style={{ cursor: 'pointer', borderRadius: 5, padding: 10, border: '1px solid #6AA9F4', fontWeight: 'bold', color: '#6AA9F4', marginTop: 30, justifySelf: 'center' }}
-            hAlignContent='center'
-            onClick={this.handleClearPencil}>
+          <Flex
+            style={{
+              cursor: 'pointer',
+              borderRadius: 5,
+              padding: 10,
+              border: '1px solid #6AA9F4',
+              fontWeight: 'bold',
+              color: '#6AA9F4',
+              marginTop: 30,
+              justifySelf: 'center',
+            }}
+            hAlignContent="center"
+            onClick={this.handleClearPencil}
+          >
             {'Clear Pencil'}
           </Flex>
         </Flex>
@@ -287,12 +311,12 @@ export default class Editor extends Component {
   }
 
   render() {
-    const { selected, direction, frozen } = this.state;
+    const {selected, direction, frozen} = this.state;
     return (
-      <Flex className='editor--main--wrapper'>
+      <Flex className="editor--main--wrapper">
         <GridControls
-          ref='gridControls'
-          ignore='input'
+          ref="gridControls"
+          ignore="input"
           selected={selected}
           editMode
           frozen={frozen}
@@ -300,70 +324,71 @@ export default class Editor extends Component {
           canSetDirection={this.canSetDirection}
           onSetDirection={this.handleSetDirection}
           onSetSelected={this.handleSetSelected}
-          onPressEnter={() => this.setState({ editingClue: true }, this.focusClue.bind(this))}
+          onPressEnter={() => this.setState({editingClue: true}, this.focusClue.bind(this))}
           onPressEscape={() => this.props.onUnfocus()}
           onPressPeriod={this.handlePressPeriod}
           updateGrid={this.handleUpdateGrid}
           grid={this.props.grid}
-          clues={this.props.clues} >
-
-          <Flex className='editor--main'>
+          clues={this.props.clues}
+        >
+          <Flex className="editor--main">
             {this.renderLeft()}
-            <Flex className='editor--right' column>
-              <Flex className='editor--main--clues' grow={1}>
-                {
-                  // Clues component
-                  ['across', 'down'].map((dir, i) => (
-                    <Flex key={i} className='editor--main--clues--list'>
-                      <Flex className='editor--main--clues--list--title'>
-                        {dir.toUpperCase()}
-                      </Flex>
+            <Flex className="editor--right" column>
+              <Flex className="editor--main--clues" grow={1}>
+                {// Clues component
+                ['across', 'down'].map((dir, i) => (
+                  <Flex key={i} className="editor--main--clues--list">
+                    <Flex className="editor--main--clues--list--title">{dir.toUpperCase()}</Flex>
 
-                      <Flex column grow={1}>
-                        <Flex column grow={1} basis={1}
-                          className={'editor--main--clues--list--scroll ' + dir}
-                          ref={'clues--list--'+dir}>
-                          {
-                            this.props.clues[dir].map((clue, i) => clue !== undefined && (
-                              <Flex shrink={0} key={i}
+                    <Flex column grow={1}>
+                      <Flex
+                        column
+                        grow={1}
+                        basis={1}
+                        className={'editor--main--clues--list--scroll ' + dir}
+                        ref={'clues--list--' + dir}
+                      >
+                        {this.props.clues[dir].map(
+                          (clue, i) =>
+                            clue !== undefined && (
+                              <Flex
+                                shrink={0}
+                                key={i}
                                 className={
                                   (this.isClueSelected(dir, i)
                                     ? 'selected '
-                                    : (this.isClueHalfSelected(dir, i)
+                                    : this.isClueHalfSelected(dir, i)
                                       ? 'half-selected '
-                                      : ' ')
-                                  )
-                                    + 'editor--main--clues--list--scroll--clue'
+                                      : ' ') + 'editor--main--clues--list--scroll--clue'
                                 }
                                 ref={
-                                  (this.isClueSelected(dir, i) ||
-                                    this.isClueHalfSelected(dir, i))
+                                  this.isClueSelected(dir, i) || this.isClueHalfSelected(dir, i)
                                     ? this.scrollToClue.bind(this, dir, i)
                                     : null
                                 }
-                                onClick={() => {this.handleSelectClue(dir, i)}}>
-                                <Flex className='editor--main--clues--list--scroll--clue--number' shrink={0}>
+                                onClick={() => {
+                                  this.handleSelectClue(dir, i);
+                                }}
+                              >
+                                <Flex className="editor--main--clues--list--scroll--clue--number" shrink={0}>
                                   {i}
                                 </Flex>
-                                <Flex className='editor--main--clues--list--scroll--clue--text' shrink={1}>
+                                <Flex className="editor--main--clues--list--scroll--clue--text" shrink={1}>
                                   {clue}
                                 </Flex>
                               </Flex>
-                            ))
-                          }
-                        </Flex>
+                            )
+                        )}
                       </Flex>
                     </Flex>
-                  ))
-                }
+                  </Flex>
+                ))}
               </Flex>
-              {<Flex className='editor--right--hints'>
-                <Hints
-                  grid={this.props.grid}
-                  num={this.selectedClueNumber}
-                  direction={direction}
-                />
-              </Flex>}
+              {
+                <Flex className="editor--right--hints">
+                  <Hints grid={this.props.grid} num={this.selectedClueNumber} direction={direction} />
+                </Flex>
+              }
             </Flex>
           </Flex>
         </GridControls>

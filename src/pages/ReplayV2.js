@@ -1,6 +1,6 @@
 import './css/replay.css';
 
-import Replay from './Replay'
+import Replay from './Replay';
 
 export default class ReplayV2 extends Replay {
   historyPath() {
@@ -15,4 +15,3 @@ export default class ReplayV2 extends Replay {
     return `/replay/${this.gid}`;
   }
 }
-

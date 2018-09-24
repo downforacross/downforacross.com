@@ -1,5 +1,5 @@
 .welcomev2 {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   color: #333;
 }
 
@@ -28,11 +28,10 @@
 }
 
 .welcomev2--main {
-  border-left: 2px solid #6AA9F4;
+  border-left: 2px solid #6aa9f4;
   /* padding: 10px; */
   overflow: hidden;
 }
-
 
 .welcomev2--sidebar {
   padding-bottom: 20px;
@@ -77,10 +76,10 @@
   /* https://www.w3schools.com/howto/howto_css_custom_checkbox.asp */
   position: relative;
   left: 8.5px;
-  top: -4.0px;
+  top: -4px;
   width: 4px;
   height: 12px;
-  border: solid #6AA9F4;
+  border: solid #6aa9f4;
   border-width: 0 4px 4px 0;
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
@@ -90,7 +89,7 @@
 
 .quickplay {
   padding-top: 10px;
-  border-top: 2px solid #6AA9F4;
+  border-top: 2px solid #6aa9f4;
 }
 
 .entryv2 {
@@ -142,8 +141,12 @@
 }
 
 @keyframes slidein {
-  from { transform: scaleX(0); }
-  to   { transform: scaleX(1); }
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
 }
 
 .entryv2.new {
@@ -152,13 +155,13 @@
 
 .entryv2--back {
   opacity: 0;
-  transition: opacity .2s ease-in;
+  transition: opacity 0.2s ease-in;
   -moz-user-select: none;
 }
 
 .entryv2.flipped .entryv2--back {
   opacity: 1;
-  transition: opacity .2s ease-in;
+  transition: opacity 0.2s ease-in;
 }
 
 .entryv2--front {
@@ -192,7 +195,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: rgba(40, 69, 94, .95);
+  background-color: rgba(40, 69, 94, 0.95);
 }
 
 .entryv2--back--btns {
@@ -205,7 +208,7 @@
   font-size: 15px;
   font-weight: bold;
   color: white;
-  background-color: rgba(106, 169, 254, .95);
+  background-color: rgba(106, 169, 254, 0.95);
   border-radius: 5px;
 }
 
@@ -215,16 +218,15 @@
 }
 
 .entryv2--back--btn.play-solo {
-
 }
 
 ::-webkit-scrollbar {
-    width: 2px;  /* remove scrollbar space */
-    background: transparent;  /* optional: just make scrollbar invisible */
+  width: 2px; /* remove scrollbar space */
+  background: transparent; /* optional: just make scrollbar invisible */
 }
 /* optional: show position indicator in red */
 ::-webkit-scrollbar-thumb {
-    background: #F0F0F0;
+  background: #f0f0f0;
 }
 
 input::placeholder {

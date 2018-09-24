@@ -1,6 +1,6 @@
 import './css/gridControls.css';
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 import GridObject from '../utils/Grid';
 import * as gameUtils from '../gameUtils';
@@ -13,7 +13,6 @@ function safe_while(condition, step, cap = 500) {
 }
 
 export default class GridControls extends Component {
-
   get grid() {
     return new GridObject(this.props.grid);
   }
@@ -35,7 +34,7 @@ export default class GridControls extends Component {
     let clueNumber = this.getSelectedClueNumber();
     let direction = this.props.direction;
     const add = backwards ? -1 : 1;
-    const start = () => backwards ? (this.props.clues[direction].length - 1) : 1;
+    const start = () => (backwards ? this.props.clues[direction].length - 1 : 1);
     const step = () => {
       if (clueNumber + add < this.props.clues[direction].length && clueNumber + add >= 0) {
         clueNumber += add;
@@ -45,7 +44,10 @@ export default class GridControls extends Component {
       }
     };
     const ok = () => {
-      return this.props.clues[direction][clueNumber] !== undefined && (this.isGridFilled() || !this.isWordFilled(direction, clueNumber));
+      return (
+        this.props.clues[direction][clueNumber] !== undefined &&
+        (this.isGridFilled() || !this.isWordFilled(direction, clueNumber))
+      );
     };
     step();
 
@@ -67,18 +69,16 @@ export default class GridControls extends Component {
   // factored out handleAction for mobileGridControls
   handleAction(action, shiftKey) {
     const moveSelectedBy = (dr, dc) => () => {
-      const { selected } = this.props;
-      let { r, c } = selected;
+      const {selected} = this.props;
+      let {r, c} = selected;
       const step = () => {
         r += dr;
         c += dc;
       };
       step();
-      safe_while(() => (
-        this.grid.isInBounds(r, c)
-        && !this.isSelectable(r, c)      ), step);
+      safe_while(() => this.grid.isInBounds(r, c) && !this.isSelectable(r, c), step);
       if (this.grid.isInBounds(r, c)) {
-        this.setSelected({ r, c });
+        this.setSelected({r, c});
       }
     };
 
@@ -92,29 +92,29 @@ export default class GridControls extends Component {
       } else {
         cbk();
       }
-    }
+    };
 
     const flipDirection = () => {
       if (this.props.direction === 'across') {
         if (this.canSetDirection('down')) {
-            this.setDirection('down');
+          this.setDirection('down');
         }
       } else {
         if (this.canSetDirection('across')) {
-            this.setDirection('across');
+          this.setDirection('across');
         }
       }
-    }
+    };
 
     const actions = {
-      'left': setDirection('across', moveSelectedBy(0, -1)),
-      'up': setDirection('down', moveSelectedBy(-1, 0)),
-      'down': setDirection('down', moveSelectedBy(1, 0)),
-      'right': setDirection('across', moveSelectedBy(0, 1)),
-      'backspace': this.backspace.bind(this),
-      'delete': this.delete.bind(this),
-      'tab': this.selectNextClue.bind(this),
-      'space': flipDirection,
+      left: setDirection('across', moveSelectedBy(0, -1)),
+      up: setDirection('down', moveSelectedBy(-1, 0)),
+      down: setDirection('down', moveSelectedBy(1, 0)),
+      right: setDirection('across', moveSelectedBy(0, 1)),
+      backspace: this.backspace.bind(this),
+      delete: this.delete.bind(this),
+      tab: this.selectNextClue.bind(this),
+      space: flipDirection,
     };
 
     if (!(action in actions)) {
@@ -130,24 +130,23 @@ export default class GridControls extends Component {
     return letter.match(/^[A-Z0-9]$/);
   }
 
-
   handleKeyDown(ev) {
     if (ev.target.tagName === 'INPUT') {
       return;
     }
 
     const actionKeys = {
-      'ArrowLeft': 'left',
-      'ArrowUp': 'up',
-      'ArrowDown': 'down',
-      'ArrowRight': 'right',
-      'Backspace': 'backspace',
-      'Delete': 'delete',
-      'Tab': 'tab',
+      ArrowLeft: 'left',
+      ArrowUp: 'up',
+      ArrowDown: 'down',
+      ArrowRight: 'right',
+      Backspace: 'backspace',
+      Delete: 'delete',
+      Tab: 'tab',
       ' ': 'space',
     };
 
-    const { onPressEnter, onPressPeriod, onPressEscape } = this.props;
+    const {onPressEnter, onPressPeriod, onPressEscape} = this.props;
     if (ev.key in actionKeys) {
       ev.preventDefault();
       ev.stopPropagation();
@@ -174,9 +173,9 @@ export default class GridControls extends Component {
   }
 
   goToNextEmptyCell() {
-    let { r, c } = this.props.selected;
+    let {r, c} = this.props.selected;
     const nextEmptyCell = this.grid.getNextEmptyCell(r, c, this.props.direction, {
-      skipFirst: true
+      skipFirst: true,
     });
     if (nextEmptyCell) {
       this.setSelected(nextEmptyCell);
@@ -191,7 +190,7 @@ export default class GridControls extends Component {
   }
 
   goToPreviousCell() {
-    let { r, c } = this.props.selected;
+    let {r, c} = this.props.selected;
     const grid = this.props.grid;
     const step = () => {
       if (this.props.direction === 'across') {
@@ -214,28 +213,26 @@ export default class GridControls extends Component {
       return this.grid.isInBounds(r, c) && this.grid.isWhite(r, c);
     };
     step();
-    safe_while(() => (
-      this.grid.isInBounds(r, c) && !ok()
-    ), step);
+    safe_while(() => this.grid.isInBounds(r, c) && !ok(), step);
     if (ok()) {
-      this.setSelected({ r, c });
-      return { r, c };
+      this.setSelected({r, c});
+      return {r, c};
     }
   }
 
   typeLetter(letter, isRebus) {
     if (letter === '/') isRebus = true;
-    const { r, c } = this.props.selected;
+    const {r, c} = this.props.selected;
     const value = this.props.grid[r][c].value;
     if (!isRebus) {
       this.goToNextEmptyCell();
     }
-    this.props.updateGrid(r, c, isRebus ? ((value || '').substr(0, 10) + letter) : letter);
+    this.props.updateGrid(r, c, isRebus ? (value || '').substr(0, 10) + letter : letter);
   }
 
   // Returns true if the letter was successfully deleted
   delete() {
-    let { r, c } = this.props.selected;
+    let {r, c} = this.props.selected;
     if (this.props.grid[r][c].value !== '' && !this.props.grid[r][c].good) {
       this.props.updateGrid(r, c, '');
       return true;
@@ -244,7 +241,7 @@ export default class GridControls extends Component {
   }
 
   backspace(shouldStay) {
-    if (!this.delete() && !shouldStay){
+    if (!this.delete() && !shouldStay) {
       const cell = this.goToPreviousCell();
       if (cell) {
         this.props.updateGrid(cell.r, cell.c, '');
@@ -273,14 +270,15 @@ export default class GridControls extends Component {
   }
 
   render() {
-    return <div
-      ref='gridControls'
-      className='grid-controls'
-      tabIndex='1'
-      onKeyDown={this.handleKeyDown.bind(this)} >
-      <div className='grid--content'>
-        {this.props.children}
+    return (
+      <div
+        ref="gridControls"
+        className="grid-controls"
+        tabIndex="1"
+        onKeyDown={this.handleKeyDown.bind(this)}
+      >
+        <div className="grid--content">{this.props.children}</div>
       </div>
-    </div>
+    );
   }
 }

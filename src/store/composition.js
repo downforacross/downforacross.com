@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import EventEmitter from 'events';
 
-import { db, SERVER_TIME } from './firebase';
+import {db, SERVER_TIME} from './firebase';
 
 // a wrapper class that models Composition
 //
@@ -16,7 +16,7 @@ export default class Composition extends EventEmitter {
   }
 
   attach() {
-    this.events.on('child_added', snapshot => {
+    this.events.on('child_added', (snapshot) => {
       const event = snapshot.val();
       if (event.type === 'create') {
         this.createEvent = event;
@@ -65,7 +65,6 @@ export default class Composition extends EventEmitter {
       },
     });
   }
-
 
   updateCursor(r, c, id, color) {
     this.events.push({
@@ -141,8 +140,7 @@ export default class Composition extends EventEmitter {
     this.events.push({
       timestamp: SERVER_TIME,
       type: 'clearPencil',
-      params: {
-      },
+      params: {},
     });
   }
 
@@ -165,12 +163,14 @@ export default class Composition extends EventEmitter {
         title: 'Untitled',
         author: 'Anonymous',
       },
-      grid = _.range(7).map(() => _.range(7).map(() => ({
-        value: '',
-      }))),
+      grid = _.range(7).map(() =>
+        _.range(7).map(() => ({
+          value: '',
+        }))
+      ),
       clues = [],
       circles = [],
-      chat = { messages: [] },
+      chat = {messages: []},
       cursor = {},
     } = rawComposition;
 
@@ -186,18 +186,20 @@ export default class Composition extends EventEmitter {
     };
     const version = CURRENT_VERSION;
     // nuke existing events
-    return this.events.set({}).then(() => {
-      return this.events.push({
-        timestamp: SERVER_TIME,
-        type: 'create',
-        params: {
-          version,
-          composition,
-        },
+    return this.events
+      .set({})
+      .then(() => {
+        return this.events.push({
+          timestamp: SERVER_TIME,
+          type: 'create',
+          params: {
+            version,
+            composition,
+          },
+        });
+      })
+      .then(() => {
+        return this.ref.child('published').set(false);
       });
-    }).then(() => {
-      return this.ref.child('published').set(false);
-    });
   }
 }
-

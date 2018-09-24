@@ -1,10 +1,9 @@
 import './css/hints.css';
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
-import { evaluate, findMatches, getPatterns, precompute } from '../hintUtils';
+import {evaluate, findMatches, getPatterns, precompute} from '../hintUtils';
 
 export default class Hints extends Component {
-
   constructor() {
     super();
     this.state = {
@@ -22,11 +21,11 @@ export default class Hints extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     return (
-      this.props.num !== nextProps.num
-      || this.props.direction !== nextProps.direction
-      || nextState.list !== this.state.list
-      || nextState.pattern !== this.state.pattern
-      || nextState.hidden !== this.state.hidden
+      this.props.num !== nextProps.num ||
+      this.props.direction !== nextProps.direction ||
+      nextState.list !== this.state.list ||
+      nextState.pattern !== this.state.pattern ||
+      nextState.hidden !== this.state.hidden
     );
   }
 
@@ -51,22 +50,22 @@ export default class Hints extends Component {
           break;
         }
       }
-      this.state.list.sort((a, b) => (
-        -((this.scores[a] || (-10000)) - (this.scores[b] || (-10000)))
-      ));
+      this.state.list.sort((a, b) => -((this.scores[a] || -10000) - (this.scores[b] || -10000)));
       this.forceUpdate();
       if (cnt >= limit) {
         more_cbk(); // not done
       } else {
         done_cbk();
       }
-    }
+    };
 
     const loop = (cbk) => {
       requestIdleCallback(() => {
-        doWork(cbk, () => { loop(cbk) });
+        doWork(cbk, () => {
+          loop(cbk);
+        });
       });
-    }
+    };
 
     loop(() => {
       this.computing2 = false;
@@ -79,7 +78,7 @@ export default class Hints extends Component {
     }
     this.computing = true;
     requestIdleCallback(() => {
-      findMatches(this.pattern, matches => {
+      findMatches(this.pattern, (matches) => {
         this.setState({
           list: matches,
         });
@@ -100,49 +99,35 @@ export default class Hints extends Component {
 
   render() {
     return (
-      <div className='hints'>
+      <div className="hints">
         <div
-          className='hints--pattern'
+          className="hints--pattern"
           onClick={() => {
             this.setState({
-              hidden: !this.state.hidden
+              hidden: !this.state.hidden,
             });
           }}
         >
-          <span style={{float:'left'}}>
-            Pattern: {this.pattern}
-          </span>
-          <span style={{float:'right'}}>
-            Matches: {this.state.list.length}
-          </span>
+          <span style={{float: 'left'}}>Pattern: {this.pattern}</span>
+          <span style={{float: 'right'}}>Matches: {this.state.list.length}</span>
         </div>
-        {!this.state.hidden
-            ? <div className='hints--matches'>
-              {
-                this.state.list && this.state.list.length > 0
-                  ? (
-                    <div className='hints--matches--entries'>
-                      {
-                        this.state.list.slice(0, 100).map((word, i) => (
-                          <div key={i} className='hints--matches--entry'>
-                            <div className='hints--matches--entry--word'>
-                              {word}
-                            </div>
-                            <div className='hints--matches--entry--score'>
-                              {this.getScore(word) || ''}
-                            </div>
-                          </div>
-                        ))
-                      }
-                    </div>
-                  )
-                  : 'No matches'
-              }
-
-            </div>
-            : null}
+        {!this.state.hidden ? (
+          <div className="hints--matches">
+            {this.state.list && this.state.list.length > 0 ? (
+              <div className="hints--matches--entries">
+                {this.state.list.slice(0, 100).map((word, i) => (
+                  <div key={i} className="hints--matches--entry">
+                    <div className="hints--matches--entry--word">{word}</div>
+                    <div className="hints--matches--entry--score">{this.getScore(word) || ''}</div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              'No matches'
+            )}
           </div>
+        ) : null}
+      </div>
     );
   }
 }
-

@@ -1,21 +1,23 @@
 import _ from 'lodash';
-import { SERVER_TIME } from './firebase';
-import Composition, { CURRENT_VERSION } from './composition';
+import {SERVER_TIME} from './firebase';
+import Composition, {CURRENT_VERSION} from './composition';
 
 export default class DemoComposition extends Composition {
   attach() {
     super.attach();
-      const {
+    const {
       info = {
         title: 'Untitled',
         author: 'Anonymous',
       },
-      grid = _.range(5).map(() => _.range(5).map(() => ({
-        value: '',
-      }))),
+      grid = _.range(5).map(() =>
+        _.range(5).map(() => ({
+          value: '',
+        }))
+      ),
       clues = [],
       circles = [],
-      chat = { messages: [] },
+      chat = {messages: []},
       cursor = {},
     } = {};
 
@@ -41,4 +43,3 @@ export default class DemoComposition extends Composition {
     });
   }
 }
-

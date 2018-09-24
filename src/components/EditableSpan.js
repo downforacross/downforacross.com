@@ -1,5 +1,5 @@
 import './css/editableSpan.css';
-import React, { PureComponent } from 'react';
+import React, {PureComponent} from 'react';
 import Caret from '../utils/caret';
 import _ from 'lodash';
 
@@ -18,7 +18,7 @@ export default class EditableSpan extends PureComponent {
     return {
       start: this.caret.startPosition,
       focused: this.focused,
-    }
+    };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -36,7 +36,7 @@ export default class EditableSpan extends PureComponent {
   }
 
   get displayValue() {
-    const { value = '(blank)' } = this.props;
+    const {value = '(blank)'} = this.props;
     let result = value;
     const nbsp = String.fromCharCode('160');
     while (result.indexOf(' ') !== -1) {
@@ -65,11 +65,11 @@ export default class EditableSpan extends PureComponent {
 
   handleFocus = () => {
     this.focused = true;
-  }
+  };
 
   handleBlur = () => {
     this.focused = false;
-  }
+  };
 
   get caret() {
     if (!this.focused) return new Caret();
@@ -85,24 +85,26 @@ export default class EditableSpan extends PureComponent {
       e.preventDefault();
       this.props.onUnfocus();
     }
-  }
+  };
 
   handleKeyUp = _.debounce((e) => {
     this.props.onChange(this.text);
-  }, 500)
+  }, 500);
 
   render() {
-    const { hidden } = this.props;
+    const {hidden} = this.props;
     if (hidden) return null;
 
     return (
-      <div className={'editable-span ' + (this.props.className || '')}
+      <div
+        className={'editable-span ' + (this.props.className || '')}
         ref={this.span}
         contentEditable={true}
         onFocus={this.handleFocus}
         onBlur={this.handleBlur}
         onKeyDown={this.handleKeyDown}
-        onKeyUp={this.handleKeyUp}/>
+        onKeyUp={this.handleKeyUp}
+      />
     );
   }
 }

@@ -6,8 +6,8 @@
 }
 
 .file-uploader--wrapper {
-  background-color: #FAFAFA;
-  outline: 2px dashed #AAA;
+  background-color: #fafafa;
+  outline: 2px dashed #aaa;
   width: 100%;
   flex: 1;
 }
@@ -21,7 +21,7 @@
 }
 
 .file-uploader--box--icon {
-  fill: #6AA9F4;
+  fill: #6aa9f4;
   cursor: pointer;
   text-align: center;
   margin-top: 40px;
@@ -29,5 +29,5 @@
 }
 
 .file-uploader--wrapper.v2 {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }

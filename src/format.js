@@ -1,14 +1,8 @@
 import Puz from 'puzjs';
 import GridObject from './utils/Grid';
 
-const infoToMeta = info => {
-  const {
-    title = '',
-    author = '',
-    description = '',
-    notes = '',
-    copyright = '',
-  } = info;
+const infoToMeta = (info) => {
+  const {title = '', author = '', description = '', notes = '', copyright = ''} = info;
   return {
     description,
     title,
@@ -18,23 +12,14 @@ const infoToMeta = info => {
   };
 };
 
-const gridToTextGrid = grid => {
-  return grid.map(row => row.map(cell => (
-    cell.black ? '.' : cell.value
-  )));
+const gridToTextGrid = (grid) => {
+  return grid.map((row) => row.map((cell) => (cell.black ? '.' : cell.value)));
 };
 
 // to hanlde the various different formats of games
 const f = () => ({
   fromPuz: (blob) => {
-    const {
-      meta,
-      grid,
-      clues,
-      circles,
-      shades,
-      filename,
-    } = Puz.decode(blob);
+    const {meta, grid, clues, circles, shades, filename} = Puz.decode(blob);
     return intermediate({
       info: {},
       grid,
@@ -46,19 +31,14 @@ const f = () => ({
   },
 
   fromComposition: (composition) => {
-    const {
-      info,
-      grid: compositionGrid,
-      clues: compositionClues,
-      circles = [],
-    } = composition;
+    const {info, grid: compositionGrid, clues: compositionClues, circles = []} = composition;
 
-    const grid = compositionGrid.map(row =>
+    const grid = compositionGrid.map((row) =>
       row.map(({value, pencil}) => ({
         black: value === '.',
         value: value === '.' ? '' : value,
         pencil,
-        number: null
+        number: null,
       }))
     );
     new GridObject(grid).assignNumbers();
@@ -95,32 +75,28 @@ const f = () => ({
   },
 });
 
-const validateGame = ({ info, grid, clues, circles }) => {
-  const {
-    title, author, description,
-  } = info;
+const validateGame = ({info, grid, clues, circles}) => {
+  const {title, author, description} = info;
   if (typeof grid[0][0] !== 'object') {
     throw new Error('Game grid should be object');
   }
   // TODO finish this
-}
+};
 
 const validateIntermediate = validateGame;
 
-const validateComposition = ({ info, grid, clues, circles }) => {
-  const {
-    title, author, description,
-  } = info;
-}
+const validateComposition = ({info, grid, clues, circles}) => {
+  const {title, author, description} = info;
+};
 
 const validatePuz = (blob) => {
   if (!(blob instanceof Uint8Array)) {
     throw new Error('Puz must be a Uint8Array');
   }
-}
+};
 
-const intermediate = ({ info, grid, clues, extras }) => {
-  validateIntermediate({ info, grid, clues, extras });
+const intermediate = ({info, grid, clues, extras}) => {
+  validateIntermediate({info, grid, clues, extras});
   return {
     toPuz: () => {
       const x = {
@@ -134,7 +110,7 @@ const intermediate = ({ info, grid, clues, extras }) => {
         grid: gridToTextGrid(grid),
         clues,
         circles: extras.circles,
-      })
+      });
     },
 
     toComposition: () => ({

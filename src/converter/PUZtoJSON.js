@@ -1,7 +1,8 @@
 function getExtension(bytes, code) {
   // struct byte format is 4S H H
-  let i = 0, j = 0;
-  for(i = 0; i < bytes.length; i += 1) {
+  let i = 0,
+    j = 0;
+  for (i = 0; i < bytes.length; i += 1) {
     if (j === code.length) break;
     if (bytes[i] === code.charCodeAt(j)) {
       j += 1;
@@ -9,7 +10,8 @@ function getExtension(bytes, code) {
       j = 0;
     }
   }
-  if (j === code.length) { // we found the code
+  if (j === code.length) {
+    // we found the code
     const length = bytes[i] * 256 + bytes[i + 1];
     i += 4; // skip the H H
     return Array.from(bytes).slice(i, i + length);
@@ -32,7 +34,7 @@ function getRebus(bytes) {
     return;
   }
   const sols = {};
-  solstring.split(';').forEach(s => {
+  solstring.split(';').forEach((s) => {
     let tokens = s.split(':');
     if (tokens.length === 2) {
       let [key, val] = tokens;
@@ -41,7 +43,7 @@ function getRebus(bytes) {
   });
   // dict string format is k1:v1;k2:v2;...;kn:vn;
 
-  return { table, sols };
+  return {table, sols};
 }
 
 function getCircles(bytes) {
@@ -80,7 +82,7 @@ function addRebusToGrid(grid, rebus) {
         return {
           ...cell,
           solution: rebus.sols[rebus.table[idx] - 1],
-        }
+        };
       }
       return cell;
     })
@@ -89,7 +91,7 @@ function addRebusToGrid(grid, rebus) {
 
 export default function PUZtoJSON(buffer) {
   let grid = [];
-  const info = {}
+  const info = {};
   const across = [];
   const down = [];
   const bytes = new Uint8Array(buffer);
@@ -100,13 +102,12 @@ export default function PUZtoJSON(buffer) {
     throw new Error('Scrambled PUZ file');
   }
 
-
   for (let i = 0; i < nrow; i++) {
     grid[i] = [];
 
     for (let j = 0; j < ncol; j++) {
       const letter = String.fromCharCode(bytes[52 + i * ncol + j]);
-      if (letter !== ".") {
+      if (letter !== '.') {
         grid[i][j] = {
           type: 'white',
           solution: letter,
@@ -120,12 +121,7 @@ export default function PUZtoJSON(buffer) {
   }
 
   function isBlack(i, j) {
-    return (i < 0
-      || j < 0
-      || i >= nrow
-      || j >= ncol
-      || grid[i][j].type === 'black'
-    );
+    return i < 0 || j < 0 || i >= nrow || j >= ncol || grid[i][j].type === 'black';
   }
 
   const isAcross = [];
@@ -134,14 +130,8 @@ export default function PUZtoJSON(buffer) {
   for (let i = 0; i < nrow; i++) {
     for (let j = 0; j < ncol; j++) {
       if (grid[i][j].type === 'white') {
-        const isAcrossStart = (
-          isBlack(i, j - 1)
-          && !isBlack(i, j + 1)
-        );
-        const isDownStart = (
-          isBlack(i - 1, j)
-          && !isBlack(i + 1, j)
-        );
+        const isAcrossStart = isBlack(i, j - 1) && !isBlack(i, j + 1);
+        const isDownStart = isBlack(i - 1, j) && !isBlack(i + 1, j);
 
         if (isAcrossStart || isDownStart) {
           n += 1;
@@ -154,7 +144,7 @@ export default function PUZtoJSON(buffer) {
 
   let ibyte = 52 + ncol * nrow * 2;
   function readString() {
-    let result = "";
+    let result = '';
     let b = bytes[ibyte++];
     while (ibyte < bytes.length && b !== 0) {
       result += String.fromCharCode(b);
@@ -185,6 +175,5 @@ export default function PUZtoJSON(buffer) {
     grid = addRebusToGrid(grid, rebus);
   }
 
-  return { grid, info, circles, shades, across, down };
+  return {grid, info, circles, shades, across, down};
 }
-

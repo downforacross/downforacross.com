@@ -1,7 +1,7 @@
 const idKey = 'dfac-id';
 
 function genId() {
-  return (Math.floor(Math.random() * 1000000000)).toString(16);
+  return Math.floor(Math.random() * 1000000000).toString(16);
 }
 
 function genAnonId() {

@@ -1,28 +1,20 @@
-import 'react-flexview/lib/flexView.css'
+import 'react-flexview/lib/flexView.css';
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Nav from '../components/Nav';
 import _ from 'lodash';
 import Flex from 'react-flexview';
 import {RoomModel, getUser} from '../store';
 import HistoryWrapper from '../utils/historyWrapper';
 import Game from '../components/Game';
-import { pure } from '../jsUtils';
+import {pure} from '../jsUtils';
 
-const GameLink = pure(({
-  onSelectGame,
-  info,
-  progress,
-  createdAt,
-  updatedAt,
-  gid,
-  selectedGid,
-}) => (
+const GameLink = pure(({onSelectGame, info, progress, createdAt, updatedAt, gid, selectedGid}) => (
   <Flex
     grow={1}
     hAlignContent={'center'}
     style={{
-      backgroundColor: gid === selectedGid ? '#00DDDD': 'transparent',
+      backgroundColor: gid === selectedGid ? '#00DDDD' : 'transparent',
       cursor: 'pointer',
       marginTop: 5,
       padding: 5,
@@ -31,7 +23,9 @@ const GameLink = pure(({
       overflow: 'auto',
       userSelect: 'none',
     }}
-    onClick={(e) => { onSelectGame(gid); }}
+    onClick={(e) => {
+      onSelectGame(gid);
+    }}
   >
     {info.title}
   </Flex>
@@ -76,11 +70,11 @@ export default class Room extends Component {
       return;
     }
     this.roomModel = new RoomModel(`/room/${this.state.rid}`);
-    this.roomModel.addListener('games', games => {
-      this.setState({ games });
+    this.roomModel.addListener('games', (games) => {
+      this.setState({games});
     });
-    this.roomModel.addListener('users', users => {
-      this.setState({ users });
+    this.roomModel.addListener('users', (users) => {
+      this.setState({users});
     });
     this.roomModel.attach();
   }
@@ -94,7 +88,7 @@ export default class Room extends Component {
     this.gameModel = this.roomModel.getGame(this.state.gid);
     if (this.gameModel) {
       this.historyWrapper = new HistoryWrapper();
-      this.gameModel.addListener('event', event => {
+      this.gameModel.addListener('event', (event) => {
         this.historyWrapper.addEvent(event);
         this.handleUpdate();
       });
@@ -118,8 +112,7 @@ export default class Room extends Component {
     if (prevState.rid !== this.state.rid) {
       this.initializeRoom();
     }
-    if (prevState.games !== this.state.games ||
-      prevState.gid !== this.state.gid) {
+    if (prevState.games !== this.state.games || prevState.gid !== this.state.gid) {
       this.initializeGame();
     }
   }
@@ -129,48 +122,46 @@ export default class Room extends Component {
 
   handleSelectGame = (gid) => {
     this.props.history.push(`/room/${this.state.rid}/${gid}`);
-  }
+  };
 
   handleNewGameClick = (e) => {
     const pid = 2546;
-    this.roomModel.createGame(pid, gid => {
+    this.roomModel.createGame(pid, (gid) => {
       this.handleSelectGame(gid);
     });
-  }
+  };
 
   handleToggleShowingSidebar = (e) => {
     e.preventDefault();
-    const { showingSidebar } = this.state;
+    const {showingSidebar} = this.state;
     this.setState({
       showingSidebar: !showingSidebar,
     });
-  }
+  };
 
   handlePressEnter = () => {
     // noop for now
-  }
+  };
 
-  handleUpdate = _.debounce(() => {
-    this.forceUpdate();
-  }, 50, {
-    leading: true,
-  });
+  handleUpdate = _.debounce(
+    () => {
+      this.forceUpdate();
+    },
+    50,
+    {
+      leading: true,
+    }
+  );
 
   // ================
   // Render Methods
 
   renderGameLink(game) {
-    return (
-      <GameLink
-        {...game}
-        selectedGid={this.state.gid}
-        onSelectGame={this.handleSelectGame}
-      />
-    );
+    return <GameLink {...game} selectedGid={this.state.gid} onSelectGame={this.handleSelectGame} />;
   }
 
   renderSidebar() {
-    const { games } = this.state;
+    const {games} = this.state;
     return (
       <Flex column>
         <div
@@ -183,10 +174,12 @@ export default class Room extends Component {
             textAlign: 'center',
             color: 'rgb(0, 0, 0)',
             backgroundColor: 'rgb(0, 0, 0, 0.04)',
-          }}>
+          }}
+        >
           Steven's Lair
         </div>
-        <Flex column
+        <Flex
+          column
           style={{
             padding: 20,
           }}
@@ -209,23 +202,17 @@ export default class Room extends Component {
           >
             New Game
           </div>
-          {_.values(games).map((game, i) => (
-            <Flex key={i}>
-              {this.renderGameLink(game)}
-            </Flex>
-          ))}
+          {_.values(games).map((game, i) => <Flex key={i}>{this.renderGameLink(game)}</Flex>)}
         </Flex>
       </Flex>
     );
   }
 
   renderSidebarToggler() {
-    const {
-      showingSidebar,
-    } = this.state;
+    const {showingSidebar} = this.state;
     return (
       <Flex
-        vAlignContent='center'
+        vAlignContent="center"
         style={{
           padding: 3,
           backgroundColor: 'rgb(0, 0, 0, 0.04)',
@@ -234,7 +221,9 @@ export default class Room extends Component {
           cursor: 'pointer',
           userSelect: 'none',
         }}
-        onMouseDown={e=>{e.preventDefault();}}
+        onMouseDown={(e) => {
+          e.preventDefault();
+        }}
         onClick={this.handleToggleShowingSidebar}
       >
         {showingSidebar ? '<' : '>'}
@@ -247,10 +236,10 @@ export default class Room extends Component {
       return;
     }
 
-    const { id, color } = this.user;
+    const {id, color} = this.user;
     return (
       <Game
-        ref='game'
+        ref="game"
         id={id}
         myColor={color}
         historyWrapper={this.historyWrapper}
@@ -258,34 +247,32 @@ export default class Room extends Component {
         onPressEnter={this.focusChat}
         onUpdateGrid={this.handleUpdateGrid}
         onUpdateCursor={this.handleUpdateCursor}
-
       />
     );
   }
 
   render() {
-    const {
-      showingSidebar,
-    } = this.state;
+    const {showingSidebar} = this.state;
     return (
-      <Flex className='room' column grow={1}
+      <Flex
+        className="room"
+        column
+        grow={1}
         style={{
           width: '100%',
           height: '100%',
         }}
       >
-        <Nav/>
-        <Flex className='room--main' grow={1}>
-          { showingSidebar && (
+        <Nav />
+        <Flex className="room--main" grow={1}>
+          {showingSidebar && (
             <Flex column basis={200}>
               {this.renderSidebar()}
             </Flex>
           )}
-          <Flex>
-            {/*this.renderSidebarToggler()*/}
-          </Flex>
+          <Flex>{/*this.renderSidebarToggler()*/}</Flex>
           <Flex grow={7} column>
-            { this.renderGame() }
+            {this.renderGame()}
           </Flex>
         </Flex>
       </Flex>

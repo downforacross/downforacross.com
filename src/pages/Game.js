@@ -1,7 +1,7 @@
 import './css/game.css';
 
-import { Helmet } from 'react-helmet';
-import React, { Component } from 'react';
+import {Helmet} from 'react-helmet';
+import React, {Component} from 'react';
 import _ from 'lodash';
 
 import Player from '../components/Player';
@@ -9,76 +9,55 @@ import Chat from '../components/Chat';
 import Toolbar from '../components/Toolbar';
 import Nav from '../components/Nav';
 
-import { db, getTime } from '../actions';
-import { SERVER_TIME } from '../store/firebase';
+import {db, getTime} from '../actions';
+import {SERVER_TIME} from '../store/firebase';
 import GridObject from '../utils/Grid';
-import { makeEmptyGame } from '../gameUtils';
-import { toArr, lazy, rand_color } from '../jsUtils';
-import { getUser } from '../store/user';
+import {makeEmptyGame} from '../gameUtils';
+import {toArr, lazy, rand_color} from '../jsUtils';
+import {getUser} from '../store/user';
 import redirect from '../redirect';
 
 const CURSOR_EXPIRE = 1000 * 60; // 60 seconds
 
-
-function ToggleMobile({ mobile, onClick }) {
+function ToggleMobile({mobile, onClick}) {
   return (
     <a
-      className='toggle-mobile'
-      onClick={e => {
+      className="toggle-mobile"
+      onClick={(e) => {
         e.preventDefault();
         onClick();
       }}
     >
-      <i className={"fa fa-mobile fa-lg" + (mobile
-        ? ''
-        : ' toggle-mobile--off') }
-        aria-hidden="true"
-      />
-      <span className='separator'>
-        |
-      </span>
-      <i className={"fa fa-desktop" + (!mobile
-        ? ''
-        : ' toggle-mobile--off') }
-        aria-hidden="true"
-      />
+      <i className={'fa fa-mobile fa-lg' + (mobile ? '' : ' toggle-mobile--off')} aria-hidden="true" />
+      <span className="separator">|</span>
+      <i className={'fa fa-desktop' + (!mobile ? '' : ' toggle-mobile--off')} aria-hidden="true" />
     </a>
   );
 }
 
-function Header({ mobile, info }) {
-  const { title, author, type } = info || {};
+function Header({mobile, info}) {
+  const {title, author, type} = info || {};
   if (mobile) {
-    return (
-      <div className='header'>
-      </div>
-    );
+    return <div className="header" />;
   }
   return (
-    <div className='header'>
-      <div className='header--title'>
-        { title }
-      </div>
+    <div className="header">
+      <div className="header--title">{title}</div>
 
-      <div className='header--subtitle'>
-        {
-          type && (
-            type + ' | '
-            + 'By ' + author
-          )
-        }
-      </div>
+      <div className="header--subtitle">{type && type + ' | ' + 'By ' + author}</div>
     </div>
   );
 }
 
 function isMobile() {
-  if (navigator.userAgent.match(/Tablet|iPad/i))
-  {
+  if (navigator.userAgent.match(/Tablet|iPad/i)) {
     // do tablet stuff
     return true;
-  } else if(navigator.userAgent.match(/Mobile|Windows Phone|Lumia|Android|webOS|iPhone|iPod|Blackberry|PlayBook|BB10|Opera Mini|\bCrMo\/|Opera Mobi/i) )
-  {
+  } else if (
+    navigator.userAgent.match(
+      /Mobile|Windows Phone|Lumia|Android|webOS|iPhone|iPod|Blackberry|PlayBook|BB10|Opera Mini|\bCrMo\/|Opera Mobi/i
+    )
+  ) {
     // do mobile stuff
     return true;
   } else {
@@ -87,9 +66,7 @@ function isMobile() {
   }
 }
 
-
 export default class Game extends Component {
-
   constructor() {
     super();
     // window.innerWidth changes when pinch-zooming on mobile.
@@ -148,9 +125,9 @@ export default class Game extends Component {
       this.setState({
         id: this.user.id,
       });
-      this.historyRef = db.ref(`history/${this.gid}`)
-      this.gameRef = db.ref(`game/${this.gid}`)
-      this.gameRef.once('value', snapshot => {
+      this.historyRef = db.ref(`history/${this.gid}`);
+      this.gameRef = db.ref(`game/${this.gid}`);
+      this.gameRef.once('value', (snapshot) => {
         const history = _.values(snapshot.val().events || {});
         const isV2 = history.length > 0 && history[0].params && history[0].params.version >= 1.0;
         if (isV2) {
@@ -158,21 +135,24 @@ export default class Game extends Component {
         }
       });
       this.color = this.computeColor();
-      db.ref('game/' + this.gid).on('value', _game => {
-        lazy('updateGame', () => {
-          const game = _game.val() || {};
-          if (this.game && game.solved && !this.game.solved) {
-
-            this.user.markSolved(this.gid);
-          }
-          this.game = game;
-          this.setState({ game: this.game });
-        }, 200);
+      db.ref('game/' + this.gid).on('value', (_game) => {
+        lazy(
+          'updateGame',
+          () => {
+            const game = _game.val() || {};
+            if (this.game && game.solved && !this.game.solved) {
+              this.user.markSolved(this.gid);
+            }
+            this.game = game;
+            this.setState({game: this.game});
+          },
+          200
+        );
       });
-      db.ref('cursors/' + this.gid).on('value', _cursors => {
+      db.ref('cursors/' + this.gid).on('value', (_cursors) => {
         const cursors = _cursors.val() || {};
         lazy('updateCursors', () => {
-          this.setState({ cursors });
+          this.setState({cursors});
         });
       });
     });
@@ -186,35 +166,35 @@ export default class Game extends Component {
     db.ref('game/' + this.gid).transaction(fn);
     this.game = fn(this.game);
     // do this whenever game changes
-    this.setState({ game: this.game });
+    this.setState({game: this.game});
     this.user.joinGame(this.gid, this.game);
   }
 
   cellTransaction(r, c, fn) {
     db.ref('game/' + this.gid + '/grid/' + r + '/' + c).transaction(fn);
-    this.game.grid[r][c] = fn(this.game.grid[r][c])
+    this.game.grid[r][c] = fn(this.game.grid[r][c]);
     // do this whenever game changes
-    this.setState({ game: this.game });
+    this.setState({game: this.game});
     this.user.joinGame(this.gid, this.game);
   }
 
   checkIsSolved() {
     if (this.grid.isSolved(this.game.solution)) {
-      this.transaction(game => (
+      this.transaction((game) =>
         Object.assign(game, {
           grid: this.game.grid,
           solved: true,
           stopTime: game.stopTime || getTime(),
         })
-      ));
+      );
       return true;
     } else {
       if (this.game.solved) {
-        this.transaction(game => (
+        this.transaction((game) =>
           Object.assign(game, {
-            solved: false
+            solved: false,
           })
-        ));
+        );
       }
       return false;
     }
@@ -223,7 +203,7 @@ export default class Game extends Component {
   updateCursor({r, c}) {
     if (!this.color || !this.user.attached) return;
     const id = this.id;
-    const { cursors } = this.state;
+    const {cursors} = this.state;
     const color = this.color;
     const postGame = this.game.solved ? true : false;
     let updatedAt = getTime();
@@ -231,9 +211,8 @@ export default class Game extends Component {
       updatedAt = cursors[id] && cursors[id].updatedAt;
     }
     if (cursors[id] || !this.game.solved) {
-      db.ref(`cursors/${this.gid}/${this.id}`).set({ color, r, c, updatedAt, postGame });
+      db.ref(`cursors/${this.gid}/${this.id}`).set({color, r, c, updatedAt, postGame});
     }
-
 
     if (!postGame) {
       this.historyRef.push({
@@ -257,15 +236,15 @@ export default class Game extends Component {
       return; // good squares are locked
     }
 
-    const { pencilMode } = this.state;
-    this.cellTransaction(r, c, cell => (
+    const {pencilMode} = this.state;
+    this.cellTransaction(r, c, (cell) =>
       Object.assign(cell, {
         value: value,
         bad: false,
         good: false,
         pencil: pencilMode,
       })
-    ));
+    );
     this.checkIsSolved();
     this.startClock();
 
@@ -281,13 +260,13 @@ export default class Game extends Component {
   }
 
   sendChatMessage(username, text) {
-    const { id } = this.state;
+    const {id} = this.state;
     this.user.recordUsername(username);
-    this.transaction(game => {
+    this.transaction((game) => {
       game = game || {};
       game.chat = game.chat || {};
       game.chat.messages = game.chat.messages || [];
-      return ({
+      return {
         ...game,
         chat: {
           ...game.chat,
@@ -297,10 +276,10 @@ export default class Game extends Component {
               senderId: id,
               sender: username,
               text,
-            }
-          ]
-        }
-      });
+            },
+          ],
+        },
+      };
     });
 
     this.historyRef.push({
@@ -316,21 +295,20 @@ export default class Game extends Component {
 
   startClock() {
     if (this.game.startTime || this.game.stopTime) return;
-    this.transaction(game => (
+    this.transaction((game) =>
       Object.assign(game, {
-        startTime: Math.max(game.startTime || 0,
-          getTime())
-      }))
+        startTime: Math.max(game.startTime || 0, getTime()),
+      })
     );
   }
 
   pauseClock() {
     if (this.game.stopTime) return;
-    this.transaction(game => (
+    this.transaction((game) =>
       Object.assign(game, {
         startTime: null,
-        pausedTime: (game.pausedTime || 0) + getTime() - (game.startTime || 0)
-      }))
+        pausedTime: (game.pausedTime || 0) + getTime() - (game.startTime || 0),
+      })
     );
     this.historyRef.push({
       timestamp: SERVER_TIME,
@@ -342,15 +320,15 @@ export default class Game extends Component {
   }
 
   stopClock() {
-    this.transaction(game => (
+    this.transaction((game) =>
       Object.assign(game, {
-        stopTime: getTime()
+        stopTime: getTime(),
       })
-    ));
+    );
   }
 
   resetClock() {
-    this.transaction(game => {
+    this.transaction((game) => {
       game.startTime = null;
       game.stopTime = null;
       game.pausedTime = null;
@@ -386,7 +364,7 @@ export default class Game extends Component {
   }
 
   check(scopeString) {
-    this.transaction(game => {
+    this.transaction((game) => {
       this.scope(scopeString).forEach(({r, c}) => {
         game.grid[r][c] = this._checkSquare(game.grid[r][c], game.solution[r][c]);
       });
@@ -407,12 +385,12 @@ export default class Game extends Component {
       value: answer,
       good: true,
       pencil: false,
-      revealed: cell.revealed || (cell.value !== answer)
+      revealed: cell.revealed || cell.value !== answer,
     });
   }
 
   reveal(scopeString) {
-    this.transaction(game => {
+    this.transaction((game) => {
       this.scope(scopeString).forEach(({r, c}) => {
         game.grid[r][c] = this._revealSquare(game.grid[r][c], game.solution[r][c]);
       });
@@ -440,7 +418,7 @@ export default class Game extends Component {
   }
 
   reset(scopeString) {
-    this.transaction(game => {
+    this.transaction((game) => {
       this.scope(scopeString).forEach(({r, c}) => {
         game.grid[r][c] = this._resetSquare(game.grid[r][c], game.solution[r][c]);
       });
@@ -475,57 +453,52 @@ export default class Game extends Component {
   }
 
   toggleMobile() {
-    const { mobile } = this.state;
-    this.setState({
-      mobile: !mobile,
-    }, () => {
-      window.scrollTo(0, 0);
-    });
+    const {mobile} = this.state;
+    this.setState(
+      {
+        mobile: !mobile,
+      },
+      () => {
+        window.scrollTo(0, 0);
+      }
+    );
   }
 
   togglePencil() {
-    const { pencilMode } = this.state;
+    const {pencilMode} = this.state;
     this.setState({
       pencilMode: !pencilMode,
     });
   }
 
   getCursors() {
-    const { cursors } = this.state;
+    const {cursors} = this.state;
     if (Array.isArray(cursors)) return [];
-    let cursorArray = Object.keys(cursors || {})
-      .map(id => ({
-        ...cursors[id],
-        id,
-      }));
+    let cursorArray = Object.keys(cursors || {}).map((id) => ({
+      ...cursors[id],
+      id,
+    }));
     if (cursorArray.length > 0) {
       const lastTime = Math.max(...cursorArray.map(({updatedAt = 0}) => updatedAt));
-      cursorArray = cursorArray.filter(({ updatedAt, postGame }) => (
-        postGame || updatedAt > lastTime - CURSOR_EXPIRE
-      ));
+      cursorArray = cursorArray.filter(
+        ({updatedAt, postGame}) => postGame || updatedAt > lastTime - CURSOR_EXPIRE
+      );
     }
     cursorArray = cursorArray.filter(({id}) => id !== this.id);
     return cursorArray;
   }
 
-
   render() {
-    const {
-      game,
-      mobile,
-      pencilMode,
-    } = this.state;
+    const {game, mobile, pencilMode} = this.state;
 
     if (!game || !game.grid) {
       this.gameDoesNotExist && this.gameDoesNotExist();
       return (
-        <div className='room'>
-          <Nav
-            mobile={mobile}
-          />
+        <div className="room">
+          <Nav mobile={mobile} />
           <div
             style={{
-              padding: 30
+              padding: 30,
             }}
           >
             Loading your puzzle...
@@ -534,11 +507,11 @@ export default class Game extends Component {
       );
     }
 
-    const { grid } = game;
+    const {grid} = game;
     const screenWidth = this.screenWidth;
     let cols = grid[0].length;
     let rows = grid.length;
-    const width = Math.min(35 * 15 * cols / rows, screenWidth);
+    const width = Math.min((35 * 15 * cols) / rows, screenWidth);
     let size = width / cols;
 
     return (
@@ -547,14 +520,11 @@ export default class Game extends Component {
         <Helmet>
           <title>{this.getPuzzleTitle()}</title>
         </Helmet>
-        <div className='room--header'>
-          <Header
-            mobile={mobile}
-            info={game.info}
-          />
+        <div className="room--header">
+          <Header mobile={mobile} info={game.info} />
         </div>
 
-        <div className='room--toolbar'>
+        <div className="room--toolbar">
           <Toolbar
             mobile={mobile}
             startTime={this.game.startTime}
@@ -572,16 +542,16 @@ export default class Game extends Component {
           />
         </div>
 
-        <div className='room--game-and-chat-wrapper'>
+        <div className="room--game-and-chat-wrapper">
           <Player
-            ref='game'
+            ref="game"
             size={size}
             grid={this.game.grid}
             circles={this.game.circles}
             shades={this.game.shades}
             clues={{
               across: toArr(this.game.clues.across),
-              down: toArr(this.game.clues.down)
+              down: toArr(this.game.clues.down),
             }}
             cursors={this.getCursors()}
             frozen={this.game.solved}
@@ -591,24 +561,20 @@ export default class Game extends Component {
             onPressEnter={this._focusChat}
             mobile={mobile}
           />
-          <div className='room--chat'>
-            { this.shouldRenderChat()
-                ? <Chat
-                  ref='chat'
-                  chat={this.game.chat || {messages: [], users: []}}
-                  onSendChatMessage={this._sendChatMessage}
-                  onPressEnter={this._focusGame}
-                />
-                : null
-            }
+          <div className="room--chat">
+            {this.shouldRenderChat() ? (
+              <Chat
+                ref="chat"
+                chat={this.game.chat || {messages: [], users: []}}
+                onSendChatMessage={this._sendChatMessage}
+                onPressEnter={this._focusGame}
+              />
+            ) : null}
           </div>
 
-          <ToggleMobile
-            mobile={mobile}
-            onClick={this._toggleMobile}
-          />
+          <ToggleMobile mobile={mobile} onClick={this._toggleMobile} />
+        </div>
       </div>
-    </div>
     );
   }
-};
+}

@@ -1,7 +1,7 @@
 import Room from './room';
 import DemoGame from './demoGame';
-import { makeGame } from '../gameUtils';
-import { db, SERVER_TIME } from './firebase';
+import {makeGame} from '../gameUtils';
+import {db, SERVER_TIME} from './firebase';
 
 export default class DemoRoom extends Room {
   constructor(path) {
@@ -32,8 +32,7 @@ export default class DemoRoom extends Room {
     this.ref.child('users').off('value');
   }
 
-  listGames() {
-  }
+  listGames() {}
 
   sendChatMessage(uid, msg) {
     this.ref.child('chat').push({
@@ -43,7 +42,9 @@ export default class DemoRoom extends Room {
   }
 
   tickUser(uid) {
-    this.ref.child('users').child(uid)
+    this.ref
+      .child('users')
+      .child(uid)
       .set({
         lastActive: SERVER_TIME,
       });
@@ -56,20 +57,14 @@ export default class DemoRoom extends Room {
   createGame(pid, cbk) {
     const puzzleRef = db.ref(`/puzzle/${pid}`);
     const gamesRef = this.ref.child('games');
-    puzzleRef.once('value', snapshot => {
-
-      gamesRef.once('value', gamesSnapshot => {
+    puzzleRef.once('value', (snapshot) => {
+      gamesRef.once('value', (gamesSnapshot) => {
         const gid = gamesSnapshot.numChildren() + 1;
         const puzzle = snapshot.val();
-        const game = new DemoGame(
-          `${this.path}/history/${gid}`,
-          {
-            events: false,
-          }
-        );
-        game.initialize(
-          makeGame('', '', puzzle)
-        );
+        const game = new DemoGame(`${this.path}/history/${gid}`, {
+          events: false,
+        });
+        game.initialize(makeGame('', '', puzzle));
         gamesRef.child(gid).set({
           gid,
           info: puzzle.info,
@@ -84,6 +79,4 @@ export default class DemoRoom extends Room {
       });
     });
   }
-};
-
-
+}
