@@ -46,7 +46,6 @@ export default parseRawUrls({
   coffeeparrot: "https://cultofthepartyparrot.com/parrots/coffeeparrot.gif",
   parrotmustache: "https://cultofthepartyparrot.com/parrots/hd/parrotmustache.gif",
   christmasparrot: "https://cultofthepartyparrot.com/parrots/hd/christmasparrot.gif",
-  parrotsleep: "https://cultofthepartyparrot.com/parrotsleep.gif",
   parrotbeer: "https://cultofthepartyparrot.com/parrots/parrotbeer.gif",
   darkbeerparrot: "https://cultofthepartyparrot.com/parrots/darkbeerparrot.gif",
   blondesassyparrot: "https://cultofthepartyparrot.com/parrots/blondesassyparrot.gif",
