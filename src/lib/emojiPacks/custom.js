@@ -9,16 +9,4 @@ export default parseRawUrls({
   bishop: 'https://thenounproject.com/term/chess/337861',
   queen: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLyR_o_IXIJE1-3GEqG6yPu95roaso7PNcs5lJuzmurpsQai_y3w',
   king: 'https://image.spreadshirtmedia.com/image-server/v1/mp/designs/12774644,width=178,height=178/king-chess-pieces-king.png',
-
-  // prickly pear stolen from https://www.buzzfeed.com/generationzero/a-definitive-ranking-of-facebooks-cactus-stickers-1bx4k
-  'prickly_pear_happy': 'https://img.buzzfeed.com/buzzfeed-static/static/2015-03/5/18/enhanced/webdr14/enhanced-5744-1425599687-28.jpg?downsize=715:*&output-format=auto&output-quality=auto',
-  'prickly_pear_worried': 'http://123emoji.com/wp-content/uploads/2016/08/9443631487203546021.png',
-  'prickly_pear_party': 'https://img.buzzfeed.com/buzzfeed-static/static/2015-03/5/18/enhanced/webdr09/enhanced-510-1425599314-5.jpg?downsize=715:*&output-format=auto&output-quality=auto',
-  'prickly_pear_stressed': 'https://img.buzzfeed.com/buzzfeed-static/static/2015-03/5/18/enhanced/webdr11/enhanced-32207-1425598891-1.jpg?downsize=715:*&output-format=auto&output-quality=auto',
-  'prickly_pear_book': 'https://img.buzzfeed.com/buzzfeed-static/static/2015-03/5/18/enhanced/webdr07/enhanced-31715-1425599530-19.jpg?downsize=715:*&output-format=auto&output-quality=auto',
-  'prickly_pear_nerd': 'https://img.buzzfeed.com/buzzfeed-static/static/2015-03/5/18/enhanced/webdr14/enhanced-4422-1425599609-3.jpg?downsize=715:*&output-format=auto&output-quality=auto',
-  'prickly_pear_grumpy': 'https://img.buzzfeed.com/buzzfeed-static/static/2015-03/5/18/enhanced/webdr02/enhanced-25477-1425599139-2.jpg?downsize=715:*&output-format=auto&output-quality=auto',
-  'prickly_pear_enthusiastic': 'https://i.imgur.com/UczCbsJ.png',
-  'prickly_pear_barf': 'https://img.buzzfeed.com/buzzfeed-static/static/2015-03/5/18/enhanced/webdr11/enhanced-21802-1425598766-12.jpg?downsize=715:*&output-format=auto&output-quality=auto',
-  'prickly_pear_barf': 'https://img.buzzfeed.com/buzzfeed-static/static/2015-03/5/18/enhanced/webdr11/enhanced-21802-1425598766-12.jpg?downsize=715:*&output-format=auto&output-quality=auto',
 });

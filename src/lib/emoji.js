@@ -1,4 +1,5 @@
 import defaultPack from './emojiPacks/default';
+import pricklyPear from './emojiPacks/pricklyPear';
 import custom from './emojiPacks/custom';
 import partyParrot from './emojiPacks/partyParrot';
 import _ from 'lodash';
@@ -7,6 +8,7 @@ import _ from 'lodash';
 const allEmojiData = {
   ...defaultPack,
   ...partyParrot,
+  ...pricklyPear,
   ...custom,
 };
 const allEmojis = _.keys(allEmojiData);
