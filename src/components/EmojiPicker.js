@@ -188,15 +188,13 @@ export default class EmojiPicker extends React.Component {
       backgroundColor: 'beige',
       borderBottom: '1px solid #333333',
       padding: 5,
-      // color: 'white',
+      fontSize: '50%',
     };
     const patternStyle = { fontWeight: 'bold' };
     const hintStyle = { marginLeft: 20 };
     return (
       <Flex style={headerStyle}>
         <span>
-          Emoji matching
-          {' '}
           <span style={patternStyle}>
             "{`:${pattern}`}"
           </span>
@@ -221,6 +219,12 @@ export default class EmojiPicker extends React.Component {
       borderRadius: 13,
       marginRight: 20,
     };
+
+    const textStyle = {
+      fontSize: '70%',
+      marginLeft: 5,
+    };
+
     if (!this.emojiRefs[emoji]) {
       this.emojiRefs[emoji] = React.createRef();
     }
@@ -229,7 +233,7 @@ export default class EmojiPicker extends React.Component {
         data-emoji={emoji}
         onMouseMove={this.handleMouseEnterSpan}>
         <Emoji emoji={emoji}/>
-        {`:${emoji}:`}
+        <span style={textStyle}>{`:${emoji}:`}</span>
       </span>
     );
   }
