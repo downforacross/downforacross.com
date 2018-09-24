@@ -1,78 +1,63 @@
 import './css/account.css';
 
 import Nav from '../components/Nav';
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 function AccountHistory() {
-  return (
-    <div className='account-history'>
-      Account History
-    </div>
-  );
+  return <div className="account-history">Account History</div>;
 }
-
 
 export default class Account extends Component {
   constructor() {
     super();
     this.state = {
-      panel: null
+      panel: null,
     };
 
     this.panels = {
       history: {
         name: 'History',
-        component: AccountHistory
+        component: AccountHistory,
       },
-
     };
   }
 
   selectPanel(panel) {
     this.setState({
-      panel
+      panel,
     });
   }
 
   renderSidebar() {
-    const { panel: selectedPanel } = this.state;
-    return <div className='account--sidebar'> {
-      Object.keys(this.panels).map(panelKey => {
-        const selected =  (panelKey === selectedPanel);
-        const { name } = this.panels[panelKey];
-        return <div className={'account--sidebar--entry ' + (selected ? ' selected' : '')}>
-          { name }
-
-        </div>
-
-
-      })
-    }
-  </div>
+    const {panel: selectedPanel} = this.state;
+    return (
+      <div className="account--sidebar">
+        {' '}
+        {Object.keys(this.panels).map((panelKey) => {
+          const selected = panelKey === selectedPanel;
+          const {name} = this.panels[panelKey];
+          return <div className={'account--sidebar--entry ' + (selected ? ' selected' : '')}>{name}</div>;
+        })}
+      </div>
+    );
   }
 
   renderPanel() {
-    const { panel } = this.state;
+    const {panel} = this.state;
     if (panel) {
-      const { component } = this.panels[panel];
+      const {component} = this.panels[panel];
       if (component) return component();
     }
   }
 
   render() {
     return (
-      <div className='account'>
+      <div className="account">
         <Nav />
-        <div className='account--title'>
-          Your Account
-        </div>
-        <div className='account--main'>
-          <div className='account--left'>
-            { this.renderSidebar() }
-          </div>
-          <div className='account--right'>
-            { this.renderPanel() }
-          </div>
+        <div className="account--title">Your Account</div>
+        <div className="account--main">
+          <div className="account--left">{this.renderSidebar()}</div>
+          <div className="account--right">{this.renderPanel()}</div>
         </div>
       </div>
     );

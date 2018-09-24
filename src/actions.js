@@ -1,5 +1,5 @@
-import { makeGame, makeGrid } from './gameUtils';
-import firebase, { SERVER_TIME } from './store/firebase';
+import {makeGame, makeGrid} from './gameUtils';
+import firebase, {SERVER_TIME} from './store/firebase';
 import uuid from 'uuid';
 
 // for interfacing with firebase
@@ -9,9 +9,9 @@ function disconnect() {
   // no-op for now
 }
 
-const offsetRef = firebase.database().ref(".info/serverTimeOffset");
+const offsetRef = firebase.database().ref('.info/serverTimeOffset');
 let offset = 0;
-offsetRef.once('value', result => {
+offsetRef.once('value', (result) => {
   offset = result.val();
 });
 
@@ -20,8 +20,8 @@ function getTime() {
 }
 
 function setPuzzle(pid, puzzle) {
-  const { info, private: private_ = false } = puzzle;
-  const { title, author } = info;
+  const {info, private: private_ = false} = puzzle;
+  const {title, author} = info;
   db.ref('puzzlelist/' + pid).set({
     pid,
     info,
@@ -34,7 +34,7 @@ function setPuzzle(pid, puzzle) {
     ...puzzle,
     pid,
   });
-};
+}
 
 const actions = {
   updatePuzzle: (pid, puzzle) => {
@@ -42,27 +42,33 @@ const actions = {
   },
   // puzzle: { title, type, grid, clues }
   createPuzzle: (puzzle, cbk) => {
-    db.ref('counters').transaction(counters => {
-      const pid = ((counters && counters.pid) || 0) + 1;
-      return {...counters, pid }
-    }, (err, success, snapshot) => {
-      const pid = snapshot.child('pid').val();
-      setPuzzle(pid, puzzle);
-      cbk && cbk(pid);
-    });
+    db.ref('counters').transaction(
+      (counters) => {
+        const pid = ((counters && counters.pid) || 0) + 1;
+        return {...counters, pid};
+      },
+      (err, success, snapshot) => {
+        const pid = snapshot.child('pid').val();
+        setPuzzle(pid, puzzle);
+        cbk && cbk(pid);
+      }
+    );
   },
 
   getNextGid: (cbk) => {
-    db.ref('counters').transaction(counters => {
-      let gid = ((counters && counters.gid) || 0);
-      return {
-        ...counters,
-        gid: gid + 1,
-      };
-    }, (error, committed, snapshot) => {
-      const gid = snapshot.child('gid').val();
-      cbk(gid);
-    });
+    db.ref('counters').transaction(
+      (counters) => {
+        let gid = (counters && counters.gid) || 0;
+        return {
+          ...counters,
+          gid: gid + 1,
+        };
+      },
+      (error, committed, snapshot) => {
+        const gid = snapshot.child('gid').val();
+        cbk(gid);
+      }
+    );
   },
 
   getNextCid: (cbk) => {
@@ -73,53 +79,52 @@ const actions = {
     }
   },
 
-  createGame: ({ name, pid, gid }, cbk) => {
-    db.ref('counters').transaction(counters => {
-      let nextGid = ((counters && counters.gid) || 0);
-      if (!gid) { // then auto-assign the next one by incrementing
-        nextGid += 1; // if this isn't an int we are fucked lol
-      }
-      return {
-        ...counters,
-        gid: nextGid
-      };
-    }, (error, committed, snapshot) => {
-      if (error || !committed) {
-        console.error('could not create game');
-        return;
-      }
-      if (!gid) { // auto assign the result of our increment
-        // should be atomic or something
-        gid = snapshot.child('gid').val();
-      }
-      db.ref('puzzle/' + pid).once('value', puzzle => {
-        const game = makeGame(gid, name, puzzle.val());
-        db.ref('game/' + gid).set(game);
-        db.ref('history/' + gid).push({
-          timestamp: SERVER_TIME,
-          type: 'create',
-          params: { game },
+  createGame: ({name, pid, gid}, cbk) => {
+    db.ref('counters').transaction(
+      (counters) => {
+        let nextGid = (counters && counters.gid) || 0;
+        if (!gid) {
+          // then auto-assign the next one by incrementing
+          nextGid += 1; // if this isn't an int we are fucked lol
+        }
+        return {
+          ...counters,
+          gid: nextGid,
+        };
+      },
+      (error, committed, snapshot) => {
+        if (error || !committed) {
+          console.error('could not create game');
+          return;
+        }
+        if (!gid) {
+          // auto assign the result of our increment
+          // should be atomic or something
+          gid = snapshot.child('gid').val();
+        }
+        db.ref('puzzle/' + pid).once('value', (puzzle) => {
+          const game = makeGame(gid, name, puzzle.val());
+          db.ref('game/' + gid).set(game);
+          db.ref('history/' + gid).push({
+            timestamp: SERVER_TIME,
+            type: 'create',
+            params: {game},
+          });
         });
-      });
-      cbk && cbk(gid);
-    });
+        cbk && cbk(gid);
+      }
+    );
   },
 
   createComposition: (dims, pattern, cbk) => {
-    const type = Math.max(dims.r, dims.c) <= 7
-      ? 'Mini Puzzle'
-      : 'Daily Puzzle';
-    const textGrid = pattern.map(row => (
-      row.map(cell => (
-        cell === 0 ? '' : '.'
-      ))
-    ));
+    const type = Math.max(dims.r, dims.c) <= 7 ? 'Mini Puzzle' : 'Daily Puzzle';
+    const textGrid = pattern.map((row) => row.map((cell) => (cell === 0 ? '' : '.')));
     const grid = makeGrid(textGrid);
     const composition = {
       info: {
         title: 'Untitled',
         type: type,
-        author: 'Anonymous'
+        author: 'Anonymous',
       },
       grid: grid.toArray(),
       clues: grid.alignClues([]),
@@ -140,5 +145,5 @@ const actions = {
   },
 };
 
-export { db, getTime, disconnect };
+export {db, getTime, disconnect};
 export default actions;

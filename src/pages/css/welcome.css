@@ -1,7 +1,7 @@
 .welcome {
   display: flex;
   flex-direction: column;
-  background-color: #FAFAFA;
+  background-color: #fafafa;
   color: #333;
 }
 
@@ -20,7 +20,7 @@
 .welcome--browse--filter {
   flex: 1;
   padding: 15px 15px 15px 15px;
-  border-right: 1px solid #9B9B9B;
+  border-right: 1px solid #9b9b9b;
   display: flex;
   flex-direction: column;
   display: none;
@@ -76,8 +76,12 @@
 }
 
 @keyframes slidein {
-  from { transform: scaleX(0); }
-  to   { transform: scaleX(1); }
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
 }
 
 .entry.new {
@@ -86,13 +90,13 @@
 
 .entry--back {
   opacity: 0;
-  transition: opacity .2s ease-in;
+  transition: opacity 0.2s ease-in;
   -moz-user-select: none;
 }
 
 .entry.flipped .entry--back {
   opacity: 1;
-  transition: opacity .2s ease-in;
+  transition: opacity 0.2s ease-in;
 }
 
 .entry--front {
@@ -126,7 +130,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: rgba(40, 69, 94, .95);
+  background-color: rgba(40, 69, 94, 0.95);
 }
 
 .entry--back--btns {
@@ -139,7 +143,7 @@
   font-size: 15px;
   font-weight: bold;
   color: white;
-  background-color: rgba(106, 169, 254, .95);
+  background-color: rgba(106, 169, 254, 0.95);
   border-radius: 5px;
 }
 
@@ -149,11 +153,10 @@
 }
 
 .entry--back--btn.play-solo {
-
 }
 
 .welcome--browse--puzzlelist--entry:hover {
-  background-color: #FFF;
+  background-color: #fff;
 }
 
 .welcome--right {
@@ -178,7 +181,6 @@
   font-size: 30px;
   margin-bottom: 10px;
 }
-
 
 .welcome--create--title {
   text-align: center;
@@ -219,10 +221,10 @@
 }
 
 ::-webkit-scrollbar {
-    width: 2px;  /* remove scrollbar space */
-    background: transparent;  /* optional: just make scrollbar invisible */
+  width: 2px; /* remove scrollbar space */
+  background: transparent; /* optional: just make scrollbar invisible */
 }
 /* optional: show position indicator in red */
 ::-webkit-scrollbar-thumb {
-    background: #F0F0F0;
+  background: #f0f0f0;
 }

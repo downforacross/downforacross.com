@@ -1,8 +1,8 @@
-import firebase, { db, SERVER_TIME } from './firebase';
+import firebase, {db, SERVER_TIME} from './firebase';
 import getLocalId from '../localAuth';
 import EventEmitter from 'events';
-import { getTime } from '../actions';
-import { rand_color } from '../jsUtils';
+import {getTime} from '../actions';
+import {rand_color} from '../jsUtils';
 
 export default class User extends EventEmitter {
   constructor() {
@@ -53,21 +53,21 @@ export default class User extends EventEmitter {
   }
 
   listUserHistory() {
-    return this.ref.child('history').once('value')
-      .then(snapshot =>
-        snapshot.val()
-      );
+    return this.ref
+      .child('history')
+      .once('value')
+      .then((snapshot) => snapshot.val());
   }
 
   listCompositions() {
-    return this.ref.child('compositions').once('value')
-      .then(snapshot =>
-        snapshot.val()
-      );
+    return this.ref
+      .child('compositions')
+      .once('value')
+      .then((snapshot) => snapshot.val());
   }
 
   // write methods
-  joinComposition(cid, { title, author, published = false }) {
+  joinComposition(cid, {title, author, published = false}) {
     // safe to call this multiple times
     return this.ref
       .child('compositions')
@@ -99,24 +99,23 @@ export default class User extends EventEmitter {
     this.ref
       .child('history')
       .child(gid)
-      .transaction(item => {
+      .transaction((item) => {
         if (!item) {
           // don't mark un-joined games as solved
           return null;
         }
-      return {
-        ...item,
-        solved: true,
-      }
-    });
+        return {
+          ...item,
+          solved: true,
+        };
+      });
   }
 
   recordUsername(username) {
     this.ref
       .child('names')
       .child(username)
-      .transaction((count = 0) => (
-        count + 1));
+      .transaction((count = 0) => count + 1);
   }
 }
 

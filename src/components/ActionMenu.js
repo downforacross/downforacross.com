@@ -1,5 +1,5 @@
 import './css/ActionMenu.css';
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 /*
  * Summary of ActionMenu component
@@ -23,12 +23,11 @@ import React, { Component } from 'react';
  * - Toolbar
  **/
 
-
 export default class ActionMenu extends Component {
   constructor() {
     super();
     this.state = {
-      active: false
+      active: false,
     };
   }
 
@@ -43,38 +42,40 @@ export default class ActionMenu extends Component {
 
   render() {
     return (
-      <div
-        className={ (this.state.active ? 'active ' : '') + 'action-menu'}
-        onBlur={this.onBlur.bind(this)}>
+      <div className={(this.state.active ? 'active ' : '') + 'action-menu'} onBlur={this.onBlur.bind(this)}>
         <button
           tabIndex={-1}
-          className='action-menu--button'
-          onMouseDown={e => { e.preventDefault(); }}
-          onClick={this.onClick.bind(this)} >
+          className="action-menu--button"
+          onMouseDown={(e) => {
+            e.preventDefault();
+          }}
+          onClick={this.onClick.bind(this)}
+        >
           {this.props.label}
         </button>
-        <div className='action-menu--list'>
+        <div className="action-menu--list">
           {Object.keys(this.props.actions).map((key, i) => (
-              <div
-                key={i}
-                className='action-menu--list--action'
-                onMouseDown={(ev)=>{
-                  ev.preventDefault();
-                  this.props.actions[key]();
-                  this.onBlur();
-                  this.setState({active: false});
-                }}
-                onTouchStart={(ev)=>{
-                  ev.preventDefault();
-                  this.props.actions[key]();
-                  this.onBlur();
-                  this.setState({active: false});
-                }} >
-                <span> {key} </span>
-              </div>
+            <div
+              key={i}
+              className="action-menu--list--action"
+              onMouseDown={(ev) => {
+                ev.preventDefault();
+                this.props.actions[key]();
+                this.onBlur();
+                this.setState({active: false});
+              }}
+              onTouchStart={(ev) => {
+                ev.preventDefault();
+                this.props.actions[key]();
+                this.onBlur();
+                this.setState({active: false});
+              }}
+            >
+              <span> {key} </span>
+            </div>
           ))}
         </div>
       </div>
     );
   }
-};
+}

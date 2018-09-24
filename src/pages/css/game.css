@@ -12,7 +12,7 @@
 }
 
 .room--header {
-  border: 1px solid #E2E2E2;
+  border: 1px solid #e2e2e2;
   padding: 20px 20px 20px 30px;
   color: #333;
 }
@@ -41,7 +41,7 @@
 }
 
 .room--game-and-chat-wrapper {
-  border: 1px solid #E2E2E2;
+  border: 1px solid #e2e2e2;
   padding: 15px;
   display: flex;
   flex-direction: row;
@@ -79,7 +79,7 @@
 }
 
 .toggle-mobile {
-  color: #FFF;
+  color: #fff;
 }
 
 .mobile .toggle-mobile {
@@ -87,5 +87,5 @@
 }
 
 .toggle-mobile .fa.toggle-mobile--off {
-  opacity: .3;
+  opacity: 0.3;
 }

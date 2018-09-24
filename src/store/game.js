@@ -1,4 +1,4 @@
-import { db, SERVER_TIME } from './firebase';
+import {db, SERVER_TIME} from './firebase';
 import EventEmitter from 'events';
 
 import Puzzle from './puzzle';
@@ -17,7 +17,7 @@ export default class Game extends EventEmitter {
   }
 
   attach() {
-    this.events.on('child_added', snapshot => {
+    this.events.on('child_added', (snapshot) => {
       const event = snapshot.val();
       if (event.type === 'create') {
         this.attached = true;
@@ -36,7 +36,7 @@ export default class Game extends EventEmitter {
 
   subscribeToPuzzle() {
     if (!this.createEvent) return;
-    const { pid } = this.createEvent.params;
+    const {pid} = this.createEvent.params;
     if (!pid) return;
     const puzzle = new Puzzle(`/puzzle/${pid}`, pid);
     puzzle.on('ready', () => {
@@ -136,10 +136,10 @@ export default class Game extends EventEmitter {
   initialize(rawGame) {
     const {
       info = {},
-      grid = [ [ {} ] ],
-      solution = [ [ '' ] ],
+      grid = [[{}]],
+      solution = [['']],
       circles = [],
-      chat = { messages: [] },
+      chat = {messages: []},
       cursor = {},
       clues = {},
       clock = {

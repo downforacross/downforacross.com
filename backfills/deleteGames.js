@@ -6,12 +6,11 @@ This backfill resets their pid so they don't show up on /replays/2961
 */
 
 // npx babel-node backfills/deleteGames.js
-import { db, disconnect } from '../src/actions'
+import {db, disconnect} from '../src/actions';
 import _ from 'lodash';
 
 async function go() {
-
-  for(let gid = 11455; gid <= 14460; gid += 1) {
+  for (let gid = 11455; gid <= 14460; gid += 1) {
     const pid = (await db.ref(`/game/${gid}/pid`).once('value')).val();
     if (pid === 2961) {
       console.log('clearing', gid);
@@ -23,4 +22,3 @@ async function go() {
 }
 
 go();
-

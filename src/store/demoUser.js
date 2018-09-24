@@ -14,8 +14,7 @@ export default class DemoUser extends User {
     }, 0);
   }
 
-  detach() {
-  }
+  detach() {}
 
   logIn() {
     this.fb = {

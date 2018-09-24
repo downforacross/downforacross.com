@@ -1,18 +1,18 @@
-import 'react-flexview/lib/flexView.css'
+import 'react-flexview/lib/flexView.css';
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Nav from '../components/Nav';
 import _ from 'lodash';
-import { Helmet } from 'react-helmet';
+import {Helmet} from 'react-helmet';
 import Flex from 'react-flexview';
 
-import { GameModel, getUser } from '../store';
+import {GameModel, getUser} from '../store';
 import HistoryWrapper from '../utils/historyWrapper';
 import Game from '../components/Game';
 import MobilePanel from '../components/MobilePanel';
 import ChatV2 from '../components/ChatV2';
 import redirect from '../redirect';
-import { isMobile } from '../jsUtils';
+import {isMobile} from '../jsUtils';
 
 export default class GameV2 extends Component {
   constructor(props) {
@@ -46,14 +46,14 @@ export default class GameV2 extends Component {
     if (this.gameModel) this.gameModel.detach();
     this.gameModel = new GameModel(`/game/${this.state.gid}`);
     this.historyWrapper = new HistoryWrapper();
-    this.gameModel.on('createEvent', event => {
+    this.gameModel.on('createEvent', (event) => {
       if (!event.params || event.params.type) {
         redirect(`/game/${this.state.gid}`, 'Redirecting to old site...');
       }
       this.historyWrapper.setCreateEvent(event);
       this.handleUpdate();
     });
-    this.gameModel.on('event', event => {
+    this.gameModel.on('event', (event) => {
       if (!event.params || event.params.type) {
         redirect(`/game/${this.state.gid}`, 'Redirecting to old site...');
       }
@@ -92,26 +92,30 @@ export default class GameV2 extends Component {
 
   handleToggleChat = () => {
     const toggledMode = this.state.mode === 'game' ? 'chat' : 'game';
-    this.setState({ mode: toggledMode });
-  }
+    this.setState({mode: toggledMode});
+  };
 
   handleChat = (username, id, message) => {
-    this.gameModel.chat(username, id, message)
-  }
+    this.gameModel.chat(username, id, message);
+  };
 
   handleUnfocusGame = () => {
     this.chat && this.chat.focus();
-  }
+  };
 
   handleUnfocusChat = () => {
     this.gameComponent && this.gameComponent.focus();
-  }
+  };
 
-  handleUpdate = _.debounce(() => {
-    this.forceUpdate();
-  }, 0, {
-    leading: true,
-  });
+  handleUpdate = _.debounce(
+    () => {
+      this.forceUpdate();
+    },
+    0,
+    {
+      leading: true,
+    }
+  );
 
   handleChange = _.debounce(({isEdit = false} = {}) => {
     if (isEdit) {
@@ -134,11 +138,13 @@ export default class GameV2 extends Component {
       return;
     }
 
-    const { mobile } = this.state;
-    const { id, color } = this.user;
+    const {mobile} = this.state;
+    const {id, color} = this.user;
     return (
       <Game
-        ref={c => {this.gameComponent = c;}}
+        ref={(c) => {
+          this.gameComponent = c;
+        }}
         id={id}
         myColor={color}
         historyWrapper={this.historyWrapper}
@@ -156,11 +162,13 @@ export default class GameV2 extends Component {
       return;
     }
 
-    const { id, color } = this.user;
-    const { mobile } = this.state;
+    const {id, color} = this.user;
+    const {mobile} = this.state;
     return (
       <ChatV2
-        ref={c => {this.chat = c;}}
+        ref={(c) => {
+          this.chat = c;
+        }}
         info={this.game.info}
         data={this.game.chat}
         id={id}
@@ -184,7 +192,10 @@ export default class GameV2 extends Component {
 
   render() {
     return (
-      <Flex className='room' column grow={1}
+      <Flex
+        className="room"
+        column
+        grow={1}
         style={{
           width: '100%',
           height: '100%',
@@ -193,18 +204,15 @@ export default class GameV2 extends Component {
         <Helmet>
           <title>{this.getPuzzleTitle()}</title>
         </Helmet>
-        <Nav v2 hidden={this.state.mobile}/>
-        <MobilePanel/>
-        <Flex className='room--main' grow={1}>
+        <Nav v2 hidden={this.state.mobile} />
+        <MobilePanel />
+        <Flex className="room--main" grow={1}>
           <Flex column shrink={0}>
-            { this.showingGame && this.renderGame() }
+            {this.showingGame && this.renderGame()}
           </Flex>
-          <Flex grow={1}>
-            { this.showingChat && this.renderChat() }
-          </Flex>
+          <Flex grow={1}>{this.showingChat && this.renderChat()}</Flex>
         </Flex>
       </Flex>
     );
   }
 }
-

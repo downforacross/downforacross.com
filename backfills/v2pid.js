@@ -15,12 +15,11 @@ game[gid] {
 */
 
 // npx babel-node backfills/v2pid.js
-import { db, disconnect } from '../src/actions'
+import {db, disconnect} from '../src/actions';
 import _ from 'lodash';
 
 async function go() {
-
-  for(let gid = 10400; gid < 10980; gid += 1) {
+  for (let gid = 10400; gid < 10980; gid += 1) {
     const pid = (await db.ref(`/game/${gid}/pid`).once('value')).val();
     if (!pid) {
       console.log('migrating', gid);
@@ -36,12 +35,11 @@ async function go() {
         pid,
         events: {
           ...events,
-        }
+        },
       });
     }
   }
   process.exit(0);
-
 }
 
 go();

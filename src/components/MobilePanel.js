@@ -1,4 +1,4 @@
-import React  from 'react';
+import React from 'react';
 import Flex from 'react-flexview';
 
 export default class MobileNav extends React.Component {
@@ -15,9 +15,6 @@ export default class MobileNav extends React.Component {
       top: '0',
       left: '0',
     };
-    return (
-      <Flex style={style}>
-      </Flex>
-    );
+    return <Flex style={style} />;
   }
 }

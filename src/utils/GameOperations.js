@@ -1,13 +1,15 @@
-import { MAX_CLOCK_INCREMENT } from '../timing';
+import {MAX_CLOCK_INCREMENT} from '../timing';
 
 function getScopeGrid(grid, scope) {
-  const scopeGrid = grid.map(row => row.map(cell => false));
-  scope.forEach(({r, c}) => {scopeGrid[r][c] = true});
+  const scopeGrid = grid.map((row) => row.map((cell) => false));
+  scope.forEach(({r, c}) => {
+    scopeGrid[r][c] = true;
+  });
   return scopeGrid;
 }
 
 function isSolved(game) {
-  const { grid, solution } = game;
+  const {grid, solution} = game;
   // TODO this can be memoized
   function isRowSolved(gridRow, solutionRow) {
     for (let i = 0; i < gridRow.length; i += 1) {
@@ -30,10 +32,10 @@ const reducers = {
     const pid = params.pid;
     const {
       info = {},
-      grid = [ [ {} ] ],
-      solution = [ [ '' ] ],
+      grid = [[{}]],
+      solution = [['']],
       circles = [],
-      chat = { messages: [] },
+      chat = {messages: []},
       cursor = {},
       clues = {},
       clock = {
@@ -59,9 +61,7 @@ const reducers = {
   },
 
   updateCursor: (game, params) => {
-    let {
-      cursors = [],
-    } = game;
+    let {cursors = []} = game;
 
     const {
       cell: {r, c},
@@ -70,17 +70,15 @@ const reducers = {
       color,
     } = params;
 
-    cursors = cursors
-      .filter(
-        cursor => cursor.id !== id
-      )
-      .concat([{
+    cursors = cursors.filter((cursor) => cursor.id !== id).concat([
+      {
         r,
         c,
         id,
         timestamp,
         color,
-      }]);
+      },
+    ]);
 
     return {
       ...game,
@@ -89,12 +87,12 @@ const reducers = {
   },
 
   updateCell: (game, params) => {
-    let { grid } = game;
+    let {grid} = game;
     const {
-      cell: { r, c },
+      cell: {r, c},
       value,
       pencil = false,
-    } = params
+    } = params;
     if (!game.solved && !grid[r][c].good) {
       grid = Object.assign([], grid, {
         [r]: Object.assign([], grid[r], {
@@ -114,20 +112,22 @@ const reducers = {
   },
 
   check: (game, params) => {
-    const { scope = [] } = params;
-    let { grid, solution } = game;
+    const {scope = []} = params;
+    let {grid, solution} = game;
     const scopeGrid = getScopeGrid(grid, scope);
-    grid = grid.map((row, i) => (
-      row.map((cell, j) => (scopeGrid[i][j]
-        ? {
-          ...cell,
-          good: cell.value !== '' && cell.value === solution[i][j],
-          bad: cell.value !== '' && cell.value !== solution[i][j],
-          pencil: false,
-        }
-        : cell
-      ))
-    ));
+    grid = grid.map((row, i) =>
+      row.map(
+        (cell, j) =>
+          scopeGrid[i][j]
+            ? {
+                ...cell,
+                good: cell.value !== '' && cell.value === solution[i][j],
+                bad: cell.value !== '' && cell.value !== solution[i][j],
+                pencil: false,
+              }
+            : cell
+      )
+    );
     return {
       ...game,
       grid,
@@ -135,21 +135,23 @@ const reducers = {
   },
 
   reveal: (game, params) => {
-    const { scope = [] } = params;
-    let { grid, solution } = game;
+    const {scope = []} = params;
+    let {grid, solution} = game;
     const scopeGrid = getScopeGrid(grid, scope);
-    grid = grid.map((row, i) => (
-      row.map((cell, j) => (scopeGrid[i][j]
-        ? {
-          ...cell,
-          value: solution[i][j],
-          good: true,
-          pencil: false,
-          revealed: cell.revealed || (cell.value !== solution[i][j])
-        }
-        : cell
-      ))
-    ));
+    grid = grid.map((row, i) =>
+      row.map(
+        (cell, j) =>
+          scopeGrid[i][j]
+            ? {
+                ...cell,
+                value: solution[i][j],
+                good: true,
+                pencil: false,
+                revealed: cell.revealed || cell.value !== solution[i][j],
+              }
+            : cell
+      )
+    );
     return {
       ...game,
       grid,
@@ -157,22 +159,24 @@ const reducers = {
   },
 
   reset: (game, params) => {
-    const { scope = [] } = params;
-    let { grid } = game;
+    const {scope = []} = params;
+    let {grid} = game;
     const scopeGrid = getScopeGrid(grid, scope);
-    grid = grid.map((row, i) => (
-      row.map((cell, j) => (scopeGrid[i][j]
-        ? {
-          ...cell,
-          value: '',
-          good: false,
-          bad: false,
-          revealed: false,
-          pencil: false,
-        }
-        : cell
-      ))
-    ));
+    grid = grid.map((row, i) =>
+      row.map(
+        (cell, j) =>
+          scopeGrid[i][j]
+            ? {
+                ...cell,
+                value: '',
+                good: false,
+                bad: false,
+                revealed: false,
+                pencil: false,
+              }
+            : cell
+      )
+    );
     return {
       ...game,
       grid,
@@ -181,7 +185,7 @@ const reducers = {
 
   updateClock: (game, params) => {
     const action = params.action;
-    let { clock } = game;
+    let {clock} = game;
     if (action === 'pause') {
       // no-op, will be handled by tick
     } else if (action === 'start') {
@@ -200,9 +204,9 @@ const reducers = {
   },
 
   chat: (game, params) => {
-    let { chat } = game;
-    const { text, senderId, sender } = params;
-    const { messages = [] } = chat;
+    let {chat} = game;
+    const {text, senderId, sender} = params;
+    const {messages = []} = chat;
     chat = {
       ...chat,
       messages: [
@@ -211,7 +215,7 @@ const reducers = {
           text,
           senderId,
           sender,
-        }
+        },
       ],
     };
 
@@ -229,12 +233,9 @@ export const tick = (game, timestamp, isPause) => {
       lastUpdated: timestamp,
     },
   } = game;
-  const timeDiff = (clock.paused
+  const timeDiff = clock.paused
     ? 0
-    : Math.max(0, Math.min(
-      timestamp - clock.lastUpdated,
-      MAX_CLOCK_INCREMENT))
-  );
+    : Math.max(0, Math.min(timestamp - clock.lastUpdated, MAX_CLOCK_INCREMENT));
   clock = {
     ...clock,
     lastUpdated: timestamp,
@@ -251,11 +252,11 @@ const checkSolved = (game) => {
   return {
     ...game,
     solved: isSolved(game),
-  }
+  };
 };
 
 export const reduce = (game, action) => {
-  const { timestamp, type, params } = action;
+  const {timestamp, type, params} = action;
   if (!(type in reducers)) {
     console.error('action', type, 'not found');
     return game;
@@ -263,11 +264,8 @@ export const reduce = (game, action) => {
   game = reducers[type](game, params);
 
   game = checkSolved(game);
-  const isPause = (
-    (type === 'updateClock' && params && params.action === 'pause') ||
-    (type === 'create') ||
-    game.solved
-  );
+  const isPause =
+    (type === 'updateClock' && params && params.action === 'pause') || type === 'create' || game.solved;
   game = tick(game, timestamp, isPause);
   return game;
 };

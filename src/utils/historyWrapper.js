@@ -1,4 +1,4 @@
-import { reduce } from '../utils/GameOperations';
+import {reduce} from '../utils/GameOperations';
 import _ from 'lodash';
 
 const MEMO_RATE = 10;
@@ -8,7 +8,7 @@ export default class HistoryWrapper {
     this.history = [];
     this.memo = [];
     this.createEvent = null;
-    history.forEach(event => {
+    history.forEach((event) => {
       if (event.type === 'create') {
         this.setCreateEvent(event);
       } else {
@@ -25,12 +25,14 @@ export default class HistoryWrapper {
     if (!this.createEvent) {
       return;
     }
-    this.memo = [{
-      index: -1,
-      game: this.reduce(null, this.createEvent),
-    }];
+    this.memo = [
+      {
+        index: -1,
+        game: this.reduce(null, this.createEvent),
+      },
+    ];
 
-    _.range(this.history.length).forEach(index => {
+    _.range(this.history.length).forEach((index) => {
       this.memoize(index);
     });
   }
@@ -49,11 +51,7 @@ export default class HistoryWrapper {
 
   // returns result of [0, index]
   getSnapshotAtIndex(index) {
-    const _i = _.sortedLastIndexBy(
-      this.memo,
-      {index},
-      memoItem => memoItem.index
-    );
+    const _i = _.sortedLastIndexBy(this.memo, {index}, (memoItem) => memoItem.index);
     const memoItem = this.memo[_i - 1];
     let game = memoItem.game;
     for (let i = memoItem.index + 1; i <= index; i += 1) {
@@ -71,11 +69,7 @@ export default class HistoryWrapper {
   // this is used for replay
   getSnapshotAt(timestamp) {
     // compute the number of events that have happened
-    const index = _.sortedLastIndexBy(
-      this.history,
-      {timestamp},
-      event => event.timestamp
-    );
+    const index = _.sortedLastIndexBy(this.history, {timestamp}, (event) => event.timestamp);
     return this.getSnapshotAtIndex(index - 1);
   }
 
@@ -86,11 +80,7 @@ export default class HistoryWrapper {
 
   addEvent(event) {
     // we must support retroactive updates to the event log
-    const insertPoint =  _.sortedLastIndexBy(
-      this.history,
-      event,
-      event => event.timestamp,
-    );
+    const insertPoint = _.sortedLastIndexBy(this.history, event, (event) => event.timestamp);
     this.history.splice(insertPoint, 0, event);
     if (!this.createEvent) {
       return;
@@ -98,7 +88,7 @@ export default class HistoryWrapper {
     while (_.last(this.memo).index >= insertPoint) {
       this.memo.pop();
     }
-    _.range(0, this.history.length, MEMO_RATE).forEach(index => {
+    _.range(0, this.history.length, MEMO_RATE).forEach((index) => {
       if (index > _.last(this.memo).index) {
         this.memoize(index);
       }

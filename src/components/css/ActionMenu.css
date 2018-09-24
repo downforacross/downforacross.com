@@ -11,7 +11,7 @@
 .action-menu--list {
   position: absolute;
   top: 100%;
-  background-color: #F2F2F2;
+  background-color: #f2f2f2;
   display: none;
   z-index: 12;
 }
@@ -21,22 +21,21 @@
 }
 
 .action-menu--list--action:first-child {
-  border-top: 1px solid #CCC;
+  border-top: 1px solid #ccc;
 }
-
 
 .action-menu--list--action {
   text-align: left;
   padding: 15px;
-  border-left: 1px solid #CCC;
-  border-bottom: 1px solid #CCC;
-  border-right: 1px solid #CCC;
+  border-left: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  border-right: 1px solid #ccc;
   cursor: pointer;
 }
 
 .action-menu--list--action:hover {
   color: #111;
-  background-color: #DDDDDD;
+  background-color: #dddddd;
 }
 
 .toolbar--mobile--top .action-menu--list--action {

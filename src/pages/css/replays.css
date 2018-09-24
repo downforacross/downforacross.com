@@ -1,5 +1,5 @@
 .replays {
-  font-family: "avenir next", avenir, 'Nunito', "helvetica neue", "Helvetica", "arial", sans-serif;
+  font-family: 'avenir next', avenir, 'Nunito', 'helvetica neue', 'Helvetica', 'arial', sans-serif;
   height: 100%;
   width: 100%;
   min-width: min-content;
@@ -9,7 +9,6 @@
 .replays .grid-controls .grid--content .blurable {
   opacity: 1;
 }
-
 
 .replays .grid-controls .grid--cover {
   display: none;
@@ -41,17 +40,17 @@
   text-align: left;
   border-radius: 3px;
   padding: 8px 15px 8px 15px;
-  border-top: 1px solid #CCC;
-  border-left: 1px solid #CCC;
-  border-bottom: 1px solid #CCC;
-  border-right: 1px solid #CCC;
+  border-top: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  border-right: 1px solid #ccc;
   cursor: pointer;
 }
 
 .replays .limit--button:hover {
   transition: all ease-in 0.2s;
   color: #111;
-  background-color: #DDDDDD;
+  background-color: #dddddd;
 }
 
 .replays .scrub.active {
@@ -72,22 +71,22 @@
   font-weight: 500;
 }
 
-.replays .main-table{
+.replays .main-table {
   table-layout: auto;
   border-collapse: collapse;
   width: 100%;
 }
 
 .replays .main-table tr {
-  text-align: center; 
+  text-align: center;
 }
 
 .replays .main-table tr:hover {
-  background-color:#A7D8FF;
+  background-color: #a7d8ff;
 }
 
 .replays .main-table td {
-  border-bottom: 1px solid #E2E2E2;
+  border-bottom: 1px solid #e2e2e2;
   padding: 12px 0 12px 0;
 }
 

@@ -3,53 +3,47 @@ import './css/upload.css';
 import actions from '../actions';
 import FileUploader from './FileUploader';
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 export default class Upload extends Component {
   constructor() {
     super();
-    this.state = { puzzle: null };
+    this.state = {puzzle: null};
   }
 
   success = (puzzle) => {
-    this.setState({ puzzle });
-  }
+    this.setState({puzzle});
+  };
 
   create = () => {
-    const { puzzle } = this.state;
-    actions.createPuzzle(puzzle, puzzle => {
-      this.setState({ puzzle: null });
+    const {puzzle} = this.state;
+    actions.createPuzzle(puzzle, (puzzle) => {
+      this.setState({puzzle: null});
       this.props.onCreate && this.props.onCreate();
     });
-  }
+  };
 
-  fail = () => {
-  }
+  fail = () => {};
 
   renderSuccessMessage() {
-    const { info } = this.state.puzzle || {};
-    const { title } = info || {};
+    const {info} = this.state.puzzle || {};
+    const {title} = info || {};
     if (title) {
       return (
-        <div className='upload--success'>
-          <span className='upload--success--title'>
-            {title}
-          </span>
+        <div className="upload--success">
+          <span className="upload--success--title">{title}</span>
         </div>
       );
     }
   }
 
   renderButton() {
-    const { v2 } = this.props;
-    const { info } = this.state.puzzle || {};
-    const { type } = info || {};
+    const {v2} = this.props;
+    const {info} = this.state.puzzle || {};
+    const {type} = info || {};
     if (type) {
       return (
-        <button
-          className={'upload--button '+ (v2 ? 'v2' : '')}
-          onClick={this.create}
-        >
+        <button className={'upload--button ' + (v2 ? 'v2' : '')} onClick={this.create}>
           {`Add to the ${type} repository`}
         </button>
       );
@@ -57,16 +51,12 @@ export default class Upload extends Component {
   }
 
   render() {
-    const { v2 } = this.props;
+    const {v2} = this.props;
     return (
-      <div className='upload'>
-        <div className='upload--main'>
-          <div className='upload--main--upload'>
-            <FileUploader
-              success={this.success}
-              fail={this.fail}
-              v2={v2}
-            />
+      <div className="upload">
+        <div className="upload--main">
+          <div className="upload--main--upload">
+            <FileUploader success={this.success} fail={this.fail} v2={v2} />
             {this.renderSuccessMessage()}
             {this.renderButton()}
           </div>
@@ -74,4 +64,4 @@ export default class Upload extends Component {
       </div>
     );
   }
-};
+}

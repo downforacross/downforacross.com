@@ -30,23 +30,20 @@ const getScore = (emoji, pattern) => {
   return 0;
 };
 
-
 export const findMatches = (pattern) => {
   return _.orderBy(
-    (allEmojis
+    allEmojis
       .map((emoji, i) => ({
         emoji,
         score: getScore(emoji, pattern),
         index: i,
       }))
-      .filter(({score}) => score > 0)
-    ),
+      .filter(({score}) => score > 0),
     ['score', 'index'],
-    ['desc', 'desc'],
-  )
-    .map(({emoji}) => emoji);
-}
+    ['desc', 'desc']
+  ).map(({emoji}) => emoji);
+};
 
 export const get = (emoji) => {
   return allEmojiData[emoji];
-}
+};

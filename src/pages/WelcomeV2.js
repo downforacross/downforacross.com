@@ -1,17 +1,16 @@
 import './css/welcomev2.css';
 
-import React, { Component } from 'react';
-import { Helmet } from 'react-helmet';
+import React, {Component} from 'react';
+import {Helmet} from 'react-helmet';
 import Flex from 'react-flexview';
 import _ from 'lodash';
 import Nav from '../components/Nav';
 import Upload from '../components/Upload';
-import { getUser, PuzzlelistModel } from '../store';
+import {getUser, PuzzlelistModel} from '../store';
 import PuzzleList from '../components/PuzzleList';
-import { isMobile } from '../jsUtils';
+import {isMobile} from '../jsUtils';
 
 export default class WelcomeV2 extends Component {
-
   constructor() {
     super();
     this.state = {
@@ -19,13 +18,13 @@ export default class WelcomeV2 extends Component {
       userHistory: {},
       pages: 0,
       statusFilter: {
-        'Complete': true,
+        Complete: true,
         'In progress': true,
-        'New': true,
+        New: true,
       },
       sizeFilter: {
-        'Mini': true,
-        'Standard': true,
+        Mini: true,
+        Standard: true,
       },
       search: '',
     };
@@ -44,11 +43,11 @@ export default class WelcomeV2 extends Component {
 
   handleAuth = () => {
     if (this.user.fb) {
-      this.user.listUserHistory().then(userHistory => {
-        this.setState({ userHistory });
+      this.user.listUserHistory().then((userHistory) => {
+        this.setState({userHistory});
       });
     }
-  }
+  };
 
   initializeUser() {
     this.user = getUser();
@@ -56,7 +55,7 @@ export default class WelcomeV2 extends Component {
   }
 
   get done() {
-    const { pages, puzzles } = this.state;
+    const {pages, puzzles} = this.state;
     return puzzles.length < pages * this.puzzleList.pageSize;
   }
 
@@ -66,20 +65,23 @@ export default class WelcomeV2 extends Component {
   }
 
   nextPage = () => {
-    const { pages } = this.state;
+    const {pages} = this.state;
     if (this.loading || this.done) {
       return;
     }
     this.loading = true;
-    this.puzzleList.getPages(pages + 1, page => {
-      this.setState({
-        puzzles: page,
-        pages: pages + 1,
-      }, () => {
-        this.loading = false;
-      });
+    this.puzzleList.getPages(pages + 1, (page) => {
+      this.setState(
+        {
+          puzzles: page,
+          pages: pages + 1,
+        },
+        () => {
+          this.loading = false;
+        }
+      );
     });
-  }
+  };
 
   initializePuzzlelist() {
     this.puzzleList = new PuzzlelistModel();
@@ -87,7 +89,7 @@ export default class WelcomeV2 extends Component {
   }
 
   renderPuzzles() {
-    const { userHistory, puzzles, sizeFilter, statusFilter, search } = this.state;
+    const {userHistory, puzzles, sizeFilter, statusFilter, search} = this.state;
     return (
       <PuzzleList
         puzzles={puzzles}
@@ -105,10 +107,10 @@ export default class WelcomeV2 extends Component {
       pages: 0,
     });
     this.nextPage();
-  }
+  };
 
   handleFilterChange = (header, name, on) => {
-    const { sizeFilter, statusFilter } = this.state;
+    const {sizeFilter, statusFilter} = this.state;
     if (header === 'Size') {
       this.setState({
         sizeFilter: {
@@ -124,19 +126,19 @@ export default class WelcomeV2 extends Component {
         },
       });
     }
-  }
+  };
 
   updateSearch = _.debounce((search) => {
     this.setState({search});
-  }, 250)
+  }, 250);
 
   handleSearchInput = (e) => {
     const search = e.target.value;
     this.updateSearch(search);
-  }
+  };
 
   renderFilters() {
-    const { sizeFilter, statusFilter } = this.state;
+    const {sizeFilter, statusFilter} = this.state;
     const headerStyle = {
       fontWeight: 600,
       marginTop: 10,
@@ -150,14 +152,24 @@ export default class WelcomeV2 extends Component {
     };
 
     const checkboxGroup = (header, items, handleChange) => (
-      <Flex column style={groupStyle} className='checkbox-group'>
+      <Flex column style={groupStyle} className="checkbox-group">
         <span style={headerStyle}>{header}</span>
         {_.keys(items).map((name, i) => (
-          <label key={i} onMouseDown={e => {e.preventDefault();}}>
-            <input type="checkbox" style={inputStyle} checked={items[name]} onChange={e => {
-              handleChange(header, name, e.target.checked);
-            }}/>
-            <div className='checkmark'/>
+          <label
+            key={i}
+            onMouseDown={(e) => {
+              e.preventDefault();
+            }}
+          >
+            <input
+              type="checkbox"
+              style={inputStyle}
+              checked={items[name]}
+              onChange={(e) => {
+                handleChange(header, name, e.target.checked);
+              }}
+            />
+            <div className="checkmark" />
             {name}
           </label>
         ))}
@@ -165,15 +177,15 @@ export default class WelcomeV2 extends Component {
     );
 
     return (
-      <Flex className='filters' column hAlignContent='left' shrink={0}>
+      <Flex className="filters" column hAlignContent="left" shrink={0}>
         {checkboxGroup('Size', sizeFilter, this.handleFilterChange)}
-        {checkboxGroup('Status', statusFilter,  this.handleFilterChange)}
+        {checkboxGroup('Status', statusFilter, this.handleFilterChange)}
       </Flex>
     );
   }
 
   renderSearch() {
-    const { search } = this.state;
+    const {search} = this.state;
     const style = {
       fontSize: 16,
       padding: 5,
@@ -182,11 +194,14 @@ export default class WelcomeV2 extends Component {
       border: '2px solid silver',
     };
     return (
-      <Flex style={{
-        padding: 25,
-        borderBottom: '2px solid #6AA9F4',
-      }} shrink={0}>
-        <input placeholder='Search' onInput={this.handleSearchInput} val={search} style={style}/>
+      <Flex
+        style={{
+          padding: 25,
+          borderBottom: '2px solid #6AA9F4',
+        }}
+        shrink={0}
+      >
+        <input placeholder="Search" onInput={this.handleSearchInput} val={search} style={style} />
       </Flex>
     );
   }
@@ -194,35 +209,33 @@ export default class WelcomeV2 extends Component {
   renderQuickUpload() {
     return (
       <Flex className="quickplay" style={{width: 200}}>
-        <Upload v2 onCreate={this.handleCreatePuzzle}/>
+        <Upload v2 onCreate={this.handleCreatePuzzle} />
       </Flex>
     );
   }
 
   render() {
     return (
-      <Flex className='welcomev2' column grow={1}>
+      <Flex className="welcomev2" column grow={1}>
         <Helmet>
           <title>Down for a Cross</title>
         </Helmet>
-        <div className='welcomev2--nav'>
-          <Nav v2/>
+        <div className="welcomev2--nav">
+          <Nav v2 />
         </div>
         <Flex grow={1} basis={1}>
-          { this.showingSidebar && (
-            <Flex className='welcomev2--sidebar' column shrink={0} style={{justifyContent: 'space-between'}}>
-              { this.renderFilters() }
-              { !this.mobile && this.renderQuickUpload() }
+          {this.showingSidebar && (
+            <Flex className="welcomev2--sidebar" column shrink={0} style={{justifyContent: 'space-between'}}>
+              {this.renderFilters()}
+              {!this.mobile && this.renderQuickUpload()}
             </Flex>
           )}
-          <Flex className='welcomev2--main' column grow={1}>
-            { this.renderSearch() }
-            { this.renderPuzzles() }
+          <Flex className="welcomev2--main" column grow={1}>
+            {this.renderSearch()}
+            {this.renderPuzzles()}
           </Flex>
         </Flex>
       </Flex>
     );
   }
 }
-
-

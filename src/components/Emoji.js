@@ -18,18 +18,22 @@ export default ({emoji, big}) => {
   const spanStyle = {
     position: 'relative',
     height: size,
-    fontSize: `${size / 22 * 100}%`,
+    fontSize: `${(size / 22) * 100}%`,
     display: 'inline-block',
     textAlign: 'center',
   };
   if (data.url) {
     return (
-      <span title={emoji} style={spanStyle}><img style={imgStyle} src={data.url}/></span>
+      <span title={emoji} style={spanStyle}>
+        <img style={imgStyle} src={data.url} />
+      </span>
     );
   }
 
   // otherwise, expect a web-friendly str
   return (
-    <span style={spanStyle} title={emoji}>{data}</span>
+    <span style={spanStyle} title={emoji}>
+      {data}
+    </span>
   );
 };

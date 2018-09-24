@@ -1,22 +1,27 @@
-import 'react-flexview/lib/flexView.css'
+import 'react-flexview/lib/flexView.css';
 import './css/composition.css';
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Nav from '../components/Nav';
 import _ from 'lodash';
-import { Helmet } from 'react-helmet';
+import {Helmet} from 'react-helmet';
 import Flex from 'react-flexview';
 
 import Editor from '../components/Editor';
 import FileUploader from '../components/FileUploader';
-import { CompositionModel, getUser } from '../store';
+import {CompositionModel, getUser} from '../store';
 import ComposeHistoryWrapper from '../utils/ComposeHistoryWrapper';
 import Game from '../components/Game';
 import ChatV2 from '../components/ChatV2';
 import EditableSpan from '../components/EditableSpan';
 import redirect from '../redirect';
-import { downloadBlob, isMobile } from '../jsUtils';
-import { makeGridFromComposition, makeClues, convertCluesForComposition, convertGridForComposition } from '../gameUtils';
+import {downloadBlob, isMobile} from '../jsUtils';
+import {
+  makeGridFromComposition,
+  makeClues,
+  convertCluesForComposition,
+  convertGridForComposition,
+} from '../gameUtils';
 import format from '../format';
 import * as xwordFiller from '../lib/xword-filler';
 
@@ -51,11 +56,11 @@ export default class Composition extends Component {
   initializeComposition() {
     this.compositionModel = new CompositionModel(`/composition/${this.cid}`);
     this.historyWrapper = new ComposeHistoryWrapper();
-    this.compositionModel.on('createEvent', event => {
+    this.compositionModel.on('createEvent', (event) => {
       this.historyWrapper.setCreateEvent(event);
       this.handleUpdate();
     });
-    this.compositionModel.on('event', event => {
+    this.compositionModel.on('event', (event) => {
       this.historyWrapper.addEvent(event);
       this.handleUpdate();
     });
@@ -80,9 +85,7 @@ export default class Composition extends Component {
   }
 
   get otherCursors() {
-    return _.filter(this.composition.cursors, ({id}) => (
-      id !== this.user.id
-    ));
+    return _.filter(this.composition.cursors, ({id}) => id !== this.user.id);
   }
 
   handlePressEnter = (el) => {
@@ -91,18 +94,22 @@ export default class Composition extends Component {
     } else if (el === this.game) {
       this.chat && this.chat.focus();
     }
-  }
+  };
 
-  handleUpdate = _.debounce(() => {
-    this.forceUpdate();
-  }, 0, {
-    leading: true,
-  });
+  handleUpdate = _.debounce(
+    () => {
+      this.forceUpdate();
+    },
+    0,
+    {
+      leading: true,
+    }
+  );
 
   handleChange = _.debounce(({isEdit = true, isPublished = false} = {}) => {
     const composition = this.historyWrapper.getSnapshot();
     if (isEdit) {
-      const { title, author } = composition.info;
+      const {title, author} = composition.info;
       this.user.joinComposition(this.cid, {
         title,
         author,
@@ -113,19 +120,19 @@ export default class Composition extends Component {
 
   handleUpdateGrid = (r, c, value) => {
     this.compositionModel.updateCellText(r, c, value);
-  }
+  };
 
   handleFlipColor = (r, c) => {
     const color = this.composition.grid[r][c].value === '.' ? 'white' : 'black';
     this.compositionModel.updateCellColor(r, c, color);
-  }
+  };
 
   handleUpdateClue = (r, c, dir, value) => {
     this.compositionModel.updateClue(r, c, dir, value);
-  }
+  };
 
   handleUploadSuccess = (puzzle, filename = '') => {
-    const { info, grid, circles, clues } = puzzle;
+    const {info, grid, circles, clues} = puzzle;
     const convertedGrid = convertGridForComposition(grid);
     const gridObject = makeGridFromComposition(convertedGrid);
     const convertedClues = convertCluesForComposition(clues, gridObject);
@@ -136,62 +143,63 @@ export default class Composition extends Component {
       clues: convertedClues,
     });
     this.handleChange();
-  }
+  };
 
-  handleUploadFail = () => {
-  }
+  handleUploadFail = () => {};
 
   handleChat = (username, id, message) => {
     this.compositionModel.chat(username, id, message);
     this.handleChange();
-  }
+  };
 
   handleUpdateTitle = (title) => {
     this.compositionModel.updateTitle(title);
     this.handleChange();
-  }
+  };
 
   handleUpdateAuthor = (author) => {
     this.compositionModel.updateAuthor(author);
     this.handleChange();
-  }
+  };
 
   handleUnfocusHeader = () => {
     this.chat && this.chat.focus();
-  }
+  };
 
   handleUnfocusEditor = () => {
     this.chat && this.chat.focus();
-  }
+  };
 
   handleUnfocusChat = () => {
     this.editor && this.editor.focus();
-  }
+  };
 
   handleExportClick = () => {
-    const byteArray = format().fromComposition(this.composition).toPuz();
+    const byteArray = format()
+      .fromComposition(this.composition)
+      .toPuz();
     downloadBlob(byteArray, 'download.puz');
-  }
+  };
 
   handleUpdateCursor = (selected) => {
-    const { r, c } = selected;
-    const { id, color } = this.user;
+    const {r, c} = selected;
+    const {id, color} = this.user;
     this.compositionModel.updateCursor(r, c, id, color);
-  }
+  };
 
   handleAutofill = () => {
     console.log('c.grid', this.composition.grid);
     const grid = xwordFiller.fillGrid(this.composition.grid);
     console.log('grid', grid);
-    this.compositionModel.setGrid(grid)
-  }
+    this.compositionModel.setGrid(grid);
+  };
 
   handleClearPencil = () => {
-    this.compositionModel.clearPencil()
-  }
+    this.compositionModel.clearPencil();
+  };
 
   getCellSize() {
-    return 30 * 15 / this.composition.grid[0].length;
+    return (30 * 15) / this.composition.grid[0].length;
   }
 
   renderEditor() {
@@ -199,8 +207,8 @@ export default class Composition extends Component {
       return;
     }
 
-    const { mobile } = this.state;
-    const { id, color } = this.user;
+    const {mobile} = this.state;
+    const {id, color} = this.user;
 
     const gridObject = makeGridFromComposition(this.composition.grid);
     const grid = gridObject.grid;
@@ -209,7 +217,9 @@ export default class Composition extends Component {
 
     return (
       <Editor
-        ref={c => {this.editor = c;}}
+        ref={(c) => {
+          this.editor = c;
+        }}
         size={this.getCellSize()}
         grid={grid}
         clues={clues}
@@ -228,30 +238,36 @@ export default class Composition extends Component {
   }
 
   renderChatHeader() {
-    const { title, author, type } = this.composition.info;
+    const {title, author, type} = this.composition.info;
 
     return (
-      <div className='chatv2--header'>
-        <EditableSpan className='chatv2--header--title'
-          key_='title'
+      <div className="chatv2--header">
+        <EditableSpan
+          className="chatv2--header--title"
+          key_="title"
           onChange={this.handleUpdateTitle}
           onBlur={this.handleUnfocusHeader}
-          value={title}/>
+          value={title}
+        />
 
-        <EditableSpan className='chatv2--header--subtitle'
-          key_='author'
+        <EditableSpan
+          className="chatv2--header--subtitle"
+          key_="author"
           onChange={this.handleUpdateAuthor}
           onBlur={this.handleUnfocusHeader}
-          value={author}/>
+          value={author}
+        />
       </div>
     );
   }
 
   renderChat() {
-    const { id, color } = this.user;
+    const {id, color} = this.user;
     return (
       <ChatV2
-        ref={c => {this.chat = c;}}
+        ref={(c) => {
+          this.chat = c;
+        }}
         header={this.renderChatHeader()}
         info={this.composition.info}
         data={this.composition.chat}
@@ -268,7 +284,10 @@ export default class Composition extends Component {
       padding: 20,
     };
     return (
-      <Flex className='composition' column grow={1}
+      <Flex
+        className="composition"
+        column
+        grow={1}
         style={{
           width: '100%',
           height: '100%',
@@ -277,28 +296,18 @@ export default class Composition extends Component {
         <Helmet>
           <title>{this.title}</title>
         </Helmet>
-        <Nav v2 hidden={this.state.mobile}/>
+        <Nav v2 hidden={this.state.mobile} />
         <Flex style={style} grow={1}>
           <Flex column shrink={0}>
-            { this.renderEditor() }
+            {this.renderEditor()}
           </Flex>
-          <Flex grow={1}>
-            { this.showingChat && this.renderChat() }
-          </Flex>
+          <Flex grow={1}>{this.showingChat && this.renderChat()}</Flex>
           <Flex column>
-            <FileUploader
-              success={this.handleUploadSuccess}
-              fail={this.handleUploadFail}
-              v2
-            />
-            <button onClick={this.handleExportClick}>
-              Export to puz
-            </button>
+            <FileUploader success={this.handleUploadSuccess} fail={this.handleUploadFail} v2 />
+            <button onClick={this.handleExportClick}>Export to puz</button>
           </Flex>
         </Flex>
       </Flex>
     );
   }
 }
-
-

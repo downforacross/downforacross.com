@@ -4,7 +4,7 @@
   padding-top: 10px;
   padding-left: 30px;
   padding-right: 30px;
-  border-left: 1px solid #E2E2E2;
+  border-left: 1px solid #e2e2e2;
   min-width: 300px;
   display: flex;
   flex-direction: column;
@@ -12,7 +12,7 @@
 
 .chat--header {
   height: 50px;
-  border-bottom: 1px solid #E2E2E2;
+  border-bottom: 1px solid #e2e2e2;
   padding-bottom: 2px;
   display: flex;
   flex-direction: row;
@@ -58,4 +58,3 @@
 .chat--bar--input {
   width: 100%;
 }
-

@@ -24,11 +24,11 @@
 }
 
 .hints--matches--entry:nth-child(odd) {
-  background-color: #CCC;
+  background-color: #ccc;
   color: #000;
 }
 
 .hints--matches--entry:nth-child(even) {
-  background-color: #FFF;
+  background-color: #fff;
   color: #333;
 }

@@ -8,8 +8,8 @@ export default class Caret {
     if (!el) return;
     let start, end, range, len;
     let normalizedValue, textInputRange, endRange;
-    if (typeof window.getSelection != "undefined") {
-      const { baseOffset, focusOffset } = window.getSelection();
+    if (typeof window.getSelection != 'undefined') {
+      const {baseOffset, focusOffset} = window.getSelection();
       const start = Math.min(baseOffset, focusOffset);
       const end = Math.max(baseOffset, focusOffset);
       return {
@@ -20,7 +20,7 @@ export default class Caret {
 
     return {
       start: start,
-      end: end
+      end: end,
     };
   }
 
@@ -40,8 +40,7 @@ export default class Caret {
     if (position > el.length) {
       position = el.length;
     }
-    if (typeof window.getSelection != "undefined"
-      && typeof document.createRange != "undefined") {
+    if (typeof window.getSelection != 'undefined' && typeof document.createRange != 'undefined') {
       var range = document.createRange();
       range.selectNodeContents(el);
       range.collapse(false);
@@ -50,7 +49,7 @@ export default class Caret {
       var sel = window.getSelection();
       sel.removeAllRanges();
       sel.addRange(range);
-    } else if (typeof document.body.createTextRange != "undefined") {
+    } else if (typeof document.body.createTextRange != 'undefined') {
       var textRange = document.body.createTextRange();
       textRange.moveToElementText(el);
       textRange.collapse(false);

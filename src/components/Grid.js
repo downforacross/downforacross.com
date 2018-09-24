@@ -1,6 +1,6 @@
 import './css/grid.css';
 
-import React  from 'react';
+import React from 'react';
 import GridObject from '../utils/Grid';
 import Cell from './Cell';
 
@@ -19,36 +19,35 @@ import Cell from './Cell';
  **/
 
 export default class Grid extends React.PureComponent {
-
   get grid() {
     return new GridObject(this.props.grid);
   }
 
   get selectedIsWhite() {
-    const { selected } = this.props;
+    const {selected} = this.props;
     return this.grid.isWhite(selected.r, selected.c);
   }
 
   isSelected(r, c) {
-    const { selected } = this.props;
+    const {selected} = this.props;
     return r === selected.r && c === selected.c;
   }
 
   isCircled(r, c) {
-    const { grid, circles } = this.props;
+    const {grid, circles} = this.props;
     const idx = c + r * grid[0].length;
     return (circles || []).indexOf(idx) !== -1;
   }
 
   isShaded(r, c) {
-    const { grid, shades } = this.props;
+    const {grid, shades} = this.props;
     const idx = c + r * grid[0].length;
     return (shades || []).indexOf(idx) !== -1;
   }
 
   isHighlighted(r, c) {
     if (!this.selectedIsWhite) return false;
-    const { selected, direction } = this.props;
+    const {selected, direction} = this.props;
     const selectedParent = this.grid.getParent(selected.r, selected.c, direction);
     return (
       !this.isSelected(r, c) &&
@@ -58,9 +57,7 @@ export default class Grid extends React.PureComponent {
   }
 
   isReferenced(r, c) {
-    return this.props.references.some(clue => (
-      this.clueContainsSquare(clue, r, c)
-    ));
+    return this.props.references.some((clue) => this.clueContainsSquare(clue, r, c));
   }
 
   handleClick(r, c) {
@@ -73,14 +70,11 @@ export default class Grid extends React.PureComponent {
   }
 
   getAllSquares() {
-    return this.grid.keys().map(([r, c]) => ({ r, c }));
+    return this.grid.keys().map(([r, c]) => ({r, c}));
   }
 
-  clueContainsSquare({ ori, num }, r, c) {
-    return (
-      this.grid.isWhite(r, c) &&
-      this.grid.getParent(r, c, ori) === num
-    );
+  clueContainsSquare({ori, num}, r, c) {
+    return this.grid.isWhite(r, c) && this.grid.getParent(r, c, ori) === num;
   }
 
   getSizeClass(size) {
@@ -103,54 +97,49 @@ export default class Grid extends React.PureComponent {
       <table
         style={{
           width: this.props.grid[0].length * this.props.size,
-          height: this.props.grid.length * this.props.size
+          height: this.props.grid.length * this.props.size,
         }}
-        onTouchEnd={e => e.stopPropagation()}
-        className={'grid ' + sizeClass}>
+        onTouchEnd={(e) => e.stopPropagation()}
+        className={'grid ' + sizeClass}
+      >
         <tbody>
-          {
-            this.props.grid.map((row, r) => (
-              <tr key={key+r}>
-                {
-                  row.map((cell, c) => (
-                    <td
-                      key={r+'_'+c}
-                      className='grid--cell'
-                      style={{
-                        width: size,
-                        height: size,
-                        fontSize: size * .15 + 'px',
-                      }}
-                    >
-                      <Cell
-                        {...cell}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          this.handleClick(r, c)
-                        }}
-                        canFlipColor={this.props.canFlipColor && this.props.canFlipColor(r, c)}
-                        onFlipColor={() => {
-                          this.props.onFlipColor && this.props.onFlipColor(r, c);
-                        }}
-                        selected={this.isSelected(r, c)}
-                        referenced={this.isReferenced(r, c)}
-                        circled={this.isCircled(r, c)}
-                        shaded={this.isShaded(r, c)}
-                        cursors={(this.props.cursors || []).filter(cursor => cursor.r === r && cursor.c === c)}
-                        highlighted={this.isHighlighted(r, c)}
-                        myColor={this.props.myColor}
-                      />
-                    </td>
-                  ))
-                }
-              </tr>
-            ))
-          }
+          {this.props.grid.map((row, r) => (
+            <tr key={key + r}>
+              {row.map((cell, c) => (
+                <td
+                  key={r + '_' + c}
+                  className="grid--cell"
+                  style={{
+                    width: size,
+                    height: size,
+                    fontSize: size * 0.15 + 'px',
+                  }}
+                >
+                  <Cell
+                    {...cell}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      this.handleClick(r, c);
+                    }}
+                    canFlipColor={this.props.canFlipColor && this.props.canFlipColor(r, c)}
+                    onFlipColor={() => {
+                      this.props.onFlipColor && this.props.onFlipColor(r, c);
+                    }}
+                    selected={this.isSelected(r, c)}
+                    referenced={this.isReferenced(r, c)}
+                    circled={this.isCircled(r, c)}
+                    shaded={this.isShaded(r, c)}
+                    cursors={(this.props.cursors || []).filter((cursor) => cursor.r === r && cursor.c === c)}
+                    highlighted={this.isHighlighted(r, c)}
+                    myColor={this.props.myColor}
+                  />
+                </td>
+              ))}
+            </tr>
+          ))}
         </tbody>
       </table>
-    )
+    );
   }
 }
-
-

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default ({text=''}) => {
+export default ({text = ''}) => {
   const parts = [];
   while (text.length > 0) {
     const s = text.indexOf('<i>');
@@ -28,7 +28,9 @@ export default ({text=''}) => {
   return (
     <React.Fragment>
       {parts.map(({text, ital}, i) => (
-        <span key={i} style={{fontStyle: ital ? 'italic' : 'inherit'}}>{text}</span>
+        <span key={i} style={{fontStyle: ital ? 'italic' : 'inherit'}}>
+          {text}
+        </span>
       ))}
     </React.Fragment>
   );

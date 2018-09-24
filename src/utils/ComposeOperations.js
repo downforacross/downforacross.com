@@ -1,13 +1,13 @@
-import { MAX_CLOCK_INCREMENT } from '../timing';
+import {MAX_CLOCK_INCREMENT} from '../timing';
 import _ from 'lodash';
 
 const reducers = {
   create: (composition, params) => {
     const {
       info = {},
-      grid = [ [ {} ] ],
+      grid = [[{}]],
       circles = [],
-      chat = { messages: [] },
+      chat = {messages: []},
       cursor = {},
       clues = [],
     } = params.composition;
@@ -24,12 +24,7 @@ const reducers = {
 
   updateComposition: (composition, params) => {
     // equivalent to create, but there can only be one create
-    const {
-      info = {},
-      grid = [ [ {} ] ],
-      circles = [],
-      clues = [],
-    } = params;
+    const {info = {}, grid = [[{}]], circles = [], clues = []} = params;
 
     return {
       ...composition,
@@ -42,11 +37,7 @@ const reducers = {
 
   updateGrid: (composition, params) => {
     // equivalent to create, but there can only be one create
-    const {
-      grid = [ [ {} ] ],
-      circles = [],
-      clues = [],
-    } = params;
+    const {grid = [[{}]], circles = [], clues = []} = params;
 
     return {
       ...composition,
@@ -56,11 +47,8 @@ const reducers = {
     };
   },
 
-
   updateCursor: (composition, params) => {
-    let {
-      cursors = [],
-    } = composition;
+    let {cursors = []} = composition;
 
     const {
       cell: {r, c},
@@ -69,17 +57,15 @@ const reducers = {
       color,
     } = params;
 
-    cursors = cursors
-      .filter(
-        cursor => cursor.id !== id
-      )
-      .concat([{
+    cursors = cursors.filter((cursor) => cursor.id !== id).concat([
+      {
         r,
         c,
         id,
         timestamp,
         color,
-      }]);
+      },
+    ]);
 
     return {
       ...composition,
@@ -88,14 +74,14 @@ const reducers = {
   },
 
   clearPencil: (composition) => {
-    let { grid } = composition;
-    grid = _.map(grid, row => (
-      row.map(cell => ({
+    let {grid} = composition;
+    grid = _.map(grid, (row) =>
+      row.map((cell) => ({
         ...cell,
         pencil: cell.value === '.' ? null : false,
         value: cell.pencil ? '' : cell.value,
       }))
-    ));
+    );
     return {
       ...composition,
       grid,
@@ -103,12 +89,12 @@ const reducers = {
   },
 
   updateCellText: (composition, params) => {
-    let { grid } = composition;
+    let {grid} = composition;
     const {
-      cell: { r, c },
+      cell: {r, c},
       value,
       pencil = false,
-    } = params
+    } = params;
     grid = Object.assign([], grid, {
       [r]: Object.assign([], grid[r], {
         [c]: {
@@ -125,11 +111,11 @@ const reducers = {
   },
 
   updateCellColor: (composition, params) => {
-    let { grid } = composition;
+    let {grid} = composition;
     const {
-      cell: { r, c },
+      cell: {r, c},
       color,
-    } = params
+    } = params;
     const value = color === 'black' ? '.' : '';
     grid = Object.assign([], grid, {
       [r]: Object.assign([], grid[r], {
@@ -146,24 +132,21 @@ const reducers = {
     };
   },
 
-
   updateClue: (composition, params) => {
-    let { clues } = composition;
+    let {clues} = composition;
     const {
-      cell: { r, c },
+      cell: {r, c},
       dir,
       value,
     } = params;
     clues = [
-      ..._.filter(clues, clue => (
-        clue.r !== r || clue.c !== c || clue.dir !== dir
-      )),
+      ..._.filter(clues, (clue) => clue.r !== r || clue.c !== c || clue.dir !== dir),
       {
         r,
         c,
         dir,
         value,
-      }
+      },
     ];
     return {
       ...composition,
@@ -172,10 +155,8 @@ const reducers = {
   },
 
   updateTitle: (composition, params) => {
-    let { info } = composition;
-    const {
-      text,
-    } = params;
+    let {info} = composition;
+    const {text} = params;
     return {
       ...composition,
       info: {
@@ -186,10 +167,8 @@ const reducers = {
   },
 
   updateAuthor: (composition, params) => {
-    let { info } = composition;
-    const {
-      text,
-    } = params;
+    let {info} = composition;
+    const {text} = params;
     return {
       ...composition,
       info: {
@@ -199,11 +178,10 @@ const reducers = {
     };
   },
 
-
   chat: (composition, params) => {
-    let { chat } = composition;
-    const { text, senderId, sender } = params;
-    const { messages = [] } = chat;
+    let {chat} = composition;
+    const {text, senderId, sender} = params;
+    const {messages = []} = chat;
     chat = {
       ...chat,
       messages: [
@@ -212,7 +190,7 @@ const reducers = {
           text,
           senderId,
           sender,
-        }
+        },
       ],
     };
 
@@ -224,7 +202,7 @@ const reducers = {
 };
 
 export const reduce = (composition, action) => {
-  const { timestamp, type, params } = action;
+  const {timestamp, type, params} = action;
   if (!(type in reducers)) {
     console.error('action', type, 'not found');
     return composition;
@@ -232,4 +210,3 @@ export const reduce = (composition, action) => {
   composition = reducers[type](composition, params);
   return composition;
 };
-

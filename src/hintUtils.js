@@ -22,11 +22,10 @@ function getMasks(length) {
   return res;
 }
 
-
 function distinct(lst) {
   const res = [];
   lst.sort();
-  lst.forEach(word => {
+  lst.forEach((word) => {
     if (res[res.length - 1] !== word) {
       res.push(word);
     }
@@ -36,14 +35,14 @@ function distinct(lst) {
 
 let precomputed = {};
 function precompute(len, complete_cbk) {
-  if(precomputed[len]) {
+  if (precomputed[len]) {
     complete_cbk();
     return;
   }
   let all_words = nyt_words_long;
   all_words.sort();
   all_words = distinct(all_words);
-  all_words = all_words.filter(word => word.length === len);
+  all_words = all_words.filter((word) => word.length === len);
 
   const limit = 100; // don't work too hard
   const processed = {};
@@ -53,7 +52,7 @@ function precompute(len, complete_cbk) {
     for (let word of all_words) {
       if (word in processed) continue;
       const masks = getMasks(word.length);
-      masks.forEach(mask => {
+      masks.forEach((mask) => {
         const pattern = apply(mask, word);
         if (!(pattern in reverseIndex)) {
           reverseIndex[pattern] = [];
@@ -75,13 +74,15 @@ function precompute(len, complete_cbk) {
     } else {
       done_cbk();
     }
-  }
+  };
 
   const loop = (cbk) => {
     requestIdleCallback(() => {
-      doWork(cbk, () => { loop(cbk) });
+      doWork(cbk, () => {
+        loop(cbk);
+      });
     });
-  }
+  };
 
   loop(() => {
     precomputed[len] = true;
@@ -101,10 +102,11 @@ function findMatches(pattern, cbk) {
 }
 
 function getPatterns(grid) {
-  const across = [], down = [];
+  const across = [],
+    down = [];
   grid.forEach((row, r) => {
     row.forEach((cell, c) => {
-      const ch = (!cell.value || cell.value === '') ? '.' : cell.value;
+      const ch = !cell.value || cell.value === '' ? '.' : cell.value;
       if (!cell.black) {
         if (cell.parents.across) {
           across[cell.parents.across] = (across[cell.parents.across] || '') + ch;
@@ -122,7 +124,7 @@ function heuristic(grid) {
   const {across, down} = getPatterns(grid);
   const patterns = across.concat(down);
   let sum = 1;
-  patterns.forEach(pattern => {
+  patterns.forEach((pattern) => {
     if (pattern in reverseIndex) {
       sum += 1 - 1 / reverseIndex[pattern].length;
     } else {
@@ -134,14 +136,16 @@ function heuristic(grid) {
 
 function evaluate(grid, ori, num, word) {
   let pos = 0;
-  const ngrid = grid.map(row => (
-    row.map(cell => Object.assign({}, cell, {
-      value: !cell.black && cell.parents[ori] === num ? word[pos++] : cell.value
-    }))
-  ));
+  const ngrid = grid.map((row) =>
+    row.map((cell) =>
+      Object.assign({}, cell, {
+        value: !cell.black && cell.parents[ori] === num ? word[pos++] : cell.value,
+      })
+    )
+  );
 
   const result = heuristic(ngrid);
   return result;
 }
 
-export { evaluate, findMatches, getPatterns, precompute };
+export {evaluate, findMatches, getPatterns, precompute};

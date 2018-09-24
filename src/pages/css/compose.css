@@ -12,7 +12,7 @@
   display: flex;
   flex-direction: column;
   min-width: 200px;
-  border: 1px solid #E2E2E2;
+  border: 1px solid #e2e2e2;
 }
 
 .compose--left--top {
@@ -37,7 +37,7 @@
 }
 
 .compose--left--new {
-  border-top: 1px solid #E2E2E2;
+  border-top: 1px solid #e2e2e2;
   margin-top: 30px;
   padding: 10px;
   display: flex;
@@ -51,7 +51,7 @@
   position: relative;
   flex: 3;
   padding: 20px;
-  border: 1px solid #E2E2E2;
+  border: 1px solid #e2e2e2;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -111,7 +111,6 @@
   text-decoration: none;
 }
 
-
 .compose--main--editor {
 }
 
@@ -125,7 +124,7 @@
 /* Right panel styles */
 .compose--right {
   flex: 1;
-  border: 1px solid #E2E2E2;
+  border: 1px solid #e2e2e2;
 }
 
 .compose--right--top {
@@ -133,7 +132,7 @@
 }
 
 .compose--right--bottom {
-  border-top: 1px solid #E2E2E2;
+  border-top: 1px solid #e2e2e2;
   padding: 20px;
   display: flex;
   flex-direction: column;
