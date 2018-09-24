@@ -236,7 +236,7 @@ export default class GridControls extends Component {
   // Returns true if the letter was successfully deleted
   delete() {
     let { r, c } = this.props.selected;
-    if (this.props.grid[r][c].value !== '') {
+    if (this.props.grid[r][c].value !== '' && !this.props.grid[r][c].good) {
       this.props.updateGrid(r, c, '');
       return true;
     }
