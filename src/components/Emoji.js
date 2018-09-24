@@ -18,7 +18,6 @@ export default ({emoji, big}) => {
   const spanStyle = {
     position: 'relative',
     height: size,
-    width: size,
     fontSize: `${size / 22 * 100}%`,
     display: 'inline-block',
     textAlign: 'center',
