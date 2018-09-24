@@ -3,6 +3,7 @@ import pricklyPear from './emojiPacks/pricklyPear';
 import custom from './emojiPacks/custom';
 import partyParrot from './emojiPacks/partyParrot';
 import joku from './emojiPacks/joku';
+import sugarCubs from './emojiPacks/sugarCubs';
 import _ from 'lodash';
 
 // spread in reverse-order of priority, in case of name collisions
@@ -11,6 +12,7 @@ const allEmojiData = {
   ...partyParrot,
   ...pricklyPear,
   ...joku,
+  ...sugarCubs,
   ...custom,
 };
 const allEmojis = _.keys(allEmojiData);
