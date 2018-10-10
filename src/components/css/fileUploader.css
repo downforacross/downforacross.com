@@ -21,7 +21,7 @@
 }
 
 .file-uploader--box--icon {
-  fill: #6aa9f4;
+  fill: var(--main-blue);
   cursor: pointer;
   text-align: center;
   margin-top: 40px;
@@ -29,5 +29,5 @@
 }
 
 .file-uploader--wrapper.v2 {
-  background-color: #ffffff;
+  background-color: white;
 }

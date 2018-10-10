@@ -45,7 +45,7 @@
 }
 
 .toolbar--pencil.on .fa-pencil {
-  color: #6aa9f4 !important;
+  color: var(--main-blue) !important;
 }
 
 .toolbar--mobile--top {

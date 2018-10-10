@@ -1,6 +1,6 @@
 .welcomev2 {
   background-color: #ffffff;
-  color: #666;
+  color: var(--font-gray-1);
 }
 
 .welcomev2--browse {
@@ -28,7 +28,7 @@
 }
 
 .welcomev2--main {
-  border-left: 2px solid #6aa9f4;
+  border-left: 2px solid var(--main-blue);
   /* padding: 10px; */
   overflow: hidden;
 }

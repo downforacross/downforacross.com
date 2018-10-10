@@ -19,3 +19,8 @@ body,
     overflow: hidden;
   }
 }
+
+:root {
+  --font-gray-1: #666;
+  --main-blue: #6aa9f4;
+}

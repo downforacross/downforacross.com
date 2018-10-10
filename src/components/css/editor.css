@@ -112,6 +112,17 @@
   margin-left: 15px;
 }
 
+.editor--button {
+  cursor: pointer;
+  border-radius: 5px;
+  padding: 10px;
+  border: 1px solid var(--main-blue);
+  font-weight: bold;
+  color: var(--main-blue);
+  margin-top: 30px;
+  justify-self: center;
+}
+
 .editor--right--hints {
   padding: 20px;
   display: flex;
