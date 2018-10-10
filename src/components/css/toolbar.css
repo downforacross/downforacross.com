@@ -16,7 +16,7 @@
 
 .toolbar button,
 .toolbar--mobile button {
-  color: #666;
+  color: var(--main-gray-1);
   font-size: 14px;
   padding: 7px 10px 7px 10px;
   border-radius: 5px;
@@ -33,7 +33,7 @@
 
 .toolbar button:hover,
 .toolbar--mobile button:hover {
-  background-color: #f2f2f2;
+  background-color: var(--main-gray-3);
 }
 
 .toolbar--timer {

@@ -1,6 +1,6 @@
 .welcomev2 {
   background-color: #ffffff;
-  color: var(--font-gray-1);
+  color: var(--main-gray-1);
 }
 
 .welcomev2--browse {
@@ -229,7 +229,7 @@
 }
 /* optional: show position indicator in red */
 ::-webkit-scrollbar-thumb {
-  background: #f0f0f0;
+  background: --main-gray-3;
 }
 
 input::placeholder {

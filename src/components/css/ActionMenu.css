@@ -11,7 +11,7 @@
 .action-menu--list {
   position: absolute;
   top: 100%;
-  background-color: #f2f2f2;
+  background-color: var(--main-gray-3);
   display: none;
   z-index: 12;
 }
@@ -21,15 +21,15 @@
 }
 
 .action-menu--list--action:first-child {
-  border-top: 1px solid #ccc;
+  border-top: 1px solid --main-gray-2;
 }
 
 .action-menu--list--action {
   text-align: left;
   padding: 15px;
-  border-left: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-  border-right: 1px solid #ccc;
+  border-left: 1px solid --main-gray-2;
+  border-bottom: 1px solid --main-gray-2;
+  border-right: 1px solid --main-gray-2;
   cursor: pointer;
 }
 

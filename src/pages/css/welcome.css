@@ -203,7 +203,7 @@
 
 .welcome--create--options--option select {
   font-size: 90%;
-  font-color: #666;
+  font-color: var(--main-gray-1);
   width: 350px;
   padding: 1px;
 }
@@ -226,5 +226,5 @@
 }
 /* optional: show position indicator in red */
 ::-webkit-scrollbar-thumb {
-  background: #f0f0f0;
+  background: --main-gray-3;
 }

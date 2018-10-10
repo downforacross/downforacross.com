@@ -24,7 +24,7 @@
 }
 
 .hints--matches--entry:nth-child(odd) {
-  background-color: #ccc;
+  background-color: --main-gray-2;
   color: #000;
 }
 

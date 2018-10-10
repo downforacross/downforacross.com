@@ -270,6 +270,40 @@ export default class Editor extends Component {
     );
   }
 
+  renderClueList(dir) {
+    return this.props.clues[dir].map(
+      (clue, i) =>
+        clue !== undefined && (
+          <Flex
+            shrink={0}
+            key={i}
+            className={
+              (this.isClueSelected(dir, i)
+                ? 'selected '
+                : this.isClueHalfSelected(dir, i)
+                  ? 'half-selected '
+                  : ' ') + 'editor--main--clues--list--scroll--clue'
+            }
+            ref={
+              this.isClueSelected(dir, i) || this.isClueHalfSelected(dir, i)
+                ? this.scrollToClue.bind(this, dir, i)
+                : null
+            }
+            onClick={() => {
+              this.handleSelectClue(dir, i);
+            }}
+          >
+            <Flex className="editor--main--clues--list--scroll--clue--number" shrink={0}>
+              {i}
+            </Flex>
+            <Flex className="editor--main--clues--list--scroll--clue--text" shrink={1}>
+              {clue}
+            </Flex>
+          </Flex>
+        )
+    );
+  }
+
   render() {
     const {selected, direction, frozen} = this.state;
     return (
@@ -299,7 +333,6 @@ export default class Editor extends Component {
                 ['across', 'down'].map((dir, i) => (
                   <Flex key={i} className="editor--main--clues--list">
                     <Flex className="editor--main--clues--list--title">{dir.toUpperCase()}</Flex>
-
                     <Flex column grow={1}>
                       <Flex
                         column
@@ -308,47 +341,15 @@ export default class Editor extends Component {
                         className={'editor--main--clues--list--scroll ' + dir}
                         ref={'clues--list--' + dir}
                       >
-                        {this.props.clues[dir].map(
-                          (clue, i) =>
-                            clue !== undefined && (
-                              <Flex
-                                shrink={0}
-                                key={i}
-                                className={
-                                  (this.isClueSelected(dir, i)
-                                    ? 'selected '
-                                    : this.isClueHalfSelected(dir, i)
-                                      ? 'half-selected '
-                                      : ' ') + 'editor--main--clues--list--scroll--clue'
-                                }
-                                ref={
-                                  this.isClueSelected(dir, i) || this.isClueHalfSelected(dir, i)
-                                    ? this.scrollToClue.bind(this, dir, i)
-                                    : null
-                                }
-                                onClick={() => {
-                                  this.handleSelectClue(dir, i);
-                                }}
-                              >
-                                <Flex className="editor--main--clues--list--scroll--clue--number" shrink={0}>
-                                  {i}
-                                </Flex>
-                                <Flex className="editor--main--clues--list--scroll--clue--text" shrink={1}>
-                                  {clue}
-                                </Flex>
-                              </Flex>
-                            )
-                        )}
+                        {this.renderClueList(dir)}
                       </Flex>
                     </Flex>
                   </Flex>
                 ))}
               </Flex>
-              {
-                <Flex className="editor--right--hints">
-                  <Hints grid={this.props.grid} num={this.selectedClueNumber} direction={direction} />
-                </Flex>
-              }
+              <Flex className="editor--right--hints">
+                <Hints grid={this.props.grid} num={this.selectedClueNumber} direction={direction} />
+              </Flex>
             </Flex>
           </Flex>
         </GridControls>

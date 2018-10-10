@@ -40,10 +40,10 @@
   text-align: left;
   border-radius: 3px;
   padding: 8px 15px 8px 15px;
-  border-top: 1px solid #ccc;
-  border-left: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-  border-right: 1px solid #ccc;
+  border-top: 1px solid --main-gray-2;
+  border-left: 1px solid --main-gray-2;
+  border-bottom: 1px solid --main-gray-2;
+  border-right: 1px solid --main-gray-2;
   cursor: pointer;
 }
 

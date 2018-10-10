@@ -259,7 +259,11 @@ export default class EmojiPicker extends React.Component {
 
   render() {
     return (
-      <Flex style={{backgroundColor: 'white', color: '#666666'}} column onMouseDown={this.handleMouseDown}>
+      <Flex
+        style={{backgroundColor: 'white', color: 'var(--main-gray-1)'}}
+        column
+        onMouseDown={this.handleMouseDown}
+      >
         {this.renderHeader()}
         {this.renderMatches()}
       </Flex>
