@@ -186,13 +186,6 @@ export default class WelcomeV2 extends Component {
 
   renderSearch() {
     const {search} = this.state;
-    const style = {
-      fontSize: 16,
-      padding: 5,
-      width: 735,
-      borderRadius: 3,
-      border: '2px solid silver',
-    };
     return (
       <Flex
         style={{
@@ -201,7 +194,12 @@ export default class WelcomeV2 extends Component {
         }}
         shrink={0}
       >
-        <input placeholder="Search" onInput={this.handleSearchInput} val={search} style={style} />
+        <input
+          placeholder="Search"
+          onInput={this.handleSearchInput}
+          val={search}
+          className="welcomev2--searchbar"
+        />
       </Flex>
     );
   }

@@ -1,6 +1,6 @@
 .welcomev2 {
   background-color: #ffffff;
-  color: #333;
+  color: #666;
 }
 
 .welcomev2--browse {
@@ -42,28 +42,30 @@
   padding-right: 10px;
 }
 
+.welcomev2--searchbar {
+  font-size: 16px;
+  padding: 5px;
+  width: 735px;
+  border-radius: 3px;
+  border: 1px solid silver;
+}
+
 .filters label {
   position: relative;
   cursor: pointer;
   line-height: 1.8;
 }
 
-.filters input {
-  /* display: none; */
-}
-
 .filters .checkmark {
-  /* position: absolute; */
-  /* left: 0; */
-  /* top: 0; */
+  background-color: white !important;
+  border-radius: 3px;
+  border: 1px solid silver;
   display: inline-block;
   height: 15px;
-  width: 15px;
+  margin-right: 10px;
   position: relative;
   top: 3px;
-  margin-right: 10px;
-  background-color: white !important;
-  border: 1px solid gray;
+  width: 15px;
 }
 
 .filters input {
