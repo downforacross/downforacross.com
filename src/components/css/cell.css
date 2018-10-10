@@ -30,13 +30,13 @@
 
 .cell.black {
   /* z-index: 2; */
-  background-color: black;
-  color: black;
+  background-color: var(--main-black);
+  color: var(--main-black);
 }
 
 .cell.black.selected {
-  background-color: black;
-  color: black;
+  background-color: var(--main-black);
+  color: var(--main-black);
   border: 3px solid #4aeba1;
 }
 

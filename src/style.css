@@ -21,6 +21,7 @@ body,
 }
 
 :root {
+  --main-black: #151515;
   --main-gray-1: #666;
   --main-gray-2: #ccc;
   --main-gray-3: #f0f0f0;
