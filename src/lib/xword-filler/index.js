@@ -23,6 +23,7 @@ const assignScores = (wordlist) => {
 const generateDefaultWordlist = () => {
   const result = {};
   _.forEach(window.nyt_words, (k) => {
+    k = k.toUpperCase();
     if (k.length > 7) return;
     result[k] = {
       score: 30,
