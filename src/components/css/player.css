@@ -9,7 +9,7 @@
 }
 
 .player--main--clue-bar {
-  background-color: #dcefff;
+  background-color: var(--main-blue-3);
   padding: 10px 20px 10px 20px;
   display: flex;
   font-size: 15px;
@@ -60,7 +60,7 @@
 }
 
 .player--mobile--clue-bar {
-  background-color: #dcefff;
+  background-color: var(--main-blue-3);
   padding: 10px 20px 10px 20px;
   display: flex;
   font-size: 15px;

@@ -229,7 +229,7 @@
 }
 /* optional: show position indicator in red */
 ::-webkit-scrollbar-thumb {
-  background: --main-gray-3;
+  background: var(--main-gray-3);
 }
 
 input::placeholder {

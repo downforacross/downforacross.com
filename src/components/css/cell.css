@@ -41,19 +41,19 @@
 }
 
 .frozen .cell.highlighted {
-  background-color: rgba(31, 255, 61, 0.3);
+  background-color: var(--main-green-2);
 }
 
 div:focus .frozen .cell.highlighted {
-  background-color: rgba(31, 255, 61, 1);
+  background-color: var(--main-green-1);
 }
 
 .cell.highlighted {
-  background-color: rgba(110, 198, 255, 0.3);
+  background-color: var(--main-blue-3);
 }
 
 div:focus .cell.highlighted {
-  background-color: rgba(110, 198, 255, 1);
+  background-color: var(--main-blue-2);
 }
 
 .cell.referenced {
@@ -108,20 +108,6 @@ div:focus .cell.referenced {
 
 .cell--number.nonempty {
   background-color: inherit;
-}
-
-.cell--flip {
-  position: absolute;
-  right: 1px;
-  top: 1px;
-  color: #333;
-  font-size: 10px;
-  cursor: pointer;
-  z-index: 11;
-}
-
-.black .cell--flip {
-  color: --main-gray-2;
 }
 
 .cell--value {

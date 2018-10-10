@@ -5,7 +5,7 @@
 }
 
 .editor--main--clue-bar {
-  background-color: #dcefff;
+  background-color: var(--main-blue-3);
   padding: 10px 20px 10px 20px;
   display: flex;
   font-size: 15px;
@@ -94,11 +94,11 @@
 }
 
 .editor--main--clues--list--scroll--clue.selected {
-  background-color: #a7d8ff;
+  background-color: var(--main-blue-3);
 }
 
 .editor--main--clues--list--scroll--clue.half-selected {
-  border-left: 5px solid #a7d8ff;
+  border-left: 5px solid var(--main-blue-3);
 }
 
 .editor--main--clues--list--scroll--clue--number {

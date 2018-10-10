@@ -25,4 +25,8 @@ body,
   --main-gray-2: #ccc;
   --main-gray-3: #f0f0f0;
   --main-blue: #6aa9f4;
+  --main-blue-2: rgba(110, 198, 255, 1);
+  --main-blue-3: #dcefff;
+  --main-green-1: rgba(31, 255, 61, 0.3);
+  --main-green-2: rgba(31, 255, 61, 1);
 }
