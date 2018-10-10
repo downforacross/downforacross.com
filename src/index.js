@@ -32,7 +32,8 @@ ReactDOM.render(
 ReactDOM.render(
   <Router>
     <div className="router-wrapper">
-      <Route exact path="/" component={Welcome} />
+      <Route exact path="/" component={WelcomeV2} />
+      <Route exact path="/old" component={Welcome} />
       <Route exact path="/game/:gid" component={Game} />
       <Route exact path="/room/:rid" component={Room} />
       <Route exact path="/room/:rid/:gid" component={Room} />
