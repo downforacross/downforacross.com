@@ -93,6 +93,10 @@ export default class EmojiPicker extends React.Component {
   };
 
   handleKeyDown = (e) => {
+    if (e.key === 'Escape') {
+      this.props.onEscape();
+      return;
+    }
     const {selectedEmoji} = this.state;
     const {matches} = this.props;
     if (!selectedEmoji || !matches.length) return;
@@ -153,10 +157,6 @@ export default class EmojiPicker extends React.Component {
       this.props.onConfirm(this.state.selectedEmoji);
     };
 
-    const escape = () => {
-      this.props.onEscape();
-    };
-
     const actions = {
       Tab: next,
       ArrowLeft: move(-1, 0),
@@ -164,7 +164,6 @@ export default class EmojiPicker extends React.Component {
       ArrowUp: move(0, -1),
       ArrowDown: move(0, 1),
       Enter: confirm,
-      Escape: escape,
     };
 
     if (actions[key]) {
