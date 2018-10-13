@@ -39,12 +39,18 @@ export default class Chat extends Component {
   };
 
   handleChangeUsername = (ev) => {
-    const username = ev.target.value || nameGenerator();
+    const username = ev.target.value;
     this.setState({username});
   };
 
   handleUnfocus = () => {
     this.props.onUnfocus();
+  };
+
+  handleBlur = () => {
+    let {username} = this.state;
+    username = username || nameGenerator();
+    this.setState({username});
   };
 
   handleToggleChat = () => {
@@ -84,6 +90,7 @@ export default class Chat extends Component {
           className="chatv2--username--input"
           value={this.state.username}
           onChange={this.handleChangeUsername}
+          onBlur={this.handleBlur}
           onKeyPress={this.handleUsernameInputKeyPress}
         />
       </div>
@@ -187,7 +194,9 @@ export default class Chat extends Component {
           }}
           className="chatv2--messages"
         >
-          {messages.map((message, i) => <div key={i}>{this.renderMessage(message)}</div>)}
+          {messages.map((message, i) => (
+            <div key={i}>{this.renderMessage(message)}</div>
+          ))}
         </div>
 
         {this.renderChatBar()}
