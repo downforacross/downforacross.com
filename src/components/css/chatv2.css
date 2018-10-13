@@ -33,10 +33,23 @@
 }
 
 .chatv2--username {
-  margin-top: 20px;
+  padding: 5px;
+}
+
+.chatv2--username--input {
+  display: inline;
   padding-left: 5px;
-  margin-bottom: 20px;
   font-size: 16px;
+}
+
+.chatv2--username--input.editable-span:hover {
+  background-color: #f8f8654d;
+  cursor: pointer;
+}
+
+.chatv2--username--input.editable-span:focus {
+  background-color: #f8f8654d;
+  cursor: initial;
 }
 
 .chatv2--messages {

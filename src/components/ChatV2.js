@@ -1,10 +1,10 @@
 import './css/chatv2.css';
-
 import React, {Component} from 'react';
 import Emoji from './Emoji';
 import * as emojiLib from '../lib/emoji';
 import nameGenerator from '../nameGenerator';
 import ChatBar from './ChatBar';
+import EditableSpan from './EditableSpan';
 import _ from 'lodash';
 
 const isEmojis = (str) => {
@@ -21,6 +21,7 @@ export default class Chat extends Component {
       username,
     };
     this.chatBar = React.createRef();
+    this.usernameInput = React.createRef();
   }
 
   handleSendMessage = (message) => {
@@ -30,16 +31,10 @@ export default class Chat extends Component {
     localStorage.setItem(usernameKey, username);
   };
 
-  handleUsernameInputKeyPress = (ev) => {
-    if (ev.key === 'Enter') {
-      ev.stopPropagation();
-      ev.preventDefault();
-      this.focus();
+  handleChangeUsername = (username) => {
+    if (!this.usernameInput.current.focused) {
+      username = username || nameGenerator();
     }
-  };
-
-  handleChangeUsername = (ev) => {
-    const username = ev.target.value;
     this.setState({username});
   };
 
@@ -57,12 +52,12 @@ export default class Chat extends Component {
     this.props.onToggleChat();
   };
 
-  focus() {
+  focus = () => {
     const chatBar = this.chatBar.current;
     if (chatBar) {
       chatBar.focus();
     }
-  }
+  };
 
   renderChatHeader() {
     if (this.props.header) return this.props.header;
@@ -83,15 +78,13 @@ export default class Chat extends Component {
     return this.props.hideChatBar ? null : (
       <div className="chatv2--username">
         {'You are '}
-        <input
-          style={{
-            textAlign: 'center',
-          }}
+        <EditableSpan
+          ref={this.usernameInput}
           className="chatv2--username--input"
           value={this.state.username}
           onChange={this.handleChangeUsername}
           onBlur={this.handleBlur}
-          onKeyPress={this.handleUsernameInputKeyPress}
+          onUnfocus={this.focus}
         />
       </div>
     );

@@ -69,6 +69,7 @@ export default class EditableSpan extends PureComponent {
 
   handleBlur = () => {
     this.focused = false;
+    this.props.onBlur && this.props.onBlur();
   };
 
   get caret() {
@@ -92,11 +93,12 @@ export default class EditableSpan extends PureComponent {
   }, 500);
 
   render() {
-    const {hidden} = this.props;
+    const {hidden, style} = this.props;
     if (hidden) return null;
 
     return (
       <div
+        style={style}
         className={'editable-span ' + (this.props.className || '')}
         ref={this.span}
         contentEditable={true}
