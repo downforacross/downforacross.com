@@ -15,23 +15,38 @@
   font-size: 15px;
   /* width: 486px; */
   height: 40px;
-  align-items: center;
+  align-items: stretch;
 }
 
 .player--main--clue-bar--number {
   font-weight: bold;
   display: inline-block;
+  align-self: center;
 }
 
-.player--main--clue-bar--text {
+.player--main--clue-bar--text--wrapper {
+  flex: 1;
+  position: relative;
   margin-left: 20px;
-  display: inline-block;
-  overflow-y: auto;
   max-height: 100%;
 }
 
+.player--main--clue-bar--text {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-begin;
+}
+
+.player--main--clue-bar--text span {
+}
+
 .player--main--left {
-  max-width: min-content;
+  display: flex;
+  flex-direction: column;
 }
 
 .player--main--left--grid {

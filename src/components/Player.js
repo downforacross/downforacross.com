@@ -318,8 +318,10 @@ export default class Player extends Component {
             <div className="player--main--left">
               <div className="player--main--clue-bar">
                 <div className="player--main--clue-bar--number">{this.getClueBarAbbreviation()}</div>
-                <div className="player--main--clue-bar--text">
-                  <Clue text={this.getClueBarText()} />
+                <div className="player--main--clue-bar--text--wrapper">
+                  <div className="player--main--clue-bar--text">
+                    <Clue text={this.getClueBarText()} />
+                  </div>
                 </div>
               </div>
 
