@@ -241,6 +241,9 @@ const reducers = {
 };
 
 export const tick = (game, timestamp, isPause) => {
+  if (!timestamp) {
+    return game;
+  }
   let {
     clock = {
       totalTime: 0,

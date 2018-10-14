@@ -81,6 +81,7 @@ export default class Game extends EventEmitter {
 
   updateColor(id, color) {
     this.events.push({
+      timestamp: SERVER_TIME,
       type: 'updateColor',
       params: {
         id,
