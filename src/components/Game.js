@@ -27,7 +27,7 @@ export default class GameV2 extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.myColor !== this.props.myColor) {
+    if (prevProps.myColor && prevProps.myColor !== this.props.myColor) {
       this.handleUpdateColor(this.props.id, this.props.myColor);
     }
   }
@@ -62,7 +62,9 @@ export default class GameV2 extends Component {
 
   handleUpdateCursor = ({r, c}) => {
     const {id} = this.props;
-    this.gameModel.updateCursor(r, c, id);
+    if (!this.game.solved || this.game.colors[id]) {
+      this.gameModel.updateCursor(r, c, id);
+    }
   };
 
   handleUpdateColor = (id, color) => {
