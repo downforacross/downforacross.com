@@ -41,11 +41,11 @@
 }
 
 .frozen .cell.highlighted {
-  background-color: var(--main-green-2);
+  background-color: var(--main-green-1);
 }
 
 div:focus .frozen .cell.highlighted {
-  background-color: var(--main-green-1);
+  background-color: var(--main-green-2);
 }
 
 .cell.highlighted {
