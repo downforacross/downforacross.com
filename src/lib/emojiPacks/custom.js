@@ -12,4 +12,6 @@ export default parseRawUrls({
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLyR_o_IXIJE1-3GEqG6yPu95roaso7PNcs5lJuzmurpsQai_y3w',
   king:
     'https://image.spreadshirtmedia.com/image-server/v1/mp/designs/12774644,width=178,height=178/king-chess-pieces-king.png',
-});
+  steven:
+    'http://i64.tinypic.com/1zdaiv4.jpg',
+);
