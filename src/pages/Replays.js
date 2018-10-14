@@ -77,10 +77,10 @@ export default class Replays extends Component {
       const historyWrapper = new HistoryWrapper(events);
       const game = historyWrapper.getSnapshot();
       const startTime = historyWrapper.createEvent.timestamp / 1000;
-      console.log(startTime);
       return {
         gid,
         pid: game.pid,
+        title: game.info.title,
         v2: true,
         startTime,
         solved: game.solved,
@@ -126,7 +126,6 @@ export default class Replays extends Component {
         .once('value')
         .then((snapshot) => {
           const gid = parseInt(snapshot.val());
-          console.log(gid);
           Promise.map(_.range(gid - 1, gid - limit - 1, -1), (g) =>
             db
               .ref('/game')
@@ -135,23 +134,12 @@ export default class Replays extends Component {
               .then((snapshot) => ({...snapshot.val(), gid: g}))
           ).then((rawGames) => {
             const games = _.map(_.keys(rawGames), (g) => this.processGame(rawGames[g], rawGames[g].gid));
-            console.log(rawGames);
             this.setState({
               games,
             });
           });
         });
     }
-
-    // TODO: go through the list of solo games
-    // callback: if this is its pid, append it to the list of solo players
-    //
-    // function callback(something) {
-    //     this.setState(prevState => ({
-    //         soloPlayers: [...prevState.soloPlayers, [pid, time]],
-    //         games: prevState.games,
-    //     }))
-    // }
   }
 
   componentDidMount() {
@@ -192,29 +180,32 @@ export default class Replays extends Component {
     }
 
     const games = this.state.games;
-    const list1Items = _.values(games).map(({pid, gid, solved, startTime, time, chatters, v2, active}) => (
-      <tr key={gid}>
-        {this.pid ? null : (
+    const list1Items = _.values(games).map(
+      ({pid, gid, solved, startTime, time, chatters, v2, active, title}) => (
+        <tr key={gid}>
+          {this.pid ? null : (
+            <td style={{textAlign: 'left'}}>
+              <a href={`/replays/${pid}`}>{pid}</a>
+            </td>
+          )}
+          {this.pid ? null : <td>{title})</td>}
           <td>
-            <a href={`/replays/${pid}`}>{pid}</a>
+            <a href={'/replay/' + gid}>
+              Game #{gid}
+              {v2 ? '(beta)' : ''}
+            </a>
           </td>
-        )}
-        <td>
-          <a href={'/replay/' + gid}>
-            Game #{gid}
-            {v2 ? '(beta)' : ''}
-          </a>
-        </td>
-        <td>
-          <Timestamp time={startTime} />
-        </td>
-        <td>
-          <TimeFormatter millis={time} />
-        </td>
-        <td>{this.linkToGame(gid, {v2, active, solved})}</td>
-        <td style={{overflow: 'auto', maxWidth: 300}}>{chatters.join(', ')}</td>
-      </tr>
-    ));
+          <td>
+            <Timestamp time={startTime} />
+          </td>
+          <td>
+            <TimeFormatter millis={time} />
+          </td>
+          <td>{this.linkToGame(gid, {v2, active, solved})}</td>
+          <td style={{overflow: 'auto', maxWidth: 300}}>{chatters.join(', ')}</td>
+        </tr>
+      )
+    );
     const players = this.state.soloPlayers;
     const list2Items = players.map(({id, solved, time}) => (
       <tr>
@@ -235,6 +226,7 @@ export default class Replays extends Component {
         <tbody>
           <tr>
             {this.pid ? null : <th>Pid</th>}
+            {this.pid ? null : <th>Title</th>}
             <th>Game</th>
             <th>Start time</th>
             <th>Duration</th>
@@ -254,7 +246,6 @@ export default class Replays extends Component {
   }
 
   render() {
-    console.log(this.pid, this.getPuzzleTitle());
     const {limit} = this.state;
     return (
       <Flex column className="replays">
