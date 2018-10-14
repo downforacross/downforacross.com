@@ -251,6 +251,7 @@ export default class Player extends Component {
       updateGrid,
       frozen,
       myColor,
+      colors,
       id,
     } = this.props;
 
@@ -258,6 +259,7 @@ export default class Player extends Component {
     const cursors = allCursors.filter((cursor) => cursor.id !== id).map((cursor) => ({
       ...cursor,
       active: cursor.timestamp > currentTime - CURSOR_TIMEOUT,
+      color: colors[cursor.id],
     }));
     const {direction} = this.state;
     const selected = this.selected;

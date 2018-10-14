@@ -23,6 +23,13 @@ export default class GameV2 extends Component {
     this.setState({
       screenWidth,
     });
+    this.componentDidUpdate({});
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.myColor !== this.props.myColor) {
+      this.handleUpdateColor(this.props.id, this.props.myColor);
+    }
   }
 
   get game() {
@@ -54,8 +61,12 @@ export default class GameV2 extends Component {
   };
 
   handleUpdateCursor = ({r, c}) => {
-    const {id, myColor} = this.props;
-    this.gameModel.updateCursor(r, c, id, myColor);
+    const {id} = this.props;
+    this.gameModel.updateCursor(r, c, id);
+  };
+
+  handleUpdateColor = (id, color) => {
+    this.gameModel.updateColor(id, color);
   };
 
   handleStartClock = () => {
@@ -116,7 +127,7 @@ export default class GameV2 extends Component {
       return <div>Loading...</div>;
     }
 
-    const {grid, circles, shades, cursors, clues, solved} = this.game;
+    const {grid, circles, shades, cursors, colors, clues, solved} = this.game;
     const {screenWidth} = this.state;
     let cols = grid[0].length;
     let rows = grid.length;
@@ -137,6 +148,7 @@ export default class GameV2 extends Component {
         }}
         id={id}
         cursors={cursors}
+        colors={colors}
         frozen={solved}
         myColor={myColor}
         updateGrid={this.handleUpdateGrid}

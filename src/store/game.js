@@ -67,15 +67,24 @@ export default class Game extends EventEmitter {
     });
   }
 
-  updateCursor(r, c, id, color) {
+  updateCursor(r, c, id) {
     this.events.push({
       timestamp: SERVER_TIME,
       type: 'updateCursor',
       params: {
         timestamp: SERVER_TIME,
         cell: {r, c},
-        color,
         id,
+      },
+    });
+  }
+
+  updateColor(id, color) {
+    this.events.push({
+      type: 'updateColor',
+      params: {
+        id,
+        color,
       },
     });
   }

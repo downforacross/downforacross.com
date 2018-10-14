@@ -173,11 +173,10 @@ export default class Chat extends Component {
   }
 
   renderMessage(message) {
-    const {cursors} = this.props;
+    const {colors} = this.props;
     const {sender, text, senderId: id} = message;
     const big = text.length <= 10 && isEmojis(text);
-    const cursor = _.find(cursors, (cursor) => cursor.id === id);
-    const color = cursor && cursor.color;
+    const color = colors[id];
 
     return (
       <div className={'chatv2--message' + (big ? ' big' : '')}>

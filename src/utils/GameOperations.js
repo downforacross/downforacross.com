@@ -36,13 +36,14 @@ const reducers = {
       solution = [['']],
       circles = [],
       chat = {messages: []},
-      cursor = {},
       clues = {},
       clock = {
         lastUpdated: 0,
         totalTime: 0,
         paused: true,
       },
+      cursors = [],
+      colors = {},
       solved = false,
     } = params.game;
 
@@ -53,10 +54,11 @@ const reducers = {
       solution,
       circles,
       chat,
-      cursor,
       clues,
       clock,
       solved,
+      cursors,
+      colors,
     };
   },
 
@@ -67,7 +69,6 @@ const reducers = {
       cell: {r, c},
       id,
       timestamp,
-      color,
     } = params;
 
     cursors = cursors.filter((cursor) => cursor.id !== id).concat([
@@ -76,13 +77,26 @@ const reducers = {
         c,
         id,
         timestamp,
-        color,
       },
     ]);
 
     return {
       ...game,
       cursors,
+    };
+  },
+
+  updateColor: (game, params) => {
+    let {colors = {}} = game;
+
+    const {id, color} = params;
+    colors = {
+      ...colors,
+      [id]: color,
+    };
+    return {
+      ...game,
+      colors,
     };
   },
 
@@ -261,11 +275,15 @@ export const reduce = (game, action) => {
     console.error('action', type, 'not found');
     return game;
   }
-  game = reducers[type](game, params);
+  try {
+    game = reducers[type](game, params);
 
-  game = checkSolved(game);
-  const isPause =
-    (type === 'updateClock' && params && params.action === 'pause') || type === 'create' || game.solved;
-  game = tick(game, timestamp, isPause);
+    game = checkSolved(game);
+    const isPause =
+      (type === 'updateClock' && params && params.action === 'pause') || type === 'create' || game.solved;
+    game = tick(game, timestamp, isPause);
+  } catch (e) {
+    console.error('Error handling action', action);
+  }
   return game;
 };
