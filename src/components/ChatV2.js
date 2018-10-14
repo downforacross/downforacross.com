@@ -104,6 +104,17 @@ export default class Chat extends Component {
     );
   }
 
+  renderMessageSender(name, color) {
+    const style = color && {
+      color,
+    };
+    return (
+      <span className="chatv2--message--sender" style={style}>
+        {name}
+      </span>
+    );
+  }
+
   renderMessageText(text) {
     const words = text.split(' ');
     const tokens = [];
@@ -162,11 +173,15 @@ export default class Chat extends Component {
   }
 
   renderMessage(message) {
-    const {sender, text} = message;
+    const {cursors} = this.props;
+    const {sender, text, senderId: id} = message;
     const big = text.length <= 10 && isEmojis(text);
+    const cursor = _.find(cursors, (cursor) => cursor.id === id);
+    const color = cursor && cursor.color;
+
     return (
       <div className={'chatv2--message' + (big ? ' big' : '')}>
-        <span className="chatv2--message--sender">{message.sender}</span>
+        {this.renderMessageSender(message.sender, color)}
         {':'}
         {this.renderMessageText(message.text)}
       </div>

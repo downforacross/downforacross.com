@@ -259,7 +259,6 @@ export default class Player extends Component {
       ...cursor,
       active: cursor.timestamp > currentTime - CURSOR_TIMEOUT,
     }));
-    console.log(cursors);
     const {direction} = this.state;
     const selected = this.selected;
 

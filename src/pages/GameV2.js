@@ -171,6 +171,7 @@ export default class GameV2 extends Component {
         }}
         info={this.game.info}
         data={this.game.chat}
+        cursors={this.game.cursors}
         id={id}
         myColor={color}
         onChat={this.handleChat}
