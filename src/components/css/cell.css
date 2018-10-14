@@ -153,6 +153,10 @@ div:focus .cell.referenced {
   border-width: 1px;
 }
 
+.cell--cursor.inactive {
+  opacity: 0.2;
+}
+
 .cell--circle {
   position: absolute;
   left: 0;

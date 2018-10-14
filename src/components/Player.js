@@ -2,7 +2,7 @@ import './css/player.css';
 
 import React, {Component} from 'react';
 import Flex from 'react-flexview';
-
+import {getTime} from '../actions';
 import {lazy} from '../jsUtils';
 
 import GridObject from '../utils/Grid';
@@ -15,6 +15,7 @@ import MobileGridControls from './MobileGridControls';
 
 import * as gameUtils from '../gameUtils';
 
+const CURSOR_TIMEOUT = 60000;
 /*
  * Summary of Player component
  *
@@ -253,7 +254,12 @@ export default class Player extends Component {
       id,
     } = this.props;
 
-    const cursors = allCursors.filter((cursor) => cursor.id !== id);
+    const currentTime = getTime();
+    const cursors = allCursors.filter((cursor) => cursor.id !== id).map((cursor) => ({
+      ...cursor,
+      active: cursor.timestamp > currentTime - CURSOR_TIMEOUT,
+    }));
+    console.log(cursors);
     const {direction} = this.state;
     const selected = this.selected;
 

@@ -19,21 +19,17 @@ import {getTime} from '../actions';
 export default class Cell extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     if (!_.isEqual(_.omit(nextProps, 'cursors'), _.omit(this.props, 'cursors'))) return true;
-    const {cursors} = this.props;
-    if (nextProps.cursors.length !== cursors.length) {
-      return true;
-    }
-    return false;
+    return !_.isEqual(nextProps.cursors, this.props.cursors);
   }
 
   renderCursors() {
     const {cursors} = this.props;
     return (
       <div className="cell--cursors">
-        {cursors.map(({color}, i) => (
+        {cursors.map(({color, active}, i) => (
           <div
             key={i}
-            className="cell--cursor"
+            className={'cell--cursor' + (active ? ' active' : ' inactive')}
             style={{
               borderColor: color,
               zIndex: Math.min(2 + cursors.length - i, 9),
