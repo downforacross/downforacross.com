@@ -253,6 +253,23 @@ export default class Replays extends Component {
         <Helmet>
           <title>{this.pid ? `Replays ${this.pid}: ${this.getPuzzleTitle()}` : `Last ${limit} games`}</title>
         </Helmet>
+        <div
+          style={{
+            paddingLeft: 30,
+            paddingTop: 20,
+            paddingBottom: 20,
+          }}
+        >
+          {this.renderHeader()}
+          <div
+            style={{
+              padding: 20,
+            }}
+          >
+            {this.renderList()}
+          </div>
+        </div>
+
         <Flex className="limit--container" shrink={0} hAlignContent="center" vAlignContent="center">
           <span className="limit--text">Limit: {limit}</span>
           &nbsp;
@@ -274,22 +291,6 @@ export default class Replays extends Component {
             ++
           </button>
         </Flex>
-        <div
-          style={{
-            paddingLeft: 30,
-            paddingTop: 20,
-            paddingBottom: 20,
-          }}
-        >
-          {this.renderHeader()}
-          <div
-            style={{
-              padding: 20,
-            }}
-          >
-            {this.renderList()}
-          </div>
-        </div>
       </Flex>
     );
   }

@@ -251,7 +251,7 @@ export default class Player extends Component {
       updateGrid,
       frozen,
       myColor,
-      colors,
+      colors = {},
       id,
     } = this.props;
 
