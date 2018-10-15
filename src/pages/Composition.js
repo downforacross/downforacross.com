@@ -195,14 +195,26 @@ export default class Composition extends Component {
     this.compositionModel.setGrid(grid);
   };
 
-  handleChangeSize = (newSize) => {
-    //TODO: Is this the best place to put this logic? Steven pls advise.
+  handleChangeSize = (newRows, newCols) => {
     const oldGrid = this.composition.grid;
-    const oldSize = oldGrid.length;
-    const newGrid = _.range(newSize).map((i) =>
-      _.range(newSize).map((j) => (Math.max(i, j) < oldSize ? oldGrid[i][j] : {value: ''}))
+    const oldRows = oldGrid.length;
+    const oldCols = oldGrid[0].length;
+    const newGrid = _.range(newRows).map((i) =>
+      _.range(newCols).map((j) => (i < oldRows && j < oldCols ? oldGrid[i][j] : {value: ''}))
     );
     this.compositionModel.setGrid(newGrid);
+  };
+
+  handleChangeRows = (newRows) => {
+    if (newRows > 0) {
+      this.handleChangeSize(newRows, this.composition.grid[0].length);
+    }
+  };
+
+  handleChangeColumns = (newCols) => {
+    if (newCols > 0) {
+      this.handleChangeSize(this.composition.grid.length, newCols);
+    }
   };
 
   handlePublish = () => {
@@ -257,7 +269,8 @@ export default class Composition extends Component {
         onChange={this.handleChange}
         onFlipColor={this.handleFlipColor}
         onPublish={this.handlePublish}
-        onChangeSize={this.handleChangeSize}
+        onChangeRows={this.handleChangeRows}
+        onChangeColumns={this.handleChangeColumns}
         myColor={this.user.color}
         onUnfocus={this.handleUnfocusEditor}
       />

@@ -124,8 +124,12 @@ export default class Editor extends Component {
     this.props.onPublish();
   };
 
-  handleChangeSize = (event) => {
-    this.props.onChangeSize(event.target.value);
+  handleChangeRows = (event) => {
+    this.props.onChangeRows(event.target.value);
+  };
+
+  handleChangeColumns = (event) => {
+    this.props.onChangeColumns(event.target.value);
   };
 
   handleClearPencil = () => {
@@ -277,14 +281,25 @@ export default class Editor extends Component {
             {'Publish'}
           </Flex>
         </Flex>
-        <Flex className="editor--grid-size">
-          {'Grid Size: '}
-          <input
-            className="editor--input"
-            type="number"
-            defaultValue={this.grid.size}
-            onChange={this.handleChangeSize}
-          />
+        <Flex>
+          <Flex className="editor--grid-size">{'Rows: '}</Flex>
+          <Flex className="editor--grid-size">
+            <input
+              className="editor--input"
+              type="number"
+              defaultValue={this.grid.size}
+              onChange={this.handleChangeRows}
+            />
+          </Flex>
+          <Flex className="editor--grid-size">{'Columns: '}</Flex>
+          <Flex className="editor--grid-size">
+            <input
+              className="editor--input"
+              type="number"
+              defaultValue={this.grid.size}
+              onChange={this.handleChangeColumns}
+            />
+          </Flex>
         </Flex>
       </div>
     );
