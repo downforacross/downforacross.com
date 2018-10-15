@@ -26,6 +26,10 @@ export default class Grid {
     return result;
   }
 
+  get size() {
+    return this.grid.length;
+  }
+
   keys() {
     const keys = [];
     for (const r of _.range(0, this.grid.length)) {
@@ -238,6 +242,11 @@ export default class Grid {
       }
     }
     return result;
+  }
+
+  resize(newSize) {
+    console.log('GOT', newSize);
+    return this.grid;
   }
 
   toArray() {

@@ -7,6 +7,7 @@ import _ from 'lodash';
 import {Helmet} from 'react-helmet';
 import Flex from 'react-flexview';
 
+import actions from '../actions';
 import Editor from '../components/Editor';
 import FileUploader from '../components/FileUploader';
 import {CompositionModel, getUser} from '../store';
@@ -194,6 +195,30 @@ export default class Composition extends Component {
     this.compositionModel.setGrid(grid);
   };
 
+  handleChangeSize = (newSize) => {
+    //TODO: Is this the best place to put this logic? Steven pls advise.
+    const oldGrid = this.composition.grid;
+    const oldSize = oldGrid.length;
+    const newGrid = _.range(newSize).map((i) =>
+      _.range(newSize).map((j) => (Math.max(i, j) < oldSize ? oldGrid[i][j] : {value: ''}))
+    );
+    this.compositionModel.setGrid(newGrid);
+  };
+
+  handlePublish = () => {
+    let {grid, clues, info} = this.composition;
+
+    clues = makeClues(clues, makeGridFromComposition(grid).grid);
+    grid = grid.map((row) => row.map(({value}) => value || '.'));
+
+    const puzzle = {grid, clues, info};
+
+    actions.createPuzzle(puzzle, (pid) => {
+      console.log('Puzzle path: ', `/beta/play/${pid}`);
+      redirect(`/beta/play/${pid}`);
+    });
+  };
+
   handleClearPencil = () => {
     this.compositionModel.clearPencil();
   };
@@ -231,6 +256,8 @@ export default class Composition extends Component {
         onUpdateCursor={this.handleUpdateCursor}
         onChange={this.handleChange}
         onFlipColor={this.handleFlipColor}
+        onPublish={this.handlePublish}
+        onChangeSize={this.handleChangeSize}
         myColor={this.user.color}
         onUnfocus={this.handleUnfocusEditor}
       />
