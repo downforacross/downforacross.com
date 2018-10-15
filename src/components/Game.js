@@ -2,6 +2,7 @@ import 'react-flexview/lib/flexView.css';
 
 import React, {Component} from 'react';
 import Flex from 'react-flexview';
+import _ from 'lodash';
 
 import Player from '../components/Player';
 import Toolbar from '../components/Toolbar';
@@ -27,7 +28,7 @@ export default class GameV2 extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.myColor && prevProps.myColor !== this.props.myColor) {
+    if (prevProps.myColor !== this.props.myColor) {
       this.handleUpdateColor(this.props.id, this.props.myColor);
     }
   }
@@ -62,9 +63,10 @@ export default class GameV2 extends Component {
 
   handleUpdateCursor = ({r, c}) => {
     const {id} = this.props;
-    if (!this.game.solved || this.game.colors[id]) {
-      this.gameModel.updateCursor(r, c, id);
+    if (this.game.solved && !_.find(this.game.cursors, (cursor) => cursor.id === id)) {
+      return;
     }
+    this.gameModel.updateCursor(r, c, id);
   };
 
   handleUpdateColor = (id, color) => {
