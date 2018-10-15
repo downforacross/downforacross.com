@@ -128,3 +128,15 @@
   display: flex;
   flex-direction: column;
 }
+
+.editor--grid-size {
+  padding: 10px;
+  font-weight: bold;
+  color: var(--main-blue);
+  margin-top: 30px;
+  justify-content: left;
+}
+
+.editor--input {
+  margin-left: 20px;
+}
