@@ -120,6 +120,18 @@ export default class Editor extends Component {
     this.props.onAutofill();
   };
 
+  handlePublish = () => {
+    this.props.onPublish();
+  };
+
+  handleChangeRows = (event) => {
+    this.props.onChangeRows(event.target.value);
+  };
+
+  handleChangeColumns = (event) => {
+    this.props.onChangeColumns(event.target.value);
+  };
+
   handleClearPencil = () => {
     this.props.onClearPencil();
   };
@@ -264,6 +276,29 @@ export default class Editor extends Component {
           </Flex>
           <Flex className="editor--button" hAlignContent="center" onClick={this.handleClearPencil}>
             {'Clear Pencil'}
+          </Flex>
+          <Flex className="editor--button" hAlignContent="center" onClick={this.handlePublish}>
+            {'Publish'}
+          </Flex>
+        </Flex>
+        <Flex>
+          <Flex className="editor--grid-size">{'Rows: '}</Flex>
+          <Flex className="editor--grid-size">
+            <input
+              className="editor--input"
+              type="number"
+              defaultValue={this.grid.size}
+              onChange={this.handleChangeRows}
+            />
+          </Flex>
+          <Flex className="editor--grid-size">{'Columns: '}</Flex>
+          <Flex className="editor--grid-size">
+            <input
+              className="editor--input"
+              type="number"
+              defaultValue={this.grid.size}
+              onChange={this.handleChangeColumns}
+            />
           </Flex>
         </Flex>
       </div>

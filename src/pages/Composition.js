@@ -7,6 +7,7 @@ import _ from 'lodash';
 import {Helmet} from 'react-helmet';
 import Flex from 'react-flexview';
 
+import actions from '../actions';
 import Editor from '../components/Editor';
 import FileUploader from '../components/FileUploader';
 import {CompositionModel, getUser} from '../store';
@@ -194,6 +195,42 @@ export default class Composition extends Component {
     this.compositionModel.setGrid(grid);
   };
 
+  handleChangeSize = (newRows, newCols) => {
+    const oldGrid = this.composition.grid;
+    const oldRows = oldGrid.length;
+    const oldCols = oldGrid[0].length;
+    const newGrid = _.range(newRows).map((i) =>
+      _.range(newCols).map((j) => (i < oldRows && j < oldCols ? oldGrid[i][j] : {value: ''}))
+    );
+    this.compositionModel.setGrid(newGrid);
+  };
+
+  handleChangeRows = (newRows) => {
+    if (newRows > 0) {
+      this.handleChangeSize(newRows, this.composition.grid[0].length);
+    }
+  };
+
+  handleChangeColumns = (newCols) => {
+    if (newCols > 0) {
+      this.handleChangeSize(this.composition.grid.length, newCols);
+    }
+  };
+
+  handlePublish = () => {
+    let {grid, clues, info} = this.composition;
+
+    clues = makeClues(clues, makeGridFromComposition(grid).grid);
+    grid = grid.map((row) => row.map(({value}) => value || '.'));
+
+    const puzzle = {grid, clues, info};
+
+    actions.createPuzzle(puzzle, (pid) => {
+      console.log('Puzzle path: ', `/beta/play/${pid}`);
+      redirect(`/beta/play/${pid}`);
+    });
+  };
+
   handleClearPencil = () => {
     this.compositionModel.clearPencil();
   };
@@ -231,6 +268,9 @@ export default class Composition extends Component {
         onUpdateCursor={this.handleUpdateCursor}
         onChange={this.handleChange}
         onFlipColor={this.handleFlipColor}
+        onPublish={this.handlePublish}
+        onChangeRows={this.handleChangeRows}
+        onChangeColumns={this.handleChangeColumns}
         myColor={this.user.color}
         onUnfocus={this.handleUnfocusEditor}
       />
