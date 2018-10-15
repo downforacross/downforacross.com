@@ -14,4 +14,4 @@ export default parseRawUrls({
     'https://image.spreadshirtmedia.com/image-server/v1/mp/designs/12774644,width=178,height=178/king-chess-pieces-king.png',
   steven:
     'http://i64.tinypic.com/1zdaiv4.jpg',
-);
+});

@@ -120,6 +120,14 @@ export default class Editor extends Component {
     this.props.onAutofill();
   };
 
+  handlePublish = () => {
+    this.props.onPublish();
+  };
+
+  handleChangeSize = (event) => {
+    this.props.onChangeSize(event.target.value);
+  };
+
   handleClearPencil = () => {
     this.props.onClearPencil();
   };
@@ -265,6 +273,18 @@ export default class Editor extends Component {
           <Flex className="editor--button" hAlignContent="center" onClick={this.handleClearPencil}>
             {'Clear Pencil'}
           </Flex>
+          <Flex className="editor--button" hAlignContent="center" onClick={this.handlePublish}>
+            {'Publish'}
+          </Flex>
+        </Flex>
+        <Flex className="editor--grid-size">
+          {'Grid Size: '}
+          <input
+            className="editor--input"
+            type="number"
+            defaultValue={this.grid.size}
+            onChange={this.handleChangeSize}
+          />
         </Flex>
       </div>
     );
