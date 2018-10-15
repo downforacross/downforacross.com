@@ -244,11 +244,6 @@ export default class Grid {
     return result;
   }
 
-  resize(newSize) {
-    console.log('GOT', newSize);
-    return this.grid;
-  }
-
   toArray() {
     return this.grid;
   }
