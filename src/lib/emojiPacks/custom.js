@@ -13,4 +13,5 @@ export default parseRawUrls({
   king:
     'https://image.spreadshirtmedia.com/image-server/v1/mp/designs/12774644,width=178,height=178/king-chess-pieces-king.png',
   steven: 'http://i64.tinypic.com/1zdaiv4.jpg',
+  surprised_pikachu: 'https://emojis.slackmojis.com/emojis/images/1541014354/4885/surprised_pikachu.jpg',
 });
