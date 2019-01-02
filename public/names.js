@@ -68,12 +68,12 @@ Basilisk
 Bass
 Bat
 Beaked whale
-Bear   
+Bear
 Beaver
 Bedbug
 Bee
 Beetle
-Bird   
+Bird
 Bison
 Blackbird
 Black panther
@@ -89,8 +89,6 @@ Bonobo
 Booby
 Box jellyfish
 Bovid
-Buffalo, African
-Buffalo, American (bison)
 Bug
 Butterfly
 Buzzard
@@ -101,17 +99,17 @@ Capybara
 Cardinal
 Caribou
 Carp
-Cat   
+Cat
 Catshark
 Caterpillar
 Catfish
-Cattle   
+Cattle
 Centipede
 Cephalopod
 Chameleon
 Cheetah
 Chickadee
-Chicken   
+Chicken
 Chimpanzee
 Chinchilla
 Chipmunk
@@ -140,15 +138,15 @@ Cuckoo
 Damselfly
 Deer
 Dingo
-Dinosaur   
-Dog   
+Dinosaur
+Dog
 Dolphin
-Donkey   
+Donkey
 Dormouse
 Dove
 Dragonfly
 Dragon
-Duck   
+Duck
 Dung beetle
 Eagle
 Earthworm
@@ -175,8 +173,8 @@ Fowl
 Fox
 Frog
 Fruit bat
-Gamefowl   
-Galliform   
+Gamefowl
+Galliform
 Gazelle
 Gecko
 Gerbil
@@ -185,9 +183,9 @@ Giant squid
 Gibbon
 Gila monster
 Giraffe
-Goat   
+Goat
 Goldfish
-Goose   
+Goose
 Gopher
 Gorilla
 Grasshopper
@@ -197,10 +195,10 @@ Grizzly bear
 Ground shark
 Ground sloth
 Grouse
-Guan   
+Guan
 Guanaco
-Guineafowl   
-Guinea pig   
+Guineafowl
+Guinea pig
 Gull
 Guppy
 Haddock
@@ -217,7 +215,7 @@ Herring
 Hippopotamus
 Hookworm
 Hornet
-Horse   
+Horse
 Hoverfly
 Hummingbird
 Humpback whale
@@ -329,7 +327,7 @@ Perch
 Peregrine falcon
 Pheasant
 Pig
-Pigeon   
+Pigeon
 Pike
 Pilot whale
 Pinniped
@@ -353,7 +351,7 @@ Python
 Quail
 Quelea
 Quokka
-Rabbit   
+Rabbit
 Raccoon
 Rainbow trout
 Rat
@@ -383,8 +381,8 @@ Seahorse
 Sea lion
 Sea slug
 Sea snail
-Shark   
-Sheep   
+Shark
+Sheep
 Shrew
 Shrimp
 Silkworm
@@ -395,7 +393,7 @@ Sloth
 Slug
 Smelt
 Snail
-Snake   
+Snake
 Snipe
 Snow leopard
 Sockeye salmon
@@ -439,7 +437,7 @@ Toucan
 Tree frog
 Trout
 Tuna
-Turkey  
+Turkey
 Turtle
 Tyrannosaurus
 Usacow
