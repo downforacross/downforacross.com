@@ -125,15 +125,16 @@ const actions = {
   },
 
   // TODO: this should probably be createGame and the above should be deleted but idk what it does...
-  createGameForBattle: (pid, cbk) => {
+  createGameForBattle: ({pid, battleData}, cbk) => {
     actions.getNextGid((gid) => {
       const game = new GameModel(`/game/${gid}`);
       const puzzle = new PuzzleModel(`/puzzle/${pid}`);
       puzzle.attach();
       puzzle.once('ready', () => {
         const rawGame = puzzle.toGame();
-        game.initialize(rawGame);
-        cbk && cbk(gid);
+        game.initialize(rawGame, battleData, () => {
+          cbk && cbk(gid);
+        });
       });
     });
   },

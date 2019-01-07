@@ -28,6 +28,9 @@ export default class Game extends EventEmitter {
         this.emit('event', event);
       }
     });
+    this.ref.child('battleData').on('value', (snapshot) => {
+      this.emit('battleData', snapshot.val());
+    });
   }
 
   detach() {
@@ -143,7 +146,7 @@ export default class Game extends EventEmitter {
     });
   }
 
-  initialize(rawGame) {
+  initialize(rawGame, battleData, cbk) {
     const {
       info = {},
       grid = [[{}]],
@@ -188,5 +191,11 @@ export default class Game extends EventEmitter {
       });
     });
     this.ref.child('pid').set(pid);
+
+    if (battleData) {
+      this.ref.child('battleData').set(battleData);
+    }
+
+    cbk && cbk();
   }
 }

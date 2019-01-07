@@ -41,7 +41,6 @@ export default class Play extends Component {
 
   componentDidUpdate() {
     if (this.query.mode === 'battle') {
-      console.log('WOO');
       return;
     }
 
@@ -110,9 +109,8 @@ export default class Play extends Component {
 
   createAndJoinBattle() {
     actions.getNextBid((bid) => {
-      console.log('INITING', bid);
       const battle = new BattleModel(`/battle/${bid}`);
-      battle.initialize(this.pid);
+      battle.initialize(this.pid, bid);
       battle.once('ready', () => {
         redirect(`/beta/battle/${bid}`);
       });

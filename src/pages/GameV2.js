@@ -3,7 +3,6 @@ import 'react-flexview/lib/flexView.css';
 import React, {Component} from 'react';
 import Nav from '../components/Nav';
 import _ from 'lodash';
-import querystring from 'querystring';
 import {Helmet} from 'react-helmet';
 import Flex from 'react-flexview';
 
@@ -43,6 +42,17 @@ export default class GameV2 extends Component {
     });
   }
 
+  initializeBattle(battleData) {
+    const {bid, team} = battleData;
+    if (this.battleModel) this.battleModel.detach();
+    this.battleModel = new BattleModel(`/battle/${bid}`);
+    this.battleModel.once('games', (games) => {
+      const opponent = games[1 - team];
+      this.setState({opponent}, () => this.initializeOpponentGame());
+    });
+    this.battleModel.attach();
+  }
+
   initializeGame() {
     if (this.gameModel) this.gameModel.detach();
     this.gameModel = new GameModel(`/game/${this.state.gid}`);
@@ -62,16 +72,19 @@ export default class GameV2 extends Component {
       this.handleChange();
       this.handleUpdate();
     });
+    this.gameModel.once('battleData', (battleData) => {
+      this.initializeBattle(battleData);
+    });
     this.gameModel.attach();
   }
 
   // TODO: combine this logic with the above...
   initializeOpponentGame() {
-    if (!this.opponent) return;
+    if (!this.state.opponent) return;
 
     if (this.opponentGameModel) this.opponentGameModel.detach();
 
-    this.opponentGameModel = new GameModel(`/game/${this.opponent}`);
+    this.opponentGameModel = new GameModel(`/game/${this.state.opponent}`);
     this.opponentHistoryWrapper = new HistoryWrapper();
     this.opponentGameModel.on('createEvent', (event) => {
       this.opponentHistoryWrapper.setCreateEvent(event);
@@ -87,7 +100,6 @@ export default class GameV2 extends Component {
 
   componentDidMount() {
     this.initializeGame();
-    this.initializeOpponentGame();
   }
 
   componentWillUnmount() {
@@ -110,10 +122,6 @@ export default class GameV2 extends Component {
 
   get game() {
     return this.historyWrapper.getSnapshot();
-  }
-
-  get opponent() {
-    return querystring.parse(this.props.location.search.slice(1)).opponent;
   }
 
   handleToggleChat = () => {
