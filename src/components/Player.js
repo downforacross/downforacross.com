@@ -248,6 +248,7 @@ export default class Player extends Component {
       clues,
       circles,
       shades,
+      solution,
       cursors: allCursors = [],
       updateGrid,
       frozen,
@@ -339,6 +340,7 @@ export default class Player extends Component {
                   size={size}
                   grid={grid}
                   opponentGrid={opponentGrid}
+                  solution={solution}
                   circles={circles}
                   shades={shades}
                   selected={selected}

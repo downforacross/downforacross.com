@@ -136,7 +136,7 @@ export default class GameV2 extends Component {
       return <div>Loading...</div>;
     }
 
-    const {grid, circles, shades, cursors, colors, clues, solved} = this.game;
+    const {grid, circles, shades, cursors, colors, clues, solved, solution} = this.game;
     const opponentGrid = this.opponentGame && this.opponentGame.grid;
     const {screenWidth} = this.state;
     let cols = grid[0].length;
@@ -150,6 +150,7 @@ export default class GameV2 extends Component {
         }}
         size={size}
         grid={grid}
+        solution={solution}
         opponentGrid={opponentGrid}
         circles={circles}
         shades={shades}

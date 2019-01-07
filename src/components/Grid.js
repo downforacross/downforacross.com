@@ -44,8 +44,12 @@ export default class Grid extends React.PureComponent {
   }
 
   isDoneByOpponent(r, c) {
-    // TODO: make correctness check here.
-    return this.opponentGrid && this.opponentGrid.isFilled(r, c);
+    if (!this.opponentGrid || !this.props.solution) {
+      return false;
+    }
+    return (
+      this.opponentGrid.isFilled(r, c) && this.props.solution[r][c] === this.props.opponentGrid[r][c].value
+    );
   }
 
   isShaded(r, c) {
@@ -99,7 +103,6 @@ export default class Grid extends React.PureComponent {
   }
 
   render() {
-    console.log(this.props.opponentGrid);
     const size = this.props.size;
     const sizeClass = this.getSizeClass(size);
     const key = size + '-';
