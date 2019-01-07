@@ -2,7 +2,6 @@ import './css/battle.css';
 import 'react-flexview/lib/flexView.css';
 
 import React, {Component} from 'react';
-import GameV2 from './GameV2';
 import _ from 'lodash';
 import {Helmet} from 'react-helmet';
 import Flex from 'react-flexview';

@@ -11,6 +11,7 @@ import HistoryWrapper from '../utils/historyWrapper';
 import Game from '../components/Game';
 import MobilePanel from '../components/MobilePanel';
 import ChatV2 from '../components/ChatV2';
+import Powerups from '../components/Powerups';
 import redirect from '../redirect';
 import {isMobile} from '../jsUtils';
 
@@ -21,6 +22,7 @@ export default class GameV2 extends Component {
       gid: undefined,
       mobile: isMobile(),
       mode: 'game',
+      powerups: undefined,
     };
     this.initializeUser();
   }
@@ -49,6 +51,10 @@ export default class GameV2 extends Component {
     this.battleModel.once('games', (games) => {
       const opponent = games[1 - team];
       this.setState({opponent}, () => this.initializeOpponentGame());
+    });
+    this.battleModel.on('powerups', (powerups) => {
+      console.log(powerups);
+      this.setState({powerups});
     });
     this.battleModel.attach();
   }
@@ -250,6 +256,7 @@ export default class GameV2 extends Component {
           </Flex>
           <Flex grow={1}>{this.showingChat && this.renderChat()}</Flex>
         </Flex>
+        <Powerups powerups={this.state.powerups} />
       </Flex>
     );
   }
