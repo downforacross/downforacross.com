@@ -1,5 +1,6 @@
 import {makeGame, makeGrid} from './gameUtils';
 import firebase, {SERVER_TIME} from './store/firebase';
+import {GameModel, PuzzleModel} from './store';
 import uuid from 'uuid';
 
 // for interfacing with firebase
@@ -71,6 +72,13 @@ const actions = {
     );
   },
 
+  getNextBid: (cbk) => {
+    // Copying Cid logic for now...
+    const NUM_BIDS = 1000000;
+    const bid = Math.floor(Math.random() * NUM_BIDS);
+    cbk(bid);
+  },
+
   getNextCid: (cbk) => {
     const NUM_CIDS = 1000000;
     for (let tries = 0; tries < 10; tries += 1) {
@@ -114,6 +122,20 @@ const actions = {
         cbk && cbk(gid);
       }
     );
+  },
+
+  // TODO: this should probably be createGame and the above should be deleted but idk what it does...
+  createGameForBattle: (pid, cbk) => {
+    actions.getNextGid((gid) => {
+      const game = new GameModel(`/game/${gid}`);
+      const puzzle = new PuzzleModel(`/puzzle/${pid}`);
+      puzzle.attach();
+      puzzle.once('ready', () => {
+        const rawGame = puzzle.toGame();
+        game.initialize(rawGame);
+        cbk && cbk(gid);
+      });
+    });
   },
 
   createComposition: (dims, pattern, cbk) => {

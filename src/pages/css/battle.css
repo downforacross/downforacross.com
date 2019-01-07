@@ -1,0 +1,37 @@
+.battle {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  min-height: 760px;
+}
+
+.battle--main {
+  position: relative;
+  flex: 3;
+  padding: 20px;
+  border: 1px solid #e2e2e2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.battle--selector {
+  display: flex;
+  justify-content: center;
+}
+
+.battle--button {
+  cursor: pointer;
+  border-radius: 5px;
+  padding: 10px;
+  border: 1px solid var(--main-blue);
+
+  justify-self: center;
+  margin-left: 20px;
+  margin-right: 20px;
+
+  font-weight: bold;
+  font-size: 50px;
+  color: var(--main-blue);
+}

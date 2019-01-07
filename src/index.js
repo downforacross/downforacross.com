@@ -46,7 +46,7 @@ ReactDOM.render(
       <Route exact path="/game/solo/:pid" component={Solo} />
       <Route exact path="/beta" component={WelcomeV2} />
       <Route exact path="/beta/game/:gid" component={GameV2} />
-      <Route exact path="/beta/battle/:gid" component={Battle} />
+      <Route exact path="/beta/battle/:bid" component={Battle} />
       <Route exact path="/beta/play/:pid" component={Play} />
       <Route path="/puzzle/:pid" component={Solo} />
       <Route path="/account" component={Account} />

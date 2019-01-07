@@ -1,187 +1,97 @@
+import './css/battle.css';
 import 'react-flexview/lib/flexView.css';
 
 import React, {Component} from 'react';
-import Nav from '../components/Nav';
+import GameV2 from './GameV2';
 import _ from 'lodash';
 import {Helmet} from 'react-helmet';
 import Flex from 'react-flexview';
-
-import {GameModel, getUser} from '../store';
-import HistoryWrapper from '../utils/historyWrapper';
-import Game from '../components/Game';
-import MobilePanel from '../components/MobilePanel';
-import ChatV2 from '../components/ChatV2';
-import {isMobile} from '../jsUtils';
+import {BattleModel} from '../store';
+import redirect from '../redirect';
 
 export default class Battle extends Component {
   constructor(props) {
     super();
     this.state = {
-      gid: undefined,
-      mobile: isMobile(),
-      mode: 'game',
+      bid: undefined,
+      team: undefined,
+      games: undefined,
+      started: false,
+      redirecting: false,
     };
-    this.initializeUser();
-  }
-
-  // lifecycle stuff
-
-  static getDerivedStateFromProps(props, prevState) {
-    return {
-      ...prevState,
-      rid: props.match.params.rid,
-      gid: parseInt(props.match.params.gid, 10),
-    };
-  }
-
-  initializeUser() {
-    this.user = getUser();
-    this.user.onAuth(() => {
-      this.forceUpdate();
-    });
-  }
-
-  initializeGame() {
-    if (this.gameModel) this.gameModel.detach();
-    this.gameModels = [
-      new GameModel(`/game/${this.state.gid}`),
-      new GameModel(`/game/${this.state.gid}`),
-    ];
-    this.historyWrapper = new HistoryWrapper();
-    this.gameModel.attach();
   }
 
   componentDidMount() {
-    this.initializeGame();
+    this.initializeBattle();
   }
 
-  componentWillUnmount() {
-    if (this.gameModel) this.gameModel.detach();
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.gid !== this.state.gid) {
-      this.initializeGame();
+  componentDidUpdate() {
+    console.log(this.state.redirecting, this.state.started, this.state.team);
+    if (this.state.started && this.state.team !== undefined && !this.state.redirecting) {
+      console.log('REDIR');
+      this.setState({redirecting: true}, () =>
+        redirect(`/beta/game/${this.state.games[this.state.team - 1]}`)
+      );
     }
   }
 
-  get showingGame() {
-    return !this.state.mobile || this.state.mode === 'game';
+  // ================
+  // Getters
+
+  get bid() {
+    return parseInt(this.props.match.params.bid, 10);
   }
 
-  get showingChat() {
-    return !this.state.mobile || this.state.mode === 'chat';
+  // ================
+
+  initializeBattle() {
+    if (this.battleModel) this.battleModel.detach();
+    this.battleModel = new BattleModel(`/battle/${this.bid}`);
+    this.battleModel.on('games', (games) => {
+      console.log('SETGIN', games);
+      this.setState({games});
+    });
+    this.battleModel.on('started', (started) => {
+      this.setState({started});
+    });
+    this.battleModel.attach();
   }
 
-  get game() {
-    return this.historyWrapper.getSnapshot();
+  handleTeamSelect(team) {
+    this.setState({team});
   }
-
-  handleToggleChat = () => {
-    const toggledMode = this.state.mode === 'game' ? 'chat' : 'game';
-    this.setState({mode: toggledMode});
-  };
-
-  handleChat = (username, id, message) => {
-    this.gameModel.chat(username, id, message);
-  };
-
-  handleUnfocusGame = () => {
-    this.chat && this.chat.focus();
-  };
-
-  handleUnfocusChat = () => {
-    this.gameComponent && this.gameComponent.focus();
-  };
-
-  handleUpdate = _.debounce(
-    () => {
-      this.forceUpdate();
-    },
-    0,
-    {
-      leading: true,
-    }
-  );
-
-  handleChange = _.debounce(({isEdit = false} = {}) => {
-    if (isEdit) {
-      this.user.joinGame(this.state.gid, {
-        pid: this.game.pid,
-        solved: false,
-        v2: true,
-      });
-    }
-    if (this.game.solved) {
-      this.user.markSolved(this.state.gid);
-    }
-  });
 
   // ================
   // Render Methods
 
-  renderGame() {
-    if (!this.gameModel || !this.gameModel.attached) {
-      return;
-    }
-
-    const {mobile} = this.state;
-    const {id, color} = this.user;
+  renderTeamSelector() {
     return (
-      <Game
-        ref={(c) => {
-          this.gameComponent = c;
-        }}
-        id={id}
-        myColor={color}
-        historyWrapper={this.historyWrapper}
-        gameModel={this.gameModel}
-        onUnfocus={this.handleUnfocusGame}
-        onChange={this.handleChange}
-        onToggleChat={this.handleToggleChat}
-        mobile={mobile}
-      />
+      <Flex className="battle--selector">
+        <Flex className="battle--button" hAlignContent="center" onClick={() => this.handleTeamSelect(1)}>
+          {'Team 1'}
+        </Flex>
+        <Flex className="battle--button" hAlignContent="center" onClick={() => this.handleTeamSelect(2)}>
+          {'Team 2'}
+        </Flex>
+      </Flex>
     );
   }
 
-  renderChat() {
-    if (!this.gameModel || !this.gameModel.attached) {
-      return;
-    }
-
-    const {id, color} = this.user;
-    const {mobile} = this.state;
+  renderStartButton() {
+    // TODO: show how many players connected / team comps
     return (
-      <ChatV2
-        ref={(c) => {
-          this.chat = c;
-        }}
-        info={this.game.info}
-        data={this.game.chat}
-        colors={this.game.colors}
-        id={id}
-        myColor={color}
-        onChat={this.handleChat}
-        onUnfocus={this.handleUnfocusChat}
-        onToggleChat={this.handleToggleChat}
-        mobile={mobile}
-      />
+      <Flex className="battle--selector">
+        <Flex className="battle--button" hAlignContent="center" onClick={() => this.battleModel.start()}>
+          {'Start'}
+        </Flex>
+      </Flex>
     );
-  }
-
-  getPuzzleTitle() {
-    if (!this.gameModel || !this.gameModel.attached) {
-      return;
-    }
-    const game = this.historyWrapper.getSnapshot();
-    if (!game || !game.info) return '';
-    return game.info.title;
   }
 
   render() {
     return (
       <Flex
-        className="room"
+        className="battle"
         column
         grow={1}
         style={{
@@ -190,15 +100,13 @@ export default class Battle extends Component {
         }}
       >
         <Helmet>
-          <title>{this.getPuzzleTitle()}</title>
+          <title>Battle mode</title>
         </Helmet>
-        <Nav v2 hidden={this.state.mobile} />
-        <MobilePanel />
-        <Flex className="room--main" grow={1}>
+        <Flex className="battle--main" grow={1}>
           <Flex column shrink={0}>
-            {this.showingGame && this.renderGame()}
+            {!this.state.team && this.renderTeamSelector()}
+            {this.state.team && !this.state.started && this.renderStartButton()}
           </Flex>
-          <Flex grow={1}>{this.showingChat && this.renderChat()}</Flex>
         </Flex>
       </Flex>
     );
