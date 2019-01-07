@@ -27,11 +27,10 @@ export default class Battle extends Component {
 
   componentDidUpdate() {
     console.log(this.state.redirecting, this.state.started, this.state.team);
-    if (this.state.started && this.state.team !== undefined && !this.state.redirecting) {
-      console.log('REDIR');
-      this.setState({redirecting: true}, () =>
-        redirect(`/beta/game/${this.state.games[this.state.team - 1]}`)
-      );
+    if (this.state.started && this.state.team !== undefined && this.state.games && !this.state.redirecting) {
+      const self = this.state.games[this.state.team - 1];
+      const opponent = this.state.games[2 - this.state.team];
+      this.setState({redirecting: true}, () => redirect(`/beta/game/${self}?opponent=${opponent}`));
     }
   }
 

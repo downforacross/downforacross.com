@@ -110,6 +110,7 @@ export default class Play extends Component {
 
   createAndJoinBattle() {
     actions.getNextBid((bid) => {
+      console.log('INITING', bid);
       const battle = new BattleModel(`/battle/${bid}`);
       battle.initialize(this.pid);
       battle.once('ready', () => {

@@ -3,10 +3,11 @@ import 'react-flexview/lib/flexView.css';
 import React, {Component} from 'react';
 import Nav from '../components/Nav';
 import _ from 'lodash';
+import querystring from 'querystring';
 import {Helmet} from 'react-helmet';
 import Flex from 'react-flexview';
 
-import {GameModel, getUser} from '../store';
+import {GameModel, getUser, BattleModel} from '../store';
 import HistoryWrapper from '../utils/historyWrapper';
 import Game from '../components/Game';
 import MobilePanel from '../components/MobilePanel';
@@ -64,8 +65,29 @@ export default class GameV2 extends Component {
     this.gameModel.attach();
   }
 
+  // TODO: combine this logic with the above...
+  initializeOpponentGame() {
+    if (!this.opponent) return;
+
+    if (this.opponentGameModel) this.opponentGameModel.detach();
+
+    this.opponentGameModel = new GameModel(`/game/${this.opponent}`);
+    this.opponentHistoryWrapper = new HistoryWrapper();
+    this.opponentGameModel.on('createEvent', (event) => {
+      this.opponentHistoryWrapper.setCreateEvent(event);
+      this.handleUpdate();
+    });
+    this.opponentGameModel.on('event', (event) => {
+      this.opponentHistoryWrapper.addEvent(event);
+      this.handleChange();
+      this.handleUpdate();
+    });
+    this.opponentGameModel.attach();
+  }
+
   componentDidMount() {
     this.initializeGame();
+    this.initializeOpponentGame();
   }
 
   componentWillUnmount() {
@@ -88,6 +110,10 @@ export default class GameV2 extends Component {
 
   get game() {
     return this.historyWrapper.getSnapshot();
+  }
+
+  get opponent() {
+    return querystring.parse(this.props.location.search.slice(1)).opponent;
   }
 
   handleToggleChat = () => {
@@ -148,6 +174,9 @@ export default class GameV2 extends Component {
         id={id}
         myColor={color}
         historyWrapper={this.historyWrapper}
+        opponentHistoryWrapper={
+          this.opponentGameModel && this.opponentGameModel.attached && this.opponentHistoryWrapper
+        }
         gameModel={this.gameModel}
         onUnfocus={this.handleUnfocusGame}
         onChange={this.handleChange}

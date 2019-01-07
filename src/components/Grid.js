@@ -23,6 +23,10 @@ export default class Grid extends React.PureComponent {
     return new GridObject(this.props.grid);
   }
 
+  get opponentGrid() {
+    return this.props.opponentGrid && new GridObject(this.props.opponentGrid);
+  }
+
   get selectedIsWhite() {
     const {selected} = this.props;
     return this.grid.isWhite(selected.r, selected.c);
@@ -39,10 +43,15 @@ export default class Grid extends React.PureComponent {
     return (circles || []).indexOf(idx) !== -1;
   }
 
+  isDoneByOpponent(r, c) {
+    // TODO: make correctness check here.
+    return this.opponentGrid && this.opponentGrid.isFilled(r, c);
+  }
+
   isShaded(r, c) {
     const {grid, shades} = this.props;
     const idx = c + r * grid[0].length;
-    return (shades || []).indexOf(idx) !== -1;
+    return (shades || []).indexOf(idx) !== -1 || this.isDoneByOpponent(r, c);
   }
 
   isHighlighted(r, c) {
@@ -90,6 +99,7 @@ export default class Grid extends React.PureComponent {
   }
 
   render() {
+    console.log(this.props.opponentGrid);
     const size = this.props.size;
     const sizeClass = this.getSizeClass(size);
     const key = size + '-';

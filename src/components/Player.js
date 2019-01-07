@@ -244,6 +244,7 @@ export default class Player extends Component {
       onPressPeriod,
       size,
       grid,
+      opponentGrid,
       clues,
       circles,
       shades,
@@ -337,6 +338,7 @@ export default class Player extends Component {
                   ref="grid"
                   size={size}
                   grid={grid}
+                  opponentGrid={opponentGrid}
                   circles={circles}
                   shades={shades}
                   selected={selected}

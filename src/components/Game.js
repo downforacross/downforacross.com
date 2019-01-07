@@ -38,6 +38,11 @@ export default class GameV2 extends Component {
     return this.props.historyWrapper.getSnapshot();
   }
 
+  get opponentGame() {
+    if (!this.props.opponentHistoryWrapper) return;
+    return this.props.opponentHistoryWrapper.getSnapshot();
+  }
+
   get gameModel() {
     return this.props.gameModel;
   }
@@ -132,6 +137,7 @@ export default class GameV2 extends Component {
     }
 
     const {grid, circles, shades, cursors, colors, clues, solved} = this.game;
+    const opponentGrid = this.opponentGame && this.opponentGame.grid;
     const {screenWidth} = this.state;
     let cols = grid[0].length;
     let rows = grid.length;
@@ -144,6 +150,7 @@ export default class GameV2 extends Component {
         }}
         size={size}
         grid={grid}
+        opponentGrid={opponentGrid}
         circles={circles}
         shades={shades}
         clues={{

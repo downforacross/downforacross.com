@@ -17,6 +17,7 @@ export default class Battle extends EventEmitter {
 
   attach() {
     this.ref.child('games').on('value', (snapshot) => {
+      console.log('GOT', snapshot.val());
       this.emit('games', snapshot.val());
     });
     this.ref.child('powerups').on('value', (snapshot) => {
@@ -43,9 +44,10 @@ export default class Battle extends EventEmitter {
     const args = Array(teams).fill(pid);
 
     async.map(args, shiftCbkArg(actions.createGameForBattle), (err, gids) => {
-      this.ref.child('games').set(gids);
-      this.ref.child('started').set(false);
-      this.emit('ready');
+      console.log('MAKING', gids);
+      this.ref.child('games').set(gids, () => {
+        this.emit('ready');
+      });
     });
   }
 }
