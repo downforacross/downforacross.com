@@ -22,11 +22,15 @@ const removeVowels = (game) => {
 };
 
 const hideSquares = (game) => {
-  const {grid} = game;
+  const {grid, cursors} = game;
+  console.log(game, cursors);
+  const closeToCursor = (r2, c2) => {
+    return _.some(cursors, ({r, c}) => Math.max(Math.abs(r2 - r), Math.abs(c2 - c)) <= 1);
+  };
 
   return {
     ...game,
-    grid: grid.map((row) => row.map((tile) => ({...tile, value: '🌚'}))),
+    grid: grid.map((row, r) => row.map((tile, c) => (closeToCursor(r, c) ? tile : {...tile, value: '🌚'}))),
   };
 };
 
