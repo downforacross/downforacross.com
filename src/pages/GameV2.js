@@ -45,6 +45,10 @@ export default class GameV2 extends Component {
   }
 
   initializeBattle(battleData) {
+    if (!battleData) {
+      return;
+    }
+
     const {bid, team} = battleData;
     this.setState({bid, team});
     if (this.battleModel) this.battleModel.detach();

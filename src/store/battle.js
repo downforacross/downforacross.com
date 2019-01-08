@@ -24,16 +24,35 @@ export default class Battle extends EventEmitter {
     this.ref.child('started').on('value', (snapshot) => {
       this.emit('started', snapshot.val());
     });
+    this.ref.child('players').on('value', (snapshot) => {
+      this.emit('players', snapshot.val());
+    });
   }
 
   detach() {
     this.ref.child('games').off('value');
     this.ref.child('powerups').off('value');
     this.ref.child('started').off('value');
+    this.ref.child('players').off('value');
   }
 
   start() {
     this.ref.child('started').set(true);
+  }
+
+  addPlayer(name, team) {
+    this.ref.child('players').push({name, team});
+  }
+
+  removePlayer(name, team) {
+    this.ref.child('players').once('value', (snapshot) => {
+      const players = snapshot.val();
+      const playerToRemove = _.findKey(players, {name, team});
+      this.ref
+        .child('players')
+        .child(playerToRemove)
+        .remove();
+    });
   }
 
   usePowerup(type, team) {

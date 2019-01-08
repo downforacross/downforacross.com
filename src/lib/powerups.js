@@ -17,14 +17,14 @@ const reverseClues = (game) => {
 };
 
 const removeVowels = (game) => {
-  const reverseString = (s) => s && _.filter(s.split(''), (char) => !_.includes('aeiou', char)).join('');
-  return transformClues(game, reverseString);
+  const remove = (s) => s && _.filter(s.split(''), (char) => !_.includes('aeiou', char)).join('');
+  return transformClues(game, remove);
 };
 
 const hideSquares = (game) => {
   const {grid, cursors} = game;
   const closeToCursor = (r2, c2) => {
-    return _.some(cursors, ({r, c}) => Math.max(Math.abs(r2 - r), Math.abs(c2 - c)) <= 1);
+    return _.some(cursors, ({r, c}) => Math.max(Math.abs(r2 - r), Math.abs(c2 - c)) <= 3);
   };
 
   return {
@@ -32,8 +32,6 @@ const hideSquares = (game) => {
     grid: grid.map((row, r) => row.map((tile, c) => (closeToCursor(r, c) ? tile : {...tile, value: '🌚'}))),
   };
 };
-
-// There should probably be an enum here with the keys of the following.
 
 const secondsSince = (t) => parseInt(moment.duration(moment(Date.now()).diff(moment(t))).asSeconds());
 
@@ -72,6 +70,8 @@ export const apply = (ownGame, opponentGame, ownPowerups, opponentPowerups) => {
   );
   return {ownGame: ownGame2, opponentGame: opponentGame2};
 };
+
+// There should probably be an enum here with the keys of the following.
 
 const powerups = {
   REVERSE: {

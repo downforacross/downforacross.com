@@ -17,18 +17,28 @@ export default class Battle extends Component {
       games: undefined,
       started: false,
       redirecting: false,
+      name: undefined,
+      players: undefined,
     };
+    this.handleChangeName = this.handleChangeName.bind(this);
+    this.handleUnload = this.handleUnload.bind(this);
+    this.renderTeam = this.renderTeam.bind(this); // Why do I have to do this?
   }
 
   componentDidMount() {
     this.initializeBattle();
+    window.addEventListener('beforeunload', this.handleUnload);
   }
 
   componentDidUpdate() {
     if (this.state.started && this.state.team !== undefined && this.state.games && !this.state.redirecting) {
-      const self = this.state.games[this.state.team - 1];
+      const self = this.state.games[this.state.team];
       this.setState({redirecting: true}, () => redirect(`/beta/game/${self}`));
     }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('beforeunload', this.handleUnload);
   }
 
   // ================
@@ -49,36 +59,93 @@ export default class Battle extends Component {
     this.battleModel.on('started', (started) => {
       this.setState({started});
     });
+    this.battleModel.on('players', (players) => {
+      this.setState({players: _.values(players)});
+    });
     this.battleModel.attach();
   }
 
   handleTeamSelect(team) {
+    this.battleModel.addPlayer(this.state.name, team);
     this.setState({team});
+  }
+
+  handleChangeName(name) {
+    this.setState({name});
+  }
+
+  handleUnload() {
+    if (this.state.name && _.isNumber(this.state.team)) {
+      this.battleModel.removePlayer(this.state.name, this.state.team);
+    }
   }
 
   // ================
   // Render Methods
 
   renderTeamSelector() {
+    const isDisabled = !this.state.name || this.state.name === '';
+    const buttonClass = isDisabled ? 'battle--button-disabled' : 'battle--button';
     return (
       <Flex className="battle--selector">
-        <Flex className="battle--button" hAlignContent="center" onClick={() => this.handleTeamSelect(1)}>
-          {'Team 1'}
+        <Flex className="battle--buttons">
+          <Flex
+            className={buttonClass}
+            hAlignContent="center"
+            onClick={() => !isDisabled && this.handleTeamSelect(0)}
+          >
+            {'Team 1'}
+          </Flex>
+          <Flex
+            className={buttonClass}
+            hAlignContent="center"
+            onClick={() => !isDisabled && this.handleTeamSelect(1)}
+          >
+            {'Team 2'}
+          </Flex>
         </Flex>
-        <Flex className="battle--button" hAlignContent="center" onClick={() => this.handleTeamSelect(2)}>
-          {'Team 2'}
+        <Flex className="battle--name">
+          <input
+            className="battle--input"
+            placeholder="Name..."
+            onChange={(event) => this.handleChangeName(event.target.value)}
+          />
         </Flex>
       </Flex>
     );
   }
 
-  renderStartButton() {
-    // TODO: show how many players connected / team comps
+  renderPlayer(player, idx) {
+    return (
+      <Flex className="battle--player" key={idx}>
+        {' '}
+        {player.name}{' '}
+      </Flex>
+    );
+  }
+
+  renderTeam(team, idx) {
+    return (
+      <Flex className="battle--team" key={idx}>
+        <Flex className="battle--team-name"> Team {parseInt(idx) + 1} </Flex>
+        {_.map(team, this.renderPlayer)}
+      </Flex>
+    );
+  }
+
+  renderPreGameLobby() {
+    const numTeams = Math.max(_.max(_.map(this.state.players, 'team')), 2);
+    const teams = _.map(_.range(numTeams), (team) => _.filter(this.state.players, {team}));
+
     return (
       <Flex className="battle--selector">
-        <Flex className="battle--button" hAlignContent="center" onClick={() => this.battleModel.start()}>
-          {'Start'}
+        <Flex className="battle--teams">(This starts the game for all players)</Flex>
+        <Flex className="battle--buttons">
+          <Flex className="battle--button" hAlignContent="center" onClick={() => this.battleModel.start()}>
+            {'Start'}
+          </Flex>
         </Flex>
+        <Flex className="battle--teams">{_.map(teams, this.renderTeam)}</Flex>
       </Flex>
     );
   }
@@ -95,12 +162,12 @@ export default class Battle extends Component {
         }}
       >
         <Helmet>
-          <title>Battle mode</title>
+          <title>Down For A Battle</title>
         </Helmet>
         <Flex className="battle--main" grow={1}>
           <Flex column shrink={0}>
-            {!this.state.team && this.renderTeamSelector()}
-            {this.state.team && !this.state.started && this.renderStartButton()}
+            {!_.isNumber(this.state.team) && this.renderTeamSelector()}
+            {_.isNumber(this.state.team) && !this.state.started && this.renderPreGameLobby()}
           </Flex>
         </Flex>
       </Flex>
