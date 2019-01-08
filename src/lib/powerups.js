@@ -23,7 +23,6 @@ const removeVowels = (game) => {
 
 const hideSquares = (game) => {
   const {grid, cursors} = game;
-  console.log(game, cursors);
   const closeToCursor = (r2, c2) => {
     return _.some(cursors, ({r, c}) => Math.max(Math.abs(r2 - r), Math.abs(c2 - c)) <= 1);
   };
