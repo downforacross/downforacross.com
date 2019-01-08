@@ -15,7 +15,7 @@ export default class Powerups extends React.Component {
 
   componentDidMount() {
     if (this.interval) clearInterval(this.interval);
-    this.interval = setInterval(() => this.forceUpdate(), 1000);
+    this.interval = setInterval(() => this.forceUpdate(), 500);
   }
 
   componentWillUnmount() {
