@@ -57,8 +57,11 @@ export default class GameV2 extends Component {
       const opponent = games[1 - team];
       this.setState({opponent}, () => this.initializeOpponentGame());
     });
-    this.battleModel.on('powerups', (powerups) => {
-      this.setState({powerups: powerups});
+
+    _.forEach(['powerups', 'startedAt', 'winner', 'players'], (subpath) => {
+      this.battleModel.on(subpath, (value) => {
+        this.setState({[subpath]: value});
+      });
     });
     this.battleModel.attach();
   }
@@ -120,6 +123,18 @@ export default class GameV2 extends Component {
     if (prevState.gid !== this.state.gid) {
       this.initializeGame();
     }
+    if (prevState.winner !== this.state.winner && this.state.winner) {
+      const {winner, startedAt, players} = this.state;
+      const {team, completedAt} = winner;
+
+      const winningPlayers = _.filter(_.values(players), {team});
+      const winningPlayersString = _.join(_.map(winningPlayers, 'name'), ', ');
+
+      const victoryMessage = `Team ${parseInt(team) + 1} [${winningPlayersString}] won! `;
+      const timeMessage = `Time taken: ${parseInt((completedAt - startedAt) / 1000)} seconds.`;
+
+      this.gameModel.chat('BattleBot', null, victoryMessage + timeMessage);
+    }
   }
 
   get showingGame() {
@@ -178,6 +193,9 @@ export default class GameV2 extends Component {
     }
     if (this.game.solved) {
       this.user.markSolved(this.state.gid);
+      if (this.battleModel) {
+        this.battleModel.setSolved(this.state.team);
+      }
     }
   });
 

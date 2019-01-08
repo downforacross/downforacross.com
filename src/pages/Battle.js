@@ -15,7 +15,7 @@ export default class Battle extends Component {
       bid: undefined,
       team: undefined,
       games: undefined,
-      started: false,
+      startedAt: undefined,
       redirecting: false,
       name: undefined,
       players: undefined,
@@ -31,7 +31,12 @@ export default class Battle extends Component {
   }
 
   componentDidUpdate() {
-    if (this.state.started && this.state.team !== undefined && this.state.games && !this.state.redirecting) {
+    if (
+      this.state.startedAt &&
+      this.state.team !== undefined &&
+      this.state.games &&
+      !this.state.redirecting
+    ) {
       const self = this.state.games[this.state.team];
       this.setState({redirecting: true}, () => redirect(`/beta/game/${self}`));
     }
@@ -56,8 +61,8 @@ export default class Battle extends Component {
     this.battleModel.on('games', (games) => {
       this.setState({games});
     });
-    this.battleModel.on('started', (started) => {
-      this.setState({started});
+    this.battleModel.on('startedAt', (startedAt) => {
+      this.setState({startedAt});
     });
     this.battleModel.on('players', (players) => {
       this.setState({players: _.values(players)});
@@ -76,7 +81,7 @@ export default class Battle extends Component {
   }
 
   handleUnload() {
-    if (this.state.name && _.isNumber(this.state.team)) {
+    if (this.state.name && _.isNumber(this.state.team) && !this.state.redirecting) {
       this.battleModel.removePlayer(this.state.name, this.state.team);
     }
   }
@@ -168,7 +173,7 @@ export default class Battle extends Component {
         <Flex className="battle--main" grow={1}>
           <Flex column shrink={0}>
             {!_.isNumber(this.state.team) && this.renderTeamSelector()}
-            {_.isNumber(this.state.team) && !this.state.started && this.renderPreGameLobby()}
+            {_.isNumber(this.state.team) && !this.state.startedAt && this.renderPreGameLobby()}
           </Flex>
         </Flex>
       </Flex>

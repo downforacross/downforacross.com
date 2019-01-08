@@ -6,6 +6,7 @@ import async from 'async';
 import _ from 'lodash';
 
 const STARTING_POWERUPS = _.map(['REVERSE', 'VOWELS', 'DARK_MODE'], (type) => ({type}));
+const VALUE_LISTENERS = ['games', 'powerups', 'startedAt', 'players', 'winner'];
 
 export default class Battle extends EventEmitter {
   constructor(path) {
@@ -15,29 +16,35 @@ export default class Battle extends EventEmitter {
   }
 
   attach() {
-    this.ref.child('games').on('value', (snapshot) => {
-      this.emit('games', snapshot.val());
-    });
-    this.ref.child('powerups').on('value', (snapshot) => {
-      this.emit('powerups', snapshot.val());
-    });
-    this.ref.child('started').on('value', (snapshot) => {
-      this.emit('started', snapshot.val());
-    });
-    this.ref.child('players').on('value', (snapshot) => {
-      this.emit('players', snapshot.val());
+    _.forEach(VALUE_LISTENERS, (subpath) => {
+      this.ref.child(subpath).on('value', (snapshot) => {
+        this.emit(subpath, snapshot.val());
+      });
     });
   }
 
   detach() {
-    this.ref.child('games').off('value');
-    this.ref.child('powerups').off('value');
-    this.ref.child('started').off('value');
-    this.ref.child('players').off('value');
+    _.forEach(VALUE_LISTENERS, (subpath) => {
+      this.ref.child(subpath).off('value');
+    });
   }
 
   start() {
-    this.ref.child('started').set(true);
+    this.ref.child('startedAt').set(Date.now());
+  }
+
+  setSolved(team) {
+    // Obviously this has a race. TODO: Figure out atomicity later...
+    this.ref.child('winner').once('value', (snapshot) => {
+      if (snapshot.val()) {
+        return;
+      }
+
+      this.ref.child('winner').set({
+        team,
+        completedAt: Date.now(),
+      });
+    });
   }
 
   addPlayer(name, team) {
