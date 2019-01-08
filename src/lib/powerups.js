@@ -12,6 +12,15 @@ const reverseClues = (game) => {
   };
 };
 
+const hideSquares = (game) => {
+  const {grid} = game;
+
+  return {
+    ...game,
+    grid: grid.map((row) => row.map((tile) => ({...tile, value: '🌚'}))),
+  };
+};
+
 // There should probably be an enum here with the keys of the following.
 
 const secondsSince = (t) => parseInt(moment.duration(moment(Date.now()).diff(moment(t))).asSeconds());
@@ -58,6 +67,12 @@ const powerups = {
     icon: 'steven',
     duration: 60,
     action: ({ownGame, opponentGame}) => ({ownGame, opponentGame: reverseClues(opponentGame)}),
+  },
+  DARK_MODE: {
+    name: 'Dark Mode',
+    icon: 'new_moon_with_face',
+    duration: 60,
+    action: ({ownGame, opponentGame}) => ({ownGame, opponentGame: hideSquares(opponentGame)}),
   },
 };
 
