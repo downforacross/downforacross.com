@@ -37,6 +37,11 @@ export default class Powerups extends React.Component {
   }
 
   render() {
-    return <Flex className="powerups--main">{_.map(this.props.powerups, this.renderPowerup)}</Flex>;
+    return (
+      <Flex className="powerups--main">
+        <Flex className="powerups--header">POWERUPS</Flex>
+        {_.map(this.props.powerups, this.renderPowerup)}
+      </Flex>
+    );
   }
 }

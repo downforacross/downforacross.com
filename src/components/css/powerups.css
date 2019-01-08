@@ -1,7 +1,16 @@
 .powerups--main {
+  background-color: #f3f3f3;
   display: flex;
   margin-top: 10px;
   margin-bottom: 30px;
+}
+
+.powerups--header {
+  justify-content: center;
+  color: #c87e25;
+  font-weight: bold;
+
+  writing-mode: vertical-lr;
 }
 
 .powerups--label {
@@ -12,7 +21,7 @@
 
 .powerups--info {
   justify-content: center;
-  color: #c69d39;
+  color: #c87e25;
 }
 
 .powerups--powerup {
