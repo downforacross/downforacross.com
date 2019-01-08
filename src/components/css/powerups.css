@@ -1,5 +1,6 @@
 .powerups--main {
   display: flex;
+  margin-bottom: 30px;
 }
 
 .powerups--label {

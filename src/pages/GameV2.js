@@ -134,6 +134,13 @@ export default class GameV2 extends Component {
     return this.historyWrapper.getSnapshot();
   }
 
+  get opponentGame() {
+    if (!this.opponentGameModel || !this.opponentGameModel.attached || !this.opponentHistoryWrapper) {
+      return;
+    }
+    return this.opponentHistoryWrapper.getSnapshot();
+  }
+
   handleToggleChat = () => {
     const toggledMode = this.state.mode === 'game' ? 'chat' : 'game';
     this.setState({mode: toggledMode});
@@ -233,6 +240,7 @@ export default class GameV2 extends Component {
         onUnfocus={this.handleUnfocusChat}
         onToggleChat={this.handleToggleChat}
         mobile={mobile}
+        opponentData={this.opponentGame && this.opponentGame.chat}
       />
     );
   }

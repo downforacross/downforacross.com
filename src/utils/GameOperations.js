@@ -217,7 +217,7 @@ const reducers = {
     };
   },
 
-  chat: (game, params) => {
+  chat: (game, params, timestamp) => {
     let {chat} = game;
     const {text, senderId, sender} = params;
     const {messages = []} = chat;
@@ -229,6 +229,7 @@ const reducers = {
           text,
           senderId,
           sender,
+          timestamp,
         },
       ],
     };
@@ -279,7 +280,7 @@ export const reduce = (game, action) => {
     return game;
   }
   try {
-    game = reducers[type](game, params);
+    game = reducers[type](game, params, timestamp);
 
     game = checkSolved(game);
     const isPause =
