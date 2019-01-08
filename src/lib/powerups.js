@@ -1,15 +1,24 @@
 import moment from 'moment';
 import _ from 'lodash';
 
-const reverseClues = (game) => {
+const transformClues = (game, transformation) => {
   const {clues} = game;
-  const reverseString = (s) => s && _.reverse(s.split('')).join('');
-  const across = _.map(clues.across, reverseString);
-  const down = _.map(clues.down, reverseString);
+  const across = _.map(clues.across, transformation);
+  const down = _.map(clues.down, transformation);
   return {
     ...game,
     clues: {across, down},
   };
+};
+
+const reverseClues = (game) => {
+  const reverseString = (s) => s && _.reverse(s.split('')).join('');
+  return transformClues(game, reverseString);
+};
+
+const removeVowels = (game) => {
+  const reverseString = (s) => s && _.filter(s.split(''), (char) => !_.includes('aeiou', char)).join('');
+  return transformClues(game, reverseString);
 };
 
 const hideSquares = (game) => {
@@ -73,6 +82,12 @@ const powerups = {
     icon: 'new_moon_with_face',
     duration: 60,
     action: ({ownGame, opponentGame}) => ({ownGame, opponentGame: hideSquares(opponentGame)}),
+  },
+  VOWELS: {
+    name: 'De-Vowel',
+    icon: 'open_book',
+    duration: 60,
+    action: ({ownGame, opponentGame}) => ({ownGame, opponentGame: removeVowels(opponentGame)}),
   },
 };
 

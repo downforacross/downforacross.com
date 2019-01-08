@@ -5,7 +5,7 @@ import EventEmitter from 'events';
 import async from 'async';
 import _ from 'lodash';
 
-const STARTING_POWERUPS = _.map(['REVERSE', 'REVERSE', 'DARK_MODE'], (type) => ({type}));
+const STARTING_POWERUPS = _.map(['REVERSE', 'VOWELS', 'DARK_MODE'], (type) => ({type}));
 
 export default class Battle extends EventEmitter {
   constructor(path) {
