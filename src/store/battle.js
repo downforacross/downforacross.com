@@ -5,7 +5,8 @@ import EventEmitter from 'events';
 import async from 'async';
 import _ from 'lodash';
 
-// a wrapper class that models Room
+const STARTING_POWERUPS = _.map(['REVERSE', 'REVERSE', 'REVERSE'], (type) => ({type}));
+
 export default class Battle extends EventEmitter {
   constructor(path) {
     super();
@@ -35,6 +36,17 @@ export default class Battle extends EventEmitter {
     this.ref.child('started').set(true);
   }
 
+  usePowerup(type, team) {
+    this.ref.child('powerups').once('value', (snapshot) => {
+      const allPowerups = snapshot.val();
+      const ownPowerups = allPowerups[team];
+      const toUse = _.find(ownPowerups, (powerup) => powerup.type === type && !powerup.used);
+      toUse.used = Date.now();
+      toUse.target = 1 - team; // For now use on other team.
+      this.ref.child('powerups').set(allPowerups);
+    });
+  }
+
   initialize(pid, bid, teams = 2) {
     const shiftCbkArg = (fn) => (args, cbk) => fn(args, (val) => cbk(null, val)); // async style fun
 
@@ -43,9 +55,13 @@ export default class Battle extends EventEmitter {
       battleData: {bid, team},
     }));
 
+    const powerups = Array(teams).fill(STARTING_POWERUPS);
+
     async.map(args, shiftCbkArg(actions.createGameForBattle), (err, gids) => {
       this.ref.child('games').set(gids, () => {
-        this.emit('ready');
+        this.ref.child('powerups').set(powerups, () => {
+          this.emit('ready');
+        });
       });
     });
   }

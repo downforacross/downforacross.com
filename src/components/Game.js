@@ -4,6 +4,7 @@ import React, {Component} from 'react';
 import Flex from 'react-flexview';
 import _ from 'lodash';
 
+import * as powerups from '../lib/powerups';
 import Player from '../components/Player';
 import Toolbar from '../components/Toolbar';
 import {toArr} from '../jsUtils';
@@ -33,14 +34,19 @@ export default class GameV2 extends Component {
     }
   }
 
+  // TODO: this should be cached, sigh...
+  get games() {
+    const ownGame = this.props.historyWrapper && this.props.historyWrapper.getSnapshot();
+    const opponentGame = this.props.opponentHistoryWrapper && this.props.opponentHistoryWrapper.getSnapshot();
+    return powerups.apply(ownGame, opponentGame, this.props.ownPowerups, this.props.opponentPowerups);
+  }
+
   get game() {
-    if (!this.props.historyWrapper) return;
-    return this.props.historyWrapper.getSnapshot();
+    return this.games.ownGame;
   }
 
   get opponentGame() {
-    if (!this.props.opponentHistoryWrapper) return;
-    return this.props.opponentHistoryWrapper.getSnapshot();
+    return this.games.opponentGame;
   }
 
   get gameModel() {

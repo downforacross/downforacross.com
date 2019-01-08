@@ -46,6 +46,7 @@ export default class GameV2 extends Component {
 
   initializeBattle(battleData) {
     const {bid, team} = battleData;
+    this.setState({bid, team});
     if (this.battleModel) this.battleModel.detach();
     this.battleModel = new BattleModel(`/battle/${bid}`);
     this.battleModel.once('games', (games) => {
@@ -53,8 +54,7 @@ export default class GameV2 extends Component {
       this.setState({opponent}, () => this.initializeOpponentGame());
     });
     this.battleModel.on('powerups', (powerups) => {
-      console.log(powerups);
-      this.setState({powerups});
+      this.setState({powerups: powerups});
     });
     this.battleModel.attach();
   }
@@ -170,6 +170,10 @@ export default class GameV2 extends Component {
     }
   });
 
+  handleUsePowerup = (powerup) => {
+    this.battleModel.usePowerup(powerup.type, this.state.team);
+  };
+
   // ================
   // Render Methods
 
@@ -180,6 +184,8 @@ export default class GameV2 extends Component {
 
     const {mobile} = this.state;
     const {id, color} = this.user;
+    const ownPowerups = _.get(this.state.powerups, this.state.team);
+    const opponentPowerups = _.get(this.state.powerups, 1 - this.state.team);
     return (
       <Game
         ref={(c) => {
@@ -188,14 +194,16 @@ export default class GameV2 extends Component {
         id={id}
         myColor={color}
         historyWrapper={this.historyWrapper}
-        opponentHistoryWrapper={
-          this.opponentGameModel && this.opponentGameModel.attached && this.opponentHistoryWrapper
-        }
         gameModel={this.gameModel}
         onUnfocus={this.handleUnfocusGame}
         onChange={this.handleChange}
         onToggleChat={this.handleToggleChat}
         mobile={mobile}
+        opponentHistoryWrapper={
+          this.opponentGameModel && this.opponentGameModel.attached && this.opponentHistoryWrapper
+        }
+        ownPowerups={ownPowerups}
+        opponentPowerups={opponentPowerups}
       />
     );
   }
@@ -235,6 +243,7 @@ export default class GameV2 extends Component {
   }
 
   render() {
+    const powerups = _.get(this.state.powerups, this.state.team);
     return (
       <Flex
         className="room"
@@ -256,7 +265,7 @@ export default class GameV2 extends Component {
           </Flex>
           <Flex grow={1}>{this.showingChat && this.renderChat()}</Flex>
         </Flex>
-        <Powerups powerups={this.state.powerups} />
+        <Powerups powerups={powerups} handleUsePowerup={this.handleUsePowerup} />
       </Flex>
     );
   }
