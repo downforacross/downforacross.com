@@ -44,7 +44,13 @@ export const hasExpired = (powerup) => {
 export const inUse = (powerup) => {
   const {type, used} = powerup;
   const {duration} = powerups[type];
-  return used && secondsSince(used) <= duration;
+  return used && secondsSince(used) < duration;
+};
+
+export const timeLeft = (powerup) => {
+  const {type, used} = powerup;
+  const {duration} = powerups[type];
+  return used && duration - secondsSince(used);
 };
 
 export const apply = (ownGame, opponentGame, ownPowerups, opponentPowerups) => {
