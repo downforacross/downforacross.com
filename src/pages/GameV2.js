@@ -241,6 +241,7 @@ export default class GameV2 extends Component {
         onToggleChat={this.handleToggleChat}
         mobile={mobile}
         opponentData={this.opponentGame && this.opponentGame.chat}
+        bid={this.state.bid}
       />
     );
   }

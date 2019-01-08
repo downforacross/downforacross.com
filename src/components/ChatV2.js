@@ -23,6 +23,18 @@ export default class Chat extends Component {
     this.usernameInput = React.createRef();
   }
 
+  componentDidMount() {
+    const battleName = localStorage.getItem(`battle_${this.props.bid}`);
+    // HACK
+    if (battleName && !localStorage.getItem(this.usernameKey)) {
+      this.setState({username: battleName});
+    }
+  }
+
+  get battleKey() {
+    return;
+  }
+
   get usernameKey() {
     return `username_${window.location.href}`;
   }

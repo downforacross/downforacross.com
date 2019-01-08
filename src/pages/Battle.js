@@ -71,6 +71,7 @@ export default class Battle extends Component {
   }
 
   handleChangeName(name) {
+    localStorage.setItem(`battle_${this.state.bid}`, name);
     this.setState({name});
   }
 
