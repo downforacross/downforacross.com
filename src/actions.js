@@ -74,7 +74,7 @@ const actions = {
 
   getNextBid: (cbk) => {
     // Copying Cid logic for now...
-    const NUM_BIDS = 1000000;
+    const NUM_BIDS = 100000000;
     const bid = Math.floor(Math.random() * NUM_BIDS);
     cbk(bid);
   },
