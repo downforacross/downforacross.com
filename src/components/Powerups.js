@@ -28,8 +28,9 @@ export default class Powerups extends React.Component {
     return (
       <Flex className="powerups--powerup" onClick={onClick}>
         <Flex className="powerups--label">{name}</Flex>
+        {inuse && <Flex className="powerups--info">(active)</Flex>}
         <Flex key={idx} className={className}>
-          <Emoji emoji={icon} big={true} />
+          <Emoji emoji={icon} big={true} className="powerups--eemoji" />
         </Flex>
       </Flex>
     );

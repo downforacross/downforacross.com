@@ -72,6 +72,7 @@ export const apply = (ownGame, opponentGame, ownPowerups, opponentPowerups) => {
 };
 
 // There should probably be an enum here with the keys of the following.
+// Only image based emojis for now, until I figure out how css works...
 
 const powerups = {
   REVERSE: {
@@ -82,13 +83,13 @@ const powerups = {
   },
   DARK_MODE: {
     name: 'Dark Mode',
-    icon: 'new_moon_with_face',
+    icon: 'dark_moon',
     duration: 60,
     action: ({ownGame, opponentGame}) => ({ownGame, opponentGame: hideSquares(opponentGame)}),
   },
   VOWELS: {
     name: 'De-Vowel',
-    icon: 'open_book',
+    icon: 'cactus_sweat',
     duration: 60,
     action: ({ownGame, opponentGame}) => ({ownGame, opponentGame: removeVowels(opponentGame)}),
   },

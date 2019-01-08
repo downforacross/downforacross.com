@@ -1,16 +1,21 @@
 .powerups--main {
   display: flex;
+  margin-top: 10px;
   margin-bottom: 30px;
 }
 
 .powerups--label {
   justify-content: center;
-  color: #666699;
+  color: #f8bd2a;
+  font-weight: bold;
+}
+
+.powerups--info {
+  justify-content: center;
+  color: #c69d39;
 }
 
 .powerups--powerup {
-  border-radius: 5px;
-
   justify-self: center;
   margin-left: 20px;
   margin-right: 20px;
@@ -20,9 +25,23 @@
 
 .powerups--unused {
   cursor: pointer;
-  border: 10px solid #666699;
 }
 
-.powerups--in-use {
-  border: 10px solid #339966;
+span {
+  justify-content: center;
+}
+
+.powerups--unused span img {
+  border-radius: 50%;
+  padding: 2px;
+  padding-bottom: 2.2px;
+  padding-right: 2.1px;
+  border: 2px solid #59677e !important;
+}
+
+.powerups--in-use span img {
+  border-radius: 50%;
+  padding-bottom: 0.2px;
+  padding-right: 0.1px;
+  border: 10px solid #339966 !important;
 }
