@@ -117,6 +117,7 @@ export default class Battle extends Component {
             onChange={(event) => this.handleChangeName(event.target.value)}
           />
         </Flex>
+        {this.renderTeams()}
       </Flex>
     );
   }
@@ -139,10 +140,14 @@ export default class Battle extends Component {
     );
   }
 
-  renderPreGameLobby() {
+  renderTeams() {
     const numTeams = Math.max(_.max(_.map(this.state.players, 'team')), 2);
     const teams = _.map(_.range(numTeams), (team) => _.filter(this.state.players, {team}));
 
+    return <Flex className="battle--teams">{_.map(teams, this.renderTeam)}</Flex>;
+  }
+
+  renderPreGameLobby() {
     return (
       <Flex className="battle--selector">
         <Flex className="battle--teams">(This starts the game for all players)</Flex>
@@ -151,7 +156,7 @@ export default class Battle extends Component {
             {'Start'}
           </Flex>
         </Flex>
-        <Flex className="battle--teams">{_.map(teams, this.renderTeam)}</Flex>
+        {this.renderTeams()}
       </Flex>
     );
   }
