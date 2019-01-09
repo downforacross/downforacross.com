@@ -9,7 +9,7 @@ import powerupData from '../lib/powerups';
 import GridObject from '../utils/Grid';
 import {PuzzleModel} from '../store';
 
-const STARTING_POWERUPS = _.map(['REVERSE', 'VOWELS', 'DARK_MODE'], (type) => ({type}));
+const STARTING_POWERUPS = 1;
 const NUM_PICKUPS = 10;
 const VALUE_LISTENERS = ['games', 'powerups', 'startedAt', 'players', 'winner', 'pickups'];
 
@@ -86,7 +86,10 @@ export default class Battle extends EventEmitter {
       battleData: {bid, team},
     }));
 
-    const powerups = Array(teams).fill(STARTING_POWERUPS);
+    const powerupTypes = _.keys(powerupData);
+    const powerups = _.map(_.range(teams), () =>
+      _.map(_.sampleSize(powerupTypes, STARTING_POWERUPS), (type) => ({type}))
+    );
 
     const puzzle = new PuzzleModel(`/puzzle/${pid}`);
     puzzle.attach();
@@ -109,8 +112,7 @@ export default class Battle extends EventEmitter {
       });
 
       const locations = _.sampleSize(emptyCells, NUM_PICKUPS);
-      const types = _.keys(powerupData);
-      const pickups = _.map(locations, ({i, j}) => ({i, j, type: _.sample(types)}));
+      const pickups = _.map(locations, ({i, j}) => ({i, j, type: _.sample(powerupTypes)}));
 
       async.map(args, shiftCbkArg(actions.createGameForBattle), (err, gids) => {
         this.ref.child('games').set(gids, () => {
