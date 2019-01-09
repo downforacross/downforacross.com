@@ -19,6 +19,10 @@ export default class Puzzle extends EventEmitter {
     });
   }
 
+  detach() {
+    this.ref.off('value');
+  }
+
   toGame() {
     // TODO rewrite makeGame in here
     return makeGame(undefined, undefined, this.data);

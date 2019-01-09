@@ -244,15 +244,18 @@ export default class Player extends Component {
       onPressPeriod,
       size,
       grid,
+      opponentGrid,
       clues,
       circles,
       shades,
+      solution,
       cursors: allCursors = [],
       updateGrid,
       frozen,
       myColor,
       colors = {},
       id,
+      pickups,
     } = this.props;
 
     const currentTime = getTime();
@@ -337,6 +340,9 @@ export default class Player extends Component {
                   ref="grid"
                   size={size}
                   grid={grid}
+                  opponentGrid={opponentGrid}
+                  pickups={pickups}
+                  solution={solution}
                   circles={circles}
                   shades={shades}
                   selected={selected}

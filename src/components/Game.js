@@ -4,6 +4,7 @@ import React, {Component} from 'react';
 import Flex from 'react-flexview';
 import _ from 'lodash';
 
+import * as powerups from '../lib/powerups';
 import Player from '../components/Player';
 import Toolbar from '../components/Toolbar';
 import {toArr} from '../jsUtils';
@@ -33,9 +34,30 @@ export default class GameV2 extends Component {
     }
   }
 
+  get rawGame() {
+    return this.props.historyWrapper && this.props.historyWrapper.getSnapshot();
+  }
+
+  get rawOpponentGame() {
+    return this.props.opponentHistoryWrapper && this.props.opponentHistoryWrapper.getSnapshot();
+  }
+
+  // TODO: this should be cached, sigh...
+  get games() {
+    return powerups.apply(
+      this.rawGame,
+      this.rawOpponentGame,
+      this.props.ownPowerups,
+      this.props.opponentPowerups
+    );
+  }
+
   get game() {
-    if (!this.props.historyWrapper) return;
-    return this.props.historyWrapper.getSnapshot();
+    return this.games.ownGame;
+  }
+
+  get opponentGame() {
+    return this.games.opponentGame;
   }
 
   get gameModel() {
@@ -59,6 +81,8 @@ export default class GameV2 extends Component {
     const {pencilMode} = this.state;
     this.gameModel.updateCell(r, c, id, myColor, pencilMode, value);
     this.props.onChange({isEdit: true});
+
+    this.props.battleModel.checkPickups(r, c, this.rawGame, this.props.team);
   };
 
   handleUpdateCursor = ({r, c}) => {
@@ -131,7 +155,8 @@ export default class GameV2 extends Component {
       return <div>Loading...</div>;
     }
 
-    const {grid, circles, shades, cursors, colors, clues, solved} = this.game;
+    const {grid, circles, shades, cursors, colors, clues, solved, solution} = this.game;
+    const opponentGrid = this.opponentGame && this.opponentGame.grid;
     const {screenWidth} = this.state;
     let cols = grid[0].length;
     let rows = grid.length;
@@ -144,6 +169,8 @@ export default class GameV2 extends Component {
         }}
         size={size}
         grid={grid}
+        solution={solution}
+        opponentGrid={opponentGrid}
         circles={circles}
         shades={shades}
         clues={{
@@ -160,6 +187,7 @@ export default class GameV2 extends Component {
         onPressEnter={this.handlePressEnter}
         onPressPeriod={this.handlePressPeriod}
         mobile={mobile}
+        pickups={this.props.pickups}
       />
     );
   }

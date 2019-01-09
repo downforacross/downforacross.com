@@ -135,6 +135,20 @@ export default class Grid {
     return this.getNextEmptyCell(r, c, direction) !== undefined;
   }
 
+  getWritableLocations() {
+    const writableLocations = [];
+
+    _.forEach(_.range(this.grid.length), (i) => {
+      _.forEach(_.range(this.grid[0].length), (j) => {
+        if (this.isWriteable(i, j)) {
+          writableLocations.push({i, j});
+        }
+      });
+    });
+
+    return writableLocations;
+  }
+
   getCellByNumber(number) {
     for (const [r, c, cell] of this.items()) {
       if (cell.number === number) {

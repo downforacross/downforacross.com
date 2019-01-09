@@ -1,18 +1,19 @@
 import {
-  Welcome,
-  WelcomeV2,
+  Account,
+  Battle,
+  Compose,
+  Composition,
   Game,
   GameV2,
-  Compose,
-  Solo,
-  Account,
+  Play,
   Replay,
   ReplaySolo,
-  Room,
-  Replays,
-  Play,
   ReplayV2,
-  Composition,
+  Replays,
+  Room,
+  Solo,
+  Welcome,
+  WelcomeV2,
 } from './pages/index';
 import Testing from './pages/Testing';
 
@@ -45,6 +46,7 @@ ReactDOM.render(
       <Route exact path="/game/solo/:pid" component={Solo} />
       <Route exact path="/beta" component={WelcomeV2} />
       <Route exact path="/beta/game/:gid" component={GameV2} />
+      <Route exact path="/beta/battle/:bid" component={Battle} />
       <Route exact path="/beta/play/:pid" component={Play} />
       <Route path="/puzzle/:pid" component={Solo} />
       <Route path="/account" component={Account} />

@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import _ from 'lodash';
+import querystring from 'querystring';
 import Timestamp from 'react-timestamp';
 import {Link} from 'react-router-dom';
 
 import Nav from '../components/Nav';
 import actions from '../actions';
-import {getUser, GameModel, PuzzleModel} from '../store';
+import {getUser, GameModel, PuzzleModel, BattleModel} from '../store';
 import redirect from '../redirect';
 
 export default class Play extends Component {
@@ -24,13 +25,25 @@ export default class Play extends Component {
         this.setState({userHistory});
       });
     });
+
+    if (this.query.mode === 'battle') {
+      this.createAndJoinBattle();
+    }
   }
 
   get pid() {
     return parseInt(this.props.match.params.pid);
   }
 
+  get query() {
+    return querystring.parse(this.props.location.search.slice(1));
+  }
+
   componentDidUpdate() {
+    if (this.query.mode === 'battle') {
+      return;
+    }
+
     const games = this.games;
     const shouldAutocreate = !this.state.creating && (!games || (games && games.length === 0));
     if (shouldAutocreate) {
@@ -90,6 +103,16 @@ export default class Play extends Component {
           .then(() => {
             redirect(`/beta/game/${gid}`);
           });
+      });
+    });
+  }
+
+  createAndJoinBattle() {
+    actions.getNextBid((bid) => {
+      const battle = new BattleModel(`/battle/${bid}`);
+      battle.initialize(this.pid, bid);
+      battle.once('ready', () => {
+        redirect(`/beta/battle/${bid}`);
       });
     });
   }

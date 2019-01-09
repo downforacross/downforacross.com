@@ -23,6 +23,18 @@ export default class Chat extends Component {
     this.usernameInput = React.createRef();
   }
 
+  componentDidMount() {
+    const battleName = localStorage.getItem(`battle_${this.props.bid}`);
+    // HACK
+    if (battleName && !localStorage.getItem(this.usernameKey)) {
+      this.setState({username: battleName});
+    }
+  }
+
+  get battleKey() {
+    return;
+  }
+
   get usernameKey() {
     return `username_${window.location.href}`;
   }
@@ -62,9 +74,29 @@ export default class Chat extends Component {
     }
   };
 
+  mergeMessages(data, opponentData) {
+    if (!opponentData) {
+      return data.messages || [];
+    }
+
+    const getMessages = (data, isOpponent) => _.map(data.messages, (message) => ({...message, isOpponent}));
+
+    const messages = _.concat(getMessages(data, false), getMessages(opponentData, true));
+
+    return _.sortBy(messages, 'timestamp');
+  }
+
+  getMessageColor(senderId, isOpponent) {
+    const {colors} = this.props;
+    if (isOpponent === undefined) {
+      return colors[senderId];
+    }
+    return isOpponent ? 'rgb(220, 107, 103)' : 'rgb(47, 137, 141)';
+  }
+
   renderChatHeader() {
     if (this.props.header) return this.props.header;
-    const {info = {}} = this.props;
+    const {info = {}, bid} = this.props;
     const {title, author, type} = info;
 
     return (
@@ -73,6 +105,8 @@ export default class Chat extends Component {
         <div className="chatv2--header--title">{title}</div>
 
         <div className="chatv2--header--subtitle">{type && type + ' | ' + 'By ' + author}</div>
+
+        {bid && <div className="chatv2--header--subtitle">Battle {bid}</div>}
       </div>
     );
   }
@@ -176,10 +210,9 @@ export default class Chat extends Component {
   }
 
   renderMessage(message) {
-    const {colors} = this.props;
-    const {sender, text, senderId: id} = message;
+    const {sender, text, senderId: id, isOpponent} = message;
     const big = text.length <= 10 && isEmojis(text);
-    const color = colors[id];
+    const color = this.getMessageColor(id, isOpponent);
 
     return (
       <div className={'chatv2--message' + (big ? ' big' : '')}>
@@ -191,7 +224,8 @@ export default class Chat extends Component {
   }
 
   render() {
-    const {messages = []} = this.props.data;
+    const messages = this.mergeMessages(this.props.data, this.props.opponentData);
+
     return (
       <div className="chatv2">
         {this.renderChatHeader()}

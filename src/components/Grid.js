@@ -4,6 +4,8 @@ import React from 'react';
 import GridObject from '../utils/Grid';
 import Cell from './Cell';
 
+import _ from 'lodash';
+
 /*
  * Summary of Grid component
  *
@@ -23,6 +25,10 @@ export default class Grid extends React.PureComponent {
     return new GridObject(this.props.grid);
   }
 
+  get opponentGrid() {
+    return this.props.opponentGrid && new GridObject(this.props.opponentGrid);
+  }
+
   get selectedIsWhite() {
     const {selected} = this.props;
     return this.grid.isWhite(selected.r, selected.c);
@@ -39,10 +45,19 @@ export default class Grid extends React.PureComponent {
     return (circles || []).indexOf(idx) !== -1;
   }
 
+  isDoneByOpponent(r, c) {
+    if (!this.opponentGrid || !this.props.solution) {
+      return false;
+    }
+    return (
+      this.opponentGrid.isFilled(r, c) && this.props.solution[r][c] === this.props.opponentGrid[r][c].value
+    );
+  }
+
   isShaded(r, c) {
     const {grid, shades} = this.props;
     const idx = c + r * grid[0].length;
-    return (shades || []).indexOf(idx) !== -1;
+    return (shades || []).indexOf(idx) !== -1 || this.isDoneByOpponent(r, c);
   }
 
   isHighlighted(r, c) {
@@ -58,6 +73,13 @@ export default class Grid extends React.PureComponent {
 
   isReferenced(r, c) {
     return this.props.references.some((clue) => this.clueContainsSquare(clue, r, c));
+  }
+
+  getPickup(r, c) {
+    return (
+      this.props.pickups &&
+      _.get(_.find(this.props.pickups, ({i, j, pickedUp}) => i == r && j == c && !pickedUp), 'type')
+    );
   }
 
   handleClick(r, c) {
@@ -133,6 +155,7 @@ export default class Grid extends React.PureComponent {
                     cursors={(this.props.cursors || []).filter((cursor) => cursor.r === r && cursor.c === c)}
                     highlighted={this.isHighlighted(r, c)}
                     myColor={this.props.myColor}
+                    pickupType={this.getPickup(r, c)}
                   />
                 </td>
               ))}

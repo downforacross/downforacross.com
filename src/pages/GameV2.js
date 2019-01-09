@@ -6,11 +6,12 @@ import _ from 'lodash';
 import {Helmet} from 'react-helmet';
 import Flex from 'react-flexview';
 
-import {GameModel, getUser} from '../store';
+import {GameModel, getUser, BattleModel} from '../store';
 import HistoryWrapper from '../utils/historyWrapper';
 import Game from '../components/Game';
 import MobilePanel from '../components/MobilePanel';
 import ChatV2 from '../components/ChatV2';
+import Powerups from '../components/Powerups';
 import redirect from '../redirect';
 import {isMobile} from '../jsUtils';
 
@@ -21,6 +22,7 @@ export default class GameV2 extends Component {
       gid: undefined,
       mobile: isMobile(),
       mode: 'game',
+      powerups: undefined,
     };
     this.initializeUser();
   }
@@ -42,6 +44,28 @@ export default class GameV2 extends Component {
     });
   }
 
+  initializeBattle(battleData) {
+    if (!battleData) {
+      return;
+    }
+
+    const {bid, team} = battleData;
+    this.setState({bid, team});
+    if (this.battleModel) this.battleModel.detach();
+    this.battleModel = new BattleModel(`/battle/${bid}`);
+    this.battleModel.once('games', (games) => {
+      const opponent = games[1 - team];
+      this.setState({opponent}, () => this.initializeOpponentGame());
+    });
+
+    _.forEach(['powerups', 'startedAt', 'winner', 'players', 'pickups'], (subpath) => {
+      this.battleModel.on(subpath, (value) => {
+        this.setState({[subpath]: value});
+      });
+    });
+    this.battleModel.attach();
+  }
+
   initializeGame() {
     if (this.gameModel) this.gameModel.detach();
     this.gameModel = new GameModel(`/game/${this.state.gid}`);
@@ -61,7 +85,30 @@ export default class GameV2 extends Component {
       this.handleChange();
       this.handleUpdate();
     });
+    this.gameModel.once('battleData', (battleData) => {
+      this.initializeBattle(battleData);
+    });
     this.gameModel.attach();
+  }
+
+  // TODO: combine this logic with the above...
+  initializeOpponentGame() {
+    if (!this.state.opponent) return;
+
+    if (this.opponentGameModel) this.opponentGameModel.detach();
+
+    this.opponentGameModel = new GameModel(`/game/${this.state.opponent}`);
+    this.opponentHistoryWrapper = new HistoryWrapper();
+    this.opponentGameModel.on('createEvent', (event) => {
+      this.opponentHistoryWrapper.setCreateEvent(event);
+      this.handleUpdate();
+    });
+    this.opponentGameModel.on('event', (event) => {
+      this.opponentHistoryWrapper.addEvent(event);
+      this.handleChange();
+      this.handleUpdate();
+    });
+    this.opponentGameModel.attach();
   }
 
   componentDidMount() {
@@ -76,6 +123,18 @@ export default class GameV2 extends Component {
     if (prevState.gid !== this.state.gid) {
       this.initializeGame();
     }
+    if (prevState.winner !== this.state.winner && this.state.winner) {
+      const {winner, startedAt, players} = this.state;
+      const {team, completedAt} = winner;
+
+      const winningPlayers = _.filter(_.values(players), {team});
+      const winningPlayersString = _.join(_.map(winningPlayers, 'name'), ', ');
+
+      const victoryMessage = `Team ${parseInt(team) + 1} [${winningPlayersString}] won! `;
+      const timeMessage = `Time taken: ${parseInt((completedAt - startedAt) / 1000)} seconds.`;
+
+      this.gameModel.chat('BattleBot', null, victoryMessage + timeMessage);
+    }
   }
 
   get showingGame() {
@@ -88,6 +147,13 @@ export default class GameV2 extends Component {
 
   get game() {
     return this.historyWrapper.getSnapshot();
+  }
+
+  get opponentGame() {
+    if (!this.opponentGameModel || !this.opponentGameModel.attached || !this.opponentHistoryWrapper) {
+      return;
+    }
+    return this.opponentHistoryWrapper.getSnapshot();
   }
 
   handleToggleChat = () => {
@@ -127,8 +193,15 @@ export default class GameV2 extends Component {
     }
     if (this.game.solved) {
       this.user.markSolved(this.state.gid);
+      if (this.battleModel) {
+        this.battleModel.setSolved(this.state.team);
+      }
     }
   });
+
+  handleUsePowerup = (powerup) => {
+    this.battleModel.usePowerup(powerup.type, this.state.team);
+  };
 
   // ================
   // Render Methods
@@ -140,6 +213,8 @@ export default class GameV2 extends Component {
 
     const {mobile} = this.state;
     const {id, color} = this.user;
+    const ownPowerups = _.get(this.state.powerups, this.state.team);
+    const opponentPowerups = _.get(this.state.powerups, 1 - this.state.team);
     return (
       <Game
         ref={(c) => {
@@ -153,6 +228,14 @@ export default class GameV2 extends Component {
         onChange={this.handleChange}
         onToggleChat={this.handleToggleChat}
         mobile={mobile}
+        opponentHistoryWrapper={
+          this.opponentGameModel && this.opponentGameModel.attached && this.opponentHistoryWrapper
+        }
+        ownPowerups={ownPowerups}
+        opponentPowerups={opponentPowerups}
+        pickups={this.state.pickups}
+        battleModel={this.battleModel}
+        team={this.state.team}
       />
     );
   }
@@ -178,6 +261,8 @@ export default class GameV2 extends Component {
         onUnfocus={this.handleUnfocusChat}
         onToggleChat={this.handleToggleChat}
         mobile={mobile}
+        opponentData={this.opponentGame && this.opponentGame.chat}
+        bid={this.state.bid}
       />
     );
   }
@@ -192,6 +277,7 @@ export default class GameV2 extends Component {
   }
 
   render() {
+    const powerups = _.get(this.state.powerups, this.state.team);
     return (
       <Flex
         className="room"
@@ -213,6 +299,7 @@ export default class GameV2 extends Component {
           </Flex>
           <Flex grow={1}>{this.showingChat && this.renderChat()}</Flex>
         </Flex>
+        <Powerups powerups={powerups} handleUsePowerup={this.handleUsePowerup} />
       </Flex>
     );
   }
