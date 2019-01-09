@@ -76,7 +76,10 @@ export default class Grid extends React.PureComponent {
   }
 
   getPickup(r, c) {
-    return this.props.pickups && _.get(_.find(this.props.pickups, ({i, j}) => i == r && j == c), 'type');
+    return (
+      this.props.pickups &&
+      _.get(_.find(this.props.pickups, ({i, j, pickedUp}) => i == r && j == c && !pickedUp), 'type')
+    );
   }
 
   handleClick(r, c) {

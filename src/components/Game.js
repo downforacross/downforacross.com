@@ -34,11 +34,22 @@ export default class GameV2 extends Component {
     }
   }
 
+  get rawGame() {
+    return this.props.historyWrapper && this.props.historyWrapper.getSnapshot();
+  }
+
+  get rawOpponentGame() {
+    return this.props.opponentHistoryWrapper && this.props.opponentHistoryWrapper.getSnapshot();
+  }
+
   // TODO: this should be cached, sigh...
   get games() {
-    const ownGame = this.props.historyWrapper && this.props.historyWrapper.getSnapshot();
-    const opponentGame = this.props.opponentHistoryWrapper && this.props.opponentHistoryWrapper.getSnapshot();
-    return powerups.apply(ownGame, opponentGame, this.props.ownPowerups, this.props.opponentPowerups);
+    return powerups.apply(
+      this.rawGame,
+      this.rawOpponentGame,
+      this.props.ownPowerups,
+      this.props.opponentPowerups
+    );
   }
 
   get game() {
@@ -70,6 +81,8 @@ export default class GameV2 extends Component {
     const {pencilMode} = this.state;
     this.gameModel.updateCell(r, c, id, myColor, pencilMode, value);
     this.props.onChange({isEdit: true});
+
+    this.props.battleModel.checkPickups(r, c, this.rawGame, this.props.team);
   };
 
   handleUpdateCursor = ({r, c}) => {

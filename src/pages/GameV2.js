@@ -234,6 +234,8 @@ export default class GameV2 extends Component {
         ownPowerups={ownPowerups}
         opponentPowerups={opponentPowerups}
         pickups={this.state.pickups}
+        battleModel={this.battleModel}
+        team={this.state.team}
       />
     );
   }

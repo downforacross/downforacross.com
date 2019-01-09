@@ -78,6 +78,50 @@ export default class Battle extends EventEmitter {
     });
   }
 
+  // TODO: This is going to have races, figure out how to use the game reducer later.
+  checkPickups(r, c, game, team) {
+    const {grid, solution} = game;
+    const gridObj = new GridObject(grid);
+
+    const isSameWord = (direction) => ({i, j}) => {
+      if (!gridObj.isWriteable(i, j)) return false;
+      return gridObj.getParent(r, c, direction) === gridObj.getParent(i, j, direction);
+    };
+
+    const writableLocations = gridObj.getWritableLocations();
+    const acrossCells = _.filter(writableLocations, isSameWord('across'));
+    const downCells = _.filter(writableLocations, isSameWord('down'));
+
+    this.ref.child('pickups').once('value', (snapshot1) => {
+      const pickups = snapshot1.val();
+
+      this.ref.child('powerups').once('value', (snapshot2) => {
+        const powerups = snapshot2.val();
+
+        const pickupIfCorrect = (cells) => {
+          const isCorrect = _.every(cells, ({i, j}) => grid[i][j].value === solution[i][j]);
+          if (!isCorrect) return;
+
+          _.forEach(pickups, (pickup) => {
+            if (pickup.pickedUp) return;
+            const {i, j, type} = pickup;
+            const foundMatch = _.find(cells, {i, j});
+            if (!foundMatch) return;
+
+            pickup.pickedUp = true;
+            powerups[team].push({type});
+          });
+        };
+
+        pickupIfCorrect(acrossCells);
+        pickupIfCorrect(downCells);
+
+        this.ref.child('pickups').set(pickups);
+        this.ref.child('powerups').set(powerups);
+      });
+    });
+  }
+
   initialize(pid, bid, teams = 2) {
     const shiftCbkArg = (fn) => (args, cbk) => fn(args, (val) => cbk(null, val)); // async style fun
 
@@ -98,20 +142,9 @@ export default class Battle extends EventEmitter {
       puzzle.detach();
       const {grid} = rawGame;
 
-      const r = grid.length;
-      const c = grid[0].length;
       const gridObj = new GridObject(grid);
-      const emptyCells = [];
 
-      _.forEach(_.range(r), (i) => {
-        _.forEach(_.range(c), (j) => {
-          if (gridObj.isWriteable(i, j)) {
-            emptyCells.push({i, j});
-          }
-        });
-      });
-
-      const locations = _.sampleSize(emptyCells, NUM_PICKUPS);
+      const locations = _.sampleSize(gridObj.getWritableLocations(), NUM_PICKUPS);
       const pickups = _.map(locations, ({i, j}) => ({i, j, type: _.sample(powerupTypes)}));
 
       async.map(args, shiftCbkArg(actions.createGameForBattle), (err, gids) => {
