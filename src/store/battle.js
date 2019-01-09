@@ -5,8 +5,13 @@ import EventEmitter from 'events';
 import async from 'async';
 import _ from 'lodash';
 
+import powerupData from '../lib/powerups';
+import GridObject from '../utils/Grid';
+import {PuzzleModel} from '../store';
+
 const STARTING_POWERUPS = _.map(['REVERSE', 'VOWELS', 'DARK_MODE'], (type) => ({type}));
-const VALUE_LISTENERS = ['games', 'powerups', 'startedAt', 'players', 'winner'];
+const NUM_PICKUPS = 10;
+const VALUE_LISTENERS = ['games', 'powerups', 'startedAt', 'players', 'winner', 'pickups'];
 
 export default class Battle extends EventEmitter {
   constructor(path) {
@@ -83,10 +88,37 @@ export default class Battle extends EventEmitter {
 
     const powerups = Array(teams).fill(STARTING_POWERUPS);
 
-    async.map(args, shiftCbkArg(actions.createGameForBattle), (err, gids) => {
-      this.ref.child('games').set(gids, () => {
-        this.ref.child('powerups').set(powerups, () => {
-          this.emit('ready');
+    const puzzle = new PuzzleModel(`/puzzle/${pid}`);
+    puzzle.attach();
+    puzzle.once('ready', () => {
+      const rawGame = puzzle.toGame();
+      puzzle.detach();
+      const {grid} = rawGame;
+
+      const r = grid.length;
+      const c = grid[0].length;
+      const gridObj = new GridObject(grid);
+      const emptyCells = [];
+
+      _.forEach(_.range(r), (i) => {
+        _.forEach(_.range(c), (j) => {
+          if (gridObj.isWriteable(i, j)) {
+            emptyCells.push({i, j});
+          }
+        });
+      });
+
+      const locations = _.sampleSize(emptyCells, NUM_PICKUPS);
+      const types = _.keys(powerupData);
+      const pickups = _.map(locations, ({i, j}) => ({i, j, type: _.sample(types)}));
+
+      async.map(args, shiftCbkArg(actions.createGameForBattle), (err, gids) => {
+        this.ref.child('games').set(gids, () => {
+          this.ref.child('powerups').set(powerups, () => {
+            this.ref.child('pickups').set(pickups, () => {
+              this.emit('ready');
+            });
+          });
         });
       });
     });

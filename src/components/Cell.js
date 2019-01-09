@@ -4,6 +4,8 @@ import React, {Component} from 'react';
 import _ from 'lodash';
 
 import {getTime} from '../actions';
+import Emoji from './Emoji';
+import powerups from '../lib/powerups';
 /*
  * Summary of Cell component
  *
@@ -69,6 +71,15 @@ export default class Cell extends Component {
     const {shaded} = this.props;
     if (shaded) {
       return <div className="cell--shade" />;
+    }
+    return null;
+  }
+
+  renderPickup() {
+    const {pickupType} = this.props;
+    if (pickupType) {
+      const {icon} = powerups[pickupType];
+      return <Emoji emoji={icon} big={false} className="cell--emoji" />;
     }
     return null;
   }
@@ -143,6 +154,7 @@ export default class Cell extends Component {
           {this.renderFlipButton()}
           {this.renderCircle()}
           {this.renderShade()}
+          {this.renderPickup()}
           <div
             className="cell--value"
             style={{

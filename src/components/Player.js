@@ -255,6 +255,7 @@ export default class Player extends Component {
       myColor,
       colors = {},
       id,
+      pickups,
     } = this.props;
 
     const currentTime = getTime();
@@ -340,6 +341,7 @@ export default class Player extends Component {
                   size={size}
                   grid={grid}
                   opponentGrid={opponentGrid}
+                  pickups={pickups}
                   solution={solution}
                   circles={circles}
                   shades={shades}

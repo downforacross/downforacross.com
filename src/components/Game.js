@@ -174,6 +174,7 @@ export default class GameV2 extends Component {
         onPressEnter={this.handlePressEnter}
         onPressPeriod={this.handlePressPeriod}
         mobile={mobile}
+        pickups={this.props.pickups}
       />
     );
   }

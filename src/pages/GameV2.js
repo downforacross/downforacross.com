@@ -58,7 +58,7 @@ export default class GameV2 extends Component {
       this.setState({opponent}, () => this.initializeOpponentGame());
     });
 
-    _.forEach(['powerups', 'startedAt', 'winner', 'players'], (subpath) => {
+    _.forEach(['powerups', 'startedAt', 'winner', 'players', 'pickups'], (subpath) => {
       this.battleModel.on(subpath, (value) => {
         this.setState({[subpath]: value});
       });
@@ -233,6 +233,7 @@ export default class GameV2 extends Component {
         }
         ownPowerups={ownPowerups}
         opponentPowerups={opponentPowerups}
+        pickups={this.state.pickups}
       />
     );
   }
