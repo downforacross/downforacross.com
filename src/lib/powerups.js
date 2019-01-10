@@ -35,22 +35,22 @@ const hideSquares = (game) => {
 
 const secondsSince = (t) => parseInt(moment.duration(moment(Date.now()).diff(moment(t))).asSeconds());
 
-export const hasExpired = (powerup) => {
-  const {type, used} = powerup;
-  const {duration} = powerups[type];
-  return used && secondsSince(used) > duration;
-};
-
-export const inUse = (powerup) => {
-  const {type, used} = powerup;
-  const {duration} = powerups[type];
-  return used && secondsSince(used) < duration;
-};
-
 export const timeLeft = (powerup) => {
   const {type, used} = powerup;
   const {duration} = powerups[type];
-  return used && duration - secondsSince(used);
+  if (!used) {
+    return duration;
+  } else {
+    return duration - secondsSince(used);
+  }
+};
+
+export const hasExpired = (powerup) => {
+  return timeLeft(powerup) < 0;
+};
+
+export const inUse = (powerup) => {
+  return powerup.used && !hasExpired(powerup);
 };
 
 export const apply = (ownGame, opponentGame, ownPowerups, opponentPowerups) => {
