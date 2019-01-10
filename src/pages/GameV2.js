@@ -15,6 +15,8 @@ import Powerups from '../components/Powerups';
 import redirect from '../redirect';
 import {isMobile} from '../jsUtils';
 
+import * as powerupLib from '../lib/powerups';
+
 export default class GameV2 extends Component {
   constructor(props) {
     super();
@@ -56,6 +58,13 @@ export default class GameV2 extends Component {
     this.battleModel.once('games', (games) => {
       const opponent = games[1 - team];
       this.setState({opponent}, () => this.initializeOpponentGame());
+    });
+
+    this.battleModel.on('usePowerup', (powerup) => {
+      const {gameModel, opponentGameModel} = this;
+      const {selected} = this.gameComponent.player.state;
+      powerupLib.applyOneTimeEffects(powerup, {gameModel, opponentGameModel, selected});
+      this.handleChange();
     });
 
     _.forEach(['powerups', 'startedAt', 'winner', 'players', 'pickups'], (subpath) => {

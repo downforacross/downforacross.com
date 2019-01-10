@@ -72,9 +72,12 @@ export default class Battle extends EventEmitter {
       const allPowerups = snapshot.val();
       const ownPowerups = allPowerups[team];
       const toUse = _.find(ownPowerups, (powerup) => powerup.type === type && !powerup.used);
-      toUse.used = Date.now();
-      toUse.target = 1 - team; // For now use on other team.
-      this.ref.child('powerups').set(allPowerups);
+      if (toUse) {
+        this.emit('usePowerup', toUse);
+        toUse.used = Date.now();
+        toUse.target = 1 - team; // For now use on other team.
+        this.ref.child('powerups').set(allPowerups);
+      }
     });
   }
 

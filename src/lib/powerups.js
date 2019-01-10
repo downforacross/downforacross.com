@@ -1,6 +1,8 @@
 import moment from 'moment';
 import _ from 'lodash';
 
+/** Status effect helpers **/
+
 const transformClues = (game, transformation) => {
   const {clues} = game;
   const across = _.map(clues.across, transformation);
@@ -33,7 +35,19 @@ const hideSquares = (game) => {
   };
 };
 
-const secondsSince = (t) => parseInt(moment.duration(moment(Date.now()).diff(moment(t))).asSeconds());
+/** One time action helpers **/
+
+const revealSquare = ({selected, gameModel, opponentGameModel}) => {
+  gameModel.reveal([selected]);
+};
+
+const deleteShit = ({selected, gameModel, opponentGameModel}) => {
+  gameModel.reveal([selected]);
+};
+
+/** Duration helpers **/
+
+const secondsSince = (t) => moment.duration(moment(Date.now()).diff(moment(t))).asSeconds();
 
 export const hasExpired = (powerup) => {
   const {type, used} = powerup;
@@ -50,8 +64,10 @@ export const inUse = (powerup) => {
 export const timeLeft = (powerup) => {
   const {type, used} = powerup;
   const {duration} = powerups[type];
-  return used && duration - secondsSince(used);
+  return used && parseInt(duration - secondsSince(used));
 };
+
+/** Application helpers **/
 
 export const apply = (ownGame, opponentGame, ownPowerups, opponentPowerups) => {
   if (!ownGame || !opponentGame) {
@@ -77,6 +93,11 @@ export const apply = (ownGame, opponentGame, ownPowerups, opponentPowerups) => {
   return {ownGame: ownGame2, opponentGame: opponentGame2};
 };
 
+export const applyOneTimeEffects = (p, args) => {
+  const fn = powerups[p.type].oneTimeAction;
+  fn && fn(args);
+};
+
 // There should probably be an enum here with the keys of the following.
 // Only image based emojis for now, until I figure out how css works...
 
@@ -98,6 +119,13 @@ const powerups = {
     icon: 'cactus_sweat',
     duration: 60,
     action: ({ownGame, opponentGame}) => ({ownGame, opponentGame: removeVowels(opponentGame)}),
+  },
+  REVEAL_SQUARE: {
+    name: 'Reveal Square',
+    icon: 'surprised_pikachu',
+    duration: 0,
+    action: _.identity,
+    oneTimeAction: revealSquare,
   },
 };
 
