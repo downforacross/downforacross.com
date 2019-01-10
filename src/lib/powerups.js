@@ -37,11 +37,7 @@ const hideSquares = (game) => {
 
 /** One time action helpers **/
 
-const revealSquare = ({selected, gameModel, opponentGameModel}) => {
-  gameModel.reveal([selected]);
-};
-
-const deleteShit = ({selected, gameModel, opponentGameModel}) => {
+const revealSquare = ({selected, gameModel}) => {
   gameModel.reveal([selected]);
 };
 
