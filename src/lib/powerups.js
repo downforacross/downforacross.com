@@ -101,6 +101,8 @@ export const applyOneTimeEffects = (p, args) => {
 // There should probably be an enum here with the keys of the following.
 // Only image based emojis for now, until I figure out how css works...
 
+/** Powerup data **/
+
 const powerups = {
   REVERSE: {
     name: 'Reverse!',

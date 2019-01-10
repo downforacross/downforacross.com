@@ -299,6 +299,7 @@ export default class Player extends Component {
                   onSetSelected={this._setSelected}
                   myColor={myColor}
                   onChangeDirection={this._changeDirection}
+                  pickups={pickups}
                 />
               </div>
 

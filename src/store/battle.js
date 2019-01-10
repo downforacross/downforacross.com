@@ -86,15 +86,6 @@ export default class Battle extends EventEmitter {
     const {grid, solution} = game;
     const gridObj = new GridObject(grid);
 
-    const isSameWord = (direction) => ({i, j}) => {
-      if (!gridObj.isWriteable(i, j)) return false;
-      return gridObj.getParent(r, c, direction) === gridObj.getParent(i, j, direction);
-    };
-
-    const writableLocations = gridObj.getWritableLocations();
-    const acrossCells = _.filter(writableLocations, isSameWord('across'));
-    const downCells = _.filter(writableLocations, isSameWord('down'));
-
     this.ref.child('pickups').once('value', (snapshot1) => {
       const pickups = snapshot1.val();
 
@@ -116,13 +107,38 @@ export default class Battle extends EventEmitter {
           });
         };
 
-        pickupIfCorrect(acrossCells);
-        pickupIfCorrect(downCells);
+        const {across, down} = gridObj.getCrossingWords(r, c);
+        pickupIfCorrect(across);
+        pickupIfCorrect(down);
 
         this.ref.child('pickups').set(pickups);
         this.ref.child('powerups').set(powerups);
       });
     });
+  }
+
+  spawnPowerups(n, games, cbk) {
+    const possibleLocationsPerGrid = _.map(games, (game) => {
+      const {grid, solution} = game;
+      const gridObj = new GridObject(grid);
+      return gridObj.getPossiblePickupLocations(solution);
+    });
+
+    const possibleLocations = _.intersectionWith(...possibleLocationsPerGrid, _.isEqual);
+    console.log(possibleLocations, possibleLocationsPerGrid);
+
+    const locations = _.sampleSize(possibleLocations, n);
+
+    const powerupTypes = _.keys(powerupData);
+    const pickups = _.map(locations, ({i, j}) => ({i, j, type: _.sample(powerupTypes)}));
+
+    async.map(
+      pickups,
+      (pickup, cbk) => {
+        this.ref.child('pickups').push(pickup, () => cbk());
+      },
+      () => cbk && cbk()
+    );
   }
 
   initialize(pid, bid, teams = 2) {
@@ -143,17 +159,13 @@ export default class Battle extends EventEmitter {
     puzzle.once('ready', () => {
       const rawGame = puzzle.toGame();
       puzzle.detach();
-      const {grid} = rawGame;
 
-      const gridObj = new GridObject(grid);
-
-      const locations = _.sampleSize(gridObj.getWritableLocations(), NUM_PICKUPS);
-      const pickups = _.map(locations, ({i, j}) => ({i, j, type: _.sample(powerupTypes)}));
-
+      // Need to wait for all of these to finish otherwise the redirect on emit(ready) kills things.
       async.map(args, shiftCbkArg(actions.createGameForBattle), (err, gids) => {
+        this.gids = gids;
         this.ref.child('games').set(gids, () => {
           this.ref.child('powerups').set(powerups, () => {
-            this.ref.child('pickups').set(pickups, () => {
+            this.spawnPowerups(NUM_PICKUPS, [rawGame], () => {
               this.emit('ready');
             });
           });
