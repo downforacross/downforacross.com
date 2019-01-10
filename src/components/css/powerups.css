@@ -20,7 +20,9 @@
 }
 
 .powerups--info {
-  justify-content: center;
+  margin-top: 5px;
+  font-size: 70%;
+  text-align: center;
   color: #c87e25;
 }
 
@@ -36,6 +38,23 @@
   cursor: pointer;
 }
 
+.powerups--emoji {
+  position: relative;
+}
+
+.powerups--count {
+  position: absolute;
+  background-color: blue;
+  border-radius: 10px;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  top: 0px;
+  right: 0px;
+  vertical-align: middle;
+  color: white;
+}
+
 span {
   justify-content: center;
 }
@@ -46,6 +65,7 @@ span {
   padding-bottom: 2.2px;
   padding-right: 2.1px;
   border: 2px solid #59677e !important;
+  box-sizing: border-box;
 }
 
 .powerups--in-use span img {
@@ -53,4 +73,5 @@ span {
   padding-bottom: 0.2px;
   padding-right: 0.1px;
   border: 10px solid #339966 !important;
+  box-sizing: border-box;
 }
