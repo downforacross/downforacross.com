@@ -11,6 +11,7 @@ import {PuzzleModel} from '../store';
 
 const STARTING_POWERUPS = 1;
 const NUM_PICKUPS = 10;
+const MAX_ON_BOARD = 3;
 const VALUE_LISTENERS = ['games', 'powerups', 'startedAt', 'players', 'winner', 'pickups'];
 
 export default class Battle extends EventEmitter {
@@ -117,6 +118,14 @@ export default class Battle extends EventEmitter {
     });
   }
 
+  countLivePickups(cbk) {
+    this.ref.child('pickups').once('value', (snapshot) => {
+      const pickups = snapshot.val();
+      const live = _.filter(pickups, (p) => !p.pickedUp);
+      cbk(live.length);
+    });
+  }
+
   spawnPowerups(n, games, cbk) {
     const possibleLocationsPerGrid = _.map(games, (game) => {
       const {grid, solution} = game;
@@ -124,21 +133,23 @@ export default class Battle extends EventEmitter {
       return gridObj.getPossiblePickupLocations(solution);
     });
 
-    const possibleLocations = _.intersectionWith(...possibleLocationsPerGrid, _.isEqual);
-    console.log(possibleLocations, possibleLocationsPerGrid);
+    this.countLivePickups((currentNum) => {
+      if (currentNum > MAX_ON_BOARD) return;
+      const possibleLocations = _.intersectionWith(...possibleLocationsPerGrid, _.isEqual);
 
-    const locations = _.sampleSize(possibleLocations, n);
+      const locations = _.sampleSize(possibleLocations, n);
 
-    const powerupTypes = _.keys(powerupData);
-    const pickups = _.map(locations, ({i, j}) => ({i, j, type: _.sample(powerupTypes)}));
+      const powerupTypes = _.keys(powerupData);
+      const pickups = _.map(locations, ({i, j}) => ({i, j, type: _.sample(powerupTypes)}));
 
-    async.map(
-      pickups,
-      (pickup, cbk) => {
-        this.ref.child('pickups').push(pickup, () => cbk());
-      },
-      () => cbk && cbk()
-    );
+      async.map(
+        pickups,
+        (pickup, cbk) => {
+          this.ref.child('pickups').push(pickup, () => cbk());
+        },
+        () => cbk && cbk()
+      );
+    });
   }
 
   initialize(pid, bid, teams = 2) {

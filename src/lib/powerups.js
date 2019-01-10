@@ -115,7 +115,7 @@ const powerups = {
   VOWELS: {
     name: 'De-Vowel',
     icon: 'cactus_sweat',
-    duration: 30,
+    duration: 15,
     action: ({ownGame, opponentGame}) => ({ownGame, opponentGame: removeVowels(opponentGame)}),
   },
   REVEAL_SQUARE: {
