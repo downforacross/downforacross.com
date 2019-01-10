@@ -41,16 +41,14 @@ export default class Powerups extends React.Component {
     const timeSecs = format(secsLeft % 60);
 
     return (
-      <Flex column className="powerups--powerup" onClick={onClick} hAlignContent="center">
+      <Flex key={type} column className="powerups--powerup" onClick={onClick} hAlignContent="center">
         <Flex className="powerups--label">{name}</Flex>
-        <Flex key={type} className={className}>
+        <Flex className={className}>
           <Flex column>
             <Emoji emoji={icon} big={true} className="powerups--eemoji" />
-            {inuse && (
-              <div className="powerups--info">
-                {timeMins}:{timeSecs}
-              </div>
-            )}
+            <div className="powerups--info" style={{opacity: inuse ? 1 : 0}}>
+              {timeMins}:{timeSecs}
+            </div>
           </Flex>
           {count > 1 && <div className="powerups--count">{count}</div>}
         </Flex>
