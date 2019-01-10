@@ -125,7 +125,7 @@ export default class GameV2 extends Component {
     // TODO: fix these.
     setInterval(() => {
       this.battleModel.spawnPowerups(1, [this.game, this.opponentGame]);
-    }, 30 * 1000);
+    }, 60 * 1000);
 
     this.opponentGameModel.attach();
   }

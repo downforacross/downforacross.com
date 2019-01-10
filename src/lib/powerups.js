@@ -103,19 +103,19 @@ const powerups = {
   REVERSE: {
     name: 'Reverse!',
     icon: 'steven',
-    duration: 60,
+    duration: 15,
     action: ({ownGame, opponentGame}) => ({ownGame, opponentGame: reverseClues(opponentGame)}),
   },
   DARK_MODE: {
     name: 'Dark Mode',
     icon: 'dark_moon',
-    duration: 60,
+    duration: 30,
     action: ({ownGame, opponentGame}) => ({ownGame, opponentGame: hideSquares(opponentGame)}),
   },
   VOWELS: {
     name: 'De-Vowel',
     icon: 'cactus_sweat',
-    duration: 60,
+    duration: 30,
     action: ({ownGame, opponentGame}) => ({ownGame, opponentGame: removeVowels(opponentGame)}),
   },
   REVEAL_SQUARE: {
