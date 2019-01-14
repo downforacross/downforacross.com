@@ -45,22 +45,23 @@ const revealSquare = ({selected, gameModel}) => {
 
 const secondsSince = (t) => moment.duration(moment(Date.now()).diff(moment(t))).asSeconds();
 
-export const hasExpired = (powerup) => {
+export const timeLeft = (powerup) => {
   const {type, used} = powerup;
-  const {duration} = powerups[type];
-  return used && secondsSince(used) > duration;
+  let {duration} = powerups[type];
+  duration = parseInt(duration);
+  if (!used) {
+    return duration;
+  } else {
+    return duration - secondsSince(used);
+  }
+};
+
+export const hasExpired = (powerup) => {
+  return timeLeft(powerup) < 0;
 };
 
 export const inUse = (powerup) => {
-  const {type, used} = powerup;
-  const {duration} = powerups[type];
-  return used && secondsSince(used) < duration;
-};
-
-export const timeLeft = (powerup) => {
-  const {type, used} = powerup;
-  const {duration} = powerups[type];
-  return used && parseInt(duration - secondsSince(used));
+  return powerup.used && !hasExpired(powerup);
 };
 
 /** Application helpers **/

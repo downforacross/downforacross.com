@@ -24,14 +24,15 @@ export default class Powerups extends React.Component {
 
   // TODO: forceUpdate to make sure hasExpired check clears powerups that time out.
   // Maybe by using a delay callback?
-  renderPowerup(powerup, idx) {
+  renderPowerup(powerup, count) {
+    console.log(powerup);
     if (hasExpired(powerup)) {
       return;
     }
     const {type} = powerup;
     const {icon, name} = powerups[type];
     const inuse = inUse(powerup);
-    const className = inuse ? 'powerups--in-use' : 'powerups--unused';
+    const className = 'powerups--emoji ' + (inuse ? 'powerups--in-use' : 'powerups--unused');
     const onClick = inuse ? undefined : () => this.props.handleUsePowerup(powerup);
 
     const secsLeft = timeLeft(powerup);
@@ -40,15 +41,16 @@ export default class Powerups extends React.Component {
     const timeSecs = format(secsLeft % 60);
 
     return (
-      <Flex className="powerups--powerup" onClick={onClick}>
+      <Flex key={type} column className="powerups--powerup" onClick={onClick} hAlignContent="center">
         <Flex className="powerups--label">{name}</Flex>
-        {inuse && (
-          <Flex className="powerups--info">
-            {timeMins}:{timeSecs}
+        <Flex className={className}>
+          <Flex column>
+            <Emoji emoji={icon} big={true} className="powerups--eemoji" />
+            <div className="powerups--info" style={{opacity: inuse ? 1 : 0}}>
+              {timeMins}:{timeSecs}
+            </div>
           </Flex>
-        )}
-        <Flex key={idx} className={className}>
-          <Emoji emoji={icon} big={true} className="powerups--eemoji" />
+          {count > 1 && <div className="powerups--count">{count}</div>}
         </Flex>
       </Flex>
     );
@@ -58,7 +60,13 @@ export default class Powerups extends React.Component {
     return (
       <Flex className="powerups--main">
         <Flex className="powerups--header">POWERUPS</Flex>
-        {_.map(this.props.powerups, this.renderPowerup)}
+        {_.values(_.groupBy(this.props.powerups, 'type'))
+          .map((powerupGroup) => powerupGroup.filter((powerup) => !hasExpired(powerup)))
+          .map(
+            (powerupGroup) =>
+              // only render the first powerup of a given type
+              powerupGroup.length > 0 && this.renderPowerup(powerupGroup[0], powerupGroup.length)
+          )}
       </Flex>
     );
   }

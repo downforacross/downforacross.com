@@ -318,7 +318,7 @@ export default class GameV2 extends Component {
           </Flex>
           <Flex grow={1}>{this.showingChat && this.renderChat()}</Flex>
         </Flex>
-        <Powerups powerups={powerups} handleUsePowerup={this.handleUsePowerup} />
+        {powerups && <Powerups powerups={powerups} handleUsePowerup={this.handleUsePowerup} />}
       </Flex>
     );
   }
