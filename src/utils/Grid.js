@@ -149,6 +149,26 @@ export default class Grid {
     return writableLocations;
   }
 
+  getCrossingWords(r, c) {
+    const writableLocations = this.getWritableLocations();
+    const isSameWord = (direction) => ({i, j}) =>
+      this.getParent(r, c, direction) === this.getParent(i, j, direction);
+
+    const across = _.filter(writableLocations, isSameWord('across'));
+    const down = _.filter(writableLocations, isSameWord('down'));
+    return {across, down};
+  }
+
+  getPossiblePickupLocations(solution) {
+    const writableLocations = this.getWritableLocations();
+    const isCorrect = (cells) => _.every(cells, ({i, j}) => this.grid[i][j].value === solution[i][j]);
+
+    return _.filter(writableLocations, ({i, j}) => {
+      const {across, down} = this.getCrossingWords(i, j);
+      return !isCorrect(across) && !isCorrect(down);
+    });
+  }
+
   getCellByNumber(number) {
     for (const [r, c, cell] of this.items()) {
       if (cell.number === number) {

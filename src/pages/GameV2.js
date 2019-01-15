@@ -15,6 +15,8 @@ import Powerups from '../components/Powerups';
 import redirect from '../redirect';
 import {isMobile} from '../jsUtils';
 
+import * as powerupLib from '../lib/powerups';
+
 export default class GameV2 extends Component {
   constructor(props) {
     super();
@@ -52,10 +54,19 @@ export default class GameV2 extends Component {
     const {bid, team} = battleData;
     this.setState({bid, team});
     if (this.battleModel) this.battleModel.detach();
+
     this.battleModel = new BattleModel(`/battle/${bid}`);
+
     this.battleModel.once('games', (games) => {
       const opponent = games[1 - team];
       this.setState({opponent}, () => this.initializeOpponentGame());
+    });
+
+    this.battleModel.on('usePowerup', (powerup) => {
+      const {gameModel, opponentGameModel} = this;
+      const {selected} = this.gameComponent.player.state;
+      powerupLib.applyOneTimeEffects(powerup, {gameModel, opponentGameModel, selected});
+      this.handleChange();
     });
 
     _.forEach(['powerups', 'startedAt', 'winner', 'players', 'pickups'], (subpath) => {
@@ -108,6 +119,14 @@ export default class GameV2 extends Component {
       this.handleChange();
       this.handleUpdate();
     });
+
+    // For now, every client spawns pickups. That makes sense maybe from a balance perpsective.
+    // It's just easier to write. Also for now you can have multiple in the same tile oops.
+    // TODO: fix these.
+    setInterval(() => {
+      this.battleModel.spawnPowerups(1, [this.game, this.opponentGame]);
+    }, 6 * 1000);
+
     this.opponentGameModel.attach();
   }
 

@@ -1,6 +1,8 @@
 import moment from 'moment';
 import _ from 'lodash';
 
+/** Status effect helpers **/
+
 const transformClues = (game, transformation) => {
   const {clues} = game;
   const across = _.map(clues.across, transformation);
@@ -33,11 +35,20 @@ const hideSquares = (game) => {
   };
 };
 
-const secondsSince = (t) => parseInt(moment.duration(moment(Date.now()).diff(moment(t))).asSeconds());
+/** One time action helpers **/
+
+const revealSquare = ({selected, gameModel}) => {
+  gameModel.reveal([selected]);
+};
+
+/** Duration helpers **/
+
+const secondsSince = (t) => moment.duration(moment(Date.now()).diff(moment(t))).asSeconds();
 
 export const timeLeft = (powerup) => {
   const {type, used} = powerup;
-  const {duration} = powerups[type];
+  let {duration} = powerups[type];
+  duration = parseInt(duration);
   if (!used) {
     return duration;
   } else {
@@ -52,6 +63,8 @@ export const hasExpired = (powerup) => {
 export const inUse = (powerup) => {
   return powerup.used && !hasExpired(powerup);
 };
+
+/** Application helpers **/
 
 export const apply = (ownGame, opponentGame, ownPowerups, opponentPowerups) => {
   if (!ownGame || !opponentGame) {
@@ -77,27 +90,41 @@ export const apply = (ownGame, opponentGame, ownPowerups, opponentPowerups) => {
   return {ownGame: ownGame2, opponentGame: opponentGame2};
 };
 
+export const applyOneTimeEffects = (p, args) => {
+  const fn = powerups[p.type].oneTimeAction;
+  fn && fn(args);
+};
+
 // There should probably be an enum here with the keys of the following.
 // Only image based emojis for now, until I figure out how css works...
+
+/** Powerup data **/
 
 const powerups = {
   REVERSE: {
     name: 'Reverse!',
     icon: 'steven',
-    duration: 60,
+    duration: 15,
     action: ({ownGame, opponentGame}) => ({ownGame, opponentGame: reverseClues(opponentGame)}),
   },
   DARK_MODE: {
     name: 'Dark Mode',
     icon: 'dark_moon',
-    duration: 60,
+    duration: 30,
     action: ({ownGame, opponentGame}) => ({ownGame, opponentGame: hideSquares(opponentGame)}),
   },
   VOWELS: {
     name: 'De-Vowel',
     icon: 'cactus_sweat',
-    duration: 60,
+    duration: 15,
     action: ({ownGame, opponentGame}) => ({ownGame, opponentGame: removeVowels(opponentGame)}),
+  },
+  REVEAL_SQUARE: {
+    name: 'Reveal Square',
+    icon: 'surprised_pikachu',
+    duration: 0,
+    action: _.identity,
+    oneTimeAction: revealSquare,
   },
 };
 

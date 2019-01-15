@@ -11,6 +11,7 @@ import {PuzzleModel} from '../store';
 
 const STARTING_POWERUPS = 1;
 const NUM_PICKUPS = 10;
+const MAX_ON_BOARD = 3;
 const VALUE_LISTENERS = ['games', 'powerups', 'startedAt', 'players', 'winner', 'pickups'];
 
 export default class Battle extends EventEmitter {
@@ -72,9 +73,12 @@ export default class Battle extends EventEmitter {
       const allPowerups = snapshot.val();
       const ownPowerups = allPowerups[team];
       const toUse = _.find(ownPowerups, (powerup) => powerup.type === type && !powerup.used);
-      toUse.used = Date.now();
-      toUse.target = 1 - team; // For now use on other team.
-      this.ref.child('powerups').set(allPowerups);
+      if (toUse) {
+        this.emit('usePowerup', toUse);
+        toUse.used = Date.now();
+        toUse.target = 1 - team; // For now use on other team.
+        this.ref.child('powerups').set(allPowerups);
+      }
     });
   }
 
@@ -82,15 +86,6 @@ export default class Battle extends EventEmitter {
   checkPickups(r, c, game, team) {
     const {grid, solution} = game;
     const gridObj = new GridObject(grid);
-
-    const isSameWord = (direction) => ({i, j}) => {
-      if (!gridObj.isWriteable(i, j)) return false;
-      return gridObj.getParent(r, c, direction) === gridObj.getParent(i, j, direction);
-    };
-
-    const writableLocations = gridObj.getWritableLocations();
-    const acrossCells = _.filter(writableLocations, isSameWord('across'));
-    const downCells = _.filter(writableLocations, isSameWord('down'));
 
     this.ref.child('pickups').once('value', (snapshot1) => {
       const pickups = snapshot1.val();
@@ -113,12 +108,47 @@ export default class Battle extends EventEmitter {
           });
         };
 
-        pickupIfCorrect(acrossCells);
-        pickupIfCorrect(downCells);
+        const {across, down} = gridObj.getCrossingWords(r, c);
+        pickupIfCorrect(across);
+        pickupIfCorrect(down);
 
         this.ref.child('pickups').set(pickups);
         this.ref.child('powerups').set(powerups);
       });
+    });
+  }
+
+  countLivePickups(cbk) {
+    this.ref.child('pickups').once('value', (snapshot) => {
+      const pickups = snapshot.val();
+      const live = _.filter(pickups, (p) => !p.pickedUp);
+      cbk(live.length);
+    });
+  }
+
+  spawnPowerups(n, games, cbk) {
+    const possibleLocationsPerGrid = _.map(games, (game) => {
+      const {grid, solution} = game;
+      const gridObj = new GridObject(grid);
+      return gridObj.getPossiblePickupLocations(solution);
+    });
+
+    this.countLivePickups((currentNum) => {
+      if (currentNum > MAX_ON_BOARD) return;
+      const possibleLocations = _.intersectionWith(...possibleLocationsPerGrid, _.isEqual);
+
+      const locations = _.sampleSize(possibleLocations, n);
+
+      const powerupTypes = _.keys(powerupData);
+      const pickups = _.map(locations, ({i, j}) => ({i, j, type: _.sample(powerupTypes)}));
+
+      async.map(
+        pickups,
+        (pickup, cbk) => {
+          this.ref.child('pickups').push(pickup, () => cbk());
+        },
+        () => cbk && cbk()
+      );
     });
   }
 
@@ -140,17 +170,13 @@ export default class Battle extends EventEmitter {
     puzzle.once('ready', () => {
       const rawGame = puzzle.toGame();
       puzzle.detach();
-      const {grid} = rawGame;
 
-      const gridObj = new GridObject(grid);
-
-      const locations = _.sampleSize(gridObj.getWritableLocations(), NUM_PICKUPS);
-      const pickups = _.map(locations, ({i, j}) => ({i, j, type: _.sample(powerupTypes)}));
-
+      // Need to wait for all of these to finish otherwise the redirect on emit(ready) kills things.
       async.map(args, shiftCbkArg(actions.createGameForBattle), (err, gids) => {
+        this.gids = gids;
         this.ref.child('games').set(gids, () => {
           this.ref.child('powerups').set(powerups, () => {
-            this.ref.child('pickups').set(pickups, () => {
+            this.spawnPowerups(NUM_PICKUPS, [rawGame], () => {
               this.emit('ready');
             });
           });
