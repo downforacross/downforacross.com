@@ -28,13 +28,13 @@
 }
 
 .welcomev2--main {
-  border-left: 2px solid var(--main-blue);
   /* padding: 10px; */
   overflow: hidden;
 }
 
 .welcomev2--sidebar {
   padding-bottom: 20px;
+  border-right: 2px solid var(--main-blue);
 }
 
 .welcomev2--sidebar > div {
