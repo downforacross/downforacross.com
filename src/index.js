@@ -12,11 +12,11 @@ import {
   Replays,
   Room,
   Solo,
-  Welcome,
   WelcomeV2,
 } from './pages/index';
+import {isMobile} from './jsUtils';
 import Testing from './pages/Testing';
-
+import classnames from 'classnames';
 import ReactDOM from 'react-dom';
 import React from 'react';
 
@@ -32,9 +32,8 @@ ReactDOM.render(
 */
 ReactDOM.render(
   <Router>
-    <div className="router-wrapper">
+    <div className={classnames('router-wrapper', {mobile: isMobile()})}>
       <Route exact path="/" component={WelcomeV2} />
-      <Route exact path="/old" component={Welcome} />
       <Route exact path="/game/:gid" component={Game} />
       <Route exact path="/room/:rid" component={Room} />
       <Route exact path="/room/:rid/:gid" component={Room} />

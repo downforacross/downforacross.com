@@ -1,6 +1,7 @@
 import React, {PureComponent} from 'react';
 import _ from 'lodash';
 import Entry from './Entry';
+import './css/puzzleList.css';
 
 export default class PuzzleList extends PureComponent {
   constructor() {
@@ -13,7 +14,7 @@ export default class PuzzleList extends PureComponent {
     setTimeout(this.handleScroll, 1000);
     // when resizing / changing filters, check if we need to load more pages
     // for some reason we need to delay it.
-    // calling handleScroll twice with different delays to be performant but also resistant to weirdly slow browsers that alg??
+    // calling handleScroll twice with different delays to be performant but also resistant to weirdly slow browsers that lag??
   }
 
   get fullyScrolled() {
@@ -115,10 +116,11 @@ export default class PuzzleList extends PureComponent {
           // justifyContent: 'space-around',
           overflowY: 'auto',
         }}
+        className="puzzlelist"
         onScroll={this.handleScroll}
       >
         {this.puzzles.map((entry, i) => (
-          <div key={i} style={{marginLeft: 25, marginTop: 25}}>
+          <div className="entry--container" key={i}>
             <Entry
               {...entry}
               status={this.puzzleStatuses[entry.pid]}

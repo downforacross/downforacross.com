@@ -1,0 +1,16 @@
+.entry--container {
+  margin-left: 25px;
+  margin-top: 25px;
+}
+
+.mobile .entry--container {
+  margin: 18px auto 0;
+}
+
+.mobile .entryv2 {
+  margin: 0;
+}
+
+.mobile .puzzlelist {
+  /* margin-top: 18px; */
+}
