@@ -1,5 +1,3 @@
-import './css/welcome.css';
-
 import React, {Component} from 'react';
 import {Helmet} from 'react-helmet';
 
