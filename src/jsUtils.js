@@ -99,7 +99,6 @@ function isAncestor(a, b) {
 }
 
 function isMobile() {
-  return true;
   if (navigator.userAgent.match(/Tablet|iPad/i)) {
     // do tablet stuff
     return true;
