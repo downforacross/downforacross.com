@@ -312,7 +312,7 @@ export default class GameV2 extends Component {
         </Helmet>
         <Nav v2 hidden={this.state.mobile} />
         <MobilePanel />
-        <Flex className="room--main" grow={1}>
+        <Flex grow={1} style={{overflow: 'auto'}}>
           <Flex column shrink={0}>
             {this.showingGame && this.renderGame()}
           </Flex>
