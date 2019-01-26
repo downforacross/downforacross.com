@@ -27,6 +27,11 @@ export default class GameV2 extends Component {
       powerups: undefined,
     };
     this.initializeUser();
+    window.addEventListener('resize', () => {
+      this.setState({
+        mobile: isMobile(),
+      });
+    });
   }
 
   // lifecycle stuff
@@ -295,8 +300,33 @@ export default class GameV2 extends Component {
     return game.info.title;
   }
 
-  render() {
+  renderContent() {
     const powerups = _.get(this.state.powerups, this.state.team);
+
+    const mobileContent = (
+      <React.Fragment>
+        <MobilePanel />
+        {this.showingGame && this.renderGame()}
+      </React.Fragment>
+    );
+
+    const desktopContent = (
+      <React.Fragment>
+        <Nav v2 />
+        <Flex grow={1} style={{overflow: 'auto'}}>
+          <Flex column shrink={0}>
+            {this.showingGame && this.renderGame()}
+          </Flex>
+          <Flex grow={1}>{this.showingChat && this.renderChat()}</Flex>
+        </Flex>
+        {powerups && <Powerups powerups={powerups} handleUsePowerup={this.handleUsePowerup} />}
+      </React.Fragment>
+    );
+
+    return this.state.mobile ? mobileContent : desktopContent;
+  }
+
+  render() {
     return (
       <Flex
         className="room"
@@ -310,15 +340,7 @@ export default class GameV2 extends Component {
         <Helmet>
           <title>{this.getPuzzleTitle()}</title>
         </Helmet>
-        <Nav v2 hidden={this.state.mobile} />
-        <MobilePanel />
-        <Flex grow={1} style={{overflow: 'auto'}}>
-          <Flex column shrink={0}>
-            {this.showingGame && this.renderGame()}
-          </Flex>
-          <Flex grow={1}>{this.showingChat && this.renderChat()}</Flex>
-        </Flex>
-        {powerups && <Powerups powerups={powerups} handleUsePowerup={this.handleUsePowerup} />}
+        {this.renderContent()}
       </Flex>
     );
   }
