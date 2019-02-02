@@ -14,6 +14,11 @@
   text-align: center;
 }
 
+.toolbar--mobile {
+  height: 5vh;
+  max-height: 5vh;
+}
+
 .toolbar button,
 .toolbar--mobile button {
   color: var(--main-gray-1);

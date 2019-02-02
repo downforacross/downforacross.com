@@ -1,7 +1,6 @@
 import './css/player.css';
 
 import React, {Component} from 'react';
-import Flex from 'react-flexview';
 import {getTime} from '../actions';
 import {lazy} from '../jsUtils';
 
@@ -11,7 +10,7 @@ import Grid from './Grid';
 import Clues from './Clues';
 import Clue from './ClueText';
 import GridControls from './GridControls';
-import MobileGridControls from './MobileGridControls';
+import MobileGridControls from './MobileGridControlsV2';
 
 import * as gameUtils from '../gameUtils';
 
@@ -222,20 +221,6 @@ export default class Player extends Component {
     }
   }
 
-  renderMobileClueBar() {
-    return (
-      <Flex className="player--mobile--clue-bar">
-        <div className="player--mobile--clue-bar--number">
-          <Clue text={this.getClueBarAbbreviation()} />
-        </div>
-        <Flex className="player--mobile--clue-bar--text" grow={1}>
-          <Clue text={this.getClueBarText()} />
-        </Flex>
-        <i className="player--mobile--typing-hint fa fa-6 fa-keyboard-o" />
-      </Flex>
-    );
-  }
-
   /* Render */
   render() {
     const {
@@ -282,10 +267,10 @@ export default class Player extends Component {
             updateGrid={updateGrid}
             grid={grid}
             clues={clues}
+            clueBarAbbreviation={this.getClueBarAbbreviation()}
+            clueBarText={this.getClueBarText()}
           >
             <div className="player--mobile">
-              {this.renderMobileClueBar()}
-
               <div className={'player--mobile--grid' + (frozen ? ' frozen' : '')}>
                 <Grid
                   ref="grid"
@@ -302,8 +287,6 @@ export default class Player extends Component {
                   pickups={pickups}
                 />
               </div>
-
-              {this.renderMobileClueBar()}
             </div>
           </MobileGridControls>
         </div>

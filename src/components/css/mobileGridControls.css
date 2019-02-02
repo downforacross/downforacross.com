@@ -8,34 +8,41 @@
 }
 
 .mobile-grid-controls {
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  max-height: 80vh;
   outline: none;
   position: relative;
 }
 
-.mobile-grid-controls--textarea--wrapper {
-  position: absolute;
-  top: 115px;
-}
-
-.mobile-grid-controls--textarea {
-  font-size: 30px;
-  transform: scale(0);
-}
-
-.mobile-grid-controls--focus-button {
-  width: 100%;
-  background-color: #fff;
-  color: black;
-  text-transform: uppercase;
-  padding: 10px;
-  font-size: 20px;
-  border-radius: 3px;
-  border: 1px solid black;
-}
-
 .mobile-grid-controls--grid-content {
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 1px;
   display: flex;
   width: min-content;
   height: 100%;
+}
+
+.mobile-grid-controls--clue-bar {
+  background-color: var(--main-blue-3);
+  padding: 20px;
+  display: flex;
+  font-size: 15px;
+  flex: 1;
+  min-height: 20px;
+  align-items: center;
+}
+
+.mobile-grid-controls--clue-bar--number {
+  font-weight: bold;
+  display: inline-block;
+}
+
+.mobile-grid-controls--clue-bar--text {
+  margin-left: 20px;
+  display: inline-block;
+  overflow-y: auto;
+  max-height: 100%;
 }
