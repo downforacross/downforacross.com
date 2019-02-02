@@ -4,43 +4,42 @@ import React from 'react';
 import Flex from 'react-flexview';
 import Clue from './ClueText';
 import GridControls from './GridControls';
+import MobileKeyboard from './MobileKeyboard';
+import classnames from 'classnames';
 
 export default class MobileGridControls extends GridControls {
   constructor() {
     super();
     this.state = {
-      typing: false,
+      touchingClueBar: false,
     };
-    this._handleMobileKeyDown = this.handleMobileKeyDown.bind(this);
-    this._handleInput = this.handleInput.bind(this);
     this.prvInput = '';
   }
 
-  handleMobileKeyDown(ev) {
-    if (ev.keyCode !== 229) {
-      // skip it on android
-      this.handleKeyDown(ev);
-    }
-  }
+  handleTouchClueBarEnd = () => {
+    this.setState({
+      touchingClueBar: false,
+    });
+    this.handleAction('space');
+  };
 
-  // handle input -- which should only fire on android
-  handleInput(ev) {
-    const input = this.refs.textarea.value;
-    const prvInput = this.prvInput;
-    if (input.startsWith(prvInput)) {
-      if (input.length === prvInput.length + 1) {
-        const letter = input.substring(input.length - 1).toUpperCase();
-        this.typeLetter(letter, false); // no rebus for android
-      }
-    }
-    this.prvInput = input;
-  }
+  handleTouchClueBarStart = () => {
+    this.setState({
+      touchingClueBar: true,
+    });
+  };
 
-  renderMobileKeyboard() {}
+  renderGridContent() {
+    return <div className="mobile-grid-controls--grid-content">{this.props.children}</div>;
+  }
 
   renderClueBar() {
     return (
-      <Flex className="mobile-grid-controls--clue-bar">
+      <Flex
+        className={classnames('mobile-grid-controls--clue-bar', {touching: this.state.touchingClueBar})}
+        onTouchStart={this.handleTouchClueBarStart}
+        onTouchEnd={this.handleTouchClueBarEnd}
+      >
         <div className="mobile-grid-controls--clue-bar--number">
           <Clue text={this.props.clueBarAbbreviation} />
         </div>
@@ -51,23 +50,17 @@ export default class MobileGridControls extends GridControls {
     );
   }
 
-  renderGridContent() {
-    return <div className="mobile-grid-controls--grid-content">{this.props.children}</div>;
+  renderMobileKeyboard() {
+    return (
+      <Flex className="mobile-grid-controls--keyboard">
+        <MobileKeyboard onKeydown={this.handleKeyDown} />
+      </Flex>
+    );
   }
 
   render() {
-    const {typing} = this.state;
     return (
-      <div
-        ref="gridControls"
-        className={'mobile-grid-controls ' + (typing ? ' typing' : '')}
-        onKeyDown={this._handleMobileKeyDown}
-        onInput={this._handleInput}
-        onTouchEnd={(e) => {
-          e.preventDefault();
-          this.refs.textarea.focus();
-        }}
-      >
+      <div ref="gridControls" className="mobile-grid-controls">
         {this.renderGridContent()}
         {this.renderClueBar()}
       </div>

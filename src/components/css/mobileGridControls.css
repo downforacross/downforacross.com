@@ -35,6 +35,10 @@
   align-items: center;
 }
 
+.mobile-grid-controls--clue-bar.touching {
+  background-image: linear-gradient(to bottom, #edffff, #dcefff);
+}
+
 .mobile-grid-controls--clue-bar--number {
   font-weight: bold;
   display: inline-block;
