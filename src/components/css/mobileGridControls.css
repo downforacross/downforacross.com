@@ -21,8 +21,6 @@
   flex-shrink: 1;
   flex-basis: 1px;
   display: flex;
-  width: min-content;
-  height: 100%;
 }
 
 .mobile-grid-controls--clue-bar {

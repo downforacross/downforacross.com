@@ -48,6 +48,7 @@ export default class Player extends Component {
       },
       direction: 'across',
       mobile: false,
+      size: props.size,
     };
 
     // for deferring scroll-to-clue actions
@@ -62,6 +63,20 @@ export default class Player extends Component {
     this._canSetDirection = this.canSetDirection.bind(this);
     this._setSelected = this.setSelected.bind(this);
     this._changeDirection = this.changeDirection.bind(this);
+    this.container = React.createRef();
+  }
+
+  componentDidMount() {
+    const el = this.container.current;
+    const {width, height} = el.getBoundingClientRect();
+    console.log(height);
+    debugger;
+    const rows = this.props.grid.length;
+    const cols = this.props.grid[0].length;
+    const size = Math.floor(Math.min(width / cols, height / rows));
+    this.setState({
+      size,
+    });
   }
 
   get grid() {
@@ -227,7 +242,6 @@ export default class Player extends Component {
       mobile,
       onPressEnter,
       onPressPeriod,
-      size,
       grid,
       opponentGrid,
       clues,
@@ -242,6 +256,7 @@ export default class Player extends Component {
       id,
       pickups,
     } = this.props;
+    const {size} = this.state;
 
     const currentTime = getTime();
     const cursors = allCursors.filter((cursor) => cursor.id !== id).map((cursor) => ({
@@ -270,7 +285,7 @@ export default class Player extends Component {
             clueBarAbbreviation={this.getClueBarAbbreviation()}
             clueBarText={this.getClueBarText()}
           >
-            <div className="player--mobile">
+            <div className="player--mobile" ref={this.container}>
               <div className={'player--mobile--grid' + (frozen ? ' frozen' : '')}>
                 <Grid
                   ref="grid"
