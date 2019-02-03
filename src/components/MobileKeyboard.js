@@ -6,7 +6,7 @@ import 'react-simple-keyboard/build/css/index.css';
 export default class MobileKeyboard extends React.Component {
   handleKeyPress = (button) => {
     console.log('keypress', button);
-    // this.props.onKeyPress(button);
+    this.props.onKeyDown(button);
   };
 
   render() {

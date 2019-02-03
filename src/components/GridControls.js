@@ -130,11 +130,8 @@ export default class GridControls extends Component {
     return letter.match(/^[A-Z0-9]$/);
   }
 
-  handleKeyDown(ev) {
-    if (ev.target.tagName === 'INPUT') {
-      return;
-    }
-
+  // takes in key, a string
+  _handleKeyDown = (key, shiftKey) => {
     const actionKeys = {
       ArrowLeft: 'left',
       ArrowUp: 'up',
@@ -147,28 +144,34 @@ export default class GridControls extends Component {
     };
 
     const {onPressEnter, onPressPeriod, onPressEscape} = this.props;
-    if (ev.key in actionKeys) {
-      ev.preventDefault();
-      ev.stopPropagation();
-      this.handleAction(actionKeys[ev.key], ev.shiftKey);
-    } else if (ev.key === '.') {
-      ev.preventDefault();
-      ev.stopPropagation();
+    if (key in actionKeys) {
+      this.handleAction(actionKeys[key], shiftKey);
+      return true;
+    } else if (key === '.') {
       onPressPeriod && onPressPeriod();
-    } else if (ev.key === 'Enter') {
+      return true;
+    } else if (key === 'Enter') {
+      onPressEnter && onPressEnter();
+      return true;
+    } else if (key === 'Escape') {
+      onPressEscape && onPressEscape();
+    } else if (!this.props.frozen) {
+      const letter = key.toUpperCase();
+      if (this.validLetter(letter)) {
+        this.typeLetter(letter, shiftKey);
+        return true;
+      }
+    }
+  };
+
+  // takes in a Keyboard Event
+  handleKeyDown(ev) {
+    if (ev.target.tagName === 'INPUT' || ev.metaKey || ev.ctrlKey) {
+      return;
+    }
+    if (this._handleKeyDown(ev.key, ev.shiftKey)) {
       ev.preventDefault();
       ev.stopPropagation();
-      onPressEnter && onPressEnter();
-    } else if (ev.key === 'Escape') {
-      onPressEscape && onPressEscape();
-    } else {
-      const letter = ev.key.toUpperCase();
-      if (this.props.frozen) return;
-      if (!ev.metaKey && !ev.ctrlKey && this.validLetter(letter)) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        this.typeLetter(letter, ev.shiftKey);
-      }
     }
   }
 

@@ -53,7 +53,7 @@ export default class MobileGridControls extends GridControls {
   renderMobileKeyboard() {
     return (
       <Flex className="mobile-grid-controls--keyboard">
-        <MobileKeyboard onKeyDown={this.handleKeyDown} />
+        <MobileKeyboard onKeyDown={this._handleKeyDown} />
       </Flex>
     );
   }
