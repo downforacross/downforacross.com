@@ -69,8 +69,6 @@ export default class Player extends Component {
   componentDidMount() {
     const el = this.container.current;
     const {width, height} = el.getBoundingClientRect();
-    console.log(height);
-    debugger;
     const rows = this.props.grid.length;
     const cols = this.props.grid[0].length;
     const size = Math.floor(Math.min(width / cols, height / rows));
