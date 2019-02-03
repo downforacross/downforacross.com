@@ -82,7 +82,7 @@ export default class GameV2 extends Component {
     this.gameModel.updateCell(r, c, id, myColor, pencilMode, value);
     this.props.onChange({isEdit: true});
 
-    this.props.battleModel.checkPickups(r, c, this.rawGame, this.props.team);
+    this.props.battleModel && this.props.battleModel.checkPickups(r, c, this.rawGame, this.props.team);
   };
 
   handleUpdateCursor = ({r, c}) => {
