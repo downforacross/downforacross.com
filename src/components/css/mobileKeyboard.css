@@ -1,0 +1,9 @@
+.simple-keyboard .hg-button {
+  width: 30px;
+}
+.simple-keyboard .hg-button.hg-button-del,
+.simple-keyboard .hg-button.hg-button-more {
+  color: white;
+  background-color: #888;
+  width: 40px;
+}
