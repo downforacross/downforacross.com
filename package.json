@@ -17,6 +17,7 @@
     "react-fontawesome": "^1.6.1",
     "react-helmet": "^5.2.0",
     "react-router-dom": "^4.1.2",
+    "react-simple-keyboard": "^1.15.2",
     "react-timestamp": "^4.4.0",
     "superagent": "^3.5.2"
   },
