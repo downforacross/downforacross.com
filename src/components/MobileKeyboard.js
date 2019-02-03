@@ -5,8 +5,22 @@ import 'react-simple-keyboard/build/css/index.css';
 import './css/mobileKeyboard.css';
 
 export default class MobileKeyboard extends React.Component {
+  state = {
+    layout: 'default',
+  };
   handleKeyPress = (button) => {
     console.log('keypress', button);
+    if (button === '{del}') {
+      this.props.onKeyDown('backspace');
+    } else if (button === '{more}') {
+      this.setState({
+        layout: 'more',
+      });
+    } else if (button === '{abc}') {
+      this.setState({
+        layout: 'default',
+      });
+    }
     this.props.onKeyDown(button);
   };
 
@@ -21,7 +35,11 @@ export default class MobileKeyboard extends React.Component {
           display={{
             '{del}': '⌫',
             '{more}': '123',
+            '{abc}': 'ABC',
+            '{rebus}': '{}',
           }}
+          useTouchEvents={true}
+          layoutName={this.state.layout}
           onKeyPress={this.handleKeyPress}
         />
       </Flex>

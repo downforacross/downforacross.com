@@ -16,7 +16,12 @@ export default class MobileGridControls extends GridControls {
     this.prvInput = '';
   }
 
-  handleTouchClueBarEnd = () => {
+  handleTouchClueBarMove = (e) => {
+    e.preventDefault();
+  };
+
+  handleTouchClueBarEnd = (e) => {
+    e.preventDefault();
     this.setState({
       touchingClueBar: false,
     });
@@ -35,17 +40,24 @@ export default class MobileGridControls extends GridControls {
 
   renderClueBar() {
     return (
-      <Flex
-        className={classnames('mobile-grid-controls--clue-bar', {touching: this.state.touchingClueBar})}
-        onTouchStart={this.handleTouchClueBarStart}
-        onTouchEnd={this.handleTouchClueBarEnd}
-      >
-        <div className="mobile-grid-controls--clue-bar--number">
-          <Clue text={this.props.clueBarAbbreviation} />
-        </div>
-        <Flex className="mobile-grid-controls--clue-bar--text" grow={1}>
-          <Clue text={this.props.clueBarText} />
+      <Flex className="mobile-grid-controls--clue-bar-container">
+        <div className="mobile-grid-controls--intra-clue left">{'<'}</div>
+        <Flex
+          grow={1}
+          vAlignContent="center"
+          className={classnames('mobile-grid-controls--clue-bar', {touching: this.state.touchingClueBar})}
+          onTouchStart={this.handleTouchClueBarStart}
+          onTouchEnd={this.handleTouchClueBarEnd}
+          onTouchMove={this.handleTouchClueBarMove}
+        >
+          <div className="mobile-grid-controls--clue-bar--number">
+            <Clue text={this.props.clueBarAbbreviation} />
+          </div>
+          <Flex className="mobile-grid-controls--clue-bar--text" grow={1}>
+            <Clue text={this.props.clueBarText} />
+          </Flex>
         </Flex>
+        <div className="mobile-grid-controls--intra-clue left">{'>'}</div>
       </Flex>
     );
   }

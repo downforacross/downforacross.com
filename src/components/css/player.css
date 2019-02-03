@@ -68,10 +68,12 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: stretch;
+  justify-content: center;
+  align-items: center;
 }
 
 .player--mobile--grid {
+  display: flex;
 }
 
 .player--mobile--clue-bar {

@@ -2,8 +2,16 @@
   width: 30px;
 }
 .simple-keyboard .hg-button.hg-button-del,
+.simple-keyboard .hg-button.hg-button-abc,
 .simple-keyboard .hg-button.hg-button-more {
   color: white;
   background-color: #888;
   width: 40px;
+}
+
+.simple-keyboard .hg-button.hg-button-rebus {
+  color: white;
+  background-color: var(--main-blue);
+  width: 40px;
+  letter-spacing: 2px;
 }

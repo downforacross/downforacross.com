@@ -138,6 +138,7 @@ export default class GridControls extends Component {
       ArrowDown: 'down',
       ArrowRight: 'right',
       Backspace: 'backspace',
+      '{del}': 'backspace',
       Delete: 'delete',
       Tab: 'tab',
       ' ': 'space',

@@ -48,7 +48,6 @@ export default class Player extends Component {
       },
       direction: 'across',
       mobile: false,
-      size: props.size,
     };
 
     // for deferring scroll-to-clue actions
@@ -63,18 +62,33 @@ export default class Player extends Component {
     this._canSetDirection = this.canSetDirection.bind(this);
     this._setSelected = this.setSelected.bind(this);
     this._changeDirection = this.changeDirection.bind(this);
-    this.container = React.createRef();
+    this.mobileContainer = React.createRef();
   }
 
-  componentDidMount() {
-    const el = this.container.current;
+  updateSize = () => {
+    const el = this.mobileContainer.current;
+    if (!el) return;
     const {width, height} = el.getBoundingClientRect();
     const rows = this.props.grid.length;
     const cols = this.props.grid[0].length;
     const size = Math.floor(Math.min(width / cols, height / rows));
+    console.log({width, size});
     this.setState({
       size,
     });
+  };
+
+  componentDidMount() {
+    window.addEventListener('resize', this.updateSize);
+    this.updateSize();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateSize);
+  }
+
+  get size() {
+    return this.state.size || this.props.size;
   }
 
   get grid() {
@@ -254,7 +268,7 @@ export default class Player extends Component {
       id,
       pickups,
     } = this.props;
-    const {size} = this.state;
+    const size = this.size;
 
     const currentTime = getTime();
     const cursors = allCursors.filter((cursor) => cursor.id !== id).map((cursor) => ({
@@ -283,7 +297,7 @@ export default class Player extends Component {
             clueBarAbbreviation={this.getClueBarAbbreviation()}
             clueBarText={this.getClueBarText()}
           >
-            <div className="player--mobile" ref={this.container}>
+            <div className="player--mobile" ref={this.mobileContainer}>
               <div className={'player--mobile--grid' + (frozen ? ' frozen' : '')}>
                 <Grid
                   ref="grid"

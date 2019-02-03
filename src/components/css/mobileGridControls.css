@@ -23,9 +23,13 @@
   display: flex;
 }
 
-.mobile-grid-controls--clue-bar {
+.mobile-grid-controls--intra-clue {
   background-color: var(--main-blue-3);
   padding: 20px;
+}
+
+.mobile-grid-controls--clue-bar {
+  background-color: var(--main-blue-3);
   display: flex;
   font-size: 15px;
   flex: 1;
