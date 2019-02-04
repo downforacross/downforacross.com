@@ -4,7 +4,7 @@ import SimpleKeyboard from 'react-simple-keyboard';
 import 'react-simple-keyboard/build/css/index.css';
 import './css/mobileKeyboard.css';
 
-export default class MobileKeyboard extends React.Component {
+export default class MobileKeyboard extends React.PureComponent {
   state = {
     layout: 'default',
   };
