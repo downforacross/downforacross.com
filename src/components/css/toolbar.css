@@ -21,17 +21,17 @@
 }
 
 .toolbar--chat {
-  width: 35px;
-  height: 35px;
+  width: 30px;
+  height: 30px;
   fill: white;
-  margin-right: 10px;
+  margin-right: 23px;
 }
 
 .toolbar--mobile a {
   margin-left: 25px;
   color: white;
   text-decoration: none;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 17px;
 }
 

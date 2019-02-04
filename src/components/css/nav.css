@@ -17,6 +17,10 @@
   line-height: 100%;
 }
 
+.nav.mobile .nav--left {
+  font-weight: 600;
+}
+
 .nav--right {
   margin-right: 10px;
   align-self: flex-end;
