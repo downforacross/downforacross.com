@@ -20,6 +20,8 @@
   flex-grow: 1;
   flex-shrink: 1;
   flex-basis: 1px;
+  padding: 10px;
+  overflow: hidden;
   display: flex;
 }
 
@@ -34,7 +36,6 @@
   font-size: 15px;
   flex: 1;
   min-height: 20px;
-  align-items: center;
 }
 
 .mobile-grid-controls--clue-bar.touching {

@@ -7,7 +7,10 @@
   justify-content: space-between;
   background-color: var(--main-blue);
 }
-
+.nav.mobile {
+  padding-top: 17px;
+  padding-bottom: 17px;
+}
 .nav--left {
   font-size: 17px;
   font-weight: bold;

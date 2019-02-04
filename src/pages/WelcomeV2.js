@@ -219,7 +219,7 @@ export default class WelcomeV2 extends Component {
           <title>Down for a Cross</title>
         </Helmet>
         <div className="welcomev2--nav">
-          <Nav v2 />
+          <Nav v2 mobile={this.mobile} />
         </div>
         <Flex grow={1} basis={1}>
           {this.showingSidebar && (

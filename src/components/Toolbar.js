@@ -4,6 +4,7 @@ import React, {Component} from 'react';
 import Clock from './Clock';
 import ActionMenu from './ActionMenu';
 import Flex from 'react-flexview';
+import {Link} from 'react-router-dom';
 
 export default class Toolbar extends Component {
   handleBlur = (e) => {
@@ -95,7 +96,18 @@ export default class Toolbar extends Component {
   }
 
   renderChatButton() {
-    return <button onClick={this.handleToggleChat}>Chat</button>;
+    return (
+      <svg
+        className="toolbar--chat"
+        viewBox="0 0 90 90"
+        enableBackground="0 0 90 90"
+        space="preserve"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlnsXlink="http://www.w3.org/1999/xlink"
+      >
+        <path d="M72.55664,51.2041c3.0874-3.93164,4.87598-8.56836,4.87598-13.53711c0-14.18066-14.52051-25.67578-32.43262-25.67578  S12.56738,23.48633,12.56738,37.66699c0,14.17969,14.52051,25.67578,32.43262,25.67578c2.61572,0,5.15625-0.25195,7.59277-0.71484  v15.38086L72.55664,51.2041z" />
+      </svg>
+    );
   }
 
   renderPencil() {
@@ -134,8 +146,14 @@ export default class Toolbar extends Component {
 
     if (mobile) {
       return (
-        <div className="toolbar--mobile">
-          <Flex className="toolbar--mobile--top">
+        <Flex className="toolbar--mobile" vAlignContent="center">
+          <Flex
+            className="toolbar--mobile--top"
+            grow={1}
+            vAlignContent="center"
+            hAlignContent="space-between"
+          >
+            <Link to={'/'}>Down for a Cross</Link>{' '}
             <Clock
               v2={this.props.v2}
               startTime={startTime}
@@ -145,12 +163,9 @@ export default class Toolbar extends Component {
               onStart={onStartClock}
               onPause={onPauseClock}
             />
-            {solved ? null : this.renderCheckMenu()}
-            {solved ? null : this.renderRevealMenu()}
-            {solved ? this.renderResetMenu() : null}
             {this.renderChatButton()}
           </Flex>
-        </div>
+        </Flex>
       );
     }
 

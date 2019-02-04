@@ -3,6 +3,7 @@ import './css/nav.css';
 import {Link} from 'react-router-dom';
 
 import React from 'react';
+import classnames from 'classnames';
 import {getUser} from '../store/user';
 
 function LogIn({user}) {
@@ -38,7 +39,7 @@ function LogIn({user}) {
   }
 }
 
-export default function Nav({hidden, v2, secret}) {
+export default function Nav({hidden, v2, secret, mobile}) {
   if (hidden) return null; // no nav for mobile
   if (secret) {
     return (
@@ -55,7 +56,7 @@ export default function Nav({hidden, v2, secret}) {
   }
 
   return (
-    <div className="nav">
+    <div className={classnames('nav', {mobile})}>
       <div className="nav--left">
         <Link to={v2 ? '/beta' : '/'}>
           Down for a Cross

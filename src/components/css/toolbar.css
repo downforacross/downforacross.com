@@ -15,8 +15,24 @@
 }
 
 .toolbar--mobile {
-  height: 5vh;
-  max-height: 5vh;
+  height: 52px;
+  max-height: 52px;
+  background-color: var(--main-blue);
+}
+
+.toolbar--chat {
+  width: 35px;
+  height: 35px;
+  fill: white;
+  margin-right: 10px;
+}
+
+.toolbar--mobile a {
+  margin-left: 25px;
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 17px;
 }
 
 .toolbar button,
@@ -41,6 +57,9 @@
   background-color: var(--main-gray-3);
 }
 
+.toolbar--mobile .clock {
+  color: white;
+}
 .toolbar--timer {
   text-align: center;
 }
@@ -55,10 +74,7 @@
 
 .toolbar--mobile--top {
   font-size: 15px;
-  padding: 5px;
-  height: 20px;
-  align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   position: relative;
   text-align: center;

@@ -8,6 +8,7 @@ export default class MobileKeyboard extends React.PureComponent {
   state = {
     layout: 'default',
   };
+
   handleKeyPress = (button) => {
     console.log('keypress', button);
     if (button === '{del}') {
