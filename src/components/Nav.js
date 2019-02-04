@@ -41,27 +41,11 @@ function LogIn({user}) {
 
 export default function Nav({hidden, v2, secret, mobile}) {
   if (hidden) return null; // no nav for mobile
-  if (secret) {
-    return (
-      <div className="nav">
-        <div className="nav--left">
-          <Link to={'/'}>Down for a Cross</Link>{' '}
-          <Link to={'/beta'}>
-            <span className="nav--v2 secret">(beta)</span>
-          </Link>
-        </div>
-        <LogIn user={getUser()} />
-      </div>
-    );
-  }
 
   return (
     <div className={classnames('nav', {mobile})}>
       <div className="nav--left">
-        <Link to={v2 ? '/beta' : '/'}>
-          Down for a Cross
-          {v2 ? <span className="nav--v2"> (beta)</span> : null}
-        </Link>
+        <Link to={v2 ? '/beta' : '/'}>Down for a Cross</Link>
       </div>
       <LogIn user={getUser()} />
     </div>
