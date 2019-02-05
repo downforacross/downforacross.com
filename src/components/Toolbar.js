@@ -98,6 +98,7 @@ export default class Toolbar extends Component {
   renderChatButton() {
     return (
       <svg
+        onClick={this.handleToggleChat}
         className="toolbar--chat"
         viewBox="0 0 90 90"
         enableBackground="0 0 90 90"
@@ -147,12 +148,7 @@ export default class Toolbar extends Component {
     if (mobile) {
       return (
         <Flex className="toolbar--mobile" vAlignContent="center">
-          <Flex
-            className="toolbar--mobile--top"
-            grow={1}
-            vAlignContent="center"
-            hAlignContent="space-between"
-          >
+          <Flex className="toolbar--mobile--top" grow={1} vAlignContent="center">
             <Link to={'/'}>Down for a Cross</Link>{' '}
             <Clock
               v2={this.props.v2}
