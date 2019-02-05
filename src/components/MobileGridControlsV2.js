@@ -20,11 +20,11 @@ export default class MobileGridControls extends GridControls {
     this.zoomContainer = React.createRef();
   }
 
-  handleTouchClueBarMove = (e) => {
+  handlClueBarTouchMove = (e) => {
     e.preventDefault();
   };
 
-  handleTouchClueBarEnd = (e) => {
+  handlClueBarTouchEnd = (e) => {
     e.preventDefault();
     this.setState({
       touchingClueBar: false,
@@ -32,7 +32,7 @@ export default class MobileGridControls extends GridControls {
     this.handleAction('space');
   };
 
-  handleTouchClueBarStart = () => {
+  handlClueBarTouchStart = () => {
     this.setState({
       touchingClueBar: true,
     });
@@ -43,7 +43,7 @@ export default class MobileGridControls extends GridControls {
   };
 
   handleTouchMove = (e) => {
-    // e.preventDefault(); // https://www.chromestatus.com/features/5093566007214080
+    e.preventDefault(); // annoying -- https://www.chromestatus.com/features/5093566007214080
     e.stopPropagation();
 
     const transform = this.state.transform;
@@ -72,6 +72,14 @@ export default class MobileGridControls extends GridControls {
   handleTouchEnd = (e) => {
     e.preventDefault();
     this.handleTouchMove(e);
+  };
+
+  handleRightArrowTouchEnd = (e) => {
+    this.handleAction('right');
+  };
+
+  handleLeftArrowTouchEnd = (e) => {
+    this.handleAction('left');
   };
 
   getTransform(anchors, {scale, translateX, translateY}) {
@@ -151,14 +159,16 @@ export default class MobileGridControls extends GridControls {
   renderClueBar() {
     return (
       <Flex className="mobile-grid-controls--clue-bar-container">
-        <div className="mobile-grid-controls--intra-clue left">{'<'}</div>
+        <div className="mobile-grid-controls--intra-clue left" onTouchEnd={this.handleLeftArrowTouchEnd}>
+          {'<'}
+        </div>
         <Flex
           grow={1}
           vAlignContent="center"
           className={classnames('mobile-grid-controls--clue-bar', {touching: this.state.touchingClueBar})}
-          onTouchStart={this.handleTouchClueBarStart}
-          onTouchEnd={this.handleTouchClueBarEnd}
-          onTouchMove={this.handleTouchClueBarMove}
+          onTouchStart={this.handlClueBarTouchStart}
+          onTouchEnd={this.handlClueBarTouchEnd}
+          onTouchMove={this.handlClueBarTouchMove}
         >
           <div className="mobile-grid-controls--clue-bar--number">
             <Clue text={this.props.clueBarAbbreviation} />
@@ -167,7 +177,13 @@ export default class MobileGridControls extends GridControls {
             <Clue text={this.props.clueBarText} />
           </Flex>
         </Flex>
-        <div className="mobile-grid-controls--intra-clue left">{'>'}</div>
+        <div
+          className="mobile-grid-controls--intra-clue left"
+          onTouchStart={this.handleRightArrowTouchStart}
+          onTouchEnd={this.handleRightArrowTouchEnd}
+        >
+          {'>'}
+        </div>
       </Flex>
     );
   }
