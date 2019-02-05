@@ -223,15 +223,16 @@ export default class GameV2 extends Component {
   render() {
     const padding = this.props.mobile ? 0 : 20;
     return (
-      <Flex column>
+      <Flex column grow={1}>
         {this.renderToolbar()}
-        <div
+        <Flex
+          grow={1}
           style={{
             padding,
           }}
         >
           {this.renderPlayer()}
-        </div>
+        </Flex>
       </Flex>
     );
   }

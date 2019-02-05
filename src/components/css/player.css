@@ -64,6 +64,11 @@
 .player--main--clues {
 }
 
+.player--mobile--wrapper {
+  display: flex;
+  flex: 1;
+}
+
 .player--mobile {
   flex: 1;
   display: flex;
