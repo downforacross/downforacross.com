@@ -22,7 +22,14 @@
   flex-basis: 1px;
   padding: 10px;
   overflow: hidden;
-  display: flex;
+}
+
+.mobile-grid-controls--zoom-container {
+  overflow: hidden;
+}
+
+.mobile-grid-controls--zoom-content {
+  transform-origin: top left;
 }
 
 .mobile-grid-controls--intra-clue {

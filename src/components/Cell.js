@@ -105,10 +105,6 @@ export default class Cell extends Component {
         <div
           className={'cell black ' + (selected ? 'selected' : '')}
           style={selected ? {borderColor: myColor} : undefined}
-          onTouchEnd={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
           onClick={onClick}
         />
       );
@@ -132,20 +128,22 @@ export default class Cell extends Component {
         }
         style={selected ? {backgroundColor: myColor} : null}
         onClick={onClick}
-        onTouchMove={(e) => {
-          if (e.touches.length >= 1) {
-            window.lastZoomed = getTime();
-          } else {
-            e.preventDefault();
-            e.stopPropagation();
-          }
+        onTouchStart={(e) => {
+          if (e.touches.length !== 1) return;
+          const touch = e.touches[0];
+          this.touchStart = {pageX: touch.pageX, pageY: touch.pageY};
         }}
         onTouchEnd={(e) => {
-          e.preventDefault();
-          const now = getTime();
-          const disablePeriod = 200;
-          if (!window.lastZoomed || window.lastZoomed + disablePeriod < now) {
-            onClick(e);
+          console.log(e, e.changedTouches, e.touches);
+          if (e.changedTouches.length !== 1 || e.touches.length !== 0) return;
+          const touch = e.changedTouches[0];
+          console.log(touch, this.touchStart);
+          if (
+            !this.touchStart ||
+            (Math.abs(touch.pageX - this.touchStart.pageX) < 5 &&
+              Math.abs(touch.pageY - this.touchStart.pageY) < 5)
+          ) {
+            onClick();
           }
         }}
       >

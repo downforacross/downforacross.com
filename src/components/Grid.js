@@ -121,7 +121,6 @@ export default class Grid extends React.PureComponent {
           width: this.props.grid[0].length * this.props.size,
           height: this.props.grid.length * this.props.size,
         }}
-        onTouchEnd={(e) => e.stopPropagation()}
         className={'grid ' + sizeClass}
       >
         <tbody>
@@ -140,8 +139,8 @@ export default class Grid extends React.PureComponent {
                   <Cell
                     {...cell}
                     onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
+                      if (e) e.preventDefault();
+                      if (e) e.stopPropagation();
                       this.handleClick(r, c);
                     }}
                     canFlipColor={this.props.canFlipColor && this.props.canFlipColor(r, c)}

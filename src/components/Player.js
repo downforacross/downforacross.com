@@ -72,7 +72,6 @@ export default class Player extends Component {
     const rows = this.props.grid.length;
     const cols = this.props.grid[0].length;
     const size = Math.floor(Math.min(width / cols, height / rows));
-    console.log({width, size});
     this.setState({
       size,
     });
