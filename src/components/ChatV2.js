@@ -260,7 +260,7 @@ export default class Chat extends Component {
 
     return (
       <Flex>
-        <MobileKeyboard />
+        <MobileKeyboard layout="uppercase" />
       </Flex>
     );
   }

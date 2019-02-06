@@ -134,10 +134,8 @@ export default class Cell extends Component {
           this.touchStart = {pageX: touch.pageX, pageY: touch.pageY};
         }}
         onTouchEnd={(e) => {
-          console.log(e, e.changedTouches, e.touches);
           if (e.changedTouches.length !== 1 || e.touches.length !== 0) return;
           const touch = e.changedTouches[0];
-          console.log(touch, this.touchStart);
           if (
             !this.touchStart ||
             (Math.abs(touch.pageX - this.touchStart.pageX) < 5 &&

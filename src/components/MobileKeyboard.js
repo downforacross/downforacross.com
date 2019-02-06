@@ -12,13 +12,13 @@ const globalKeyboardState = {
 };
 
 export const focusKeyboard = (callback, layout = 'default') => {
-  if (globalKeyboardState.callback === callback) return;
-  if (globalKeyboardState.onUnfocusCallback) {
-    globalKeyboardState.onUnfocusCallback();
+  if (globalKeyboardState.callback !== callback) {
+    if (globalKeyboardState.onUnfocusCallback) {
+      globalKeyboardState.onUnfocusCallback();
+    }
+    globalKeyboardState.onUnfocusCallback = null;
+    globalKeyboardState.callback = callback;
   }
-  globalKeyboardState.onUnfocusCallback = null;
-  console.log('focus keyboard');
-  globalKeyboardState.callback = callback;
   globalKeyboardState.ref.setState({
     layout,
     disabled: false,
@@ -26,7 +26,6 @@ export const focusKeyboard = (callback, layout = 'default') => {
 };
 
 export const unfocusKeyboard = () => {
-  console.log('unfocus keyboard');
   console.trace();
 
   if (globalKeyboardState.onUnfocusCallback) {
@@ -45,13 +44,35 @@ export const onUnfocusKeyboard = (callback) => {
 };
 
 export default class MobileKeyboard extends React.PureComponent {
-  state = {
-    layout: 'default',
-  };
+  constructor(props) {
+    super();
+    this.state = {
+      layout: props.layout || 'default',
+    };
+  }
 
   componentDidMount() {
     globalKeyboardState.ref = this;
+    console.log('MOUNT');
+    this.componentDidUpdate();
   }
+
+  componentDidUpdate() {
+    Array.from(document.querySelectorAll('.hg-button')).forEach((el) => {
+      if (el.attributes['data-react']) return;
+      console.log('killed', el);
+      el.ontouchstart = () => {};
+    });
+  }
+
+  handleTouchStart = (e) => {
+    if (!e.target.attributes['data-skbtn']) return;
+    const val = e.target.attributes['data-skbtn'].value;
+    console.log(val);
+    this.handleKeyPress(val);
+    e.preventDefault();
+    e.stopPropagation();
+  };
 
   handleKeyPress = (button) => {
     const onKeyDown = globalKeyboardState.callback || _.noop;
@@ -81,9 +102,14 @@ export default class MobileKeyboard extends React.PureComponent {
 
   render() {
     return (
-      <Flex grow={1}>
+      <Flex grow={1} onTouchStart={this.handleTouchStart}>
         <SimpleKeyboard
           layout={{
+            default: [
+              '{x} Q W E R T Y U I O P {x}',
+              '{x} A S D F G H J K L {x}',
+              '{x} {more} Z X C V B N M {del} {x}',
+            ],
             default: ['Q W E R T Y U I O P', 'A S D F G H J K L', '{more} Z X C V B N M {del}'],
             uppercase: [
               'Q W E R T Y U I O P',
@@ -109,7 +135,6 @@ export default class MobileKeyboard extends React.PureComponent {
           }}
           useTouchEvents={true}
           layoutName={this.state.layout}
-          onKeyPress={this.handleKeyPress}
         />
       </Flex>
     );

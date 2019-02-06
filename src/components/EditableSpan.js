@@ -17,9 +17,14 @@ export default class EditableSpan extends PureComponent {
 
   componentDidMount() {
     this.text = this.displayValue;
+    this.mounted = true;
   }
 
-  getSnapshotBeforeUpdate(prevProps, prevState) {
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
+  getSnapshotBeforeUpdate() {
     return {
       start: this.caret.startPosition,
       focused: this.focused,
@@ -39,15 +44,18 @@ export default class EditableSpan extends PureComponent {
   focusMobile = () => {
     const shouldCapitalize = this.text.endsWith(' ') || this.text.length === 0;
     const layout = shouldCapitalize ? 'uppercase' : 'lowercase';
+    console.log('focusmobile', layout);
     focusKeyboard(this.handleKeyDownMobile, layout);
     this.setState({
       mobileFocused: true,
       caret: this.text.length,
     });
     onUnfocusKeyboard(() => {
-      this.setState({
-        mobileFocused: false,
-      });
+      if (this.mounted) {
+        this.setState({
+          mobileFocused: false,
+        });
+      }
     });
   };
 
@@ -73,6 +81,7 @@ export default class EditableSpan extends PureComponent {
     while (result.indexOf(nbsp) !== -1) {
       result = result.replace(nbsp, ' ');
     }
+    while (result.startsWith(' ')) result = result.substring(1);
     return result;
   }
 
@@ -150,20 +159,20 @@ export default class EditableSpan extends PureComponent {
     if (hidden) return null;
 
     return (
-      <div style={{position: 'relative', display: 'inline-block'}}>
+      <div
+        style={{width: '100%', border: '1px solid #DDDDDD', position: 'relative'}}
+        onTouchStart={this.focusMobile}
+      >
         <div
           style={style}
           className={'editable-span ' + (this.props.className || '')}
           ref={this.span}
           contentEditable={this.props.mobile ? undefined : true}
-          onTouchStart={this.focusMobile}
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}
           onKeyDown={this.handleKeyDown}
           onKeyUp={this.handleKeyUp}
-        >
-          Hello!!!
-        </div>
+        />
         {this.renderCaret()}
       </div>
     );

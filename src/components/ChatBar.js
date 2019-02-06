@@ -118,6 +118,7 @@ export default class ChatBar extends React.Component {
             mobile={this.props.mobile}
             value={this.state.message}
             onChange={this.handleChangeMobile}
+            style={{height: 24}}
           />
         </div>
       );

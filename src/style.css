@@ -15,8 +15,12 @@ body,
 }
 
 @media only screen and (max-device-width: 480px) {
-  body {
+  body,
+  html {
     overflow: hidden;
+    position: fixed;
+    height: 100%;
+    width: 100%;
   }
 }
 

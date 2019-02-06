@@ -1,12 +1,25 @@
-.simple-keyboard .hg-button {
-  width: 30px;
+.simple-keyboard {
+  user-select: none;
 }
+
+.simple-keyboard .hg-button {
+  width: 20px;
+}
+
+.hg-button span {
+  pointer-events: none;
+}
+
 .simple-keyboard .hg-button.hg-button-del,
 .simple-keyboard .hg-button.hg-button-abc,
 .simple-keyboard .hg-button.hg-button-more {
   color: white;
   background-color: #888;
   width: 40px;
+}
+.simple-keyboard .hg-button.hg-button-x {
+  width: 30px;
+  opacity: 0;
 }
 
 .simple-keyboard .hg-button.hg-button-emoji {
