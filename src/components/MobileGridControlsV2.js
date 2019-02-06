@@ -29,14 +29,17 @@ export default class MobileGridControls extends GridControls {
     focusKeyboard(this._handleKeyDown);
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     if (this.state.anchors.length === 0) {
       this.fitOnScreen();
     }
+    if (prevProps.selected.r !== this.props.selected.r || prevProps.selected.c !== this.props.selected.c) {
+      this.fitOnScreen(true);
+    }
   }
 
-  fitOnScreen() {
-    if (this.state.lastFitOnScreen > Date.now() - 100) return;
+  fitOnScreen(fitCurrentClue) {
+    if (!fitCurrentClue && this.state.lastFitOnScreen > Date.now() - 100) return;
 
     const rect = this.zoomContainer.current.getBoundingClientRect();
     let {scale, translateX, translateY} = this.state.transform;
@@ -47,6 +50,19 @@ export default class MobileGridControls extends GridControls {
     const maxTranslateY = 0;
     translateX = _.clamp(translateX, minTranslateX, maxTranslateX);
     translateY = _.clamp(translateY, minTranslateY, maxTranslateY);
+
+    if (fitCurrentClue) {
+      const {selected, size} = this.props;
+      const posX = selected.c * size;
+      const posY = selected.r * size;
+      const paddingX = (rect.width - this.grid.cols * size) / 2;
+      const paddingY = (rect.height - this.grid.rows * size) / 2;
+      const tX = (posX + paddingX) * scale;
+      const tY = (posY + paddingY) * scale;
+      translateX = _.clamp(translateX, -tX, rect.width - tX - size * scale);
+      translateY = _.clamp(translateY, -tY, rect.height - tY - size * scale);
+    }
+
     this.setState({
       transform: {
         scale,
@@ -108,6 +124,10 @@ export default class MobileGridControls extends GridControls {
   };
 
   handleTouchStart = (e) => {
+    console.log('touch start', e.touches.length);
+    if (e.touches.length === 2) {
+      this.props.onSetCursorLock(true);
+    }
     this.handleTouchMove(e);
   };
 
@@ -139,6 +159,10 @@ export default class MobileGridControls extends GridControls {
   };
 
   handleTouchEnd = (e) => {
+    console.log('touch end', e.touches.length);
+    if (e.touches.length === 0 && this.state.anchors.length === 1) {
+      this.props.onSetCursorLock(false);
+    }
     e.preventDefault();
     this.handleTouchMove(e);
   };

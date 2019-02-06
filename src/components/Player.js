@@ -63,6 +63,7 @@ export default class Player extends Component {
     this._setSelected = this.setSelected.bind(this);
     this._changeDirection = this.changeDirection.bind(this);
     this.mobileContainer = React.createRef();
+    this.cursorLocked = false;
   }
 
   updateSize = () => {
@@ -130,6 +131,7 @@ export default class Player extends Component {
   }
 
   setSelected(selected) {
+    if (this.cursorLocked) return;
     if (this.isValidDirection(this.state.direction, selected)) {
       if (selected.r !== this.selected.r || selected.c !== this.selected.c) {
         this.setState(
@@ -161,6 +163,7 @@ export default class Player extends Component {
   }
 
   changeDirection() {
+    if (this.cursorLocked) return;
     this.setDirection(gameUtils.getOppositeDirection(this.state.direction));
   }
 
@@ -247,6 +250,13 @@ export default class Player extends Component {
     }
   }
 
+  handleSetCursorLock = (val) => {
+    console.log('set cursor lock', val);
+    setTimeout(() => {
+      this.cursorLocked = val;
+    }, val ? 0 : 150);
+  };
+
   /* Render */
   render() {
     const {
@@ -291,10 +301,10 @@ export default class Player extends Component {
             canSetDirection={this._canSetDirection}
             onSetSelected={this._setSelected}
             updateGrid={updateGrid}
+            size={size}
             grid={grid}
             clues={clues}
-            clueBarAbbreviation={this.getClueBarAbbreviation()}
-            clueBarText={this.getClueBarText()}
+            onSetCursorLock={this.handleSetCursorLock}
           >
             <div className="player--mobile" ref={this.mobileContainer}>
               <div className={'player--mobile--grid' + (frozen ? ' frozen' : '')}>

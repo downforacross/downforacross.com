@@ -129,8 +129,7 @@ export default class Cell extends Component {
         style={selected ? {backgroundColor: myColor} : null}
         onClick={onClick}
         onTouchStart={(e) => {
-          if (e.touches.length !== 1) return;
-          const touch = e.touches[0];
+          const touch = e.touches[e.touches.length - 1];
           this.touchStart = {pageX: touch.pageX, pageY: touch.pageY};
         }}
         onTouchEnd={(e) => {

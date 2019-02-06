@@ -38,6 +38,14 @@ export default class Grid {
     return this.grid.length;
   }
 
+  get rows() {
+    return this.grid.length;
+  }
+
+  get cols() {
+    return this.grid[0].length;
+  }
+
   keys() {
     const keys = [];
     for (const r of _.range(0, this.grid.length)) {
