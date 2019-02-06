@@ -7,6 +7,11 @@ import GridControls from './GridControls';
 import MobileKeyboard from './MobileKeyboard';
 import classnames from 'classnames';
 import _ from 'lodash';
+import GridObject from '../utils/Grid';
+import * as gameUtils from '../gameUtils';
+import {focusKeyboard, unfocusKeyboard} from './MobileKeyboard';
+
+const CLUE_ANIMATION_TIME = 0.3; // in seconds
 
 export default class MobileGridControls extends GridControls {
   constructor() {
@@ -20,21 +25,57 @@ export default class MobileGridControls extends GridControls {
     this.zoomContainer = React.createRef();
   }
 
-  handlClueBarTouchMove = (e) => {
-    e.preventDefault();
-  };
+  componentDidMount() {
+    focusKeyboard(this._handleKeyDown);
+  }
 
-  handlClueBarTouchEnd = (e) => {
+  handleClueBarTouchMove = (e) => {
     e.preventDefault();
+    const touch = e.touches[0];
     this.setState({
-      touchingClueBar: false,
+      touchingClueBarCurrent: touch,
     });
-    this.handleAction('space');
   };
 
-  handlClueBarTouchStart = () => {
+  handleClueBarTouchEnd = (e) => {
+    e.preventDefault();
+    const clueBarGesture = this.clueBarGesture;
+    let stateUpdates = {
+      touchingClueBarStart: null,
+      touchingClueBarCurrent: null,
+    };
+
+    if (!this.previewClue) {
+      // nothing to do if cannot perform action :|
+    } else if (Math.abs(clueBarGesture.x) > 50) {
+      this.selectNextClue(clueBarGesture.x > 0);
+      stateUpdates = {
+        ...stateUpdates,
+        previousGesture: {
+          x: clueBarGesture.x > 0 ? 1 : -1,
+        },
+        previousClue: this.mainClue,
+      };
+    } else if (!clueBarGesture.x) {
+      this.flipDirection();
+      stateUpdates = {
+        ...stateUpdates,
+        previousGesture: {
+          y: clueBarGesture.y > 0 ? 1 : -1,
+        },
+        previousClue: this.mainClue,
+      };
+    }
+    this.setState(stateUpdates);
+  };
+
+  handleClueBarTouchStart = (e) => {
+    e.preventDefault();
+    const touch = e.touches[0];
     this.setState({
-      touchingClueBar: true,
+      touchingClueBarStart: touch,
+      touchingClueBarCurrent: touch,
+      previousGesture: null,
     });
   };
 
@@ -128,6 +169,62 @@ export default class MobileGridControls extends GridControls {
     };
   }
 
+  get grid() {
+    return new GridObject(this.props.grid);
+  }
+
+  getClueAbbreviation({clueNumber = '', direction = ''} = {}) {
+    return `${clueNumber}${direction.substring(0, 1).toUpperCase()}`;
+  }
+
+  getClueText({clueNumber = '', direction = ''} = {}) {
+    return this.props.clues[direction][clueNumber];
+  }
+
+  get mainClue() {
+    if (this.previousGesture) {
+      return this.state.previousClue;
+    } else {
+      return {clueNumber: this.getSelectedClueNumber(), direction: this.props.direction};
+    }
+  }
+
+  get previewClue() {
+    const clueNumber = this.getSelectedClueNumber();
+    if (this.previousGesture) {
+      return {clueNumber, direction: this.props.direction};
+    } else {
+      const {x} = this.clueBarGesture;
+      if (x) {
+        return this.grid.getNextClue(clueNumber, this.props.direction, this.props.clues, x > 0);
+      } else {
+        const oppositeDirection = gameUtils.getOppositeDirection(this.props.direction);
+        if (this.canSetDirection(oppositeDirection)) {
+          const oppositeClueNumber = this.grid.getParent(
+            this.props.selected.r,
+            this.props.selected.c,
+            oppositeDirection
+          );
+          return {direction: oppositeDirection, clueNumber: oppositeClueNumber};
+        } else {
+          return; // cannot preview this clue
+        }
+      }
+    }
+  }
+
+  get clueBarGesture() {
+    const {touchingClueBarStart, touchingClueBarCurrent} = this.state;
+    if (!touchingClueBarStart || !touchingClueBarCurrent) return {};
+    const x = touchingClueBarCurrent.pageX - touchingClueBarStart.pageX;
+    const y = _.clamp(1.7 * (touchingClueBarCurrent.pageY - touchingClueBarStart.pageY), -62, 62);
+    return Math.max(Math.abs(x), Math.abs(y)) > 10 ? (Math.abs(x) > Math.abs(y) ? {x} : {y}) : {y: 0};
+  }
+
+  get previousGesture() {
+    return this.state.previousGesture;
+  }
+
   renderGridContent() {
     const {scale, translateX, translateY} = this.state.transform;
     const style = {
@@ -157,6 +254,19 @@ export default class MobileGridControls extends GridControls {
   }
 
   renderClueBar() {
+    const {x, y} = this.clueBarGesture;
+
+    const {x: px = 0, y: py = 0} = this.previousGesture || {};
+    const X = px || x;
+    const Y = py || y;
+    const style = {
+      flexDirection: X > 0 ? 'row-reverse' : X < 0 ? 'row' : Y >= 0 ? 'column-reverse' : 'column',
+      [X ? 'width' : 'height']: '200%',
+      transform: px || py ? `translate(${px * 50}%, ${py * 50}%)` : `translate(${x || 0}px, ${y || 0}px)`,
+      left: X > 0 ? '-100%' : 0,
+      top: Y >= 0 ? '-100%' : 0,
+      transition: x === undefined && y === undefined ? `${CLUE_ANIMATION_TIME}s transform ease-out` : '',
+    };
     return (
       <Flex className="mobile-grid-controls--clue-bar-container">
         <div className="mobile-grid-controls--intra-clue left" onTouchEnd={this.handleLeftArrowTouchEnd}>
@@ -166,16 +276,28 @@ export default class MobileGridControls extends GridControls {
           grow={1}
           vAlignContent="center"
           className={classnames('mobile-grid-controls--clue-bar', {touching: this.state.touchingClueBar})}
-          onTouchStart={this.handlClueBarTouchStart}
-          onTouchEnd={this.handlClueBarTouchEnd}
-          onTouchMove={this.handlClueBarTouchMove}
+          onTouchStart={this.handleClueBarTouchStart}
+          onTouchEnd={this.handleClueBarTouchEnd}
+          onTouchMove={this.handleClueBarTouchMove}
         >
-          <div className="mobile-grid-controls--clue-bar--number">
-            <Clue text={this.props.clueBarAbbreviation} />
+          <div className="mobile-grid-controls--clue-bar--clues--container" style={style}>
+            <div className="mobile-grid-controls--clue-bar--main">
+              <div className="mobile-grid-controls--clue-bar--number">
+                <Clue text={this.getClueAbbreviation(this.mainClue)} />
+              </div>
+              <Flex className="mobile-grid-controls--clue-bar--text" grow={1}>
+                <Clue text={this.getClueText(this.mainClue)} />
+              </Flex>
+            </div>
+            <div className="mobile-grid-controls--clue-bar--preview">
+              <div className="mobile-grid-controls--clue-bar--number">
+                <Clue text={this.getClueAbbreviation(this.previewClue)} />
+              </div>
+              <Flex className="mobile-grid-controls--clue-bar--text" grow={1}>
+                <Clue text={this.getClueText(this.previewClue)} />
+              </Flex>
+            </div>
           </div>
-          <Flex className="mobile-grid-controls--clue-bar--text" grow={1}>
-            <Clue text={this.props.clueBarText} />
-          </Flex>
         </Flex>
         <div
           className="mobile-grid-controls--intra-clue left"
@@ -191,7 +313,7 @@ export default class MobileGridControls extends GridControls {
   renderMobileKeyboard() {
     return (
       <Flex className="mobile-grid-controls--keyboard">
-        <MobileKeyboard onKeyDown={this._handleKeyDown} />
+        <MobileKeyboard />
       </Flex>
     );
   }

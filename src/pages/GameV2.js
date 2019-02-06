@@ -283,6 +283,7 @@ export default class GameV2 extends Component {
         myColor={color}
         onChat={this.handleChat}
         onUnfocus={this.handleUnfocusChat}
+        mobile={this.state.mobile}
         onToggleChat={this.handleToggleChat}
         mobile={mobile}
         opponentData={this.opponentGame && this.opponentGame.chat}
@@ -307,6 +308,7 @@ export default class GameV2 extends Component {
       <React.Fragment>
         <MobilePanel />
         {this.showingGame && this.renderGame()}
+        {this.showingChat && this.renderChat()}
       </React.Fragment>
     );
 

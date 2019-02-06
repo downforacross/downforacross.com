@@ -3,7 +3,6 @@ import './css/gridControls.css';
 import React, {Component} from 'react';
 
 import GridObject from '../utils/Grid';
-import * as gameUtils from '../gameUtils';
 
 function safe_while(condition, step, cap = 500) {
   while (condition() && cap >= 0) {
@@ -25,33 +24,13 @@ export default class GridControls extends Component {
     this.focus();
   }
 
-  isWordFilled(direction, number) {
-    const clueRoot = this.grid.getCellByNumber(number);
-    return !this.grid.hasEmptyCells(clueRoot.r, clueRoot.c, direction);
-  }
-
   selectNextClue(backwards) {
-    let clueNumber = this.getSelectedClueNumber();
-    let direction = this.props.direction;
-    const add = backwards ? -1 : 1;
-    const start = () => (backwards ? this.props.clues[direction].length - 1 : 1);
-    const step = () => {
-      if (clueNumber + add < this.props.clues[direction].length && clueNumber + add >= 0) {
-        clueNumber += add;
-      } else {
-        direction = gameUtils.getOppositeDirection(direction);
-        clueNumber = start();
-      }
-    };
-    const ok = () => {
-      return (
-        this.props.clues[direction][clueNumber] !== undefined &&
-        (this.isGridFilled() || !this.isWordFilled(direction, clueNumber))
-      );
-    };
-    step();
-
-    safe_while(() => !ok(), step);
+    const {direction, clueNumber} = this.grid.getNextClue(
+      this.getSelectedClueNumber(),
+      this.props.direction,
+      this.props.clues,
+      backwards
+    );
     this.selectClue(direction, clueNumber);
   }
 
@@ -64,6 +43,18 @@ export default class GridControls extends Component {
 
   isSelectable(r, c) {
     return this.props.editMode || this.grid.isWhite(r, c);
+  }
+
+  flipDirection() {
+    if (this.props.direction === 'across') {
+      if (this.canSetDirection('down')) {
+        this.setDirection('down');
+      }
+    } else {
+      if (this.canSetDirection('across')) {
+        this.setDirection('across');
+      }
+    }
   }
 
   // factored out handleAction for mobileGridControls
@@ -94,18 +85,6 @@ export default class GridControls extends Component {
       }
     };
 
-    const flipDirection = () => {
-      if (this.props.direction === 'across') {
-        if (this.canSetDirection('down')) {
-          this.setDirection('down');
-        }
-      } else {
-        if (this.canSetDirection('across')) {
-          this.setDirection('across');
-        }
-      }
-    };
-
     const actions = {
       left: setDirection('across', moveSelectedBy(0, -1)),
       up: setDirection('down', moveSelectedBy(-1, 0)),
@@ -114,7 +93,7 @@ export default class GridControls extends Component {
       backspace: this.backspace.bind(this),
       delete: this.delete.bind(this),
       tab: this.selectNextClue.bind(this),
-      space: flipDirection,
+      space: this.flipDirection.bind(this),
     };
 
     if (!(action in actions)) {

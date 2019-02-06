@@ -18,12 +18,20 @@
   height: 52px;
   max-height: 52px;
   background-color: var(--main-blue);
+  justify-content: space-between;
 }
 
 .toolbar--chat {
   width: 30px;
   height: 30px;
   fill: white;
+  margin-right: 23px;
+}
+
+.toolbar--game {
+  width: 30px;
+  height: 30px;
+  fill: black;
   margin-right: 23px;
 }
 

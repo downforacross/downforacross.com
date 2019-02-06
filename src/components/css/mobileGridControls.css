@@ -39,6 +39,8 @@
   font-size: 15px;
   flex: 1;
   min-height: 20px;
+  position: relative;
+  overflow: hidden;
 }
 
 .mobile-grid-controls--clue-bar.touching {
@@ -55,4 +57,20 @@
   display: inline-block;
   overflow-y: auto;
   max-height: 100%;
+}
+
+.mobile-grid-controls--clue-bar--clues--container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+}
+
+.mobile-grid-controls--clue-bar--main,
+.mobile-grid-controls--clue-bar--preview {
+  flex: 1;
+  display: flex;
+  align-items: center;
 }

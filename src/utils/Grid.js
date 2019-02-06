@@ -1,4 +1,12 @@
 import _ from 'lodash';
+import * as gameUtils from '../gameUtils';
+
+function safe_while(condition, step, cap = 500) {
+  while (condition() && cap >= 0) {
+    step();
+    cap -= 1;
+  }
+}
 
 export default class Grid {
   constructor(grid) {
@@ -133,6 +141,37 @@ export default class Grid {
 
   hasEmptyCells(r, c, direction) {
     return this.getNextEmptyCell(r, c, direction) !== undefined;
+  }
+
+  isWordFilled(direction, number) {
+    const clueRoot = this.getCellByNumber(number);
+    return !this.hasEmptyCells(clueRoot.r, clueRoot.c, direction);
+  }
+
+  getNextClue(clueNumber, direction, clues, backwards) {
+    const add = backwards ? -1 : 1;
+    const start = () => (backwards ? clues[direction].length - 1 : 1);
+    const step = () => {
+      if (clueNumber + add < clues[direction].length && clueNumber + add >= 0) {
+        clueNumber += add;
+      } else {
+        direction = gameUtils.getOppositeDirection(direction);
+        clueNumber = start();
+      }
+    };
+    const ok = () => {
+      return (
+        clues[direction][clueNumber] !== undefined &&
+        (this.isGridFilled() || !this.isWordFilled(direction, clueNumber))
+      );
+    };
+    step();
+
+    safe_while(() => !ok(), step);
+    return {
+      direction,
+      clueNumber,
+    };
   }
 
   getWritableLocations() {
