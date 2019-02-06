@@ -10,6 +10,10 @@
   flex-direction: column;
 }
 
+.chatv2.mobile {
+  padding: 0px;
+}
+
 .chatv2--header {
   border-bottom: 1px solid #e2e2e2;
   padding-bottom: 2px;

@@ -2,6 +2,7 @@ import React from 'react';
 import EmojiPicker from '../components/EmojiPicker';
 import Emoji from '../components/Emoji';
 import * as emojiLib from '../lib/emoji';
+import EditableSpan from './EditableSpan';
 
 const MAX_EMOJIS = 150;
 export default class ChatBar extends React.Component {
@@ -35,6 +36,10 @@ export default class ChatBar extends React.Component {
     } else if (ev.key === 'Escape') {
       this.props.onUnfocus();
     }
+  };
+
+  handleChangeMobile = (message) => {
+    this.setState({message});
   };
 
   handleChange = (ev) => {
@@ -105,18 +110,35 @@ export default class ChatBar extends React.Component {
     );
   }
 
+  renderInput() {
+    if (this.props.mobile) {
+      return (
+        <div>
+          <EditableSpan
+            mobile={this.props.mobile}
+            value={this.state.message}
+            onChange={this.handleChangeMobile}
+          />
+        </div>
+      );
+    }
+    return (
+      <input
+        ref={this.input}
+        className="chatv2--bar--input"
+        placeholder="[Enter] to chat"
+        value={this.state.message}
+        onChange={this.handleChange}
+        onKeyDown={this.handleKeyDown}
+      />
+    );
+  }
+
   render() {
     return (
       <div className="chatv2--bar">
         {this.emojiPattern && this.renderEmojiPicker()}
-        <input
-          ref={this.input}
-          className="chatv2--bar--input"
-          placeholder="[Enter] to chat"
-          value={this.state.message}
-          onChange={this.handleChange}
-          onKeyDown={this.handleKeyDown}
-        />
+        {this.renderInput()}
       </div>
     );
   }

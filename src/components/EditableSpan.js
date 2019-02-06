@@ -2,6 +2,7 @@ import './css/editableSpan.css';
 import React, {PureComponent} from 'react';
 import Caret from '../utils/caret';
 import _ from 'lodash';
+import {focusKeyboard, unfocusKeyboard, onUnfocusKeyboard} from './MobileKeyboard';
 
 export default class EditableSpan extends PureComponent {
   constructor() {
@@ -9,7 +10,11 @@ export default class EditableSpan extends PureComponent {
     this.span = React.createRef();
     this.prevPosition = 0;
     this.focused = false;
+    this.state = {
+      mobileFocused: false,
+    };
   }
+
   componentDidMount() {
     this.text = this.displayValue;
   }
@@ -30,6 +35,21 @@ export default class EditableSpan extends PureComponent {
       if (snapshot.focused) this.focus();
     }
   }
+
+  focusMobile = () => {
+    const shouldCapitalize = this.text.endsWith(' ') || this.text.length === 0;
+    const layout = shouldCapitalize ? 'uppercase' : 'lowercase';
+    focusKeyboard(this.handleKeyDownMobile, layout);
+    this.setState({
+      mobileFocused: true,
+      caret: this.text.length,
+    });
+    onUnfocusKeyboard(() => {
+      this.setState({
+        mobileFocused: false,
+      });
+    });
+  };
 
   focus() {
     this.span.current && this.span.current.focus();
@@ -77,6 +97,22 @@ export default class EditableSpan extends PureComponent {
     return new Caret(this.span.current && this.span.current.childNodes[0]);
   }
 
+  handleKeyDownMobile = (key) => {
+    console.log('handle key down', key);
+    const {caret} = this.state;
+    let newCaret = caret;
+    if (key === '{del}') {
+      this.text = this.text.substring(0, caret - 1) + this.text.substring(caret);
+      newCaret = caret - 1;
+    } else {
+      this.text = this.text.substring(0, caret) + key + this.text.substring(caret);
+      newCaret = caret + 1;
+    }
+    this.props.onChange(this.text);
+    this.setState({caret: newCaret});
+    this.focusMobile();
+  };
+
   handleKeyDown = (e) => {
     if (e.key === 'Tab') {
       return;
@@ -84,7 +120,7 @@ export default class EditableSpan extends PureComponent {
     e.stopPropagation();
     if (e.key === 'Enter' || e.key === 'Escape') {
       e.preventDefault();
-      this.props.onUnfocus();
+      this.props.onUnfocus && this.props.onUnfocus();
     }
   };
 
@@ -92,21 +128,44 @@ export default class EditableSpan extends PureComponent {
     this.props.onChange(this.text);
   }, 500);
 
+  renderCaret() {
+    if (!this.state.mobileFocused) {
+      return;
+    }
+    const text = this.text;
+    const caret = this.state.caret;
+    return (
+      <div
+        className={'editable-span ' + (this.props.className || '')}
+        style={{width: '100%', position: 'absolute', top: 0, left: 0, ...this.props.style}}
+      >
+        <span style={{opacity: 0}}>{this.text.substring(0, caret)}</span>
+        <span className="editable-span--caret" />
+      </div>
+    );
+  }
+
   render() {
     const {hidden, style} = this.props;
     if (hidden) return null;
 
     return (
-      <div
-        style={style}
-        className={'editable-span ' + (this.props.className || '')}
-        ref={this.span}
-        contentEditable={true}
-        onFocus={this.handleFocus}
-        onBlur={this.handleBlur}
-        onKeyDown={this.handleKeyDown}
-        onKeyUp={this.handleKeyUp}
-      />
+      <div style={{position: 'relative', display: 'inline-block'}}>
+        <div
+          style={style}
+          className={'editable-span ' + (this.props.className || '')}
+          ref={this.span}
+          contentEditable={this.props.mobile ? undefined : true}
+          onTouchStart={this.focusMobile}
+          onFocus={this.handleFocus}
+          onBlur={this.handleBlur}
+          onKeyDown={this.handleKeyDown}
+          onKeyUp={this.handleKeyUp}
+        >
+          Hello!!!
+        </div>
+        {this.renderCaret()}
+      </div>
     );
   }
 }
