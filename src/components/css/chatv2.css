@@ -1,6 +1,7 @@
 /* chat style */
 .chatv2 {
   flex-grow: 1;
+  flex-shrink: 1;
   padding-top: 10px;
   padding-left: 30px;
   padding-right: 30px;

@@ -38,6 +38,7 @@ export default class EditableSpan extends PureComponent {
         this.caret.startPosition = snapshot.start;
       }
       if (snapshot.focused) this.focus();
+      this.setState({caret: this.text.length});
     }
   }
 
@@ -110,7 +111,10 @@ export default class EditableSpan extends PureComponent {
     console.log('handle key down', key);
     const {caret} = this.state;
     let newCaret = caret;
-    if (key === '{del}') {
+    if (key === '{enter}') {
+      this.props.onPressEnter && this.props.onPressEnter();
+      return;
+    } else if (key === '{del}') {
       this.text = this.text.substring(0, caret - 1) + this.text.substring(caret);
       newCaret = caret - 1;
     } else {
@@ -155,12 +159,17 @@ export default class EditableSpan extends PureComponent {
   }
 
   render() {
-    const {hidden, style} = this.props;
+    const {hidden, style, containerStyle} = this.props;
     if (hidden) return null;
 
     return (
       <div
-        style={{width: '100%', border: '1px solid #DDDDDD', position: 'relative'}}
+        style={{
+          display: 'inline-block',
+          border: '1px solid #DDDDDD',
+          position: 'relative',
+          ...containerStyle,
+        }}
         onTouchStart={this.focusMobile}
       >
         <div

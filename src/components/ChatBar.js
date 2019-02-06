@@ -11,28 +11,32 @@ export default class ChatBar extends React.Component {
     this.state = {
       message: '',
       escapedEmoji: null,
+      enters: 0,
     };
     this.input = React.createRef();
     this.emojiPicker = React.createRef();
   }
+
+  handlePressEnter = () => {
+    const {message} = this.state;
+    if (message.length > 0) {
+      this.props.onSendMessage(message);
+      this.setState({message: '', enters: this.state.enters + 1});
+    } else {
+      this.props.onUnfocus();
+    }
+  };
 
   handleKeyDown = (ev) => {
     if (this.emojiPicker.current) {
       this.emojiPicker.current.handleKeyDown(ev);
       return;
     }
-    const {onPressEnter} = this.props;
-    const {message, username} = this.state;
 
     if (ev.key === 'Enter') {
       ev.stopPropagation();
       ev.preventDefault();
-      if (message.length > 0) {
-        this.props.onSendMessage(message);
-        this.setState({message: ''});
-      } else {
-        this.props.onUnfocus();
-      }
+      this.handlePressEnter();
     } else if (ev.key === 'Escape') {
       this.props.onUnfocus();
     }
@@ -117,8 +121,11 @@ export default class ChatBar extends React.Component {
           <EditableSpan
             mobile={this.props.mobile}
             value={this.state.message}
+            key_={this.state.enters}
             onChange={this.handleChangeMobile}
+            onPressEnter={this.handlePressEnter}
             style={{height: 24}}
+            containerStyle={{display: 'block'}}
           />
         </div>
       );

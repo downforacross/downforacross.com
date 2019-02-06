@@ -76,9 +76,7 @@ export default class MobileKeyboard extends React.PureComponent {
 
   handleKeyPress = (button) => {
     const onKeyDown = globalKeyboardState.callback || _.noop;
-    if (button === '{del}') {
-      onKeyDown('{del}');
-    } else if (button === '{more}') {
+    if (button === '{more}') {
       this.setState({
         layout: 'more',
       });
@@ -105,23 +103,18 @@ export default class MobileKeyboard extends React.PureComponent {
       <Flex grow={1} onTouchStart={this.handleTouchStart}>
         <SimpleKeyboard
           layout={{
-            default: [
-              '{x} Q W E R T Y U I O P {x}',
-              '{x} A S D F G H J K L {x}',
-              '{x} {more} Z X C V B N M {del} {x}',
-            ],
             default: ['Q W E R T Y U I O P', 'A S D F G H J K L', '{more} Z X C V B N M {del}'],
             uppercase: [
               'Q W E R T Y U I O P',
               'A S D F G H J K L',
-              ': Z X C V B N M #',
-              '{shift} {emoji} {space} , . {del}',
+              ': Z X C V B N M {del}',
+              '{shift} {emoji} {space} , . {enter}',
             ],
             lowercase: [
               'q w e r t y u i o p',
               'a s d f g h j k l',
-              ': z x c v b n m #',
-              '{shift} {emoji} {space} , . {del}',
+              ': z x c v b n m {del}',
+              '{shift} {emoji} {space} , . {enter}',
             ],
             more: ['1 2 3 4 5 6 7 8 9 0', '@ # $ % & * - = +', "{abc} ' , . : / {rebus} {del}"],
           }}
@@ -132,6 +125,7 @@ export default class MobileKeyboard extends React.PureComponent {
             '{abc}': 'ABC',
             '{rebus}': '{}',
             '{emoji}': ' ',
+            '{enter}': '⏎',
           }}
           useTouchEvents={true}
           layoutName={this.state.layout}
