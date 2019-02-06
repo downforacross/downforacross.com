@@ -29,6 +29,34 @@ export default class MobileGridControls extends GridControls {
     focusKeyboard(this._handleKeyDown);
   }
 
+  componentDidUpdate() {
+    if (this.state.anchors.length === 0) {
+      this.fitOnScreen();
+    }
+  }
+
+  fitOnScreen() {
+    if (this.state.lastFitOnScreen > Date.now() - 100) return;
+
+    const rect = this.zoomContainer.current.getBoundingClientRect();
+    let {scale, translateX, translateY} = this.state.transform;
+    if (scale < 1) scale = 1;
+    const minTranslateX = -rect.width * (scale - 1);
+    const maxTranslateX = 0;
+    const minTranslateY = -rect.height * (scale - 1);
+    const maxTranslateY = 0;
+    translateX = _.clamp(translateX, minTranslateX, maxTranslateX);
+    translateY = _.clamp(translateY, minTranslateY, maxTranslateY);
+    this.setState({
+      transform: {
+        scale,
+        translateX,
+        translateY,
+      },
+      lastFitOnScreen: Date.now(),
+    });
+  }
+
   handleClueBarTouchMove = (e) => {
     e.preventDefault();
     const touch = e.touches[0];
@@ -116,11 +144,19 @@ export default class MobileGridControls extends GridControls {
   };
 
   handleRightArrowTouchEnd = (e) => {
-    this.handleAction('right');
+    if (this.props.direction === 'across') {
+      this.handleAction('right');
+    } else {
+      this.handleAction('down');
+    }
   };
 
   handleLeftArrowTouchEnd = (e) => {
-    this.handleAction('left');
+    if (this.props.direction === 'across') {
+      this.handleAction('left');
+    } else {
+      this.handleAction('up');
+    }
   };
 
   getTransform(anchors, {scale, translateX, translateY}) {
@@ -229,6 +265,7 @@ export default class MobileGridControls extends GridControls {
     const {scale, translateX, translateY} = this.state.transform;
     const style = {
       transform: `translate(${translateX}px, ${translateY}px) scale(${scale})`,
+      transition: this.state.anchors.length === 0 ? '.3s transform ease-out' : '',
     };
     return (
       <Flex
