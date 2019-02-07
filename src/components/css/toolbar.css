@@ -43,8 +43,15 @@
   font-size: 17px;
 }
 
-.toolbar button,
 .toolbar--mobile button {
+  background-color: transparent;
+  border: none;
+  padding: 7px;
+  color: white;
+  font-size: 11px;
+}
+
+.toolbar button {
   color: var(--main-gray-1);
   font-size: 14px;
   padding: 7px 10px 7px 10px;
@@ -55,13 +62,7 @@
   cursor: pointer;
 }
 
-.toolbar--mobile button {
-  font-size: 12px;
-  padding: 0px;
-}
-
-.toolbar button:hover,
-.toolbar--mobile button:hover {
+.toolbar button:hover {
   background-color: var(--main-gray-3);
 }
 

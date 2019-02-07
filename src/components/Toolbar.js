@@ -159,6 +159,8 @@ export default class Toolbar extends Component {
               onStart={onStartClock}
               onPause={onPauseClock}
             />
+            {solved ? null : this.renderCheckMenu()}
+            {solved ? null : this.renderRevealMenu()}
             {this.renderChatButton()}
           </Flex>
         </Flex>
