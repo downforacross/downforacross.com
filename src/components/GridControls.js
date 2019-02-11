@@ -24,12 +24,13 @@ export default class GridControls extends Component {
     this.focus();
   }
 
-  selectNextClue(backwards) {
+  selectNextClue(backwards, parallel = false) {
     const {direction, clueNumber} = this.grid.getNextClue(
       this.getSelectedClueNumber(),
       this.props.direction,
       this.props.clues,
-      backwards
+      backwards,
+      parallel
     );
     this.selectClue(direction, clueNumber);
   }

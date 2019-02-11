@@ -6,13 +6,17 @@ import React from 'react';
 import classnames from 'classnames';
 import {getUser} from '../store/user';
 
-function LogIn({user}) {
+function LogIn({user, style}) {
   if (!user.attached) {
     return null;
   }
   if (user.fb) {
     // for now return a simple "logged in"
-    return <div className="nav--right">Logged in</div>;
+    return (
+      <div className="nav--right" style={style}>
+        Logged in
+      </div>
+    );
     /*
     return (
       <div className='nav--right'>
@@ -25,7 +29,7 @@ function LogIn({user}) {
     */
   } else {
     return (
-      <div className="nav--right">
+      <div className="nav--right" style={style}>
         <div
           className="nav--login"
           onClick={() => {
@@ -39,15 +43,15 @@ function LogIn({user}) {
   }
 }
 
-export default function Nav({hidden, v2, secret, mobile}) {
+export default function Nav({hidden, v2, secret, mobile, textStyle, linkStyle}) {
   if (hidden) return null; // no nav for mobile
 
   return (
     <div className={classnames('nav', {mobile})}>
-      <div className="nav--left">
+      <div className="nav--left" style={linkStyle}>
         <Link to={v2 ? '/beta' : '/'}>Down for a Cross</Link>
       </div>
-      <LogIn user={getUser()} />
+      <LogIn user={getUser()} style={textStyle} />
     </div>
   );
 }

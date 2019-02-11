@@ -29,6 +29,10 @@
   font-size: 13px;
 }
 
+.nav.mobile .nav--right {
+  margin-right: 0px;
+}
+
 .nav--login {
   cursor: pointer;
 }

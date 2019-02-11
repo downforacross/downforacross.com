@@ -1,4 +1,6 @@
 import React from 'react';
+import _ from 'lodash';
+import leftPad from 'left-pad';
 
 function toArr(a) {
   if (Array.isArray(a)) return a;
@@ -25,6 +27,24 @@ function hasShape(obj, shape) {
   } else {
     return true;
   }
+}
+
+const hexToRgb = (hex) => {
+  return _.map([hex.substring(1, 3), hex.substring(3, 5), hex.substring(5, 7)], (x) => parseInt(x, 16));
+};
+
+const rgbToHex = (r, g, b) => {
+  const [R, G, B] = _.map([r, g, b], (x) => leftPad(x.toString(16, 2), '0', 2).substring(0, 2));
+  return `#${R}${G}${B}`;
+};
+
+export function colorAverage(hex1, hex2, weight) {
+  const [r1, g1, b1] = hexToRgb(hex1);
+  const [r2, g2, b2] = hexToRgb(hex2);
+  const r = r1 * (1 - weight) + r2 * weight;
+  const g = g1 * (1 - weight) + g2 * weight;
+  const b = b1 * (1 - weight) + b2 * weight;
+  return rgbToHex(r, g, b);
 }
 
 window.requestIdleCallback =

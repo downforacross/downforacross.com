@@ -156,7 +156,16 @@ export default class Grid {
     return !this.hasEmptyCells(clueRoot.r, clueRoot.c, direction);
   }
 
-  getNextClue(clueNumber, direction, clues, backwards) {
+  get parallelMapInverse() {
+    // TODO
+  }
+
+  get parallelMap() {
+    // TODO
+  }
+
+  getNextClue(clueNumber, direction, clues, backwards, parallel) {
+    clueNumber = parallel ? this.parallelMap[direction][clueNumber] : clueNumber;
     const add = backwards ? -1 : 1;
     const start = () => (backwards ? clues[direction].length - 1 : 1);
     const step = () => {
@@ -168,17 +177,19 @@ export default class Grid {
       }
     };
     const ok = () => {
+      const number = parallel ? this.parallelMapInverse[direction][clueNumber] : clueNumber;
       return (
-        clues[direction][clueNumber] !== undefined &&
-        (this.isGridFilled() || !this.isWordFilled(direction, clueNumber))
+        clues[direction][number] !== undefined &&
+        (this.isGridFilled() || !this.isWordFilled(direction, number))
       );
     };
     step();
 
     safe_while(() => !ok(), step);
+    const number = parallel ? this.parallelMapInverse[direction][clueNumber] : clueNumber;
     return {
       direction,
-      clueNumber,
+      clueNumber: number,
     };
   }
 

@@ -25,6 +25,10 @@ export default class PuzzleList extends PureComponent {
   }
 
   handleScroll = (e) => {
+    if (this.container.current) {
+      this.props.onScroll && this.props.onScroll(this.container.current.scrollTop);
+    }
+
     if (this.fullyScrolled) {
       if (this.isEmpty) {
         return; // if the filters are dead, don't load as they won't help

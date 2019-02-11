@@ -100,7 +100,7 @@ export default class MobileGridControls extends GridControls {
         },
         previousClue: this.mainClue,
       };
-    } else if (!clueBarGesture.x) {
+    } else if (!clueBarGesture.x && (Math.abs(clueBarGesture.y) > 20 || Math.abs(clueBarGesture.y) <= 3)) {
       this.flipDirection();
       stateUpdates = {
         ...stateUpdates,
@@ -277,7 +277,7 @@ export default class MobileGridControls extends GridControls {
     const {touchingClueBarStart, touchingClueBarCurrent} = this.state;
     if (!touchingClueBarStart || !touchingClueBarCurrent) return {};
     const x = touchingClueBarCurrent.pageX - touchingClueBarStart.pageX;
-    const y = _.clamp(1.7 * (touchingClueBarCurrent.pageY - touchingClueBarStart.pageY), -62, 62);
+    const y = _.clamp(1.2 * (touchingClueBarCurrent.pageY - touchingClueBarStart.pageY), -62, 62);
     return Math.max(Math.abs(x), Math.abs(y)) > 10 ? (Math.abs(x) > Math.abs(y) ? {x} : {y}) : {y: 0};
   }
 
