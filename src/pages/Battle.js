@@ -7,6 +7,8 @@ import {Helmet} from 'react-helmet';
 import Flex from 'react-flexview';
 import {BattleModel} from '../store';
 import redirect from '../redirect';
+import {isMobile} from '../jsUtils';
+import classnames from 'classnames';
 
 export default class Battle extends Component {
   constructor(props) {
@@ -20,9 +22,7 @@ export default class Battle extends Component {
       name: undefined,
       players: undefined,
     };
-    this.handleChangeName = this.handleChangeName.bind(this);
-    this.handleUnload = this.handleUnload.bind(this);
-    this.renderTeam = this.renderTeam.bind(this); // Why do I have to do this?
+    this.mobile = isMobile();
   }
 
   componentDidMount() {
@@ -70,42 +70,44 @@ export default class Battle extends Component {
     this.battleModel.attach();
   }
 
-  handleTeamSelect(team) {
+  handleTeamSelect = (team) => {
     this.battleModel.addPlayer(this.state.name, team);
     this.setState({team});
-  }
+  };
 
-  handleChangeName(name) {
+  handleChangeName = (name) => {
     localStorage.setItem(`battle_${this.state.bid}`, name);
     this.setState({name});
-  }
+  };
 
-  handleUnload() {
+  handleUnload = () => {
     if (this.state.name && _.isNumber(this.state.team) && !this.state.redirecting) {
       this.battleModel.removePlayer(this.state.name, this.state.team);
     }
-  }
+  };
 
   // ================
   // Render Methods
 
   renderTeamSelector() {
-    const isDisabled = !this.state.name || this.state.name === '';
-    const buttonClass = isDisabled ? 'battle--button-disabled' : 'battle--button';
+    const disabled = !this.state.name; // both undefined & '' are falsy
+    const buttonClass = classnames('battle--button', {
+      disabled,
+    });
     return (
       <Flex className="battle--selector">
         <Flex className="battle--buttons">
           <Flex
             className={buttonClass}
             hAlignContent="center"
-            onClick={() => !isDisabled && this.handleTeamSelect(0)}
+            onClick={() => !disabled && this.handleTeamSelect(0)}
           >
             {'Team 1'}
           </Flex>
           <Flex
             className={buttonClass}
             hAlignContent="center"
-            onClick={() => !isDisabled && this.handleTeamSelect(1)}
+            onClick={() => !disabled && this.handleTeamSelect(1)}
           >
             {'Team 2'}
           </Flex>
@@ -164,7 +166,7 @@ export default class Battle extends Component {
   render() {
     return (
       <Flex
-        className="battle"
+        className={classnames('battle', {mobile: this.mobile})}
         column
         grow={1}
         style={{

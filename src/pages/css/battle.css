@@ -43,17 +43,12 @@
   color: var(--main-blue);
 }
 
-.battle--button-disabled {
-  border-radius: 5px;
-  padding: 10px;
-  border: 1px solid #d9d9d9;
-
-  justify-self: center;
-  margin-left: 20px;
-  margin-right: 20px;
-
+.mobile .battle--button {
   font-weight: bold;
-  font-size: 75px;
+  font-size: 25px;
+}
+
+.battle--button.disabled {
   color: #d9d9d9;
 }
 
