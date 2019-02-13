@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 
 let offline = true;
-// offline = false;
+offline = false;
 
 const config = {
   apiKey: 'AIzaSyCe4BWm9kbjXFwlZcmq4x8DvLD3TDoinhA',

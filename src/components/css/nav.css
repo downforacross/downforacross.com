@@ -8,13 +8,13 @@
   background-color: var(--main-blue);
 }
 .nav.mobile {
-  padding-top: 17px;
-  padding-bottom: 17px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
+
 .nav--left {
   font-size: 17px;
   font-weight: bold;
-  line-height: 100%;
 }
 
 .nav.mobile .nav--left {
@@ -40,6 +40,7 @@
 .nav--left a {
   color: white;
   text-decoration: none;
+  vertical-align: middle;
   font-size: 17px;
 }
 

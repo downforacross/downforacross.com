@@ -43,11 +43,11 @@ function LogIn({user, style}) {
   }
 }
 
-export default function Nav({hidden, v2, secret, mobile, textStyle, linkStyle}) {
+export default function Nav({hidden, v2, secret, mobile, textStyle, linkStyle, divRef}) {
   if (hidden) return null; // no nav for mobile
 
   return (
-    <div className={classnames('nav', {mobile})}>
+    <div className={classnames('nav', {mobile})} ref={divRef}>
       <div className="nav--left" style={linkStyle}>
         <Link to={v2 ? '/beta' : '/'}>Down for a Cross</Link>
       </div>

@@ -7,6 +7,7 @@ export default class PuzzleList extends PureComponent {
   constructor() {
     super();
     this.container = React.createRef();
+    this.previousScrollTop = 0;
   }
 
   componentDidUpdate() {
@@ -26,7 +27,10 @@ export default class PuzzleList extends PureComponent {
 
   handleScroll = (e) => {
     if (this.container.current) {
-      this.props.onScroll && this.props.onScroll(this.container.current.scrollTop);
+      const scrollTop = this.container.current.scrollTop;
+      this.props.onScroll && this.props.onScroll(scrollTop);
+      this.direction = scrollTop - this.previousScrollTop;
+      this.previousScrollTop = scrollTop;
     }
 
     if (this.fullyScrolled) {
@@ -35,6 +39,21 @@ export default class PuzzleList extends PureComponent {
       }
       this.props.onNextPage();
     }
+  };
+
+  handleTouchEnd = (e) => {
+    console.log('touchend');
+    if (this.container.current) return;
+    const scrollTop = this.container.scrollTop;
+    const direction = this.direction;
+    if (direction > 0) {
+      if (scrollTop < 100) {
+        this.container.scrollTop = 100;
+      }
+    } else if (scrollTop < 100) {
+      this.container.scrollTop = 0;
+    }
+    this.handleScroll();
   };
 
   get isEmpty() {
@@ -122,6 +141,7 @@ export default class PuzzleList extends PureComponent {
         }}
         className="puzzlelist"
         onScroll={this.handleScroll}
+        onTouchEnd={this.handleTouchEnd}
       >
         {this.puzzles.map((entry, i) => (
           <div className="entry--container" key={i}>

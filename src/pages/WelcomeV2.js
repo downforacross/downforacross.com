@@ -35,11 +35,13 @@ export default class WelcomeV2 extends Component {
     this.loading = false;
     this.mobile = isMobile();
     this.searchInput = React.createRef();
+    this.nav = React.createRef();
   }
 
   componentDidMount() {
     this.initializePuzzlelist();
     this.initializeUser();
+    this.navHeight = this.nav.current.getBoundingClientRect().height;
   }
 
   componentWillUnmount() {
@@ -97,13 +99,14 @@ export default class WelcomeV2 extends Component {
     if (!this.mobile) return;
     const motion = this.motion;
     const {searchFocused} = this.state;
-    const offset = searchFocused ? Math.round(motion) : motion;
-    const top = -50 * offset;
-    const height = 50 * (1 - offset);
+    const offset = motion;
+    const top = -this.navHeight * offset;
+    const height = this.navHeight * (1 - offset);
     return {
       position: 'relative',
       top,
       height,
+      opacity: searchFocused && motion === 1 ? 0 : 1,
     };
   }
 
@@ -111,7 +114,7 @@ export default class WelcomeV2 extends Component {
     if (!this.mobile) return;
     const motion = this.motion;
     const opacity = _.clamp(1 - 3 * motion, 0, 1);
-    const translateY = 50 * motion;
+    const translateY = this.navHeight * motion;
     return {
       opacity,
       transform: `translateY(${translateY}px)`,
@@ -121,7 +124,7 @@ export default class WelcomeV2 extends Component {
   get navLinkStyle() {
     if (!this.mobile) return;
     const motion = this.motion;
-    const translateY = 50 * motion;
+    const translateY = this.navHeight * motion;
     return {
       transform: `translateY(${translateY}px)`,
       zIndex: 2,
@@ -251,6 +254,7 @@ export default class WelcomeV2 extends Component {
 
   get colorMotion() {
     if (!this.mobile) return 0;
+    // if (this.state.searchFocused) return 0;
     const motion = this.motion;
     const result = _.clamp(motion * 3, 0, 1);
     return result;
@@ -274,9 +278,13 @@ export default class WelcomeV2 extends Component {
     if (!this.mobile) return;
     const color = colorAverage(BLUE, WHITE, this.colorMotion);
     const backgroundColor = colorAverage(WHITE, BLUE, this.colorMotion);
+    const paddingTop = (1 - this.motion) * 10;
+    const paddingBottom = paddingTop;
     return {
       color,
       backgroundColor,
+      paddingTop,
+      paddingBottom,
     };
   }
 
@@ -347,7 +355,13 @@ export default class WelcomeV2 extends Component {
           <title>Down for a Cross</title>
         </Helmet>
         <div className="welcomev2--nav" style={this.navStyle}>
-          <Nav v2 mobile={this.mobile} textStyle={this.navTextStyle} linkStyle={this.navLinkStyle} />
+          <Nav
+            v2
+            mobile={this.mobile}
+            textStyle={this.navTextStyle}
+            linkStyle={this.navLinkStyle}
+            divRef={this.nav}
+          />
         </div>
         <Flex grow={1} basis={1}>
           {this.showingSidebar && (

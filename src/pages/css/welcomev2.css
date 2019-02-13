@@ -48,8 +48,8 @@
 }
 
 .welcomev2.mobile .welcomev2--searchbar--container {
-  padding-top: 5px;
-  padding-bottom: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   background-color: var(--main-blue);
   position: relative;
 }
