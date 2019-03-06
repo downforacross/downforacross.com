@@ -124,23 +124,23 @@ export default class Battle extends Component {
     );
   }
 
-  renderPlayer(player, idx) {
+  renderPlayer = (player, idx) => {
     return (
       <Flex className="battle--player" key={idx}>
         {' '}
         {player.name}{' '}
       </Flex>
     );
-  }
+  };
 
-  renderTeam(team, idx) {
+  renderTeam = (team, idx) => {
     return (
       <Flex className="battle--team" key={idx}>
         <Flex className="battle--team-name"> Team {parseInt(idx) + 1} </Flex>
         {_.map(team, this.renderPlayer)}
       </Flex>
     );
-  }
+  };
 
   renderTeams() {
     const numTeams = Math.max(_.max(_.map(this.state.players, 'team')), 2);
