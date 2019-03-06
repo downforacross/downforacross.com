@@ -261,7 +261,7 @@ export default class WelcomeV2 extends Component {
   }
 
   get searchStyle() {
-    if (!this.mobile) return;
+    if (!this.mobile) return {'flex-grow': 1};
     const motion = this.motion;
     const color = colorAverage(BLUE, WHITE, this.colorMotion);
     const {searchFocused} = this.state;
@@ -311,6 +311,8 @@ export default class WelcomeV2 extends Component {
 
   renderSearch() {
     const {search} = this.state;
+    const hAlignContent = this.mobile ? 'right' : 'left';
+    const grow = this.mobile ? 0 : 1;
     const searchIcon = (
       <div className="welcomev2--searchicon">
         <svg viewBox="0 0 40 40">
@@ -320,8 +322,13 @@ export default class WelcomeV2 extends Component {
       </div>
     );
     return (
-      <Flex className="welcomev2--searchbar--container" shrink={0} hAlignContent="right">
-        <Flex vAlignContent="center" style={this.searchStyle} className="welcomev2--searchbar--wrapper">
+      <Flex className="welcomev2--searchbar--container" shrink={0} hAlignContent={hAlignContent}>
+        <Flex
+          vAlignContent="center"
+          style={this.searchStyle}
+          grow={grow}
+          className="welcomev2--searchbar--wrapper"
+        >
           <div style={this.iconStyle} onTouchEnd={this.handleSearchIconTouchEnd}>
             {searchIcon}
           </div>
