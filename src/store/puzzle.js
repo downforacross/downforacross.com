@@ -38,6 +38,7 @@ export default class Puzzle extends EventEmitter {
   listGames(limit = 100) {
     return db
       .ref('/game')
+      .limitToLast(1000)
       .orderByChild('pid')
       .equalTo(this.pid)
       .limitToLast(limit)
