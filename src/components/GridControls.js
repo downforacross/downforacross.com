@@ -74,6 +74,12 @@ export default class GridControls extends Component {
       }
     };
 
+    const moveSelectedUsingDirection = (d) => () => {
+      const {direction} = this.props;
+      const [dr, dc] = this.props.direction === 'down' ? [0, d] : [d, 0];
+      return moveSelectedBy(dr, dc)();
+    };
+
     const setDirection = (direction, cbk) => () => {
       if (this.props.direction !== direction) {
         if (this.canSetDirection(direction)) {
@@ -91,6 +97,8 @@ export default class GridControls extends Component {
       up: setDirection('down', moveSelectedBy(-1, 0)),
       down: setDirection('down', moveSelectedBy(1, 0)),
       right: setDirection('across', moveSelectedBy(0, 1)),
+      forward: moveSelectedUsingDirection(1),
+      backward: moveSelectedUsingDirection(-1),
       backspace: this.backspace.bind(this),
       delete: this.delete.bind(this),
       tab: this.selectNextClue.bind(this),
@@ -122,6 +130,8 @@ export default class GridControls extends Component {
       Delete: 'delete',
       Tab: 'tab',
       ' ': 'space',
+      '[': 'backward',
+      ']': 'forward',
     };
 
     const {onPressEnter, onPressPeriod, onPressEscape} = this.props;
