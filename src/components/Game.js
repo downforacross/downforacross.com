@@ -8,6 +8,7 @@ import * as powerups from '../lib/powerups';
 import Player from '../components/Player';
 import Toolbar from '../components/Toolbar';
 import {toArr} from '../jsUtils';
+import {toHex, darken} from '../lib/colors';
 
 // component for gameplay -- incl. grid/clues & toolbar
 export default class GameV2 extends Component {
@@ -155,9 +156,24 @@ export default class GameV2 extends Component {
       return <div>Loading...</div>;
     }
 
-    const {grid, circles, shades, cursors, colors, clues, solved, solution} = this.game;
+    const {grid, circles, shades, cursors, colors, clues, solved, solution, themeColor} = this.game;
     const opponentGrid = this.opponentGame && this.opponentGame.grid;
     const {screenWidth} = this.state;
+    const themeStyles = {
+      clueBarStyle: {
+        backgroundColor: toHex(themeColor),
+      },
+      gridStyle: {
+        cellStyle: {
+          selected: {
+            backgroundColor: myColor,
+          },
+          highlighted: {
+            backgroundColor: toHex(darken(themeColor)),
+          },
+        },
+      },
+    };
     let cols = grid[0].length;
     let rows = grid.length;
     const width = Math.min((35 * 15 * cols) / rows, screenWidth);
@@ -188,6 +204,7 @@ export default class GameV2 extends Component {
         onPressPeriod={this.handlePressPeriod}
         mobile={mobile}
         pickups={this.props.pickups}
+        {...themeStyles}
       />
     );
   }

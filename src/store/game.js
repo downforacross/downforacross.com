@@ -2,6 +2,7 @@ import {db, SERVER_TIME} from './firebase';
 import EventEmitter from 'events';
 
 import Puzzle from './puzzle';
+import * as colors from '../lib/colors';
 
 // a wrapper class that models Game
 
@@ -161,6 +162,7 @@ export default class Game extends EventEmitter {
         paused: true,
       },
       solved = false,
+      themeColor = colors.MAIN_BLUE_3,
       pid,
     } = rawGame;
 
@@ -176,6 +178,7 @@ export default class Game extends EventEmitter {
       clues,
       clock,
       solved,
+      themeColor,
     };
     const version = CURRENT_VERSION;
     // nuke existing events

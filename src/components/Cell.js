@@ -84,6 +84,32 @@ export default class Cell extends Component {
     return null;
   }
 
+  getStyle() {
+    const {
+      cellStyle,
+      black,
+      selected,
+      highlighted,
+      shaded,
+      bad,
+      good,
+      revealed,
+      pencil,
+      value,
+      myColor,
+      onClick,
+      number,
+      referenced,
+    } = this.props;
+    if (selected) {
+      return cellStyle.selected;
+    }
+    if (highlighted) {
+      return cellStyle.highlighted;
+    }
+    return {};
+  }
+
   render() {
     const {
       black,
@@ -113,6 +139,7 @@ export default class Cell extends Component {
     let val = value || '';
 
     let l = Math.max(1, val.length);
+    const style = this.getStyle();
     return (
       <div
         className={
@@ -126,7 +153,7 @@ export default class Cell extends Component {
           (pencil ? 'pencil ' : '') +
           'cell'
         }
-        style={selected ? {backgroundColor: myColor} : null}
+        style={style}
         onClick={onClick}
         onTouchStart={(e) => {
           const touch = e.touches[e.touches.length - 1];

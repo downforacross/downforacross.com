@@ -112,9 +112,10 @@ export default class Grid extends React.PureComponent {
   }
 
   render() {
-    const size = this.props.size;
+    window.grid = this;
     const sizeClass = this.getSizeClass(size);
     const key = size + '-';
+    const {size, cellStyle} = this.props;
     return (
       <table
         style={{
@@ -155,6 +156,7 @@ export default class Grid extends React.PureComponent {
                     highlighted={this.isHighlighted(r, c)}
                     myColor={this.props.myColor}
                     pickupType={this.getPickup(r, c)}
+                    cellStyle={cellStyle}
                   />
                 </td>
               ))}

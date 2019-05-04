@@ -1,4 +1,5 @@
 import {MAX_CLOCK_INCREMENT} from '../timing';
+import {MAIN_BLUE_3, GREENISH, PINKISH} from '../lib/colors';
 
 function getScopeGrid(grid, scope) {
   const scopeGrid = grid.map((row) => row.map((cell) => false));
@@ -45,6 +46,8 @@ const reducers = {
       cursors = [],
       colors = {},
       solved = false,
+      themeColor = MAIN_BLUE_3,
+      // themeColor = GREENISH,
     } = params.game;
 
     return {
@@ -59,6 +62,7 @@ const reducers = {
       solved,
       cursors,
       colors,
+      themeColor,
     };
   },
 

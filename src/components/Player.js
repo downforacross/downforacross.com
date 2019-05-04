@@ -276,8 +276,12 @@ export default class Player extends Component {
       colors = {},
       id,
       pickups,
+      clueBarStyle = {},
+      gridStyle = {},
     } = this.props;
     const size = this.size;
+    const {cellStyle = {}} = gridStyle;
+    console.log(gridStyle, cellStyle);
 
     const currentTime = getTime();
     const cursors = allCursors.filter((cursor) => cursor.id !== id).map((cursor) => ({
@@ -346,7 +350,7 @@ export default class Player extends Component {
         >
           <div className="player--main">
             <div className="player--main--left">
-              <div className="player--main--clue-bar">
+              <div className="player--main--clue-bar" style={clueBarStyle}>
                 <div className="player--main--clue-bar--number">{this.getClueBarAbbreviation()}</div>
                 <div className="player--main--clue-bar--text--wrapper">
                   <div className="player--main--clue-bar--text">
@@ -372,6 +376,7 @@ export default class Player extends Component {
                   onSetSelected={this._setSelected}
                   myColor={myColor}
                   onChangeDirection={this._changeDirection}
+                  cellStyle={cellStyle}
                 />
               </div>
             </div>

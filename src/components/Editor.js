@@ -265,6 +265,7 @@ export default class Editor extends Component {
             myColor={this.props.myColor}
             references={[]}
             editMode
+            cellStyle={{}}
           />
         </div>
         <Flex className="editor--button" hAlignContent="center" onClick={this.handleToggleFreeze}>
