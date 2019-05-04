@@ -12,7 +12,7 @@ export default class Upload extends Component {
   }
 
   success = (puzzle) => {
-    this.setState({puzzle: {...puzzle, private: true}});
+    this.setState({puzzle: {...puzzle}});
   };
 
   create = () => {
