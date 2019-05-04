@@ -50,9 +50,9 @@ export const timeLeft = (powerup) => {
   let {duration} = powerups[type];
   duration = parseInt(duration);
   if (!used) {
-    return Math.ceiling(duration);
+    return Math.ceil(duration);
   } else {
-    return Math.ceiling(duration - secondsSince(used));
+    return Math.ceil(duration - secondsSince(used));
   }
 };
 
