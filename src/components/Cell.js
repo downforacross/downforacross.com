@@ -100,11 +100,15 @@ export default class Cell extends Component {
       onClick,
       number,
       referenced,
+      frozen,
     } = this.props;
     if (selected) {
       return cellStyle.selected;
     }
     if (highlighted) {
+      if (frozen) {
+        return cellStyle.frozen;
+      }
       return cellStyle.highlighted;
     }
     return {};

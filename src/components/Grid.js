@@ -156,6 +156,7 @@ export default class Grid extends React.PureComponent {
                     cursors={(this.props.cursors || []).filter((cursor) => cursor.r === r && cursor.c === c)}
                     highlighted={this.isHighlighted(r, c)}
                     myColor={this.props.myColor}
+                    frozen={this.props.frozen}
                     pickupType={this.getPickup(r, c)}
                     cellStyle={cellStyle}
                   />

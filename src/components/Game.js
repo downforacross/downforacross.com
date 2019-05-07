@@ -8,7 +8,7 @@ import * as powerups from '../lib/powerups';
 import Player from '../components/Player';
 import Toolbar from '../components/Toolbar';
 import {toArr} from '../jsUtils';
-import {toHex, darken} from '../lib/colors';
+import {toHex, darken, GREENISH} from '../lib/colors';
 
 // component for gameplay -- incl. grid/clues & toolbar
 export default class GameV2 extends Component {
@@ -170,6 +170,9 @@ export default class GameV2 extends Component {
           },
           highlighted: {
             backgroundColor: toHex(darken(themeColor)),
+          },
+          frozen: {
+            backgroundColor: toHex(GREENISH),
           },
         },
       },

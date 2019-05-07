@@ -251,7 +251,6 @@ export default class Player extends Component {
   }
 
   handleSetCursorLock = (val) => {
-    console.log('set cursor lock', val);
     setTimeout(() => {
       this.cursorLocked = val;
     }, val ? 0 : 150);
@@ -281,7 +280,6 @@ export default class Player extends Component {
     } = this.props;
     const size = this.size;
     const {cellStyle = {}} = gridStyle;
-    console.log(gridStyle, cellStyle);
 
     const currentTime = getTime();
     const cursors = allCursors.filter((cursor) => cursor.id !== id).map((cursor) => ({
@@ -291,6 +289,22 @@ export default class Player extends Component {
     }));
     const {direction} = this.state;
     const selected = this.selected;
+
+    const gridProps = {
+      size,
+      grid,
+      circles,
+      selected,
+      references: this.getReferences(),
+      direction,
+      cursors,
+      onSetSelected: this._setSelected,
+      cellStyle,
+      myColor,
+      onChangeDirection: this._changeDirection,
+      pickups,
+      frozen,
+    };
 
     if (mobile) {
       return (
@@ -312,21 +326,7 @@ export default class Player extends Component {
           >
             <div className="player--mobile" ref={this.mobileContainer}>
               <div className={'player--mobile--grid' + (frozen ? ' frozen' : '')}>
-                <Grid
-                  ref="grid"
-                  size={size}
-                  grid={grid}
-                  circles={circles}
-                  selected={selected}
-                  references={this.getReferences()}
-                  direction={direction}
-                  cursors={cursors}
-                  onSetSelected={this._setSelected}
-                  cellStyle={cellStyle}
-                  myColor={myColor}
-                  onChangeDirection={this._changeDirection}
-                  pickups={pickups}
-                />
+                <Grid ref="grid" {...gridProps} />
               </div>
             </div>
           </MobileGridControls>
@@ -361,24 +361,7 @@ export default class Player extends Component {
               </div>
 
               <div className={'player--main--left--grid' + (frozen ? ' frozen' : '') + ' blurable'}>
-                <Grid
-                  ref="grid"
-                  size={size}
-                  grid={grid}
-                  opponentGrid={opponentGrid}
-                  pickups={pickups}
-                  solution={solution}
-                  circles={circles}
-                  shades={shades}
-                  selected={selected}
-                  references={this.getReferences()}
-                  direction={direction}
-                  cursors={cursors}
-                  onSetSelected={this._setSelected}
-                  myColor={myColor}
-                  onChangeDirection={this._changeDirection}
-                  cellStyle={cellStyle}
-                />
+                <Grid ref="grid" {...gridProps} />
               </div>
             </div>
 
