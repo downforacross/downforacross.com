@@ -322,6 +322,7 @@ export default class Player extends Component {
                   direction={direction}
                   cursors={cursors}
                   onSetSelected={this._setSelected}
+                  cellStyle={cellStyle}
                   myColor={myColor}
                   onChangeDirection={this._changeDirection}
                   pickups={pickups}

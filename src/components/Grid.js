@@ -113,6 +113,7 @@ export default class Grid extends React.PureComponent {
 
   render() {
     window.grid = this;
+    window.g = this.props.grid;
     const sizeClass = this.getSizeClass(size);
     const key = size + '-';
     const {size, cellStyle} = this.props;
