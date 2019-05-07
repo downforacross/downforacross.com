@@ -20,23 +20,36 @@ const assignScores = (wordlist) => {
   return result;
 };
 
-const generateDefaultWordlist = () => {
+const makeWordlist = (words, score = 30, stdev = 10) => {
   const result = {};
-  _.forEach(window.nyt_words, (k) => {
+  _.forEach(words, (k) => {
     k = k.toUpperCase();
     if (k.length > 7) return;
     result[k] = {
-      score: 30,
-      stdev: 10,
+      score,
+      stdev,
     };
   });
   return result;
 };
 
-const DEFAULT_WORDLIST = generateDefaultWordlist();
+const DEFAULT_WORDLIST = makeWordlist(window.nyt_words);
+
+const getFullWords = (partialGrid) => {
+  const candidateGrid = convertToCandidateGrid(partialGrid);
+  const words = candidateGrid.entries.map((entry) => candidateGrid.getPattern(entry));
+  return words; //_.filter(words, word => word.indexOf(" ") === -1);
+};
+window.getFullWords = getFullWords;
+
 // partialGrid: Array(Array(cell))
 // cell: { value: '.' if black, '[a-z]' or '' otherwise, pencil: boolean/null }
 export const fillGrid = (partialGrid, wordlist = DEFAULT_WORDLIST) => {
+  const fullWords = getFullWords(partialGrid);
+  wordlist = {
+    ...wordlist,
+    // ...makeWordlist(fullWords, 80, 0),
+  };
   const scoredWordlist = assignScores(wordlist);
 
   const initialState = convertToCandidateGrid(partialGrid);
