@@ -8,18 +8,32 @@ import React, {Component} from 'react';
 export default class Upload extends Component {
   constructor() {
     super();
-    this.state = {puzzle: null};
+    this.state = {
+      puzzle: null,
+      recentlyCreatedPuzzleId: null,
+    };
   }
 
   success = (puzzle) => {
-    this.setState({puzzle: {...puzzle}});
+    this.setState({
+      puzzle: {...puzzle},
+      recentlyCreatedPuzzleId: null,
+    });
   };
 
-  create = () => {
+  create = (isPrivate = false) => {
     const {puzzle} = this.state;
-    actions.createPuzzle(puzzle, (puzzle) => {
+    if (isPrivate) {
+      puzzle.private = true;
+    }
+    actions.createPuzzle(puzzle, (pid) => {
       this.setState({puzzle: null});
       this.props.onCreate && this.props.onCreate();
+      if (isPrivate) {
+        this.setState({
+          recentlyCreatedPuzzleId: pid,
+        });
+      }
     });
   };
 
@@ -43,11 +57,34 @@ export default class Upload extends Component {
     const {type} = info || {};
     if (type) {
       return (
-        <button className={'upload--button ' + (v2 ? 'v2' : '')} onClick={this.create}>
-          {`Add to the ${type} repository`}
-        </button>
+        <div>
+          <button className={'upload--button ' + (v2 ? 'v2' : '')} onClick={(e) => this.create(false)}>
+            {`Add puzzle to the public ${type} repository`}
+          </button>
+          <button className={'upload--button ' + (v2 ? 'v2' : '')} onClick={(e) => this.create(true)}>
+            {`Create puzzle but keep it unlisted (accessible by URL only)`}
+          </button>
+        </div>
       );
     }
+  }
+
+  renderRecentlyCreatedPuzzleMessage() {
+    if (!this.state.recentlyCreatedPuzzleId) {
+      return;
+    }
+
+    const url = `${window.location.host}/beta/play/${this.state.recentlyCreatedPuzzleId}`;
+
+    return (
+      <p style={{marginTop: 10, marginBottom: 10}}>
+        Successfully created an unlisted puzzle. You may now visit the link{' '}
+        <a href={url} style={{wordBreak: 'break-all'}}>
+          {url}
+        </a>{' '}
+        to play the new puzzle.
+      </p>
+    );
   }
 
   render() {
@@ -59,6 +96,7 @@ export default class Upload extends Component {
             <FileUploader success={this.success} fail={this.fail} v2={v2} />
             {this.renderSuccessMessage()}
             {this.renderButton()}
+            {this.renderRecentlyCreatedPuzzleMessage()}
           </div>
         </div>
       </div>
