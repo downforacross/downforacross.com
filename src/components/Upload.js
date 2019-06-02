@@ -11,6 +11,7 @@ export default class Upload extends Component {
     this.state = {
       puzzle: null,
       recentlyCreatedPuzzleId: null,
+      unlistedCheckboxChecked: false,
     };
   }
 
@@ -18,11 +19,13 @@ export default class Upload extends Component {
     this.setState({
       puzzle: {...puzzle},
       recentlyCreatedPuzzleId: null,
+      unlistedCheckboxChecked: false,
     });
   };
 
-  create = (isPrivate = false) => {
-    const {puzzle} = this.state;
+  create = () => {
+    const {puzzle, unlistedCheckboxChecked} = this.state;
+    const isPrivate = unlistedCheckboxChecked;
     if (isPrivate) {
       puzzle.private = true;
     }
@@ -51,6 +54,12 @@ export default class Upload extends Component {
     }
   }
 
+  handleChangeUnlistedCheckbox = (e) => {
+    this.setState({
+      unlistedCheckboxChecked: e.target.checked,
+    });
+  };
+
   renderButton() {
     const {v2} = this.props;
     const {info} = this.state.puzzle || {};
@@ -58,11 +67,17 @@ export default class Upload extends Component {
     if (type) {
       return (
         <div>
-          <button className={'upload--button ' + (v2 ? 'v2' : '')} onClick={(e) => this.create(false)}>
-            {`Add puzzle to the public ${type} repository`}
-          </button>
-          <button className={'upload--button ' + (v2 ? 'v2' : '')} onClick={(e) => this.create(true)}>
-            {`Create puzzle but keep it unlisted (accessible by URL only)`}
+          <label>
+            <input
+              type="checkbox"
+              checked={this.state.unlistedCheckboxChecked}
+              onChange={this.handleChangeUnlistedCheckbox}
+            />{' '}
+            Unlisted
+          </label>
+          <button className={'upload--button ' + (v2 ? 'v2' : '')} onClick={this.create}>
+            {`Add puzzle to the ${type} repository`}
+            {this.state.unlistedCheckboxChecked ? ' (unlisted)' : ''}
           </button>
         </div>
       );
