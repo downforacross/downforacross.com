@@ -89,7 +89,7 @@ export default class Upload extends Component {
       return;
     }
 
-    const url = `${window.location.host}/beta/play/${this.state.recentlyCreatedPuzzleId}`;
+    const url = `/beta/play/${this.state.recentlyCreatedPuzzleId}`;
 
     return (
       <p style={{marginTop: 10, marginBottom: 10}}>
