@@ -104,6 +104,11 @@ export default class GameV2 extends Component {
     this.gameModel.once('battleData', (battleData) => {
       this.initializeBattle(battleData);
     });
+    this.gameModel.on('archived', (event) => {
+      this.setState({
+        archived: true,
+      });
+    });
     this.gameModel.attach();
   }
 

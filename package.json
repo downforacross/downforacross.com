@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "aws-sdk": "^2.496.0",
     "bluebird": "^3.5.1",
     "events": "^2.0.0",
     "firebase": "^4.2.0",

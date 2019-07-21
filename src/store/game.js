@@ -10,11 +10,51 @@ const CURRENT_VERSION = 1.0;
 export default class Game extends EventEmitter {
   constructor(path) {
     super();
+    window.game = this;
     this.path = path;
     this.ref = db.ref(path);
     this.events = this.ref.child('events');
     this.createEvent = null;
     this.attached = false;
+    this.checkArchive();
+  }
+
+  checkArchive() {
+    this.ref.child('archivedEvents').once('value', (snapshot) => {
+      const archiveInfo = snapshot.val();
+      if (!archiveInfo) {
+        return;
+      }
+      const {unarchivedAt} = archiveInfo;
+      if (!unarchivedAt) {
+        if (window.confirm('Unarchive game?')) {
+          this.unarchive();
+        }
+      }
+    });
+  }
+
+  unarchive() {
+    this.ref.child('archivedEvents').once('value', async (snapshot) => {
+      const archiveInfo = snapshot.val();
+      if (!archiveInfo) {
+        console.log('nothing to unarchive');
+        return;
+      }
+      const {url, count, archivedAt, unarchivedAt} = archiveInfo;
+      if (unarchivedAt) {
+        console.log('already unarchived at', unarchivedAt);
+      }
+      if (url) {
+        console.log('loading', count, ' events from', archivedAt);
+        console.log(url);
+        const events = await (await fetch(url)).json();
+        console.log(events);
+        console.log('populating realtime database with new /events');
+        this.ref.child('events').set(events);
+        this.ref.child('archivedEvents/unarchivedAt').set(SERVER_TIME);
+      }
+    });
   }
 
   attach() {
