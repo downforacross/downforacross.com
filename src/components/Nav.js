@@ -55,7 +55,6 @@ export default function Nav({hidden, v2, secret, mobile, textStyle, linkStyle, d
       <div className="molester-moon" onClick={toggleMolesterMoons}>
         Dark Mode (beta)
       </div>
-      <LogIn user={getUser()} style={textStyle} />
     </div>
   );
 }
