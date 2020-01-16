@@ -1,2 +1,2 @@
 yarn build
-scp -r build/* ubuntu:~/downforacross.com/build/
+scp -r build/* ec2:~/downforacross.com/build/

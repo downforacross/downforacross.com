@@ -1,0 +1,147 @@
+/* Nav Bar */
+
+.molester-moon {
+  font-family: courier;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.molester-moon:hover {
+  opacity: 1;
+  transition: 3s all;
+}
+
+.dark {
+  background-color: #111;
+  color: #bbb;
+}
+
+.dark .nav {
+  background-color: var(--dark-blue) !important;
+}
+
+/* Game Page */
+
+.dark .player--main--clue-bar {
+  background-color: var(--dark-blue) !important;
+}
+
+.dark .player--main--left--grid {
+  color: #ccc;
+}
+
+.dark .grid--cell {
+  border-color: #555;
+}
+
+.dark .cell {
+  background-color: #111;
+}
+.dark .cell.black {
+  background-color: #333;
+}
+
+.dark .cell.highlighted {
+  background-color: rgb(22, 50, 114) !important;
+}
+
+.dark .clues--list--scroll--clue.selected {
+  background-color: var(--dark-blue) !important;
+}
+
+.dark .clues--list--scroll--clue.half-selected {
+  background-color: #333;
+  border-left-color: var(--dark-blue);
+}
+
+.dark .chatv2--header--title {
+  color: #ccc;
+}
+
+.dark .clues--list--scroll {
+  border-top-color: #555;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: #555;
+}
+
+.dark .toolbar button {
+  background-color: #111;
+  color: #ccc;
+}
+
+.dark .toolbar {
+  border-right: none;
+  border-left: none;
+  border-top: none;
+  border-bottom-color: #888;
+}
+
+.dark .chatv2 {
+  border-color: #888;
+}
+
+.dark .chatv2--header {
+  border-color: #888;
+}
+
+.dark .chatv2--username div {
+  border-left: none !important;
+  border-right: none !important;
+  border-top: none !important;
+}
+.dark .cell.selected {
+  background-color: #086c3a !important;
+}
+
+.dark .cell.good .cell--value {
+  color: #9f9fff;
+}
+
+.dark .cell.revealed .cell--value {
+  color: #44cc44;
+}
+
+.dark input {
+  background-color: #111;
+  color: #ccc;
+  border-color: #ccc;
+  border-left: none;
+  border-top: none;
+  border-right: none;
+  outline: none;
+}
+
+.dark ::selection {
+  background-color: #555; /* WebKit/Blink Browsers */
+}
+
+/* Welcome Page */
+.dark .welcomev2 {
+  background-color: #111;
+  color: #bbb;
+}
+
+.dark .entryv2--top--left {
+  color: #bbb;
+}
+
+.dark .entryv2 {
+  color: #bbb !important;
+}
+
+.dark .file-uploader--wrapper.v2 {
+  background-color: #111;
+}
+
+.dark .filters .checkmark {
+  background-color: transparent !important;
+}
+
+.dark .quickplay {
+}
+
+:root {
+  --dark-blue: rgb(36, 79, 115);
+}
