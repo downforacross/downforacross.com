@@ -9,7 +9,9 @@ AWS.config.credentials = credentials;
 
 async function go() {
   const SIZE = 50;
-  for (let range = 1000; range < 1100; range += SIZE) {
+  const startTime = Date.now();
+  // for (let range = 40000; range < 1000000; range += SIZE) {
+  for (let range = 60000; range < 100000; range += SIZE) {
     await Promise.map(_.range(range, range + SIZE), async (gid) => {
       const history = (await db.ref(`/game/${gid}/events`).once('value')).val();
       if (!history) {
@@ -33,8 +35,8 @@ async function go() {
         url,
       });
       await db.ref(`/game/${gid}/events`).remove();
-      console.log('done with', gid);
     });
+    console.log('done with', range, range + SIZE, (Date.now() - startTime) / 1000 / 60, 'mins');
   }
 }
 
