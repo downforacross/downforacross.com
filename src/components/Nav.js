@@ -51,7 +51,6 @@ export default function Nav({hidden, v2, secret, mobile, textStyle, linkStyle, d
       <div className="nav--left" style={linkStyle}>
         <Link to={v2 ? '/beta' : '/'}>Down for a Cross</Link>
       </div>
-      <LogIn user={getUser()} style={textStyle} />
     </div>
   );
 }

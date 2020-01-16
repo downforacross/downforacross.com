@@ -7,7 +7,7 @@
         ".read": true,
         ".write": true
       },
-      ".read": "auth!==null"
+      ".read": "true"
     },
     "puzzle": {
       ".read": true,
