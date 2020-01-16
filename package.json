@@ -9,7 +9,7 @@
     "firebase": "^4.2.0",
     "gaussian": "^1.1.0",
     "left-pad": "^1.3.0",
-    "lodash": "^4.17.5",
+    "lodash": "^4.17.13",
     "moment": "^2.20.1",
     "puzjs": "^1.0.2",
     "react": "16",
