@@ -236,6 +236,7 @@ export default class GameV2 extends Component {
         onToggleChat={this.handleToggleChat}
         onRefocus={this.handleRefocus}
         onToggleChat={this.handleToggleChat}
+        unreads={this.props.unreads}
       />
     );
   }

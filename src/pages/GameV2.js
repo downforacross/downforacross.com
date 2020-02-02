@@ -25,6 +25,7 @@ export default class GameV2 extends Component {
       mobile: isMobile(),
       mode: 'game',
       powerups: undefined,
+      lastReadChat: 0,
     };
     this.initializeUser();
     window.addEventListener('resize', () => {
@@ -185,6 +186,11 @@ export default class GameV2 extends Component {
     return this.opponentHistoryWrapper.getSnapshot();
   }
 
+  get unreads() {
+    const lastMessage = Math.max(...(this.game.chat.messages || []).map((m) => m.timestamp));
+    return lastMessage > this.state.lastReadChat;
+  }
+
   handleToggleChat = () => {
     const toggledMode = this.state.mode === 'game' ? 'chat' : 'game';
     this.setState({mode: toggledMode});
@@ -192,6 +198,12 @@ export default class GameV2 extends Component {
 
   handleChat = (username, id, message) => {
     this.gameModel.chat(username, id, message);
+  };
+
+  updateSeen = (message) => {
+    if (message.timestamp > this.state.lastReadChat) {
+      this.setState({lastReadChat: message.timestamp});
+    }
   };
 
   handleUnfocusGame = () => {
@@ -265,6 +277,7 @@ export default class GameV2 extends Component {
         pickups={this.state.pickups}
         battleModel={this.battleModel}
         team={this.state.team}
+        unreads={this.unreads}
       />
     );
   }
@@ -293,6 +306,7 @@ export default class GameV2 extends Component {
         mobile={mobile}
         opponentData={this.opponentGame && this.opponentGame.chat}
         bid={this.state.bid}
+        updateSeen={this.updateSeen}
       />
     );
   }
