@@ -200,7 +200,7 @@ export default class GameV2 extends Component {
     this.gameModel.chat(username, id, message);
   };
 
-  updateSeen = (message) => {
+  updateSeenChatMessage = (message) => {
     if (message.timestamp > this.state.lastReadChat) {
       this.setState({lastReadChat: message.timestamp});
     }
@@ -306,7 +306,7 @@ export default class GameV2 extends Component {
         mobile={mobile}
         opponentData={this.opponentGame && this.opponentGame.chat}
         bid={this.state.bid}
-        updateSeen={this.updateSeen}
+        updateSeenChatMessage={this.updateSeenChatMessage}
       />
     );
   }
