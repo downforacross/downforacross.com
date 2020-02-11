@@ -1,3 +1,4 @@
+import {gameWords} from './lib/names';
 import {makeGame, makeGrid} from './gameUtils';
 import firebase, {SERVER_TIME} from './store/firebase';
 import {GameModel, PuzzleModel} from './store';
@@ -67,7 +68,7 @@ const actions = {
       },
       (error, committed, snapshot) => {
         const gid = snapshot.child('gid').val();
-        const word = window.gameWords[Math.floor(Math.random() * window.gameWords.length)];
+        const word = gameWords[Math.floor(Math.random() * gameWords.length)];
         cbk(gid + '-' + word);
       }
     );

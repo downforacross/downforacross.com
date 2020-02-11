@@ -1,4 +1,5 @@
-const {adjectives: rawAdjectiveList, nouns: rawNounList} = window.nameWords;
+import {nameWords} from './lib/names';
+const {adjectives: rawAdjectiveList, nouns: rawNounList} = nameWords;
 
 function capitalize(s) {
   s = s.toLowerCase();
