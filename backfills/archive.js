@@ -1,5 +1,13 @@
 // archives replays
-import {db, disconnect} from '../src/actions';
+import admin from 'firebase-admin';
+const serviceAccount = require('./serviceAccountKey.json');
+
+// Initialize the app with a service account, granting admin privileges
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://crosswordsio.firebaseio.com',
+});
+const db = admin.database();
 import _ from 'lodash';
 import AWS from 'aws-sdk';
 import Promise from 'bluebird';
