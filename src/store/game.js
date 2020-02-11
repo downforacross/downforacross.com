@@ -51,8 +51,8 @@ export default class Game extends EventEmitter {
         const events = await (await fetch(url)).json();
         console.log(events);
         console.log('populating realtime database with new /events');
-        this.ref.child('events').set(events);
         this.ref.child('archivedEvents/unarchivedAt').set(SERVER_TIME);
+        this.ref.child('events').set(events);
       }
     });
   }
