@@ -6,7 +6,7 @@
     "aws-sdk": "^2.496.0",
     "bluebird": "^3.5.5",
     "events": "^2.0.0",
-    "firebase": "^4.2.0",
+    "firebase": "^7.8.1",
     "gaussian": "^1.1.0",
     "left-pad": "^1.3.0",
     "lodash": "^4.17.13",

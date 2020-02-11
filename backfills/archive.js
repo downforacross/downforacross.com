@@ -11,8 +11,9 @@ async function go() {
   const SIZE = 50;
   const startTime = Date.now();
   // for (let range = 40000; range < 1000000; range += SIZE) {
-  for (let range = 60000; range < 100000; range += SIZE) {
+  for (let range = 100000; range < 120000; range += SIZE) {
     await Promise.map(_.range(range, range + SIZE), async (gid) => {
+      // console.log('on', gid);
       const history = (await db.ref(`/game/${gid}/events`).once('value')).val();
       if (!history) {
         console.log('skipping', gid);
