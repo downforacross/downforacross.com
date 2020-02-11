@@ -261,7 +261,7 @@ export default class WelcomeV2 extends Component {
   }
 
   get searchStyle() {
-    if (!this.mobile) return {'flex-grow': 1};
+    if (!this.mobile) return {flexGrow: 1};
     const motion = this.motion;
     const color = colorAverage(BLUE, WHITE, this.colorMotion);
     const {searchFocused} = this.state;
