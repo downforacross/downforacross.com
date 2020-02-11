@@ -1,18 +1,17 @@
 {
   "rules": {
-    ".write": true,
     "game": {
+      ".read": "false",
+      ".write": "!data.exists()",
       ".indexOn": ["pid"],
       "$gid": {
         ".read": true,
         ".write": true
-      },
-      ".read": "true",
-      ".write": " !data.exists()"
+      }
     },
     "puzzle": {
       ".read": true,
-      ".write": true
+      ".write": "!data.exists()"
     },
     "puzzlelist": {
       ".read": true,
