@@ -67,18 +67,10 @@ const actions = {
       },
       (error, committed, snapshot) => {
         const gid = snapshot.child('gid').val();
-        cbk(gid);
+        const word = window.gameWords[Math.floor(Math.random() * window.gameWords.length)];
+        cbk(gid + '-' + word);
       }
     );
-  },
-
-  getRandomGid: (cbk) => {
-    let str = '';
-    const chars = 'abcdefghijklmnopqrstuvwxyz01234567890';
-    for (let i = 0; i < 8; i += 1) {
-      str += chars[Math.floor(Math.random() * chars.length)];
-    }
-    cbk(str);
   },
 
   getNextBid: (cbk) => {

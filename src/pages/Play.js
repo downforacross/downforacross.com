@@ -84,7 +84,7 @@ export default class Play extends Component {
     this.setState({
       creating: true,
     });
-    actions.getRandomGid((gid) => {
+    actions.getNextGid((gid) => {
       const game = new GameModel(`/game/${gid}`);
       const puzzle = new PuzzleModel(`/puzzle/${this.pid}`);
       puzzle.attach();
