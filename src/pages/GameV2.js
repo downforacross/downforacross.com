@@ -41,7 +41,7 @@ export default class GameV2 extends Component {
     return {
       ...prevState,
       rid: props.match.params.rid,
-      gid: parseInt(props.match.params.gid, 10),
+      gid: props.match.params.gid,
     };
   }
 

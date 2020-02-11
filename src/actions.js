@@ -72,6 +72,15 @@ const actions = {
     );
   },
 
+  getRandomGid: (cbk) => {
+    let str = '';
+    const chars = 'abcdefghijklmnopqrstuvwxyz01234567890';
+    for (let i = 0; i < 8; i += 1) {
+      str += chars[Math.floor(Math.random() * chars.length)];
+    }
+    cbk(str);
+  },
+
   getNextBid: (cbk) => {
     // Copying Cid logic for now...
     const NUM_BIDS = 100000000;
