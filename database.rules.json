@@ -1,17 +1,31 @@
 {
   "rules": {
+    ".write": false,
+    ".read": false,
     "game": {
       ".read": "false",
-      ".write": "!data.exists()",
       ".indexOn": ["pid"],
       "$gid": {
         ".read": true,
-        ".write": true
+        ".write": "!data.exists()",
+        "archivedEvents": {
+          "unarchivedAt": {
+            ".write": "true"
+          }
+        },
+        "events": {
+          ".write": "!data.exists()",
+          "$eventId": {
+            ".write": "!data.exists()"
+          }
+        }
       }
     },
     "puzzle": {
       ".read": true,
-      ".write": "!data.exists()"
+      "$pid": {
+        ".write": "!data.exists()"
+      }
     },
     "puzzlelist": {
       ".read": true,
