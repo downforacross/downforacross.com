@@ -1,5 +1,4 @@
 import './css/replay.css';
-
 import React, {Component} from 'react';
 import Flex from 'react-flexview';
 import {Helmet} from 'react-helmet';
@@ -208,6 +207,18 @@ export default class Replay extends Component {
     this.historyWrapper = null;
   }
 
+  historyPath() {
+    return `game/${this.props.match.params.gid}/events`;
+  }
+
+  backupHistoryPath() {
+    return `history/${this.gid}`;
+  }
+
+  backupUrl() {
+    return `/replay/${this.gid}`;
+  }
+
   handleSetPosition = (position) => {
     this.setState({position});
   };
@@ -221,20 +232,6 @@ export default class Replay extends Component {
     const {position} = this.state;
     if (!this.historyWrapper) return null;
     return this.historyWrapper.getSnapshotAt(position);
-  }
-
-  // overridden in replaysolo and replayv2
-  historyPath() {
-    return `history/${this.gid}`;
-  }
-
-  // overridden in replayv2
-  backupHistoryPath() {
-    return `game/${this.gid}/events`;
-  }
-
-  backupUrl() {
-    return `/beta/replay/${this.gid}`;
   }
 
   componentDidMount() {

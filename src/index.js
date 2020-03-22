@@ -1,4 +1,4 @@
-import {Account, Battle, Compose, Composition, Game, Play, ReplayV2, Replays, Welcome} from './pages/index';
+import {Account, Battle, Compose, Composition, Game, Play, Replay, Replays, Welcome} from './pages/index';
 import {isMobile} from './jsUtils';
 import Testing from './pages/Testing';
 import classnames from 'classnames';
@@ -24,8 +24,8 @@ const Root = () => {
         <div className={classnames('router-wrapper', {mobile: isMobile(), dark: darkMode})}>
           <Route exact path="/" component={Welcome} />
           <Route exact path="/game/:gid" component={Game} />
-          <Route exact path="/replay/:gid" component={ReplayV2} />
-          <Route exact path="/beta/replay/:gid" component={ReplayV2} />
+          <Route exact path="/replay/:gid" component={Replay} />
+          <Route exact path="/beta/replay/:gid" component={Replay} />
           <Route exact path="/replays/:pid" component={Replays} />
           <Route exact path="/replays" component={Replays} />
           <Route exact path="/beta" component={Welcome} />
