@@ -253,8 +253,8 @@ export default class Replay extends Component {
         );
         this.setState({history, filteredHistory, position});
       } else {
-        const gamev2ref = db.ref(this.backupHistoryPath());
-        gamev2ref.once('value', (snapshot) => {
+        const gameref = db.ref(this.backupHistoryPath());
+        gameref.once('value', (snapshot) => {
           const history = _.values(snapshot.val());
           if (history.length > 0 && history[0].type === 'create') {
             redirect(this.backupUrl());

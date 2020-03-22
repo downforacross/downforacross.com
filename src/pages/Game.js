@@ -8,7 +8,7 @@ import Flex from 'react-flexview';
 
 import {GameModel, getUser, BattleModel} from '../store';
 import HistoryWrapper from '../utils/historyWrapper';
-import Game from '../components/Game';
+import GameComponent from '../components/Game';
 import MobilePanel from '../components/MobilePanel';
 import ChatV2 from '../components/ChatV2';
 import Powerups from '../components/Powerups';
@@ -17,7 +17,7 @@ import {isMobile} from '../jsUtils';
 
 import * as powerupLib from '../lib/powerups';
 
-export default class GameV2 extends Component {
+export default class Game extends Component {
   constructor(props) {
     super();
     this.state = {
@@ -257,7 +257,7 @@ export default class GameV2 extends Component {
     const ownPowerups = _.get(this.state.powerups, this.state.team);
     const opponentPowerups = _.get(this.state.powerups, 1 - this.state.team);
     return (
-      <Game
+      <GameComponent
         ref={(c) => {
           this.gameComponent = c;
         }}

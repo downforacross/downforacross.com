@@ -11,7 +11,7 @@ import {toArr} from '../jsUtils';
 import {toHex, darken, GREENISH} from '../lib/colors';
 
 // component for gameplay -- incl. grid/clues & toolbar
-export default class GameV2 extends Component {
+export default class Game extends Component {
   constructor() {
     super();
     this.state = {
