@@ -50,7 +50,7 @@ export default class Battle extends Component {
   // Getters
 
   get bid() {
-    return parseInt(this.props.match.params.bid, 10);
+    return Number(this.props.match.params.bid);
   }
 
   // ================
@@ -136,7 +136,7 @@ export default class Battle extends Component {
   renderTeam = (team, idx) => {
     return (
       <Flex className="battle--team" key={idx}>
-        <Flex className="battle--team-name"> Team {parseInt(idx) + 1} </Flex>
+        <Flex className="battle--team-name"> Team {Number(idx) + 1} </Flex>
         {_.map(team, this.renderPlayer)}
       </Flex>
     );

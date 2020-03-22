@@ -35,7 +35,7 @@ export default class Composition extends Component {
   }
 
   get cid() {
-    return parseInt(this.props.match.params.cid, 10);
+    return Number(this.props.match.params.cid);
   }
 
   get composition() {

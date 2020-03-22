@@ -147,7 +147,7 @@ export const makeEmptyClues = (gridArray) => {
 
 export const allNums = (str) => {
   let pattern = /\d+/g;
-  return (str.match(pattern) || []).map((x) => parseInt(x, 10));
+  return (str.match(pattern) || []).map((x) => Number(x));
 };
 
 export const getReferencedClues = (str, clues) => {

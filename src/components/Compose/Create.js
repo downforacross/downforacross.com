@@ -86,7 +86,7 @@ export default class Create extends Component {
             <input
               value={this.state.dims.r}
               onChange={(e) =>
-                this.updateDims(parseInt(e.target.value, 10) || this.state.dims.r, this.state.dims.c)
+                this.updateDims(Number(e.target.value) || this.state.dims.r, this.state.dims.c)
               }
             />
             <button onClick={this.updateDimsDelta.bind(this, +1, 0)}> + </button>
@@ -97,7 +97,7 @@ export default class Create extends Component {
             <input
               value={this.state.dims.c}
               onChange={(e) =>
-                this.updateDims(this.state.dims.r, parseInt(e.target.value, 10) || this.state.dims.c)
+                this.updateDims(this.state.dims.r, Number(e.target.value) || this.state.dims.c)
               }
             />
             <button onClick={this.updateDimsDelta.bind(this, 0, +1)}> + </button>

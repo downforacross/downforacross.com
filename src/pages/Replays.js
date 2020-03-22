@@ -68,7 +68,7 @@ export default class Replays extends Component {
     if (!this.props.match.params.pid) {
       return null;
     }
-    return parseInt(this.props.match.params.pid);
+    return Number(this.props.match.params.pid);
   }
 
   processGame(rawGame, gid) {
@@ -125,7 +125,7 @@ export default class Replays extends Component {
       db.ref('/counters/gid')
         .once('value')
         .then((snapshot) => {
-          const gid = parseInt(snapshot.val());
+          const gid = Number(snapshot.val());
           Promise.map(_.range(gid - 1, gid - limit - 1, -1), (g) =>
             db
               .ref('/game')

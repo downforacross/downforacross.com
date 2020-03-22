@@ -50,7 +50,7 @@ export default class Room extends Component {
     return {
       ...prevState,
       rid: props.match.params.rid,
-      gid: parseInt(props.match.params.gid, 10),
+      gid: Number(props.match.params.gid),
     };
   }
 

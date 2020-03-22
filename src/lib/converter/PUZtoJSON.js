@@ -38,7 +38,7 @@ function getRebus(bytes) {
     let tokens = s.split(':');
     if (tokens.length === 2) {
       let [key, val] = tokens;
-      sols[parseInt(key.trim(), 10)] = val;
+      sols[Number(key.trim())] = val;
     }
   });
   // dict string format is k1:v1;k2:v2;...;kn:vn;

@@ -144,8 +144,8 @@ export default class Game extends Component {
       const winningPlayers = _.filter(_.values(players), {team});
       const winningPlayersString = _.join(_.map(winningPlayers, 'name'), ', ');
 
-      const victoryMessage = `Team ${parseInt(team) + 1} [${winningPlayersString}] won! `;
-      const timeMessage = `Time taken: ${parseInt((completedAt - startedAt) / 1000)} seconds.`;
+      const victoryMessage = `Team ${Number(team) + 1} [${winningPlayersString}] won! `;
+      const timeMessage = `Time taken: ${Number((completedAt - startedAt) / 1000)} seconds.`;
 
       this.gameModel.chat('BattleBot', null, victoryMessage + timeMessage);
     }

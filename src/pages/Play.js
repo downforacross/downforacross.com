@@ -32,7 +32,7 @@ export default class Play extends Component {
   }
 
   get pid() {
-    return parseInt(this.props.match.params.pid);
+    return Number(this.props.match.params.pid);
   }
 
   get query() {

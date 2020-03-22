@@ -48,7 +48,7 @@ const secondsSince = (t) => moment.duration(moment(Date.now()).diff(moment(t))).
 export const timeLeft = (powerup) => {
   const {type, used} = powerup;
   let {duration} = powerups[type];
-  duration = parseInt(duration);
+  duration = Number(duration);
   if (!used) {
     return Math.ceil(duration);
   } else {
