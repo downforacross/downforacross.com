@@ -33,9 +33,6 @@ const CURSOR_TIMEOUT = 60000;
  *   - attributes: { getClueList(), selected, halfSelected }
  *   - callbacks: { selectClue }
  *
- * Potential parents (so far):
- * - Room
- * - SoloRoom
  **/
 
 export default class Player extends Component {
