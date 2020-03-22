@@ -132,7 +132,7 @@ export default class ChatBar extends React.Component {
     return (
       <input
         ref={this.input}
-        className="chatv2--bar--input"
+        className="chat--bar--input"
         placeholder="[Enter] to chat"
         value={this.state.message}
         onChange={this.handleChange}
@@ -143,7 +143,7 @@ export default class ChatBar extends React.Component {
 
   render() {
     return (
-      <div className="chatv2--bar">
+      <div className="chat--bar">
         {this.emojiPattern && this.renderEmojiPicker()}
         {this.renderInput()}
       </div>

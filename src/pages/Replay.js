@@ -6,7 +6,7 @@ import _ from 'lodash';
 
 import HistoryWrapper from '../utils/historyWrapper';
 import Player from '../components/Player';
-import Chat from '../components/ChatV2';
+import Chat from '../components/Chat';
 import Nav from '../components/Nav';
 import {db} from '../actions';
 import {toArr, pure, isAncestor} from '../jsUtils';

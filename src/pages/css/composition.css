@@ -1,7 +1,7 @@
-.composition .chatv2--header .editable-span:hover {
+.composition .chat--header .editable-span:hover {
   background-color: rgba(220, 239, 255, 0.9);
 }
 
-.composition .chatv2--header .editable-span:focus {
+.composition .chat--header .editable-span:focus {
   background-color: rgba(220, 239, 255, 0.8);
 }

@@ -10,7 +10,7 @@ import {GameModel, getUser, BattleModel} from '../store';
 import HistoryWrapper from '../utils/historyWrapper';
 import GameComponent from '../components/Game';
 import MobilePanel from '../components/MobilePanel';
-import ChatV2 from '../components/ChatV2';
+import Chat from '../components/Chat';
 import Powerups from '../components/Powerups';
 import redirect from '../redirect';
 import {isMobile} from '../jsUtils';
@@ -290,7 +290,7 @@ export default class Game extends Component {
     const {id, color} = this.user;
     const {mobile} = this.state;
     return (
-      <ChatV2
+      <Chat
         ref={(c) => {
           this.chat = c;
         }}

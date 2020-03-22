@@ -1,4 +1,4 @@
-import './css/chatv2.css';
+import './css/chat.css';
 import React, {Component} from 'react';
 import Emoji from './Emoji';
 import * as emojiLib from '../lib/emoji';
@@ -8,7 +8,6 @@ import EditableSpan from './EditableSpan';
 import _ from 'lodash';
 import MobileKeyboard from './MobileKeyboard';
 import Flex from 'react-flexview';
-import classnames from 'classnames';
 import {Link} from 'react-router-dom';
 
 const isEmojis = (str) => {
@@ -129,23 +128,23 @@ export default class Chat extends Component {
     const {title, author, type} = info;
 
     return (
-      <div className="chatv2--header">
-        <div className="chatv2--header--title">{title}</div>
+      <div className="chat--header">
+        <div className="chat--header--title">{title}</div>
 
-        <div className="chatv2--header--subtitle">{type && type + ' | ' + 'By ' + author}</div>
+        <div className="chat--header--subtitle">{type && type + ' | ' + 'By ' + author}</div>
 
-        {bid && <div className="chatv2--header--subtitle">Battle {bid}</div>}
+        {bid && <div className="chat--header--subtitle">Battle {bid}</div>}
       </div>
     );
   }
 
   renderUsernameInput() {
     return this.props.hideChatBar ? null : (
-      <div className="chatv2--username">
+      <div className="chat--username">
         {'You are '}
         <EditableSpan
           ref={this.usernameInput}
-          className="chatv2--username--input"
+          className="chat--username--input"
           mobile={this.props.mobile}
           value={this.state.username}
           onChange={this.handleChangeUsername}
@@ -176,7 +175,7 @@ export default class Chat extends Component {
       color,
     };
     return (
-      <span className="chatv2--message--sender" style={style}>
+      <span className="chat--message--sender" style={style}>
         {name}
       </span>
     );
@@ -222,7 +221,7 @@ export default class Chat extends Component {
 
     const bigEmoji = tokens.length <= 3 && _.every(tokens, (token) => token.type === 'emoji');
     return (
-      <span className={'chatv2--message--text'}>
+      <span className={'chat--message--text'}>
         {tokens.map((token, i) => (
           <React.Fragment key={i}>
             {token.type === 'emoji' ? (
@@ -246,7 +245,7 @@ export default class Chat extends Component {
 
     this.props.updateSeenChatMessage && this.props.updateSeenChatMessage(message);
     return (
-      <div className={'chatv2--message' + (big ? ' big' : '')}>
+      <div className={'chat--message' + (big ? ' big' : '')}>
         {this.renderMessageSender(message.sender, color)}
         {':'}
         {this.renderMessageText(message.text)}
@@ -272,7 +271,7 @@ export default class Chat extends Component {
     return (
       <Flex column grow={1}>
         {this.renderToolbar()}
-        <div className="chatv2">
+        <div className="chat">
           {this.renderChatHeader()}
           {this.renderUsernameInput()}
           <div
@@ -281,7 +280,7 @@ export default class Chat extends Component {
                 el.scrollTop = el.scrollHeight;
               }
             }}
-            className="chatv2--messages"
+            className="chat--messages"
           >
             {messages.map((message, i) => (
               <div key={i}>{this.renderMessage(message)}</div>

@@ -54,7 +54,7 @@
   border-left-color: var(--dark-blue);
 }
 
-.dark .chatv2--header--title {
+.dark .chat--header--title {
   color: #ccc;
 }
 
@@ -78,15 +78,15 @@
   border-bottom-color: #888;
 }
 
-.dark .chatv2 {
+.dark .chat {
   border-color: #888;
 }
 
-.dark .chatv2--header {
+.dark .chat--header {
   border-color: #888;
 }
 
-.dark .chatv2--username div {
+.dark .chat--username div {
   border-left: none !important;
   border-right: none !important;
   border-top: none !important;

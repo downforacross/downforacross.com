@@ -12,8 +12,7 @@ import Editor from '../components/Editor';
 import FileUploader from '../components/FileUploader';
 import {CompositionModel, getUser} from '../store';
 import ComposeHistoryWrapper from '../utils/ComposeHistoryWrapper';
-import Game from '../components/Game';
-import ChatV2 from '../components/ChatV2';
+import Chat from '../components/Chat';
 import EditableSpan from '../components/EditableSpan';
 import redirect from '../redirect';
 import {downloadBlob, isMobile} from '../jsUtils';
@@ -281,9 +280,9 @@ export default class Composition extends Component {
     const {title, author, type} = this.composition.info;
 
     return (
-      <div className="chatv2--header">
+      <div className="chat--header">
         <EditableSpan
-          className="chatv2--header--title"
+          className="chat--header--title"
           key_="title"
           onChange={this.handleUpdateTitle}
           onBlur={this.handleUnfocusHeader}
@@ -291,7 +290,7 @@ export default class Composition extends Component {
         />
 
         <EditableSpan
-          className="chatv2--header--subtitle"
+          className="chat--header--subtitle"
           key_="author"
           onChange={this.handleUpdateAuthor}
           onBlur={this.handleUnfocusHeader}
@@ -304,7 +303,7 @@ export default class Composition extends Component {
   renderChat() {
     const {id, color} = this.user;
     return (
-      <ChatV2
+      <Chat
         ref={(c) => {
           this.chat = c;
         }}
