@@ -1,6 +1,5 @@
 import React from 'react';
 import EmojiPicker from '../components/EmojiPicker';
-import Emoji from '../components/Emoji';
 import * as emojiLib from '../lib/emoji';
 import EditableSpan from './EditableSpan';
 

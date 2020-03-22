@@ -7,7 +7,7 @@ import _ from 'lodash';
 
 import HistoryWrapper from '../utils/historyWrapper';
 import Player from '../components/Player';
-import Chat from '../components/Chat';
+import Chat from '../components/ChatV2';
 import Nav from '../components/Nav';
 import {db} from '../actions';
 import {toArr, pure, isAncestor} from '../jsUtils';
@@ -475,7 +475,13 @@ export default class Replay extends Component {
 
     return (
       <div className="replay--chat">
-        <Chat ref="chat" chat={this.game.chat} hideChatBar={true} />
+        <Chat
+          ref="chat"
+          info={this.game.info}
+          data={this.game.chat}
+          colors={this.game.colors}
+          hideChatBar={true}
+        />
       </div>
     );
   }
