@@ -1,5 +1,5 @@
 import './css/compose.css';
-import actions, {db, getTime} from '../actions';
+import actions, {db, getTime} from '../getTime';
 
 import GridObject from '../utils/Grid';
 import React, {Component} from 'react';

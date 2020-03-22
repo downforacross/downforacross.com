@@ -1,24 +1,13 @@
 import {gameWords} from './lib/names';
 import {makeGame, makeGrid} from './gameUtils';
-import firebase, {SERVER_TIME} from './store/firebase';
+import firebase, {SERVER_TIME, getTime} from './store/firebase';
 import {GameModel, PuzzleModel} from './store';
-import uuid from 'uuid';
 
 // for interfacing with firebase
 
 const db = firebase.database();
 function disconnect() {
   // no-op for now
-}
-
-const offsetRef = firebase.database().ref('.info/serverTimeOffset');
-let offset = 0;
-offsetRef.once('value', (result) => {
-  offset = result.val();
-});
-
-function getTime() {
-  return new Date().getTime() + offset;
 }
 
 function setPuzzle(pid, puzzle) {
@@ -170,5 +159,5 @@ const actions = {
   },
 };
 
-export {db, getTime, disconnect};
+export {db, disconnect};
 export default actions;

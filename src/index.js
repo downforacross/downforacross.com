@@ -3,7 +3,6 @@ import {
   Battle,
   Compose,
   Composition,
-  Game,
   GameV2,
   Play,
   Replay,
@@ -38,7 +37,7 @@ const Root = () => {
       <GlobalContext.Provider value={{toggleMolesterMoons}}>
         <div className={classnames('router-wrapper', {mobile: isMobile(), dark: darkMode})}>
           <Route exact path="/" component={WelcomeV2} />
-          <Route exact path="/game/:gid" component={Game} />
+          <Route exact path="/game/:gid" component={GameV2} />
           <Route exact path="/room/:rid" component={Room} />
           <Route exact path="/room/:rid/:gid" component={Room} />
           <Route exact path="/replay/:gid" component={Replay} />

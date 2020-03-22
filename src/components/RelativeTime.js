@@ -1,5 +1,5 @@
 import './css/RelativeTime.css';
-import {getTime} from '../actions';
+import {getTime} from '../firebase';
 
 import React from 'react';
 import moment from 'moment';

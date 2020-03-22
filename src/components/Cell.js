@@ -3,7 +3,6 @@ import './css/cell.css';
 import React, {Component} from 'react';
 import _ from 'lodash';
 
-import {getTime} from '../actions';
 import Emoji from './Emoji';
 import powerups from '../lib/powerups';
 /*

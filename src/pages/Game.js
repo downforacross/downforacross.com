@@ -9,8 +9,7 @@ import Chat from '../components/Chat';
 import Toolbar from '../components/Toolbar';
 import Nav from '../components/Nav';
 
-import {db, getTime} from '../actions';
-import {SERVER_TIME} from '../store/firebase';
+import {db, getTime, SERVER_TIME} from '../store/firebase';
 import GridObject from '../utils/Grid';
 import {makeEmptyGame} from '../gameUtils';
 import {toArr, lazy, rand_color} from '../jsUtils';

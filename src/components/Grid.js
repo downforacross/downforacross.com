@@ -91,6 +91,10 @@ export default class Grid extends React.PureComponent {
     }
   }
 
+  handleRightClick(r, c) {
+    this.props.onPing && this.props.onPing(r, c);
+  }
+
   getAllSquares() {
     return this.grid.keys().map(([r, c]) => ({r, c}));
   }
@@ -144,6 +148,11 @@ export default class Grid extends React.PureComponent {
                       if (e) e.preventDefault();
                       if (e) e.stopPropagation();
                       this.handleClick(r, c);
+                    }}
+                    onContextMenu={(e) => {
+                      if (e) e.preventDefault();
+                      if (e) e.stopPropagation();
+                      this.handleRightClick(r, c);
                     }}
                     canFlipColor={this.props.canFlipColor && this.props.canFlipColor(r, c)}
                     onFlipColor={() => {

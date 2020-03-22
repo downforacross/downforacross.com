@@ -1,6 +1,4 @@
-import Welcome from './Welcome';
 import WelcomeV2 from './WelcomeV2';
-import Game from './Game';
 import Compose from './Compose';
 import Solo from './Solo';
 import Account from './Account';
@@ -15,9 +13,7 @@ import Play from './Play';
 import Composition from './Composition';
 
 export {
-  Welcome,
   WelcomeV2,
-  Game,
   Compose,
   Solo,
   Account,

@@ -1,7 +1,7 @@
 import './css/player.css';
 
 import React, {Component} from 'react';
-import {getTime} from '../actions';
+import {getTime} from '../store/firebase';
 import {lazy} from '../jsUtils';
 
 import GridObject from '../utils/Grid';

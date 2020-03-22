@@ -1,5 +1,5 @@
 import Grid from './utils/Grid';
-import {getTime} from './actions';
+import {getTime} from './store/firebase';
 
 export const getOppositeDirection = (direction) => {
   return {
