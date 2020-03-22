@@ -6,7 +6,7 @@ import _ from 'lodash';
 import {Helmet} from 'react-helmet';
 import Flex from 'react-flexview';
 import {BattleModel} from '../store';
-import redirect from '../redirect';
+import redirect from '../lib/redirect';
 import {isMobile} from '../lib/jsUtils';
 import classnames from 'classnames';
 

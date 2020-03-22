@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 
 import {BrowserRouter as Router, Route} from 'react-router-dom';
-import GlobalContext from './GlobalContext';
+import GlobalContext from './lib/GlobalContext';
 
 import './style.css';
 import './dark.css';

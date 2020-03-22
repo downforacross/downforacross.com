@@ -14,7 +14,7 @@ import {CompositionModel, getUser} from '../store';
 import ComposeHistoryWrapper from '../lib/wrappers/ComposeHistoryWrapper';
 import Chat from '../components/Chat';
 import EditableSpan from '../components/common/EditableSpan';
-import redirect from '../redirect';
+import redirect from '../lib/redirect';
 import {downloadBlob, isMobile} from '../lib/jsUtils';
 import {
   makeGridFromComposition,

@@ -10,7 +10,6 @@ import Chat from '../components/Chat';
 import Nav from '../components/common/Nav';
 import {db} from '../actions';
 import {toArr, pure, isAncestor} from '../lib/jsUtils';
-import redirect from '../redirect';
 
 const SCRUB_SPEED = 50; // 30 actions per second
 
@@ -250,13 +249,6 @@ export default class Replay extends Component {
         );
         this.setState({history, filteredHistory, position});
       } else {
-        const gameref = db.ref(this.backupHistoryPath());
-        gameref.once('value', (snapshot) => {
-          const history = _.values(snapshot.val());
-          if (history.length > 0 && history[0].type === 'create') {
-            redirect(this.backupUrl());
-          }
-        });
         this.setState({
           error: true,
         });

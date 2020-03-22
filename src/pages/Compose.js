@@ -1,7 +1,7 @@
 import './css/compose.css';
 
 import actions from '../actions';
-import redirect from '../redirect';
+import redirect from '../lib/redirect';
 
 import {Helmet} from 'react-helmet';
 import _ from 'lodash';

@@ -12,7 +12,6 @@ import GameComponent from '../components/Game';
 import MobilePanel from '../components/common/MobilePanel';
 import Chat from '../components/Chat';
 import Powerups from '../components/common/Powerups';
-import redirect from '../redirect';
 import {isMobile} from '../lib/jsUtils';
 
 import * as powerupLib from '../lib/powerups';
@@ -87,21 +86,6 @@ export default class Game extends Component {
     if (this.gameModel) this.gameModel.detach();
     this.gameModel = new GameModel(`/game/${this.state.gid}`);
     this.historyWrapper = new HistoryWrapper();
-    this.gameModel.on('createEvent', (event) => {
-      if (!event.params || event.params.type) {
-        redirect(`/game/${this.state.gid}`, 'Redirecting to old site...');
-      }
-      this.historyWrapper.setCreateEvent(event);
-      this.handleUpdate();
-    });
-    this.gameModel.on('event', (event) => {
-      if (!event.params || event.params.type) {
-        redirect(`/game/${this.state.gid}`, 'Redirecting to old site...');
-      }
-      this.historyWrapper.addEvent(event);
-      this.handleChange();
-      this.handleUpdate();
-    });
     this.gameModel.once('battleData', (battleData) => {
       this.initializeBattle(battleData);
     });

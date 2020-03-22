@@ -1,7 +1,7 @@
 import './css/clock.css';
 import React, {Component} from 'react';
 import {getTime} from '../../store/firebase';
-import {MAX_CLOCK_INCREMENT} from '../../timing';
+import {MAX_CLOCK_INCREMENT} from '../../lib/timing';
 
 export default class Clock extends Component {
   constructor() {

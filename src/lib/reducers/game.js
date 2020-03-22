@@ -1,4 +1,4 @@
-import {MAX_CLOCK_INCREMENT} from '../../timing';
+import {MAX_CLOCK_INCREMENT} from '../timing';
 import {MAIN_BLUE_3, GREENISH, PINKISH} from '../colors';
 
 function getScopeGrid(grid, scope) {

@@ -1,7 +1,7 @@
 import './css/nav.css';
 
 import {Link} from 'react-router-dom';
-import GlobalContext from '../../GlobalContext';
+import GlobalContext from '../../lib/GlobalContext';
 import React, {useContext} from 'react';
 import classnames from 'classnames';
 
