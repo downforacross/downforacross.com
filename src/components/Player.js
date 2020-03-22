@@ -10,7 +10,7 @@ import Grid from './Grid';
 import Clues from './Clues';
 import Clue from './ClueText';
 import GridControls from './GridControls';
-import MobileGridControls from './MobileGridControlsV2';
+import MobileGridControls from './MobileGridControls';
 
 import * as gameUtils from '../gameUtils';
 
