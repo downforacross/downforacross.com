@@ -1,6 +1,5 @@
 import {Account, Battle, Compose, Composition, Game, Play, Replay, Replays, Welcome} from './pages/index';
-import {isMobile} from './jsUtils';
-import Testing from './pages/Testing';
+import {isMobile} from './lib/jsUtils';
 import classnames from 'classnames';
 import ReactDOM from 'react-dom';
 import React from 'react';
@@ -35,7 +34,6 @@ const Root = () => {
           <Route path="/account" component={Account} />
           <Route exact path="/compose" component={Compose} />
           <Route exact path="/composition/:cid" component={Composition} />
-          <Route exact path="/secret_testing" component={Testing} />
         </div>
       </GlobalContext.Provider>
     </Router>

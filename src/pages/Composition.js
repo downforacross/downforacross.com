@@ -8,12 +8,12 @@ import {Helmet} from 'react-helmet';
 import Flex from 'react-flexview';
 
 import actions from '../actions';
-import Editor from '../components/Editor';
+import Editor from '../components/Player/Editor';
 import FileUploader from '../components/FileUploader';
 import {CompositionModel, getUser} from '../store';
-import ComposeHistoryWrapper from '../utils/ComposeHistoryWrapper';
+import ComposeHistoryWrapper from '../lib/utils/ComposeHistoryWrapper';
 import Chat from '../components/Chat';
-import EditableSpan from '../components/EditableSpan';
+import EditableSpan from '../components/lib/EditableSpan';
 import redirect from '../redirect';
 import {downloadBlob, isMobile} from '../jsUtils';
 import {

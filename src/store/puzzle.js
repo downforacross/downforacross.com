@@ -1,7 +1,7 @@
 import EventEmitter from 'events';
 
 import {db} from './firebase';
-import {makeGame} from '../gameUtils';
+import {makeGame} from '../lib/gameUtils';
 
 // a wrapper class that models Puzzle
 

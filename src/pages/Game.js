@@ -1,19 +1,19 @@
 import 'react-flexview/lib/flexView.css';
 
 import React, {Component} from 'react';
-import Nav from '../components/Nav';
+import Nav from '../components/common/Nav';
 import _ from 'lodash';
 import {Helmet} from 'react-helmet';
 import Flex from 'react-flexview';
 
 import {GameModel, getUser, BattleModel} from '../store';
-import HistoryWrapper from '../utils/historyWrapper';
+import HistoryWrapper from '../lib/wrappers/HistoryWrapper';
 import GameComponent from '../components/Game';
-import MobilePanel from '../components/MobilePanel';
+import MobilePanel from '../components/common/MobilePanel';
 import Chat from '../components/Chat';
-import Powerups from '../components/Powerups';
+import Powerups from '../components/common/Powerups';
 import redirect from '../redirect';
-import {isMobile} from '../jsUtils';
+import {isMobile} from '../lib/jsUtils';
 
 import * as powerupLib from '../lib/powerups';
 

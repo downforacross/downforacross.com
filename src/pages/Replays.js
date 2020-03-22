@@ -5,7 +5,7 @@ import _ from 'lodash';
 import React, {Component} from 'react';
 import Flex from 'react-flexview';
 
-import HistoryWrapper from '../utils/historyWrapper';
+import HistoryWrapper from '../lib/historyWrapper';
 import Nav from '../components/Nav';
 import {PuzzleModel} from '../store';
 import {db} from '../actions';

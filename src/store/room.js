@@ -1,5 +1,5 @@
 import Game from './game';
-import {makeGame} from '../gameUtils';
+import {makeGame} from '../lib/gameUtils';
 import {db, SERVER_TIME} from './firebase';
 import EventEmitter from 'events';
 

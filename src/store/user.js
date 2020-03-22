@@ -1,7 +1,7 @@
 import firebase, {db, SERVER_TIME, getTime} from './firebase';
 import getLocalId from '../localAuth';
 import EventEmitter from 'events';
-import {rand_color} from '../jsUtils';
+import {rand_color} from '../lib/jsUtils';
 export default class User extends EventEmitter {
   constructor() {
     super();

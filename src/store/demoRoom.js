@@ -1,6 +1,6 @@
 import Room from './room';
 import DemoGame from './demoGame';
-import {makeGame} from '../gameUtils';
+import {makeGame} from '../lib/gameUtils';
 import {db, SERVER_TIME} from './firebase';
 
 export default class DemoRoom extends Room {

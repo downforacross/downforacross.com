@@ -6,7 +6,7 @@ import async from 'async';
 import _ from 'lodash';
 
 import powerupData from '../lib/powerups';
-import GridObject from '../utils/Grid';
+import GridObject from '../lib/wrappers/GridWrapper';
 import {PuzzleModel} from '../store';
 
 const STARTING_POWERUPS = 1;
