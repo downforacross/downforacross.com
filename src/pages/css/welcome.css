@@ -1,67 +1,67 @@
-.welcomev2 {
+.welcome {
   background-color: #ffffff;
   color: var(--main-gray-1);
 }
 
-.welcomev2--browse {
+.welcome--browse {
   flex: 2;
   padding: 15px 15px 15px 15px;
   display: flex;
   flex-direction: row;
 }
 
-.welcomev2--browse--puzzlelist--wrapper {
+.welcome--browse--puzzlelist--wrapper {
   flex: 6;
   height: 100%;
   display: flex;
   flex-direction: row;
 }
 
-.welcomev2--browse--puzzlelist {
+.welcome--browse--puzzlelist {
   padding: 10px 0px 10px 0px;
   width: 50%;
 }
 
-.welcomev2--browse--title {
+.welcome--browse--title {
   text-align: center;
   font-size: 22px;
 }
 
-.welcomev2--main {
+.welcome--main {
   /* padding: 10px; */
   overflow: hidden;
 }
 
-.welcomev2--sidebar {
+.welcome--sidebar {
   padding-bottom: 20px;
   border-right: 2px solid var(--main-blue);
 }
 
-.welcomev2--sidebar > div {
+.welcome--sidebar > div {
   padding-left: 5px;
   padding-right: 5px;
 }
 
-.welcomev2--searchbar--container {
+.welcome--searchbar--container {
   padding: 25px;
   border-bottom: 2px solid var(--main-blue);
 }
 
-.welcomev2.mobile .welcomev2--searchbar--container {
+.welcome.mobile .welcome--searchbar--container {
   padding-top: 10px;
   padding-bottom: 10px;
   background-color: var(--main-blue);
   position: relative;
 }
 
-.welcomev2.mobile .welcomev2--searchbar {
+.welcome.mobile .welcome--searchbar {
   color: var(--main-blue);
   width: 1px;
   flex-grow: 1;
   border: none;
 }
 
-.welcomev2--searchbar {
+.welcome--searchbar {
   font-size: 16px;
   padding-right: 5px;
   padding-left: 40px;
@@ -72,18 +72,18 @@
   border: 1px solid silver;
 }
 
-.welcomev2--searchbar--wrapper {
+.welcome--searchbar--wrapper {
   position: relative;
 }
 
-.welcomev2--searchicon svg circle,
-.welcomev2--searchicon svg line {
+.welcome--searchicon svg circle,
+.welcome--searchicon svg line {
   stroke: var(--main-blue);
   stroke-width: 5px;
   fill: none;
 }
 
-.welcomev2--searchicon {
+.welcome--searchicon {
   color: var(--main-blue);
   height: 20px;
   width: 20px;

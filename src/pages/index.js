@@ -1,4 +1,4 @@
-import WelcomeV2 from './WelcomeV2';
+import Welcome from './Welcome';
 import Compose from './Compose';
 import Account from './Account';
 import ReplayV2 from './ReplayV2';
@@ -8,4 +8,4 @@ import Battle from './Battle';
 import Play from './Play';
 import Composition from './Composition';
 
-export {WelcomeV2, Compose, Account, Replays, Game, Play, ReplayV2, Composition, Battle};
+export {Welcome, Compose, Account, Replays, Game, Play, ReplayV2, Composition, Battle};

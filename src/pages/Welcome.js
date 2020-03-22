@@ -1,4 +1,4 @@
-import './css/welcomev2.css';
+import './css/welcome.css';
 
 import React, {Component} from 'react';
 import {Helmet} from 'react-helmet';
@@ -14,7 +14,7 @@ import classnames from 'classnames';
 const BLUE = '#6aa9f4';
 const WHITE = '#FFFFFF';
 
-export default class WelcomeV2 extends Component {
+export default class Welcome extends Component {
   constructor() {
     super();
     this.state = {
@@ -312,7 +312,7 @@ export default class WelcomeV2 extends Component {
     const hAlignContent = this.mobile ? 'right' : 'left';
     const grow = this.mobile ? 0 : 1;
     const searchIcon = (
-      <div className="welcomev2--searchicon">
+      <div className="welcome--searchicon">
         <svg viewBox="0 0 40 40">
           <circle cx={20} cy={20} r={15} style={this.searchIconGraphicsStyle} />
           <line x1={30} y1={30} x2={40} y2={40} style={this.searchIconGraphicsStyle} />
@@ -320,12 +320,12 @@ export default class WelcomeV2 extends Component {
       </div>
     );
     return (
-      <Flex className="welcomev2--searchbar--container" shrink={0} hAlignContent={hAlignContent}>
+      <Flex className="welcome--searchbar--container" shrink={0} hAlignContent={hAlignContent}>
         <Flex
           vAlignContent="center"
           style={this.searchStyle}
           grow={grow}
-          className="welcomev2--searchbar--wrapper"
+          className="welcome--searchbar--wrapper"
         >
           <div style={this.iconStyle} onTouchEnd={this.handleSearchIconTouchEnd}>
             {searchIcon}
@@ -338,7 +338,7 @@ export default class WelcomeV2 extends Component {
             onBlur={this.handleSearchBlur}
             onInput={this.handleSearchInput}
             val={search}
-            className="welcomev2--searchbar"
+            className="welcome--searchbar"
           />
         </Flex>
       </Flex>
@@ -355,11 +355,11 @@ export default class WelcomeV2 extends Component {
 
   render() {
     return (
-      <Flex className={classnames('welcomev2', {mobile: this.mobile})} column grow={1}>
+      <Flex className={classnames('welcome', {mobile: this.mobile})} column grow={1}>
         <Helmet>
           <title>Down for a Cross</title>
         </Helmet>
-        <div className="welcomev2--nav" style={this.navStyle}>
+        <div className="welcome--nav" style={this.navStyle}>
           <Nav
             v2
             mobile={this.mobile}
@@ -370,12 +370,12 @@ export default class WelcomeV2 extends Component {
         </div>
         <Flex grow={1} basis={1}>
           {this.showingSidebar && (
-            <Flex className="welcomev2--sidebar" column shrink={0} style={{justifyContent: 'space-between'}}>
+            <Flex className="welcome--sidebar" column shrink={0} style={{justifyContent: 'space-between'}}>
               {this.renderFilters()}
               {!this.mobile && this.renderQuickUpload()}
             </Flex>
           )}
-          <Flex className="welcomev2--main" column grow={1}>
+          <Flex className="welcome--main" column grow={1}>
             {this.renderSearch()}
             {this.renderPuzzles()}
           </Flex>
