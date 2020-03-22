@@ -43,8 +43,8 @@ export default class Entry extends Component {
     const faName = status === 'started' ? 'circle-o' : status === 'solved' ? 'check-circle' : '';
     return (
       <Link to={`/beta/play/${pid}`} style={{textDecoration: 'none', color: 'initial'}}>
-        <Flex className="entryv2" column onClick={this.handleClick} onMouseLeave={this.handleMouseLeave}>
-          <Flex className="entryv2--top--left">
+        <Flex className="entry" column onClick={this.handleClick} onMouseLeave={this.handleMouseLeave}>
+          <Flex className="entry--top--left">
             <Flex grow={0}>
               <p
                 style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden'}}
@@ -53,11 +53,11 @@ export default class Entry extends Component {
                 {author} | {this.size}
               </p>
             </Flex>
-            <Flex className="entryv2--icon">
+            <Flex className="entry--icon">
               <FontAwesome name={faName} style={{color: '#6AA9F4'}} />
             </Flex>
           </Flex>
-          <Flex className="entryv2--main">
+          <Flex className="entry--main">
             <Flex grow={0}>
               <p style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden'}} title={title}>
                 {title}
