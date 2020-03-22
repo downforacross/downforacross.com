@@ -44,7 +44,7 @@ export default class Play extends Component {
       return;
     }
 
-    const games = this.games;
+    const {games} = this;
     const shouldAutocreate = !this.state.creating && (!games || (games && games.length === 0));
     if (shouldAutocreate) {
       this.create();
@@ -52,8 +52,8 @@ export default class Play extends Component {
     }
     const shouldAutojoin = games && games.length > 0 && !this.state.creating;
     if (shouldAutojoin) {
-      const gid = games[0].gid;
-      const v2 = games[0].v2;
+      const {gid} = games[0];
+      const {v2} = games[0];
       const href = v2 ? `/beta/game/${gid}` : `/game/${gid}`;
 
       if (games.length > 1) {
@@ -137,7 +137,10 @@ export default class Play extends Component {
                   <Timestamp time={time} />
                 </td>
                 <td>
-                  <Link to={`/game/${gid}`}>Game {gid}</Link>
+                  <Link to={`/game/${gid}`}>
+                    Game
+                    {gid}
+                  </Link>
                 </td>
               </tr>
             ))}

@@ -42,7 +42,7 @@ export default class Hints extends Component {
     const doWork = (done_cbk, more_cbk) => {
       // call cbk if there's more work to be done
       let cnt = 0;
-      for (let word of this.state.list) {
+      for (const word of this.state.list) {
         if (word in this.scores) continue;
         this.scores[word] = evaluate(this.props.grid, this.props.direction, this.props.num, word);
         cnt += 1;
@@ -108,8 +108,14 @@ export default class Hints extends Component {
             });
           }}
         >
-          <span style={{float: 'left'}}>Pattern: {this.pattern}</span>
-          <span style={{float: 'right'}}>Matches: {this.state.list.length}</span>
+          <span style={{float: 'left'}}>
+            Pattern:
+            {this.pattern}
+          </span>
+          <span style={{float: 'right'}}>
+            Matches:
+            {this.state.list.length}
+          </span>
         </div>
         {!this.state.hidden ? (
           <div className="hints--matches">

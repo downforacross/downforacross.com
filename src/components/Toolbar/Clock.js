@@ -23,12 +23,12 @@ export default class Clock extends Component {
 
   updateClock() {
     function pad2(num) {
-      let s = '' + 100 + num;
+      let s = `${100}${num}`;
       s = s.substr(s.length - 2);
       return s;
     }
 
-    const pausedTime = this.props.pausedTime;
+    const {pausedTime} = this.props;
     const start = this.props.startTime;
     const stop = this.props.stopTime;
     const now = getTime();
@@ -52,11 +52,11 @@ export default class Clock extends Component {
 
     let secs = Math.floor(clock / 1000);
     let mins = Math.floor(secs / 60);
-    secs = secs % 60;
-    let hours = Math.floor(mins / 60);
-    mins = mins % 60;
+    secs %= 60;
+    const hours = Math.floor(mins / 60);
+    mins %= 60;
 
-    const str = (hours ? hours + ':' : '') + pad2(mins) + ':' + pad2(secs);
+    const str = `${(hours ? `${hours}:` : '') + pad2(mins)}:${pad2(secs)}`;
     this.setState({
       clock: str,
     });
@@ -85,7 +85,7 @@ export default class Clock extends Component {
 
   render() {
     const {clock} = this.state;
-    const clockStr = this.isPaused ? '(' + clock + ')' : clock;
+    const clockStr = this.isPaused ? `(${clock})` : clock;
     const titleStr = this.isPaused ? 'Click to unpause' : 'Click to pause';
     return (
       <div className="clock" onClick={this._togglePause} title={titleStr}>

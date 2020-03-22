@@ -2,6 +2,7 @@
 //
 // stolen from messenger using https://gist.github.com/stevenhao/e12ddee6afe7cb4b2844b5becf5402e7
 import {parseRawUrls} from '../common';
+
 export default parseRawUrls({
   sugar_cubs_cuddle:
     'https://scontent-lax3-1.xx.fbcdn.net/v/t39.1997-6/p160x160/10574690_1573846699505181_916912532_n.png?_nc_cat=1&oh=9443dc9d2242e9c94fbd81ede69c4ff7&oe=5C193BAA',

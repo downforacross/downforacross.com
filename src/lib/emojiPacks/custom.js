@@ -1,4 +1,5 @@
 import {parseRawUrls} from '../common';
+
 export default parseRawUrls({
   rilakkuma: 'http://www.stickpng.com/assets/thumbs/5a67a25201d15068bdfe87c9.png',
   rilakkuma1: 'https://i.pinimg.com/originals/1b/c3/3b/1bc33bdfd0ec831221b6ba454419001c.png',

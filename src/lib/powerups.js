@@ -1,7 +1,7 @@
 import moment from 'moment';
 import _ from 'lodash';
 
-/** Status effect helpers **/
+/** Status effect helpers * */
 
 const transformClues = (game, transformation) => {
   const {clues} = game;
@@ -25,9 +25,8 @@ const removeVowels = (game) => {
 
 const hideSquares = (game) => {
   const {grid, cursors} = game;
-  const closeToCursor = (r2, c2) => {
-    return _.some(cursors, ({r, c}) => Math.max(Math.abs(r2 - r), Math.abs(c2 - c)) <= 3);
-  };
+  const closeToCursor = (r2, c2) =>
+    _.some(cursors, ({r, c}) => Math.max(Math.abs(r2 - r), Math.abs(c2 - c)) <= 3);
 
   return {
     ...game,
@@ -35,13 +34,13 @@ const hideSquares = (game) => {
   };
 };
 
-/** One time action helpers **/
+/** One time action helpers * */
 
 const revealSquare = ({selected, gameModel}) => {
   gameModel.reveal([selected]);
 };
 
-/** Duration helpers **/
+/** Duration helpers * */
 
 const secondsSince = (t) => moment.duration(moment(Date.now()).diff(moment(t))).asSeconds();
 
@@ -51,20 +50,15 @@ export const timeLeft = (powerup) => {
   duration = Number(duration);
   if (!used) {
     return Math.ceil(duration);
-  } else {
-    return Math.ceil(duration - secondsSince(used));
   }
+  return Math.ceil(duration - secondsSince(used));
 };
 
-export const hasExpired = (powerup) => {
-  return timeLeft(powerup) < 0;
-};
+export const hasExpired = (powerup) => timeLeft(powerup) < 0;
 
-export const inUse = (powerup) => {
-  return powerup.used && !hasExpired(powerup);
-};
+export const inUse = (powerup) => powerup.used && !hasExpired(powerup);
 
-/** Application helpers **/
+/** Application helpers * */
 
 export const apply = (ownGame, opponentGame, ownPowerups, opponentPowerups) => {
   if (!ownGame || !opponentGame) {
@@ -98,7 +92,7 @@ export const applyOneTimeEffects = (p, args) => {
 // There should probably be an enum here with the keys of the following.
 // Only image based emojis for now, until I figure out how css works...
 
-/** Powerup data **/
+/** Powerup data * */
 
 const powerups = {
   REVERSE: {

@@ -1,6 +1,6 @@
 import './css/clues.css';
-import Clue from './ClueText';
 import React, {Component} from 'react';
+import Clue from './ClueText';
 
 export default class Clues extends Component {
   constructor() {
@@ -40,18 +40,15 @@ export default class Clues extends Component {
           <div key={i} className="clues--list">
             <div className="clues--list--title">{dir.toUpperCase()}</div>
 
-            <div className={'clues--list--scroll ' + dir} ref={'clues--list--' + dir}>
+            <div className={`clues--list--scroll ${dir}`} ref={`clues--list--${dir}`}>
               {clues[dir].map(
                 (clue, i) =>
                   clue && (
                     <div
                       key={i}
-                      className={
-                        (isClueSelected(dir, i) ? 'selected ' : ' ') +
+                      className={`${(isClueSelected(dir, i) ? 'selected ' : ' ') +
                         (isClueHalfSelected(dir, i) ? 'half-selected ' : ' ') +
-                        (isClueFilled(dir, i) ? 'complete ' : ' ') +
-                        'clues--list--scroll--clue'
-                      }
+                        (isClueFilled(dir, i) ? 'complete ' : ' ')}clues--list--scroll--clue`}
                       ref={
                         isClueSelected(dir, i) || isClueHalfSelected(dir, i)
                           ? scrollToClue.bind(this, dir, i)

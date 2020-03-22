@@ -8,7 +8,7 @@ import PUZtoJSON from '../../lib/converter/PUZtoJSON';
 
 export default class FileUploader extends Component {
   validPuzzle(puzzle) {
-    let shape = {
+    const shape = {
       info: {
         title: '',
         type: '',
@@ -39,7 +39,12 @@ export default class FileUploader extends Component {
       grid,
       circles,
       shades,
-      info: {type, title, author, description},
+      info: {
+        type,
+        title,
+        author,
+        description,
+      },
       clues: {across, down},
     };
     return result;
@@ -50,7 +55,7 @@ export default class FileUploader extends Component {
     const reader = new FileReader();
     const {success, fail} = this.props;
     reader.addEventListener('loadend', () => {
-      let puzzle = this.convertPUZ(reader.result);
+      const puzzle = this.convertPUZ(reader.result);
       if (this.validPuzzle(puzzle)) {
         success(puzzle);
       } else {
@@ -72,7 +77,7 @@ export default class FileUploader extends Component {
           outlineOffset: '-10px',
         }}
       >
-        <div className={'file-uploader--wrapper ' + (v2 ? 'v2' : '')}>
+        <div className={`file-uploader--wrapper ${v2 ? 'v2' : ''}`}>
           <div className="file-uploader--box">
             <svg
               className="file-uploader--box--icon"

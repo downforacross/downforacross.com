@@ -1,7 +1,7 @@
 function getExtension(bytes, code) {
   // struct byte format is 4S H H
-  let i = 0,
-    j = 0;
+  let i = 0;
+  let j = 0;
   for (i = 0; i < bytes.length; i += 1) {
     if (j === code.length) break;
     if (bytes[i] === code.charCodeAt(j)) {
@@ -28,16 +28,16 @@ function getRebus(bytes) {
     return; // no rebus
   }
   const solbytes = getExtension(bytes, rtbl);
-  var enc = new TextDecoder('ISO-8859-1');
+  const enc = new TextDecoder('ISO-8859-1');
   const solstring = enc.decode(new Uint8Array(solbytes));
   if (!solstring) {
     return;
   }
   const sols = {};
   solstring.split(';').forEach((s) => {
-    let tokens = s.split(':');
+    const tokens = s.split(':');
     if (tokens.length === 2) {
-      let [key, val] = tokens;
+      const [key, val] = tokens;
       sols[Number(key.trim())] = val;
     }
   });
@@ -77,7 +77,7 @@ function getShades(bytes) {
 function addRebusToGrid(grid, rebus) {
   return grid.map((row, i) =>
     row.map((cell, j) => {
-      let idx = i * row.length + j;
+      const idx = i * row.length + j;
       if (rebus.table[idx]) {
         return {
           ...cell,
@@ -175,5 +175,12 @@ export default function PUZtoJSON(buffer) {
     grid = addRebusToGrid(grid, rebus);
   }
 
-  return {grid, info, circles, shades, across, down};
+  return {
+    grid,
+    info,
+    circles,
+    shades,
+    across,
+    down,
+  };
 }

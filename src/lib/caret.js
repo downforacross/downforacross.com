@@ -4,11 +4,16 @@ export default class Caret {
   }
 
   _getRange() {
-    const el = this.el;
+    const {el} = this;
     if (!el) return;
-    let start, end, range, len;
-    let normalizedValue, textInputRange, endRange;
-    if (typeof window.getSelection != 'undefined') {
+    let start;
+    let end;
+    let range;
+    let len;
+    let normalizedValue;
+    let textInputRange;
+    let endRange;
+    if (typeof window.getSelection !== 'undefined') {
       const {baseOffset, focusOffset} = window.getSelection();
       const start = Math.min(baseOffset, focusOffset);
       const end = Math.max(baseOffset, focusOffset);
@@ -19,8 +24,8 @@ export default class Caret {
     }
 
     return {
-      start: start,
-      end: end,
+      start,
+      end,
     };
   }
 
@@ -35,22 +40,22 @@ export default class Caret {
   }
 
   set startPosition(position) {
-    const el = this.el;
+    const {el} = this;
     if (!el) return;
     if (position > el.length) {
       position = el.length;
     }
-    if (typeof window.getSelection != 'undefined' && typeof document.createRange != 'undefined') {
-      var range = document.createRange();
+    if (typeof window.getSelection !== 'undefined' && typeof document.createRange !== 'undefined') {
+      const range = document.createRange();
       range.selectNodeContents(el);
       range.collapse(false);
       range.setStart(range.startContainer, position);
       range.setEnd(range.startContainer, position);
-      var sel = window.getSelection();
+      const sel = window.getSelection();
       sel.removeAllRanges();
       sel.addRange(range);
-    } else if (typeof document.body.createTextRange != 'undefined') {
-      var textRange = document.body.createTextRange();
+    } else if (typeof document.body.createTextRange !== 'undefined') {
+      const textRange = document.body.createTextRange();
       textRange.moveToElementText(el);
       textRange.collapse(false);
       textRange.select();

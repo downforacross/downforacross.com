@@ -40,11 +40,11 @@ class BucketedWordlist {
     const words = _.sortBy(_.keys(scoredWordlist), (word) => -scoredWordlist[word]);
     console.log(words);
     _.forEach(words, (word) => {
-      const length = word.length;
+      const {length} = word;
       this.storeWordInBucket(word, []);
     });
     _.forEach(_.keys(scoredWordlist), (word) => {
-      const length = word.length;
+      const {length} = word;
       for (let i = 0; i < length; i += 1) {
         this.storeWordInBucket(word, [i]);
         for (let j = i; j < length; j += 1) {
@@ -64,16 +64,16 @@ class BucketedWordlist {
   }
 
   _getMatches(pattern, limit) {
-    const length = pattern.length;
+    const {length} = pattern;
     // get list of indices that are constrained
     const constraints = _.filter(_.range(length), (idx) => pattern[idx] !== ' ');
     const indices = constraints.slice(0, 2);
     const bucket = this.getBucket(length, {
-      indices: indices,
+      indices,
       vals: _.map(indices, (idx) => pattern[idx]),
     });
     const result = [];
-    for (let word of bucket) {
+    for (const word of bucket) {
       if (_.every(constraints, (idx) => word[idx] === pattern[idx])) {
         result.push(word);
       }

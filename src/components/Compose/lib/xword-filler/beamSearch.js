@@ -1,15 +1,13 @@
+import _ from 'lodash';
 import CandidateGrid from './candidateGrid';
 import {getTopMatches} from './common';
-import _ from 'lodash';
 
 const BEAM_SEARCH_PARAMS = {
   K: 100,
   C: 10,
 };
 
-const isCandidateComplete = (candidate) => {
-  return candidate.isComplete();
-};
+const isCandidateComplete = (candidate) => candidate.isComplete();
 
 const getChildrenCandidates = (candidate, scoredWordlist) => {
   const cells = _.range(candidate.width * candidate.height).filter((cell) => !candidate.isCellComplete(cell));
@@ -24,9 +22,7 @@ const getChildrenCandidates = (candidate, scoredWordlist) => {
   const {cell} = sortedCells[0];
   const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
   return letters
-    .map((letter) => {
-      return candidate.setCell(cell, letter);
-    })
+    .map((letter) => candidate.setCell(cell, letter))
     .filter((candidate) => candidate.computeCellHeuristic(cell, scoredWordlist) >= 0);
 };
 

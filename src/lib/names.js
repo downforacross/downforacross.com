@@ -5,7 +5,7 @@ export const gameWords = 'troff glon yomp bruss jank fress masp smub zint jeft v
 
 // Used for generating usernames
 // copied from some random website's list of animals and adjectives
-var rawAdjectiveList = `
+const rawAdjectiveList = `
   	Able, Abundant, Accepting, Accommodating, Active, Addictive, Adequate, Aggressive, AMERICAN, Amazing, Amiable, Amicable, Amusing, Antagonistic, Anxious, Anxious, Apathetic, Aquatic, Arrogant, Articulate, Artistic, Attentive, Attractive, Authoritative, Awesome,
 	Barren, Benevolent, Biodegradable, Blase, Bold, Bonding, Boorish, Bountiful, Braggart, Brave, Brilliant, Busy,
 	Callow, Captious, CARING, Celestial, Chaste, Cheerful, Churlish, Civil, Clean, Clever, Coastal, Cold, Colossal, Combustible, Comfortable, Commercial, Communicative, Compact, Competitive, Compulsive, Confident, Conflicted, Congenial, Conscientious, Conservative, Considerate, Conspicuous, Contemptible, Contiguous, COOPERATIVE, Cordial, COURAGEOUS, Courteous, Covetous, Creative, Critical, Critical, Crucial, Crude, Culpable, Curious, Current, Curt, Cynical,
@@ -32,7 +32,7 @@ var rawAdjectiveList = `
 	Yearning, Yielding, Youthful,
   Zany, Zealot, Zealous, Zealous, Zero-tolerant, Zero-tolerant`;
 
-var rawNounList = `
+const rawNounList = `
 Aardvark
 Aardwolf
 African buffalo

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import defaultPack from './emojiPacks/default';
 import pricklyPear from './emojiPacks/pricklyPear';
 import custom from './emojiPacks/custom';
@@ -5,7 +6,6 @@ import partyParrot from './emojiPacks/partyParrot';
 import joku from './emojiPacks/joku';
 import sugarCubs from './emojiPacks/sugarCubs';
 import bun from './emojiPacks/bun';
-import _ from 'lodash';
 
 // spread in reverse-order of priority, in case of name collisions
 const allEmojiData = {
@@ -32,8 +32,8 @@ const getScore = (emoji, pattern) => {
   return 0;
 };
 
-export const findMatches = (pattern) => {
-  return _.orderBy(
+export const findMatches = (pattern) =>
+  _.orderBy(
     allEmojis
       .map((emoji, i) => ({
         emoji,
@@ -44,8 +44,5 @@ export const findMatches = (pattern) => {
     ['score', 'index'],
     ['desc', 'desc']
   ).map(({emoji}) => emoji);
-};
 
-export const get = (emoji) => {
-  return allEmojiData[emoji];
-};
+export const get = (emoji) => allEmojiData[emoji];

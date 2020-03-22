@@ -1,13 +1,12 @@
-import actions from '../actions';
-import {db} from './firebase';
-
 import EventEmitter from 'events';
 import async from 'async';
 import _ from 'lodash';
+import {db} from './firebase';
+import actions from '../actions';
 
 import powerupData from '../lib/powerups';
 import GridObject from '../lib/wrappers/GridWrapper';
-import {PuzzleModel} from '../store';
+import {PuzzleModel} from '.';
 
 const STARTING_POWERUPS = 1;
 const NUM_PICKUPS = 10;

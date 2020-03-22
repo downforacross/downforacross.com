@@ -154,7 +154,7 @@ const reducers = {
   },
 
   updateTitle: (composition, params) => {
-    let {info} = composition;
+    const {info} = composition;
     const {text} = params;
     return {
       ...composition,
@@ -166,7 +166,7 @@ const reducers = {
   },
 
   updateAuthor: (composition, params) => {
-    let {info} = composition;
+    const {info} = composition;
     const {text} = params;
     return {
       ...composition,

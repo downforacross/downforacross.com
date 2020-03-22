@@ -33,7 +33,7 @@ function distinct(lst) {
   return res;
 }
 
-let precomputed = {};
+const precomputed = {};
 function precompute(len, complete_cbk) {
   if (precomputed[len]) {
     complete_cbk();
@@ -49,7 +49,7 @@ function precompute(len, complete_cbk) {
   const doWork = (done_cbk, more_cbk) => {
     // call cbk if there's more work to be done
     let cnt = 0;
-    for (let word of all_words) {
+    for (const word of all_words) {
       if (word in processed) continue;
       const masks = getMasks(word.length);
       masks.forEach((mask) => {
@@ -102,8 +102,8 @@ function findMatches(pattern, cbk) {
 }
 
 function getPatterns(grid) {
-  const across = [],
-    down = [];
+  const across = [];
+  const down = [];
   grid.forEach((row, r) => {
     row.forEach((cell, c) => {
       const ch = !cell.value || cell.value === '' ? '.' : cell.value;
@@ -137,11 +137,7 @@ function heuristic(grid) {
 function evaluate(grid, ori, num, word) {
   let pos = 0;
   const ngrid = grid.map((row) =>
-    row.map((cell) =>
-      Object.assign({}, cell, {
-        value: !cell.black && cell.parents[ori] === num ? word[pos++] : cell.value,
-      })
-    )
+    row.map((cell) => ({...cell, value: !cell.black && cell.parents[ori] === num ? word[pos++] : cell.value}))
   );
 
   const result = heuristic(ngrid);

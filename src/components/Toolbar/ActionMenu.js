@@ -21,7 +21,7 @@ import React, {Component} from 'react';
  *
  * Potential parents (so far):
  * - Toolbar
- **/
+ * */
 
 export default class ActionMenu extends Component {
   constructor() {
@@ -42,7 +42,7 @@ export default class ActionMenu extends Component {
 
   render() {
     return (
-      <div className={(this.state.active ? 'active ' : '') + 'action-menu'} onBlur={this.onBlur.bind(this)}>
+      <div className={`${this.state.active ? 'active ' : ''}action-menu`} onBlur={this.onBlur.bind(this)}>
         <button
           tabIndex={-1}
           className="action-menu--button"

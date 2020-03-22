@@ -41,15 +41,14 @@ export default class Create extends Component {
   flipPattern(r, c) {
     const pattern = JSON.parse(JSON.stringify(this.state.pattern));
     pattern[r][c] = 1 - pattern[r][c];
-    this.setState({pattern: pattern});
+    this.setState({pattern});
   }
 
   paint(r, c, val) {
     if (this.state.pattern[r][c] === val) return;
-    else {
-      this.painted[r + '_' + c] = true;
-      this.flipPattern(r, c);
-    }
+
+    this.painted[`${r}_${c}`] = true;
+    this.flipPattern(r, c);
   }
 
   resetPaint() {
@@ -111,8 +110,8 @@ export default class Create extends Component {
                 <tr key={r}>
                   {row.map((cell, c) => (
                     <td
-                      key={r + '_' + c}
-                      className={'create--pattern--grid--cell--wrapper'}
+                      key={`${r}_${c}`}
+                      className="create--pattern--grid--cell--wrapper"
                       style={{
                         width: size,
                         height: size,
@@ -131,13 +130,13 @@ export default class Create extends Component {
                           this.resetPaint();
                         }}
                         onClick={() => {
-                          if (!this.painted[r + '_' + c]) {
+                          if (!this.painted[`${r}_${c}`]) {
                             this.flipPattern(r, c);
                           }
                           this.resetPaint();
                         }}
                         onDrag={(e) => e.preventDefault()}
-                        className={(cell === 0 ? 'white ' : 'black ') + 'create--pattern--grid--cell'}
+                        className={`${cell === 0 ? 'white ' : 'black '}create--pattern--grid--cell`}
                       />
                     </td>
                   ))}

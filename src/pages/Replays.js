@@ -5,18 +5,18 @@ import _ from 'lodash';
 import React, {Component} from 'react';
 import Flex from 'react-flexview';
 
+import Timestamp from 'react-timestamp';
+import Promise from 'bluebird';
 import HistoryWrapper from '../lib/wrappers/HistoryWrapper';
 import Nav from '../components/common/Nav';
 import {PuzzleModel} from '../store';
 import {db} from '../actions';
-import Timestamp from 'react-timestamp';
 // const Timestamp = require('react-timestamp');
-import Promise from 'bluebird';
 
 const TimeFormatter = ({millis}) =>
   millis ? (
     <span>
-      {Math.floor(millis / 60000)}m {Math.floor(millis / 1000) % 60}s
+      {Math.floor(millis / 60000)}m{Math.floor(millis / 1000) % 60}s
     </span>
   ) : null;
 
@@ -34,14 +34,15 @@ function getTime(game) {
 function getChatters(game) {
   if (!game) return [];
   if (game.chat) {
-    const messages = game.chat.messages;
-    let chatters = [];
+    const {messages} = game.chat;
+    const chatters = [];
     _.values(messages).forEach((msg) => {
       chatters.push(msg.sender);
     });
     return Array.from(new Set(chatters));
-  } else if (game.events) {
-    let chatters = [];
+  }
+  if (game.events) {
+    const chatters = [];
     _.values(game.events).forEach((event) => {
       if (event.type === 'chat') {
         chatters.push(event.params.sender);
@@ -88,18 +89,17 @@ export default class Replays extends Component {
         chatters: getChatters(rawGame),
         active: !game.clock.paused,
       };
-    } else {
-      return {
-        gid,
-        pid: rawGame.pid,
-        v2: false,
-        solved: rawGame.solved,
-        startTime: rawGame.startTime / 1000,
-        time: getTime(rawGame),
-        chatters: getChatters(rawGame),
-        active: true,
-      };
     }
+    return {
+      gid,
+      pid: rawGame.pid,
+      v2: false,
+      solved: rawGame.solved,
+      startTime: rawGame.startTime / 1000,
+      time: getTime(rawGame),
+      chatters: getChatters(rawGame),
+      active: true,
+    };
   }
 
   updatePuzzles() {
@@ -167,9 +167,7 @@ export default class Replays extends Component {
 
   linkToGame(gid, {v2, active, solved}) {
     return (
-      <a href={(v2 ? '/beta' : '') + '/game/' + gid}>
-        {solved ? 'done' : active ? 'still playing' : 'paused'}
-      </a>
+      <a href={`${v2 ? '/beta' : ''}/game/${gid}`}>{solved ? 'done' : active ? 'still playing' : 'paused'}</a>
     );
   }
 
@@ -179,7 +177,7 @@ export default class Replays extends Component {
       return <div>Error loading replay</div>;
     }
 
-    const games = this.state.games;
+    const {games} = this.state;
     const list1Items = _.values(games).map(
       ({pid, gid, solved, startTime, time, chatters, v2, active, title}) => (
         <tr key={gid}>
@@ -190,7 +188,7 @@ export default class Replays extends Component {
           )}
           {this.pid ? null : <td>{title})</td>}
           <td>
-            <a href={'/replay/' + gid}>
+            <a href={`/replay/${gid}`}>
               Game #{gid}
               {v2 ? '(beta)' : ''}
             </a>
@@ -217,12 +215,15 @@ export default class Replays extends Component {
           <TimeFormatter millis={time} />
         </td>
         <td>{solved ? 'done' : 'not done'}</td>
-        <td>Solo by user {id}</td>
+        <td>
+          Solo by user
+          {id}
+        </td>
       </tr>
     ));
 
     return (
-      <table className={'main-table'}>
+      <table className="main-table">
         <tbody>
           <tr>
             {this.pid ? null : <th>Pid</th>}
@@ -271,7 +272,10 @@ export default class Replays extends Component {
         </div>
 
         <Flex className="limit--container" shrink={0} hAlignContent="center" vAlignContent="center">
-          <span className="limit--text">Limit: {limit}</span>
+          <span className="limit--text">
+            Limit:
+            {limit}
+          </span>
           &nbsp;
           <button
             className="limit--button"

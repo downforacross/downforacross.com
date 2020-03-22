@@ -1,10 +1,9 @@
 import './css/index.css';
 
 import React from 'react';
+import _ from 'lodash';
 import GridObject from '../../lib/wrappers/GridWrapper';
 import Cell from './Cell';
-
-import _ from 'lodash';
 
 /*
  * Summary of Grid component
@@ -18,7 +17,7 @@ import _ from 'lodash';
  * Potential parents (so far):
  * - Player, Editor
  * - Previewer (TODO)
- **/
+ * */
 
 export default class Grid extends React.PureComponent {
   get grid() {
@@ -106,20 +105,21 @@ export default class Grid extends React.PureComponent {
   getSizeClass(size) {
     if (size < 20) {
       return 'tiny';
-    } else if (size < 25) {
-      return 'small';
-    } else if (size < 40) {
-      return 'medium';
-    } else {
-      return 'big';
     }
+    if (size < 25) {
+      return 'small';
+    }
+    if (size < 40) {
+      return 'medium';
+    }
+    return 'big';
   }
 
   render() {
     window.grid = this;
     window.g = this.props.grid;
     const sizeClass = this.getSizeClass(size);
-    const key = size + '-';
+    const key = `${size}-`;
     const {size, cellStyle} = this.props;
     return (
       <table
@@ -127,19 +127,19 @@ export default class Grid extends React.PureComponent {
           width: this.props.grid[0].length * this.props.size,
           height: this.props.grid.length * this.props.size,
         }}
-        className={'grid ' + sizeClass}
+        className={`grid ${sizeClass}`}
       >
         <tbody>
           {this.props.grid.map((row, r) => (
             <tr key={key + r}>
               {row.map((cell, c) => (
                 <td
-                  key={r + '_' + c}
+                  key={`${r}_${c}`}
                   className="grid--cell"
                   style={{
                     width: size,
                     height: size,
-                    fontSize: size * 0.15 + 'px',
+                    fontSize: `${size * 0.15}px`,
                   }}
                 >
                   <Cell

@@ -1,4 +1,5 @@
 import {nameWords} from './names';
+
 const {adjectives: rawAdjectiveList, nouns: rawNounList} = nameWords;
 
 function capitalize(s) {
@@ -22,13 +23,13 @@ function sanitize(s) {
 }
 
 function adjFilter(s) {
-  var len = s.length;
+  const len = s.length;
   return len >= 2 && len <= 13;
 }
 
 function nounFilter(s) {
-  var len = s.length;
-  var numWords = s.split(' ').length;
+  const len = s.length;
+  const numWords = s.split(' ').length;
   return numWords <= 2 && len >= 2 && len <= 13;
 }
 
@@ -49,7 +50,7 @@ export default function nameGenerator() {
   function f() {
     const adj = sample(adjectives);
     const noun = sample(nouns);
-    return adj + ' ' + noun;
+    return `${adj} ${noun}`;
   }
 
   const max_len = 20;

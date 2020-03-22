@@ -15,7 +15,7 @@ export default class GridWrapper {
       throw new Error('Attempting to wrap an undefined grid object.');
     }
     if (!_.isArray(grid)) {
-      throw new Error('Invalid type for grid object: ' + typeof grid);
+      throw new Error(`Invalid type for grid object: ${typeof grid}`);
     }
   }
 
@@ -102,9 +102,8 @@ export default class GridWrapper {
     }
     if (this.isWriteable(r, c)) {
       return {r, c};
-    } else {
-      return undefined;
     }
+    return undefined;
   }
 
   getNextEmptyCell(r, c, direction, options = {}) {
@@ -271,25 +270,27 @@ export default class GridWrapper {
   isStartOfClue(r, c, direction) {
     if (!this.isWhite(r, c)) {
       return false;
-    } else if (direction === 'across') {
-      return !this.isWriteable(r, c - 1) && this.isWriteable(r, c + 1);
-    } else if (direction === 'down') {
-      return !this.isWriteable(r - 1, c) && this.isWriteable(r + 1, c);
-    } else {
-      throw new Error('Invalid direction: ' + direction);
     }
+    if (direction === 'across') {
+      return !this.isWriteable(r, c - 1) && this.isWriteable(r, c + 1);
+    }
+    if (direction === 'down') {
+      return !this.isWriteable(r - 1, c) && this.isWriteable(r + 1, c);
+    }
+    throw new Error(`Invalid direction: ${direction}`);
   }
 
   isSqueezedSquare(r, c, direction) {
     if (!this.isWhite(r, c)) {
       return false;
-    } else if (direction === 'across') {
-      return !this.isWriteable(r, c - 1) && !this.isWriteable(r, c + 1);
-    } else if (direction === 'down') {
-      return !this.isWriteable(r - 1, c) && !this.isWriteable(r + 1, c);
-    } else {
-      throw new Error('Invalid direction: ' + direction);
     }
+    if (direction === 'across') {
+      return !this.isWriteable(r, c - 1) && !this.isWriteable(r, c + 1);
+    }
+    if (direction === 'down') {
+      return !this.isWriteable(r - 1, c) && !this.isWriteable(r + 1, c);
+    }
+    throw new Error(`Invalid direction: ${direction}`);
   }
 
   assignNumbers() {

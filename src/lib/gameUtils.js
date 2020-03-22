@@ -1,12 +1,11 @@
 import GridWrapper from './wrappers/GridWrapper';
 import {getTime} from '../store/firebase';
 
-export const getOppositeDirection = (direction) => {
-  return {
+export const getOppositeDirection = (direction) =>
+  ({
     across: 'down',
     down: 'across',
-  }[direction];
-};
+  }[direction]);
 
 export const makeEmptyGame = () => ({
   gid: undefined,
@@ -106,24 +105,23 @@ export const convertCluesForComposition = (clues, gridObject) => {
   return result;
 };
 
-export const convertGridForComposition = (grid) => {
-  return grid.map((row) =>
+export const convertGridForComposition = (grid) =>
+  grid.map((row) =>
     row.map((value) => ({
       value,
     }))
   );
-};
 
 export const makeGame = (gid, name, puzzle) => {
   const grid = makeGrid(puzzle.grid);
   const clues = grid.alignClues(puzzle.clues);
   const game = {
-    gid: gid,
-    name: name,
+    gid,
+    name,
     info: puzzle.info,
     circles: puzzle.circles || [],
     shades: puzzle.shades || [],
-    clues: clues,
+    clues,
     solution: puzzle.grid,
     pid: puzzle.pid || null,
     grid: grid.toArray(),
@@ -146,7 +144,7 @@ export const makeEmptyClues = (gridArray) => {
 };
 
 export const allNums = (str) => {
-  let pattern = /\d+/g;
+  const pattern = /\d+/g;
   return (str.match(pattern) || []).map((x) => Number(x));
 };
 
@@ -155,23 +153,23 @@ export const getReferencedClues = (str, clues) => {
   str = str.toLowerCase();
   let res = [];
   while (str.indexOf('across') !== -1 || str.indexOf('down') !== -1) {
-    let a = str.indexOf('across');
-    let b = str.indexOf('down');
+    const a = str.indexOf('across');
+    const b = str.indexOf('down');
     if ((a < b || b === -1) && a !== -1) {
-      let nums = allNums(str.substring(0, a));
+      const nums = allNums(str.substring(0, a));
       res = res.concat(
         nums.map((num) => ({
           ori: 'across',
-          num: num,
+          num,
         }))
       );
       str = str.substr(a + 'across'.length);
     } else {
-      let nums = allNums(str.substring(0, b));
+      const nums = allNums(str.substring(0, b));
       res = res.concat(
         nums.map((num) => ({
           ori: 'down',
-          num: num,
+          num,
         }))
       );
       str = str.substr(b + 'down'.length);

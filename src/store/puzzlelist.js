@@ -1,5 +1,5 @@
-import {db} from './firebase';
 import EventEmitter from 'events';
+import {db} from './firebase';
 
 const DEFAULT_PAGE_SIZE = 40;
 export default class Puzzlelist extends EventEmitter {

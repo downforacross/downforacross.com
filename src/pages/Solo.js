@@ -4,11 +4,11 @@ import actions from '../actions';
 
 export default class Solo extends Game {
   gameDoesNotExist(cbk) {
-    const pid = this.props.match.params.pid;
+    const {pid} = this.props.match.params;
     actions.createGame(
       {
         name: 'Public Game',
-        pid: pid,
+        pid,
         gid: this.computeGid(),
       },
       (gid) => {
@@ -18,7 +18,7 @@ export default class Solo extends Game {
   }
 
   computeGid() {
-    const pid = this.props.match.params.pid;
+    const {pid} = this.props.match.params;
     return `solo/${this.user.id}/${pid}`;
   }
 

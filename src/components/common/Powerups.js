@@ -2,10 +2,9 @@ import './css/powerups.css';
 import React from 'react';
 import Flex from 'react-flexview';
 
+import _ from 'lodash';
 import Emoji from './Emoji';
 import powerups, {hasExpired, inUse, timeLeft} from '../../lib/powerups';
-
-import _ from 'lodash';
 
 export default class Powerups extends React.Component {
   constructor() {
@@ -32,7 +31,7 @@ export default class Powerups extends React.Component {
     const {type} = powerup;
     const {icon, name} = powerups[type];
     const inuse = inUse(powerup);
-    const className = 'powerups--emoji ' + (inuse ? 'powerups--in-use' : 'powerups--unused');
+    const className = `powerups--emoji ${inuse ? 'powerups--in-use' : 'powerups--unused'}`;
     const onClick = inuse ? undefined : () => this.props.handleUsePowerup(powerup);
 
     const secsLeft = timeLeft(powerup);
@@ -45,7 +44,7 @@ export default class Powerups extends React.Component {
         <Flex className="powerups--label">{name}</Flex>
         <Flex className={className}>
           <Flex column>
-            <Emoji emoji={icon} big={true} className="powerups--eemoji" />
+            <Emoji emoji={icon} big className="powerups--eemoji" />
             <div className="powerups--info" style={{opacity: inuse ? 1 : 0}}>
               {timeMins}:{timeSecs}
             </div>

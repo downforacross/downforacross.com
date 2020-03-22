@@ -12,9 +12,7 @@ const infoToMeta = (info) => {
   };
 };
 
-const gridToTextGrid = (grid) => {
-  return grid.map((row) => row.map((cell) => (cell.black ? '.' : cell.value)));
-};
+const gridToTextGrid = (grid) => grid.map((row) => row.map((cell) => (cell.black ? '.' : cell.value)));
 
 // to hanlde the various different formats of games
 const f = () => ({
@@ -96,7 +94,12 @@ const validatePuz = (blob) => {
 };
 
 const intermediate = ({info, grid, clues, extras}) => {
-  validateIntermediate({info, grid, clues, extras});
+  validateIntermediate({
+    info,
+    grid,
+    clues,
+    extras,
+  });
   return {
     toPuz: () => {
       const x = {

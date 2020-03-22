@@ -1,7 +1,7 @@
 // shamelessly copied from https://raw.githubusercontent.com/omnidan/node-emoji/master/lib/emoji.json
 export default {
-  '100': '💯',
-  '1234': '🔢',
+  100: '💯',
+  1234: '🔢',
   interrobang: '⁉️',
   tm: '™️',
   information_source: 'ℹ️',

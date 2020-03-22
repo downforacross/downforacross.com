@@ -1,5 +1,5 @@
-import {reduce} from '../reducers/game';
 import _ from 'lodash';
+import {reduce} from '../reducers/game';
 
 const MEMO_RATE = 10;
 
@@ -53,7 +53,7 @@ export default class HistoryWrapper {
   getSnapshotAtIndex(index) {
     const _i = _.sortedLastIndexBy(this.memo, {index}, (memoItem) => memoItem.index);
     const memoItem = this.memo[_i - 1];
-    let game = memoItem.game;
+    let {game} = memoItem;
     for (let i = memoItem.index + 1; i <= index; i += 1) {
       const event = this.history[i];
       game = this.reduce(game, event);

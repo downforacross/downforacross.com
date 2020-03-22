@@ -1,7 +1,7 @@
 import './css/account.css';
 
-import Nav from '../components/common/Nav';
 import React, {Component} from 'react';
+import Nav from '../components/common/Nav';
 
 function AccountHistory() {
   return <div className="account-history">Account History</div>;
@@ -36,7 +36,7 @@ export default class Account extends Component {
         {Object.keys(this.panels).map((panelKey) => {
           const selected = panelKey === selectedPanel;
           const {name} = this.panels[panelKey];
-          return <div className={'account--sidebar--entry ' + (selected ? ' selected' : '')}>{name}</div>;
+          return <div className={`account--sidebar--entry ${selected ? ' selected' : ''}`}>{name}</div>;
         })}
       </div>
     );

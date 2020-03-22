@@ -1,7 +1,7 @@
+import EventEmitter from 'events';
 import Game from './game';
 import {makeGame} from '../lib/gameUtils';
 import {db, SERVER_TIME} from './firebase';
-import EventEmitter from 'events';
 
 // a wrapper class that models Room
 export default class Room extends EventEmitter {

@@ -1,5 +1,5 @@
-import {db, SERVER_TIME} from './firebase';
 import EventEmitter from 'events';
+import {db, SERVER_TIME} from './firebase';
 
 import Puzzle from './puzzle';
 import * as colors from '../lib/colors';

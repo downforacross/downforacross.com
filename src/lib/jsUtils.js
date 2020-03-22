@@ -24,14 +24,12 @@ function hasShape(obj, shape) {
       }
       return hasShape(obj[key], shape[key]);
     });
-  } else {
-    return true;
   }
+  return true;
 }
 
-const hexToRgb = (hex) => {
-  return _.map([hex.substring(1, 3), hex.substring(3, 5), hex.substring(5, 7)], (x) => Number(x, 16));
-};
+const hexToRgb = (hex) =>
+  _.map([hex.substring(1, 3), hex.substring(3, 5), hex.substring(5, 7)], (x) => Number(x, 16));
 
 const rgbToHex = (r, g, b) => {
   const [R, G, B] = _.map([r, g, b], (x) => leftPad(x.toString(16, 2), '0', 2).substring(0, 2));
@@ -51,11 +49,11 @@ if (typeof window !== 'undefined') {
   window.requestIdleCallback =
     window.requestIdleCallback ||
     function(cb) {
-      var start = Date.now();
-      return setTimeout(function() {
+      const start = Date.now();
+      return setTimeout(() => {
         cb({
           didTimeout: false,
-          timeRemaining: function() {
+          timeRemaining() {
             return Math.max(0, 50 - (Date.now() - start));
           },
         });
@@ -74,7 +72,7 @@ function lazy(id, cbk, minWait = 0) {
   if (idleCallbacks[id]) {
     cancelIdleCallback(idleCallbacks[id]);
   }
-  let idleCallback = requestIdleCallback(({didTimeout}) => {
+  const idleCallback = requestIdleCallback(({didTimeout}) => {
     if (didTimeout) return;
     setTimeout(() => {
       if (idleCallbacks[id] === idleCallback) {
@@ -96,13 +94,13 @@ function rand_int(min, max) {
 
 function rand_color() {
   let h = rand_int(1, 360);
-  while ((50 <= h && h <= 70) || (190 <= h && h <= 210)) {
+  while ((h >= 50 && h <= 70) || (h >= 190 && h <= 210)) {
     // yellow / blue
     h = rand_int(1, 360);
   }
-  let s = rand_int(40, 40);
-  let l = rand_int(60, 80);
-  return 'hsl(' + h + ',' + s + '%,' + l + '%)';
+  const s = rand_int(40, 40);
+  const l = rand_int(60, 80);
+  return `hsl(${h},${s}%,${l}%)`;
 }
 
 function pure(func) {
@@ -124,26 +122,26 @@ function isMobile() {
   if (navigator.userAgent.match(/Tablet|iPad/i)) {
     // do tablet stuff
     return true;
-  } else if (
+  }
+  if (
     navigator.userAgent.match(
       /Mobile|Windows Phone|Lumia|Android|webOS|iPhone|iPod|Blackberry|PlayBook|BB10|Opera Mini|\bCrMo\/|Opera Mobi/i
     )
   ) {
     // do mobile stuff
     return true;
-  } else {
-    // do desktop stuff
-    return false;
   }
+  // do desktop stuff
+  return false;
 }
 
 // from https://jsfiddle.net/koldev/cW7W5/
 function downloadBlob(data, fileName) {
-  var a = document.createElement('a');
+  const a = document.createElement('a');
   document.body.appendChild(a);
   a.style = 'display: none';
-  var blob = new Blob([data]),
-    url = window.URL.createObjectURL(blob);
+  const blob = new Blob([data]);
+  const url = window.URL.createObjectURL(blob);
   a.href = url;
   a.download = fileName;
   a.click();

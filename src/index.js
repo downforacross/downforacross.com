@@ -1,10 +1,10 @@
-import {Account, Battle, Compose, Composition, Game, Play, Replay, Replays, Welcome} from './pages/index';
-import {isMobile} from './lib/jsUtils';
 import classnames from 'classnames';
 import ReactDOM from 'react-dom';
 import React from 'react';
 
 import {BrowserRouter as Router, Route} from 'react-router-dom';
+import {isMobile} from './lib/jsUtils';
+import {Account, Battle, Compose, Composition, Game, Play, Replay, Replays, Welcome} from './pages/index';
 import GlobalContext from './lib/GlobalContext';
 
 import './style.css';

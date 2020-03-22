@@ -41,35 +41,80 @@ export default class DemoGame extends Game {
           gid: '',
           grid: [
             [
-              {black: false, number: 1, parents: {across: 1, down: 0}, value: ''},
-              {black: false, number: 2, parents: {across: 1, down: 2}, value: ''},
-              {black: false, number: 3, parents: {across: 1, down: 3}, value: ''},
-              {black: false, number: 4, parents: {across: 1, down: 4}, value: ''},
-              {black: false, number: 5, parents: {across: 1, down: 5}, value: ''},
+              {
+                black: false,
+                number: 1,
+                parents: {across: 1, down: 0},
+                value: '',
+              },
+              {
+                black: false,
+                number: 2,
+                parents: {across: 1, down: 2},
+                value: '',
+              },
+              {
+                black: false,
+                number: 3,
+                parents: {across: 1, down: 3},
+                value: '',
+              },
+              {
+                black: false,
+                number: 4,
+                parents: {across: 1, down: 4},
+                value: '',
+              },
+              {
+                black: false,
+                number: 5,
+                parents: {across: 1, down: 5},
+                value: '',
+              },
             ],
             [
               {black: true, value: ''},
-              {black: false, number: 6, parents: {across: 6, down: 2}, value: ''},
+              {
+                black: false,
+                number: 6,
+                parents: {across: 6, down: 2},
+                value: '',
+              },
               {black: false, parents: {across: 6, down: 3}, value: ''},
               {black: false, parents: {across: 6, down: 4}, value: ''},
               {black: false, parents: {across: 6, down: 5}, value: ''},
             ],
             [
-              {black: false, number: 7, parents: {across: 7, down: 7}, value: ''},
+              {
+                black: false,
+                number: 7,
+                parents: {across: 7, down: 7},
+                value: '',
+              },
               {black: false, parents: {across: 7, down: 2}, value: ''},
               {black: false, parents: {across: 7, down: 3}, value: ''},
               {black: false, parents: {across: 7, down: 4}, value: ''},
               {black: false, parents: {across: 7, down: 5}, value: ''},
             ],
             [
-              {black: false, number: 8, parents: {across: 8, down: 7}, value: ''},
+              {
+                black: false,
+                number: 8,
+                parents: {across: 8, down: 7},
+                value: '',
+              },
               {black: false, parents: {across: 8, down: 2}, value: ''},
               {black: false, parents: {across: 8, down: 3}, value: ''},
               {black: false, parents: {across: 8, down: 4}, value: ''},
               {black: true, value: ''},
             ],
             [
-              {black: false, number: 9, parents: {across: 9, down: 7}, value: ''},
+              {
+                black: false,
+                number: 9,
+                parents: {across: 9, down: 7},
+                value: '',
+              },
               {black: false, parents: {across: 9, down: 2}, value: ''},
               {black: false, parents: {across: 9, down: 3}, value: ''},
               {black: false, parents: {across: 9, down: 4}, value: ''},
@@ -94,7 +139,6 @@ export default class DemoGame extends Game {
     };
     this.events.push(s);
   }
-  subscribeToPuzzle() {
-    return;
-  }
+
+  subscribeToPuzzle() {}
 }

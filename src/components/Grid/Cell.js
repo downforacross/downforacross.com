@@ -15,7 +15,7 @@ import powerups from '../../lib/powerups';
  *
  * Potential parents:
  * - Grid
- **/
+ * */
 
 export default class Cell extends Component {
   shouldComponentUpdate(nextProps, nextState) {
@@ -30,7 +30,7 @@ export default class Cell extends Component {
         {cursors.map(({color, active}, i) => (
           <div
             key={i}
-            className={'cell--cursor' + (active ? ' active' : ' inactive')}
+            className={`cell--cursor${active ? ' active' : ' inactive'}`}
             style={{
               borderColor: color,
               zIndex: Math.min(2 + cursors.length - i, 9),
@@ -132,30 +132,27 @@ export default class Cell extends Component {
     if (black) {
       return (
         <div
-          className={'cell black ' + (selected ? 'selected' : '')}
+          className={`cell black ${selected ? 'selected' : ''}`}
           style={selected ? {borderColor: myColor} : undefined}
           onClick={onClick}
         />
       );
     }
 
-    let val = value || '';
+    const val = value || '';
 
-    let l = Math.max(1, val.length);
+    const l = Math.max(1, val.length);
     const style = this.getStyle();
     return (
       <div
-        className={
-          (selected ? 'selected ' : '') +
+        className={`${(selected ? 'selected ' : '') +
           (highlighted ? 'highlighted ' : '') +
           (referenced ? 'referenced ' : '') +
           (shaded ? 'shaded ' : '') +
           (bad ? 'bad ' : '') +
           (good ? 'good ' : '') +
           (revealed ? 'revealed ' : '') +
-          (pencil ? 'pencil ' : '') +
-          'cell'
-        }
+          (pencil ? 'pencil ' : '')}cell`}
         style={style}
         onClick={onClick}
         onTouchStart={(e) => {
@@ -175,7 +172,7 @@ export default class Cell extends Component {
         }}
       >
         <div className="cell--wrapper">
-          <div className={'cell--number' + (number ? ' nonempty' : '')}>{number}</div>
+          <div className={`cell--number${number ? ' nonempty' : ''}`}>{number}</div>
           {this.renderFlipButton()}
           {this.renderCircle()}
           {this.renderShade()}
@@ -183,8 +180,8 @@ export default class Cell extends Component {
           <div
             className="cell--value"
             style={{
-              fontSize: 350 / Math.sqrt(l) + '%',
-              lineHeight: Math.sqrt(l) * 98 + '%',
+              fontSize: `${350 / Math.sqrt(l)}%`,
+              lineHeight: `${Math.sqrt(l) * 98}%`,
             }}
           >
             {val}

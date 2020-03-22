@@ -30,7 +30,7 @@ function isSolved(game) {
 
 const reducers = {
   create: (game, params) => {
-    const pid = params.pid;
+    const {pid} = params;
     const {
       info = {},
       grid = [[{}]],
@@ -202,7 +202,7 @@ const reducers = {
   },
 
   updateClock: (game, params) => {
-    const action = params.action;
+    const {action} = params;
     let {clock} = game;
     if (action === 'pause') {
       // no-op, will be handled by tick
@@ -270,12 +270,10 @@ export const tick = (game, timestamp, isPause) => {
   };
 };
 
-const checkSolved = (game) => {
-  return {
-    ...game,
-    solved: isSolved(game),
-  };
-};
+const checkSolved = (game) => ({
+  ...game,
+  solved: isSolved(game),
+});
 
 export const reduce = (game, action) => {
   const {timestamp, type, params} = action;

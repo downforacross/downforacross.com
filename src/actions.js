@@ -13,7 +13,7 @@ function disconnect() {
 function setPuzzle(pid, puzzle) {
   const {info, private: private_ = false} = puzzle;
   const {title, author} = info;
-  db.ref('puzzlelist/' + pid).set({
+  db.ref(`puzzlelist/${pid}`).set({
     pid,
     info,
     title,
@@ -21,7 +21,7 @@ function setPuzzle(pid, puzzle) {
     author,
     importedTime: getTime(),
   });
-  db.ref('puzzle/' + pid).set({
+  db.ref(`puzzle/${pid}`).set({
     ...puzzle,
     pid,
   });
@@ -49,7 +49,7 @@ const actions = {
   getNextGid: (cbk) => {
     db.ref('counters').transaction(
       (counters) => {
-        let gid = (counters && counters.gid) || 0;
+        const gid = (counters && counters.gid) || 0;
         return {
           ...counters,
           gid: gid + 1,
@@ -58,7 +58,7 @@ const actions = {
       (error, committed, snapshot) => {
         const gid = snapshot.child('gid').val();
         const word = gameWords[Math.floor(Math.random() * gameWords.length)];
-        cbk(gid + '-' + word);
+        cbk(`${gid}-${word}`);
       }
     );
   },
@@ -101,10 +101,10 @@ const actions = {
           // should be atomic or something
           gid = snapshot.child('gid').val();
         }
-        db.ref('puzzle/' + pid).once('value', (puzzle) => {
+        db.ref(`puzzle/${pid}`).once('value', (puzzle) => {
           const game = makeGame(gid, name, puzzle.val());
-          db.ref('game/' + gid).set(game);
-          db.ref('history/' + gid).push({
+          db.ref(`game/${gid}`).set(game);
+          db.ref(`history/${gid}`).push({
             timestamp: SERVER_TIME,
             type: 'create',
             params: {game},
@@ -137,7 +137,7 @@ const actions = {
     const composition = {
       info: {
         title: 'Untitled',
-        type: type,
+        type,
         author: 'Anonymous',
       },
       grid: grid.toArray(),

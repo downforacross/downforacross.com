@@ -1,4 +1,5 @@
 import {parseRawUrls} from '../common';
+
 export default parseRawUrls({
   parrot: 'https://cultofthepartyparrot.com/parrots/hd/parrot.gif',
   opensourceparrot: 'https://cultofthepartyparrot.com/parrots/hd/opensourceparrot.gif',

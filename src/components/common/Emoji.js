@@ -1,6 +1,5 @@
 import React from 'react';
 import * as emojiLib from '../../lib/emoji';
-import _ from 'lodash';
 
 export default ({emoji, big}) => {
   const data = emojiLib.get(emoji);

@@ -11,27 +11,25 @@ export default ({text = ''}) => {
         ital: true,
       });
       text = text.substring(e + 4);
+    } else if (s !== -1) {
+      parts.push({
+        text: text.substring(0, s),
+      });
+      text = text.substring(s);
     } else {
-      if (s !== -1) {
-        parts.push({
-          text: text.substring(0, s),
-        });
-        text = text.substring(s);
-      } else {
-        parts.push({
-          text,
-        });
-        text = '';
-      }
+      parts.push({
+        text,
+      });
+      text = '';
     }
   }
   return (
-    <React.Fragment>
+    <>
       {parts.map(({text, ital}, i) => (
         <span key={i} style={{fontStyle: ital ? 'italic' : 'inherit'}}>
           {text}
         </span>
       ))}
-    </React.Fragment>
+    </>
   );
 };

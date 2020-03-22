@@ -2,14 +2,13 @@ import _ from 'lodash';
 import {makeGridFromComposition} from '../../../../lib/gameUtils';
 import {getTopMatches, countMatches} from './common';
 
-export const convertFromCandidateGrid = (candidate) => {
-  return _.range(candidate.height).map((r) =>
+export const convertFromCandidateGrid = (candidate) =>
+  _.range(candidate.height).map((r) =>
     _.range(candidate.width).map((c) => ({
       value: candidate.gridString[r * candidate.width + c],
       pencil: true, // todo fix
     }))
   );
-};
 
 export const convertToCandidateGrid = (grid) => {
   // precompute static properties of grid

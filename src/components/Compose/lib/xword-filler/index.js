@@ -38,7 +38,7 @@ const DEFAULT_WORDLIST = makeWordlist(window.nyt_words);
 const getFullWords = (partialGrid) => {
   const candidateGrid = convertToCandidateGrid(partialGrid);
   const words = candidateGrid.entries.map((entry) => candidateGrid.getPattern(entry));
-  return words; //_.filter(words, word => word.indexOf(" ") === -1);
+  return words; // _.filter(words, word => word.indexOf(" ") === -1);
 };
 window.getFullWords = getFullWords;
 

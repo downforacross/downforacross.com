@@ -188,18 +188,16 @@ export default class Composition extends EventEmitter {
     // nuke existing events
     return this.events
       .set({})
-      .then(() => {
-        return this.events.push({
+      .then(() =>
+        this.events.push({
           timestamp: SERVER_TIME,
           type: 'create',
           params: {
             version,
             composition,
           },
-        });
-      })
-      .then(() => {
-        return this.ref.child('published').set(false);
-      });
+        })
+      )
+      .then(() => this.ref.child('published').set(false));
   }
 }

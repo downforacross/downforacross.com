@@ -1,6 +1,6 @@
+import _ from 'lodash';
 import Puzzlelist from './puzzlelist';
 import {db, SERVER_TIME} from './firebase';
-import _ from 'lodash';
 
 export default class DemoPuzzleList extends Puzzlelist {
   getPages(pages, cbk) {
