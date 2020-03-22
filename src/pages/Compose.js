@@ -8,7 +8,7 @@ import _ from 'lodash';
 import React, {Component} from 'react';
 import Flex from 'react-flexview';
 
-import Nav from '../components/Nav';
+import Nav from '../components/common/Nav';
 import {getUser, CompositionModel} from '../store';
 
 const TimeFormatter = ({millis}) =>
@@ -110,7 +110,9 @@ export default class Compose extends Component {
           <h3>Compositions</h3>
           <Flex column>
             {_.keys(compositions).length === 0 && 'Nothing found'}
-            {_.keys(compositions).map((cid) => <div>{this.linkToComposition(cid, compositions[cid])}</div>)}
+            {_.keys(compositions).map((cid) => (
+              <div>{this.linkToComposition(cid, compositions[cid])}</div>
+            ))}
           </Flex>
           <div>
             <button onClick={this.handleCreateClick}>New</button>

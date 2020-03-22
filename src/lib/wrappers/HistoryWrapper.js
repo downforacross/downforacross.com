@@ -1,4 +1,4 @@
-import {reduce} from './GameOperations';
+import {reduce} from '../reducers/game';
 import _ from 'lodash';
 
 const MEMO_RATE = 10;

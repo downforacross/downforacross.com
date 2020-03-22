@@ -4,7 +4,6 @@ import {Link} from 'react-router-dom';
 import GlobalContext from '../../GlobalContext';
 import React, {useContext} from 'react';
 import classnames from 'classnames';
-import {getUser} from '../../store/user';
 
 function LogIn({user, style}) {
   if (!user.attached) {

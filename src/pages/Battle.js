@@ -7,7 +7,7 @@ import {Helmet} from 'react-helmet';
 import Flex from 'react-flexview';
 import {BattleModel} from '../store';
 import redirect from '../redirect';
-import {isMobile} from '../jsUtils';
+import {isMobile} from '../lib/jsUtils';
 import classnames from 'classnames';
 
 export default class Battle extends Component {

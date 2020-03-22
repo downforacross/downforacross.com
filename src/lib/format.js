@@ -1,5 +1,5 @@
 import Puz from 'puzjs';
-import GridObject from './lib/utils/GridWrapper';
+import GridObject from './wrappers/GridWrapper';
 
 const infoToMeta = (info) => {
   const {title = '', author = '', description = '', notes = '', copyright = ''} = info;

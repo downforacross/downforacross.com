@@ -2,28 +2,28 @@ import 'react-flexview/lib/flexView.css';
 import './css/composition.css';
 
 import React, {Component} from 'react';
-import Nav from '../components/Nav';
+import Nav from '../components/common/Nav';
 import _ from 'lodash';
 import {Helmet} from 'react-helmet';
 import Flex from 'react-flexview';
 
 import actions from '../actions';
 import Editor from '../components/Player/Editor';
-import FileUploader from '../components/FileUploader';
+import FileUploader from '../components/Upload/FileUploader';
 import {CompositionModel, getUser} from '../store';
-import ComposeHistoryWrapper from '../lib/utils/ComposeHistoryWrapper';
+import ComposeHistoryWrapper from '../lib/wrappers/ComposeHistoryWrapper';
 import Chat from '../components/Chat';
-import EditableSpan from '../components/lib/EditableSpan';
+import EditableSpan from '../components/common/EditableSpan';
 import redirect from '../redirect';
-import {downloadBlob, isMobile} from '../jsUtils';
+import {downloadBlob, isMobile} from '../lib/jsUtils';
 import {
   makeGridFromComposition,
   makeClues,
   convertCluesForComposition,
   convertGridForComposition,
-} from '../gameUtils';
-import format from '../format';
-import * as xwordFiller from '../lib/xword-filler';
+} from '../lib/gameUtils';
+import format from '../lib/format';
+import * as xwordFiller from '../components/Compose/lib/xword-filler';
 
 export default class Composition extends Component {
   constructor(props) {

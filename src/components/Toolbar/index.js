@@ -1,8 +1,8 @@
-import './css/toolbar.css';
+import './css/index.css';
 import React, {Component} from 'react';
 
-import Clock from './Player/Clock';
-import ActionMenu from './Toolbar/ActionMenu';
+import Clock from '../Player/Clock';
+import ActionMenu from './ActionMenu';
 import Flex from 'react-flexview';
 import {Link} from 'react-router-dom';
 

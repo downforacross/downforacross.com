@@ -1,4 +1,3 @@
-import {MAX_CLOCK_INCREMENT} from '../timing';
 import _ from 'lodash';
 
 const reducers = {

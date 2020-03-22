@@ -1,7 +1,7 @@
 import 'react-flexview/lib/flexView.css';
 
 import React, {Component} from 'react';
-import Nav from '../components/Nav';
+import Nav from '../components/common/Nav';
 import _ from 'lodash';
 import Flex from 'react-flexview';
 import {RoomModel, getUser} from '../store';
@@ -202,7 +202,9 @@ export default class Room extends Component {
           >
             New Game
           </div>
-          {_.values(games).map((game, i) => <Flex key={i}>{this.renderGameLink(game)}</Flex>)}
+          {_.values(games).map((game, i) => (
+            <Flex key={i}>{this.renderGameLink(game)}</Flex>
+          ))}
         </Flex>
       </Flex>
     );

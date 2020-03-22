@@ -1,5 +1,5 @@
-import {reduce} from '../utils/ComposeOperations';
-import HistoryWrapper from '../historyWrapper';
+import {reduce} from '../reducers/compose';
+import HistoryWrapper from './HistoryWrapper';
 
 export default class CompositionHistoryWrapper extends HistoryWrapper {
   get reduce() {

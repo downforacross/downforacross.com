@@ -5,8 +5,8 @@ import _ from 'lodash';
 import React, {Component} from 'react';
 import Flex from 'react-flexview';
 
-import HistoryWrapper from '../lib/historyWrapper';
-import Nav from '../components/Nav';
+import HistoryWrapper from '../lib/wrappers/HistoryWrapper';
+import Nav from '../components/common/Nav';
 import {PuzzleModel} from '../store';
 import {db} from '../actions';
 import Timestamp from 'react-timestamp';

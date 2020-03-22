@@ -1,4 +1,4 @@
-import './css/upload.css';
+import './css/index.css';
 
 import actions from '../../actions';
 import FileUploader from './FileUploader';

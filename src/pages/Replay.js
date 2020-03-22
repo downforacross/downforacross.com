@@ -4,12 +4,12 @@ import Flex from 'react-flexview';
 import {Helmet} from 'react-helmet';
 import _ from 'lodash';
 
-import HistoryWrapper from '../lib/historyWrapper';
+import HistoryWrapper from '../lib/wrappers/HistoryWrapper';
 import Player from '../components/Player';
 import Chat from '../components/Chat';
-import Nav from '../components/Nav';
+import Nav from '../components/common/Nav';
 import {db} from '../actions';
-import {toArr, pure, isAncestor} from '../jsUtils';
+import {toArr, pure, isAncestor} from '../lib/jsUtils';
 import redirect from '../redirect';
 
 const SCRUB_SPEED = 50; // 30 actions per second

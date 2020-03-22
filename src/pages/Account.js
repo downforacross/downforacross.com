@@ -1,6 +1,6 @@
 import './css/account.css';
 
-import Nav from '../components/Nav';
+import Nav from '../components/common/Nav';
 import React, {Component} from 'react';
 
 function AccountHistory() {
