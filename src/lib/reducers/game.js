@@ -90,6 +90,27 @@ const reducers = {
     };
   },
 
+  addPing: (game, params) => {
+    let {pings = []} = game;
+    const {
+      cell: {r, c},
+      id,
+      timestamp,
+    } = params;
+
+    const ping = {
+      r,
+      c,
+      id,
+      timestamp,
+    };
+    pings = [...pings, ping];
+    return {
+      ...game,
+      pings,
+    };
+  },
+
   updateColor: (game, params) => {
     let {colors = {}} = game;
 

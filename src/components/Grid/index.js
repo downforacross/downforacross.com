@@ -161,6 +161,7 @@ export default class Grid extends React.PureComponent {
                     circled={this.isCircled(r, c)}
                     shaded={this.isShaded(r, c)}
                     cursors={(this.props.cursors || []).filter((cursor) => cursor.r === r && cursor.c === c)}
+                    pings={(this.props.pings || []).filter((ping) => ping.r === r && ping.c === c)}
                     highlighted={this.isHighlighted(r, c)}
                     myColor={this.props.myColor}
                     frozen={this.props.frozen}

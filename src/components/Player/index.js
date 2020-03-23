@@ -15,6 +15,7 @@ import MobileGridControls from './MobileGridControls';
 import * as gameUtils from '../../lib/gameUtils';
 
 const CURSOR_TIMEOUT = 60000;
+const PING_TIMEOUT = 10000;
 /*
  * Summary of Player component
  *
@@ -159,6 +160,11 @@ export default class Player extends Component {
     }
   }
 
+  handlePing = (r, c) => {
+    console.log('pinng at', r, c);
+    this.props.addPing({r, c});
+  };
+
   changeDirection() {
     if (this.cursorLocked) return;
     this.setDirection(gameUtils.getOppositeDirection(this.state.direction));
@@ -263,6 +269,7 @@ export default class Player extends Component {
       clues,
       circles,
       cursors: allCursors = [],
+      pings: allPings = [],
       updateGrid,
       frozen,
       myColor,
@@ -281,6 +288,15 @@ export default class Player extends Component {
       active: cursor.timestamp > currentTime - CURSOR_TIMEOUT,
       color: colors[cursor.id],
     }));
+    const pings = allPings
+      .map((ping) => ({
+        ...ping,
+        active: ping.timestamp > currentTime - PING_TIMEOUT,
+        age: (currentTime - ping.timestamp) / PING_TIMEOUT,
+        color: colors[ping.id],
+      }))
+      .filter(({active}) => active);
+    console.log(pings);
     const {direction} = this.state;
     const selected = this.selected;
 
@@ -292,7 +308,9 @@ export default class Player extends Component {
       references: this.getReferences(),
       direction,
       cursors,
+      pings,
       onSetSelected: this._setSelected,
+      onPing: this.handlePing,
       cellStyle,
       myColor,
       onChangeDirection: this._changeDirection,

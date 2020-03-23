@@ -30,11 +30,29 @@ export default class Cell extends Component {
         {cursors.map(({color, active}, i) => (
           <div
             key={i}
-            className={`cell--cursor${active ? ' active' : ' inactive'}`}
+            className={`cell--cursor ${active ? 'active' : 'inactive'}`}
             style={{
               borderColor: color,
               zIndex: Math.min(2 + cursors.length - i, 9),
               borderWidth: Math.min(1 + 2 * (i + 1), 12),
+            }}
+          />
+        ))}
+      </div>
+    );
+  }
+
+  renderPings() {
+    const {pings} = this.props;
+    return (
+      <div className="cell--pings">
+        {pings.map(({color, active, age}, i) => (
+          <div
+            key={i}
+            className={`cell--ping ${active ? 'active' : 'inactive'}`}
+            style={{
+              borderColor: color,
+              zIndex: Math.min(2 + pings.length - i, 9),
             }}
           />
         ))}
@@ -110,6 +128,7 @@ export default class Cell extends Component {
       value,
       myColor,
       onClick,
+      onContextMenu,
       number,
       referenced,
     } = this.props;
@@ -119,6 +138,7 @@ export default class Cell extends Component {
           className={`cell black ${selected ? 'selected' : ''}`}
           style={selected ? {borderColor: myColor} : undefined}
           onClick={onClick}
+          onContextMenu={onContextMenu}
         />
       );
     }
@@ -139,6 +159,7 @@ export default class Cell extends Component {
           (pencil ? 'pencil ' : '')}cell`}
         style={style}
         onClick={onClick}
+        onContextMenu={onContextMenu}
         onTouchStart={(e) => {
           const touch = e.touches[e.touches.length - 1];
           this.touchStart = {pageX: touch.pageX, pageY: touch.pageY};
@@ -172,6 +193,7 @@ export default class Cell extends Component {
           </div>
         </div>
         {this.renderCursors()}
+        {this.renderPings()}
       </div>
     );
   }

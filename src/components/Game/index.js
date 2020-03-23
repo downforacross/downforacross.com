@@ -94,6 +94,11 @@ export default class Game extends Component {
     this.gameModel.updateCursor(r, c, id);
   };
 
+  handleAddPing = ({r, c}) => {
+    const {id} = this.props;
+    this.gameModel.addPing(r, c, id);
+  };
+
   handleUpdateColor = (id, color) => {
     this.gameModel.updateColor(id, color);
   };
@@ -156,7 +161,7 @@ export default class Game extends Component {
       return <div>Loading...</div>;
     }
 
-    const {grid, circles, shades, cursors, colors, clues, solved, solution, themeColor} = this.game;
+    const {grid, circles, shades, cursors, pings, colors, clues, solved, solution, themeColor} = this.game;
     const opponentGrid = this.opponentGame && this.opponentGame.grid;
     const {screenWidth} = this.state;
     const themeStyles = {
@@ -198,11 +203,13 @@ export default class Game extends Component {
         }}
         id={id}
         cursors={cursors}
+        pings={pings}
         colors={colors}
         frozen={solved}
         myColor={myColor}
         updateGrid={this.handleUpdateGrid}
         updateCursor={this.handleUpdateCursor}
+        addPing={this.handleAddPing}
         onPressEnter={this.handlePressEnter}
         onPressPeriod={this.handlePressPeriod}
         mobile={mobile}

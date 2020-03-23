@@ -123,6 +123,18 @@ export default class Game extends EventEmitter {
     });
   }
 
+  addPing(r, c, id) {
+    this.events.push({
+      timestamp: SERVER_TIME,
+      type: 'addPing',
+      params: {
+        timestamp: SERVER_TIME,
+        cell: {r, c},
+        id,
+      },
+    });
+  }
+
   updateColor(id, color) {
     this.events.push({
       timestamp: SERVER_TIME,
