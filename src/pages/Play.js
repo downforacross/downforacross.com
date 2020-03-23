@@ -91,9 +91,6 @@ export default class Play extends Component {
       puzzle.once('ready', () => {
         const rawGame = puzzle.toGame();
         game.initialize(rawGame);
-        const redirect = (url) => {
-          this.props.history.push(url);
-        };
         this.user
           .joinGame(gid, {
             pid: this.pid,

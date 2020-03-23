@@ -139,7 +139,9 @@ export default class Cell extends Component {
           style={selected ? {borderColor: myColor} : undefined}
           onClick={onClick}
           onContextMenu={onContextMenu}
-        />
+        >
+          {this.renderPings()}
+        </div>
       );
     }
 
