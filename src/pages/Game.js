@@ -89,6 +89,16 @@ export default class Game extends Component {
     this.gameModel.once('battleData', (battleData) => {
       this.initializeBattle(battleData);
     });
+    this.gameModel.on('createEvent', (event) => {
+      this.historyWrapper.setCreateEvent(event);
+      this.handleUpdate();
+    });
+    this.gameModel.on('event', (event) => {
+      this.historyWrapper.addEvent(event);
+      this.handleChange();
+      this.handleUpdate();
+    });
+
     this.gameModel.on('archived', (event) => {
       this.setState({
         archived: true,
