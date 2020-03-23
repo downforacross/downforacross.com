@@ -172,7 +172,6 @@ export default class Replays extends Component {
   }
 
   renderList() {
-    const {limit} = this.state;
     if (this.state.error) {
       return <div>Error loading replay</div>;
     }

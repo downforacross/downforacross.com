@@ -1,5 +1,5 @@
 import Game from './game';
-import {db, SERVER_TIME} from './firebase';
+import {SERVER_TIME} from './firebase';
 
 // a wrapper class that models Game
 

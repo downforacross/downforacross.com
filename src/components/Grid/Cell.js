@@ -84,23 +84,7 @@ export default class Cell extends Component {
   }
 
   getStyle() {
-    const {
-      cellStyle,
-      black,
-      selected,
-      highlighted,
-      shaded,
-      bad,
-      good,
-      revealed,
-      pencil,
-      value,
-      myColor,
-      onClick,
-      number,
-      referenced,
-      frozen,
-    } = this.props;
+    const {cellStyle, selected, highlighted, frozen} = this.props;
     if (selected) {
       return cellStyle.selected;
     }

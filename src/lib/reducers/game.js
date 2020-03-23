@@ -1,5 +1,5 @@
 import {MAX_CLOCK_INCREMENT} from '../timing';
-import {MAIN_BLUE_3, GREENISH, PINKISH} from '../colors';
+import {MAIN_BLUE_3} from '../colors';
 
 function getScopeGrid(grid, scope) {
   const scopeGrid = grid.map((row) => row.map((cell) => false));

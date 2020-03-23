@@ -29,7 +29,7 @@ export default class Puzzle extends EventEmitter {
   }
 
   get info() {
-    if (!this.data) return;
+    if (!this.data) return undefined;
     return this.data.info;
   }
 

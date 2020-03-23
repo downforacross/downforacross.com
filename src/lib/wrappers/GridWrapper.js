@@ -155,14 +155,6 @@ export default class GridWrapper {
     return !this.hasEmptyCells(clueRoot.r, clueRoot.c, direction);
   }
 
-  get parallelMapInverse() {
-    // TODO
-  }
-
-  get parallelMap() {
-    // TODO
-  }
-
   getNextClue(clueNumber, direction, clues, backwards, parallel) {
     clueNumber = parallel ? this.parallelMap[direction][clueNumber] : clueNumber;
     const add = backwards ? -1 : 1;

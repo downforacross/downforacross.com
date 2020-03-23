@@ -94,7 +94,7 @@ export default class Welcome extends Component {
   }
 
   get navStyle() {
-    if (!this.mobile) return;
+    if (!this.mobile) return undefined;
     const motion = this.motion;
     const {searchFocused} = this.state;
     const offset = motion;
@@ -109,7 +109,7 @@ export default class Welcome extends Component {
   }
 
   get navTextStyle() {
-    if (!this.mobile) return;
+    if (!this.mobile) return undefined;
     const motion = this.motion;
     const opacity = _.clamp(1 - 3 * motion, 0, 1);
     const translateY = this.navHeight * motion;
@@ -120,7 +120,7 @@ export default class Welcome extends Component {
   }
 
   get navLinkStyle() {
-    if (!this.mobile) return;
+    if (!this.mobile) return undefined;
     const motion = this.motion;
     const translateY = this.navHeight * motion;
     return {
@@ -273,7 +273,7 @@ export default class Welcome extends Component {
   }
 
   get searchInputStyle() {
-    if (!this.mobile) return;
+    if (!this.mobile) return undefined;
     const color = colorAverage(BLUE, WHITE, this.colorMotion);
     const backgroundColor = colorAverage(WHITE, BLUE, this.colorMotion);
     const paddingTop = (1 - this.motion) * 10;
@@ -294,7 +294,7 @@ export default class Welcome extends Component {
   }
 
   get searchIconGraphicsStyle() {
-    if (!this.mobile) return;
+    if (!this.mobile) return undefined;
     const stroke = colorAverage(BLUE, WHITE, this.colorMotion);
     return {
       stroke,

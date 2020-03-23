@@ -165,7 +165,7 @@ export default class Game extends Component {
 
   get opponentGame() {
     if (!this.opponentGameModel || !this.opponentGameModel.attached || !this.opponentHistoryWrapper) {
-      return;
+      return undefined;
     }
     return this.opponentHistoryWrapper.getSnapshot();
   }

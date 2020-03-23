@@ -17,7 +17,7 @@ const gridToTextGrid = (grid) => grid.map((row) => row.map((cell) => (cell.black
 // to hanlde the various different formats of games
 const f = () => ({
   fromPuz: (blob) => {
-    const {meta, grid, clues, circles, shades, filename} = Puz.decode(blob);
+    const {grid, clues, circles} = Puz.decode(blob);
     return intermediate({
       info: {},
       grid,
@@ -73,8 +73,7 @@ const f = () => ({
   },
 });
 
-const validateGame = ({info, grid, clues, circles}) => {
-  const {title, author, description} = info;
+const validateGame = ({grid}) => {
   if (typeof grid[0][0] !== 'object') {
     throw new Error('Game grid should be object');
   }
@@ -82,16 +81,6 @@ const validateGame = ({info, grid, clues, circles}) => {
 };
 
 const validateIntermediate = validateGame;
-
-const validateComposition = ({info, grid, clues, circles}) => {
-  const {title, author, description} = info;
-};
-
-const validatePuz = (blob) => {
-  if (!(blob instanceof Uint8Array)) {
-    throw new Error('Puz must be a Uint8Array');
-  }
-};
 
 const intermediate = ({info, grid, clues, extras}) => {
   validateIntermediate({
@@ -102,12 +91,6 @@ const intermediate = ({info, grid, clues, extras}) => {
   });
   return {
     toPuz: () => {
-      const x = {
-        meta: infoToMeta(info),
-        grid: gridToTextGrid(grid),
-        clues,
-        circles: extras.circles,
-      };
       return Puz.encode({
         meta: infoToMeta(info),
         grid: gridToTextGrid(grid),

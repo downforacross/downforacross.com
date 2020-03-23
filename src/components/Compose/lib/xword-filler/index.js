@@ -1,8 +1,7 @@
 import _ from 'lodash';
 import gaussian from 'gaussian';
-import CandidateGrid, {convertToCandidateGrid, convertFromCandidateGrid} from './candidateGrid';
+import {convertToCandidateGrid, convertFromCandidateGrid} from './candidateGrid';
 import beamSearch from './beamSearch';
-import {getMatches} from './common';
 // randomize our word list, to introduce non-determinism early in the process.
 // non-determinism is important if we don't to generate the same puzzle every timeI
 
@@ -45,7 +44,6 @@ window.getFullWords = getFullWords;
 // partialGrid: Array(Array(cell))
 // cell: { value: '.' if black, '[a-z]' or '' otherwise, pencil: boolean/null }
 export const fillGrid = (partialGrid, wordlist = DEFAULT_WORDLIST) => {
-  const fullWords = getFullWords(partialGrid);
   wordlist = {
     ...wordlist,
     // ...makeWordlist(fullWords, 80, 0),

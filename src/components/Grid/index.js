@@ -77,7 +77,7 @@ export default class Grid extends React.PureComponent {
   getPickup(r, c) {
     return (
       this.props.pickups &&
-      _.get(_.find(this.props.pickups, ({i, j, pickedUp}) => i == r && j == c && !pickedUp), 'type')
+      _.get(_.find(this.props.pickups, ({i, j, pickedUp}) => i === r && j === c && !pickedUp), 'type')
     );
   }
 
@@ -116,11 +116,9 @@ export default class Grid extends React.PureComponent {
   }
 
   render() {
-    window.grid = this;
-    window.g = this.props.grid;
+    const {size, cellStyle} = this.props;
     const sizeClass = this.getSizeClass(size);
     const key = `${size}-`;
-    const {size, cellStyle} = this.props;
     return (
       <table
         style={{

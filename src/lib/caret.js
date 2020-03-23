@@ -8,11 +8,6 @@ export default class Caret {
     if (!el) return;
     let start;
     let end;
-    let range;
-    let len;
-    let normalizedValue;
-    let textInputRange;
-    let endRange;
     if (typeof window.getSelection !== 'undefined') {
       const {baseOffset, focusOffset} = window.getSelection();
       const start = Math.min(baseOffset, focusOffset);

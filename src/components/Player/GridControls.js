@@ -75,7 +75,6 @@ export default class GridControls extends Component {
     };
 
     const moveSelectedUsingDirection = (d) => () => {
-      const {direction} = this.props;
       const [dr, dc] = this.props.direction === 'down' ? [0, d] : [d, 0];
       return moveSelectedBy(dr, dc)();
     };

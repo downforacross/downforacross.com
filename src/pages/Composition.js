@@ -78,7 +78,7 @@ export default class Composition extends Component {
 
   get title() {
     if (!this.compositionModel || !this.compositionModel.attached) {
-      return;
+      return undefined;
     }
     const info = this.composition.info;
     return `Compose: ${info.title}`;
@@ -243,9 +243,6 @@ export default class Composition extends Component {
       return;
     }
 
-    const {mobile} = this.state;
-    const {id, color} = this.user;
-
     const gridObject = makeGridFromComposition(this.composition.grid);
     const grid = gridObject.grid;
     const clues = makeClues(this.composition.clues, grid);
@@ -277,7 +274,7 @@ export default class Composition extends Component {
   }
 
   renderChatHeader() {
-    const {title, author, type} = this.composition.info;
+    const {title, author} = this.composition.info;
 
     return (
       <div className="chat--header">

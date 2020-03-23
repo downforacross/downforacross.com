@@ -111,7 +111,7 @@ export default class Editor extends Component {
   };
 
   handleChangeClue = (value) => {
-    const {selected, direction} = this.state;
+    const {direction} = this.state;
     this.props.onUpdateClue(this.selectedParent.r, this.selectedParent.c, direction, value);
     this.props.onChange();
   };
@@ -151,25 +151,25 @@ export default class Editor extends Component {
 
   get clueBarAbbreviation() {
     const {direction} = this.state;
-    if (!this.selectedIsWhite) return;
-    if (!this.selectedClueNumber) return;
+    if (!this.selectedIsWhite) return undefined;
+    if (!this.selectedClueNumber) return undefined;
     return this.selectedClueNumber + direction.substr(0, 1).toUpperCase();
   }
 
   get selectedClueNumber() {
     const {selected, direction} = this.state;
-    if (!this.selectedIsWhite) return;
+    if (!this.selectedIsWhite) return undefined;
     return this.grid.getParent(selected.r, selected.c, direction);
   }
 
   get halfSelectedClueNumber() {
     const {selected, direction} = this.state;
-    if (!this.selectedIsWhite) return;
+    if (!this.selectedIsWhite) return undefined;
     return this.grid.getParent(selected.r, selected.c, gameUtils.getOppositeDirection(direction));
   }
 
   get selectedParent() {
-    if (!this.selectedIsWhite) return;
+    if (!this.selectedIsWhite) return undefined;
     return this.grid.getCellByNumber(this.selectedClueNumber);
   }
 

@@ -2,7 +2,7 @@ import './css/editableSpan.css';
 import React, {PureComponent} from 'react';
 import Caret from '../../lib/caret';
 import _ from 'lodash';
-import {focusKeyboard, unfocusKeyboard, onUnfocusKeyboard} from '../Player/MobileKeyboard';
+import {focusKeyboard, onUnfocusKeyboard} from '../Player/MobileKeyboard';
 
 export default class EditableSpan extends PureComponent {
   constructor() {
@@ -145,7 +145,6 @@ export default class EditableSpan extends PureComponent {
     if (!this.state.mobileFocused) {
       return;
     }
-    const text = this.text;
     const caret = this.state.caret;
     return (
       <div

@@ -9,7 +9,7 @@ import classnames from 'classnames';
 import _ from 'lodash';
 import GridObject from '../../lib/wrappers/GridWrapper';
 import * as gameUtils from '../../lib/gameUtils';
-import {focusKeyboard, unfocusKeyboard} from './MobileKeyboard';
+import {focusKeyboard} from './MobileKeyboard';
 
 const CLUE_ANIMATION_TIME = 0.3; // in seconds
 
@@ -267,7 +267,7 @@ export default class MobileGridControls extends GridControls {
           );
           return {direction: oppositeDirection, clueNumber: oppositeClueNumber};
         } else {
-          return; // cannot preview this clue
+          return undefined; // cannot preview this clue
         }
       }
     }

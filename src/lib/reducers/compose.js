@@ -201,7 +201,7 @@ const reducers = {
 };
 
 export const reduce = (composition, action) => {
-  const {timestamp, type, params} = action;
+  const {type, params} = action;
   if (!(type in reducers)) {
     console.error('action', type, 'not found');
     return composition;

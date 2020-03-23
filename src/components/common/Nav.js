@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom';
 import React, {useContext} from 'react';
 import classnames from 'classnames';
 import GlobalContext from '../../lib/GlobalContext';
+import {getUser} from '../../store/user';
 
 function LogIn({user, style}) {
   if (!user.attached) {
@@ -41,10 +42,10 @@ function LogIn({user, style}) {
   );
 }
 
-export default function Nav({hidden, v2, secret, mobile, textStyle, linkStyle, divRef}) {
+export default function Nav({hidden, v2, canLogin, secret, mobile, textStyle, linkStyle, divRef}) {
   const {toggleMolesterMoons} = useContext(GlobalContext);
   if (hidden) return null; // no nav for mobile
-
+  const user = getUser();
   return (
     <div className={classnames('nav', {mobile})} ref={divRef}>
       <div className="nav--left" style={linkStyle}>
@@ -53,6 +54,11 @@ export default function Nav({hidden, v2, secret, mobile, textStyle, linkStyle, d
       <div className="molester-moon" onClick={toggleMolesterMoons}>
         Dark Mode (beta)
       </div>
+      {canLogin && (
+        <div className="nav--right">
+          <LogIn user={user} />
+        </div>
+      )}
     </div>
   );
 }

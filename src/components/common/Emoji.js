@@ -24,7 +24,7 @@ export default ({emoji, big}) => {
   if (data.url) {
     return (
       <span title={emoji} style={spanStyle}>
-        <img style={imgStyle} src={data.url} />
+        <img style={imgStyle} src={data.url} alt={emoji} />
       </span>
     );
   }

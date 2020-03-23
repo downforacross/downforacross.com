@@ -11,21 +11,6 @@ import Flex from 'react-flexview';
 import Nav from '../components/common/Nav';
 import {getUser, CompositionModel} from '../store';
 
-const TimeFormatter = ({millis}) =>
-  millis ? (
-    <span>
-      {Math.floor(millis / 60000)}m {Math.floor(millis / 1000) % 60}s
-    </span>
-  ) : null;
-
-function getTime(game) {
-  if (game.stopTime) {
-    let t = game.stopTime - game.startTime;
-    if (game.pauseTime) t += game.pauseTime;
-    return t;
-  }
-}
-
 export default class Compose extends Component {
   constructor() {
     super();

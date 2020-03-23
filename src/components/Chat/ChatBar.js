@@ -51,7 +51,6 @@ export default class ChatBar extends React.Component {
   };
 
   handleConfirmEmoji = (emoji) => {
-    const {message} = this.state;
     const words = this.state.message.split(' ');
     const newMessage = [...words.slice(0, words.length - 1), `:${emoji}:`, ''].join(' ');
     this.setState({
@@ -88,6 +87,7 @@ export default class ChatBar extends React.Component {
         }
       }
     }
+    return undefined;
   }
 
   renderEmojiPicker() {

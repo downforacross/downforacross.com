@@ -113,7 +113,7 @@ export default class Toolbar extends Component {
   }
 
   renderPencil() {
-    const {pencilMode, onTogglePencil} = this.props;
+    const {pencilMode} = this.props;
     return (
       <div
         className={'toolbar--pencil' + (pencilMode ? ' on' : '')}

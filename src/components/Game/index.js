@@ -235,7 +235,6 @@ export default class Game extends Component {
         onTogglePencil={this.handleTogglePencil}
         onToggleChat={this.handleToggleChat}
         onRefocus={this.handleRefocus}
-        onToggleChat={this.handleToggleChat}
         unreads={this.props.unreads}
       />
     );

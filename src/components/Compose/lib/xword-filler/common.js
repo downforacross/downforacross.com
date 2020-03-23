@@ -35,12 +35,10 @@ class BucketedWordlist {
   }
 
   makeBuckets(scoredWordlist) {
-    const time1 = Date.now();
     this.buckets = {};
     const words = _.sortBy(_.keys(scoredWordlist), (word) => -scoredWordlist[word]);
     console.log(words);
     _.forEach(words, (word) => {
-      const {length} = word;
       this.storeWordInBucket(word, []);
     });
     _.forEach(_.keys(scoredWordlist), (word) => {
@@ -55,7 +53,6 @@ class BucketedWordlist {
         }
       }
     });
-    const time2 = Date.now();
   }
 
   getBucket(length, {indices = [], vals = []} = {}) {

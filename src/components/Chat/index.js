@@ -34,10 +34,6 @@ export default class Chat extends Component {
     }
   }
 
-  get battleKey() {
-    return;
-  }
-
   get usernameKey() {
     return `username_${window.location.href}`;
   }
@@ -131,7 +127,7 @@ export default class Chat extends Component {
       <div className="chat--header">
         <div className="chat--header--title">{title}</div>
 
-        <div className="chat--header--subtitle">{type && type + ' | ' + 'By ' + author}</div>
+        <div className="chat--header--subtitle">{type && `${type} | By ${author}`}</div>
 
         {bid && <div className="chat--header--subtitle">Battle {bid}</div>}
       </div>
@@ -239,7 +235,7 @@ export default class Chat extends Component {
   }
 
   renderMessage(message) {
-    const {sender, text, senderId: id, isOpponent} = message;
+    const {text, senderId: id, isOpponent} = message;
     const big = text.length <= 10 && isEmojis(text);
     const color = this.getMessageColor(id, isOpponent);
 

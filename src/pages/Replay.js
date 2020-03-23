@@ -385,7 +385,7 @@ export default class Replay extends Component {
       <div>
         <div className="header--title">{title}</div>
 
-        <div className="header--subtitle">{type && type + ' | ' + 'By ' + author}</div>
+        <div className="header--subtitle">{type && `${type} | By ${author}`}</div>
       </div>
     );
   }
