@@ -44,6 +44,7 @@ const reducers = {
         paused: true,
       },
       cursors = [],
+      usernames = {}, // mapping from id -> user display name
       colors = {},
       solved = false,
       themeColor = MAIN_BLUE_3,
@@ -61,6 +62,7 @@ const reducers = {
       clock,
       solved,
       cursors,
+      usernames,
       colors,
       themeColor,
     };
@@ -108,6 +110,20 @@ const reducers = {
     return {
       ...game,
       pings,
+    };
+  },
+
+  updateUsername: (game, params) => {
+    let {usernames = {}} = game;
+
+    const {id, username} = params;
+    usernames = {
+      ...usernames,
+      [id]: username,
+    };
+    return {
+      ...game,
+      usernames,
     };
   },
 

@@ -194,6 +194,10 @@ export default class Game extends Component {
     this.gameModel.chat(username, id, message);
   };
 
+  handleChangeUsername = (username, id, message) => {
+    this.gameModel.chat(username, id, message);
+  };
+
   updateSeenChatMessage = (message) => {
     if (message.timestamp > this.state.lastReadChat) {
       this.setState({lastReadChat: message.timestamp});
@@ -294,6 +298,7 @@ export default class Game extends Component {
         id={id}
         myColor={color}
         onChat={this.handleChat}
+        onChangeUsername={this.handleChangeUsername}
         onUnfocus={this.handleUnfocusChat}
         onToggleChat={this.handleToggleChat}
         mobile={mobile}

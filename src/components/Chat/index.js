@@ -151,6 +151,26 @@ export default class Chat extends Component {
     );
   }
 
+  renderUsersPresent() {
+    return this.props.hideChatBar ? null : (
+      <div className="chat--users-present">
+        {messages.map((message, i) => (
+          <div key={i}>{this.renderMessage(message)}</div>
+        ))}
+        {'You are '}
+        <EditableSpan
+          ref={this.usernameInput}
+          className="chat--username--input"
+          mobile={this.props.mobile}
+          value={this.state.username}
+          onChange={this.handleChangeUsername}
+          onBlur={this.handleBlur}
+          onUnfocus={this.focus}
+        />
+      </div>
+    );
+  }
+
   renderChatBar() {
     if (this.props.hideChatBar) {
       return null;
@@ -270,6 +290,7 @@ export default class Chat extends Component {
         <div className="chat">
           {this.renderChatHeader()}
           {this.renderUsernameInput()}
+          {this.renderUsersPresent()}
           <div
             ref={(el) => {
               if (el) {

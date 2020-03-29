@@ -135,6 +135,17 @@ export default class Game extends EventEmitter {
     });
   }
 
+  updateUsername(id, username) {
+    this.events.push({
+      timestamp: SERVER_TIME,
+      type: 'updateUsername',
+      params: {
+        id,
+        username,
+      },
+    });
+  }
+
   updateColor(id, color) {
     this.events.push({
       timestamp: SERVER_TIME,
