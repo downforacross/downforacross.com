@@ -260,7 +260,6 @@ export default class Chat extends Component {
     const color = this.getMessageColor(id, isOpponent);
     const users = this.props.users;
 
-    this.props.updateSeenChatMessage && this.props.updateSeenChatMessage(message);
     return (
       <div className={'chat--message' + (big ? ' big' : '')}>
         {this.renderMessageSender(users[id].displayName, color)}
