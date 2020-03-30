@@ -32,6 +32,7 @@ export default class Chat extends Component {
     if (battleName && !localStorage.getItem(this.usernameKey)) {
       this.setState({username: battleName});
     }
+    this.handleUpdateDisplayName(this.state.username);
   }
 
   get usernameKey() {
@@ -39,8 +40,8 @@ export default class Chat extends Component {
   }
 
   handleSendMessage = (message) => {
-    const {username} = this.state;
     const {id} = this.props;
+    const username = this.props.users[id].displayName;
     this.props.onChat(username, id, message);
     localStorage.setItem(this.usernameKey, username);
   };
@@ -52,6 +53,7 @@ export default class Chat extends Component {
     const {id} = this.props;
     this.props.onUpdateDisplayName(id, username);
     this.setState({username});
+    localStorage.setItem(this.usernameKey, username);
   };
 
   handleUnfocus = () => {
@@ -153,15 +155,27 @@ export default class Chat extends Component {
     );
   }
 
-  renderUsersPresent() {
-    return this.props.hideChatBar ? null : <div className="chat--users-present" />;
+  renderUserPresent(id, displayName, color) {
+    const style = color && {
+      color,
+    };
+    return (
+      <span key={id} style={style}>
+        {'\u25CF'} {displayName}
+      </span>
+    );
+  }
+
+  renderUsersPresent(users) {
+    return this.props.hideChatBar ? null : (
+      <div className="chat--users--present">
+        {Object.keys(users).map((id) => this.renderUserPresent(id, users[id].displayName, users[id].color))}
+      </div>
+    );
   }
 
   renderChatBar() {
-    if (this.props.hideChatBar) {
-      return null;
-    }
-    return (
+    return this.props.hideChatBar ? null : (
       <ChatBar
         ref={this.chatBar}
         mobile={this.props.mobile}
@@ -244,11 +258,12 @@ export default class Chat extends Component {
     const {text, senderId: id, isOpponent} = message;
     const big = text.length <= 10 && isEmojis(text);
     const color = this.getMessageColor(id, isOpponent);
+    const users = this.props.users;
 
     this.props.updateSeenChatMessage && this.props.updateSeenChatMessage(message);
     return (
       <div className={'chat--message' + (big ? ' big' : '')}>
-        {this.renderMessageSender(message.sender, color)}
+        {this.renderMessageSender(users[id].displayName, color)}
         {':'}
         {this.renderMessageText(message.text)}
       </div>
@@ -269,7 +284,7 @@ export default class Chat extends Component {
 
   render() {
     const messages = this.mergeMessages(this.props.data, this.props.opponentData);
-    console.log(this.props.users);
+    const users = this.props.users;
 
     return (
       <Flex column grow={1}>
@@ -277,7 +292,7 @@ export default class Chat extends Component {
         <div className="chat">
           {this.renderChatHeader()}
           {this.renderUsernameInput()}
-          {this.renderUsersPresent()}
+          {this.renderUsersPresent(users)}
           <div
             ref={(el) => {
               if (el) {

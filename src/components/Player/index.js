@@ -296,7 +296,6 @@ export default class Player extends Component {
         color: users[ping.id].color,
       }))
       .filter(({active}) => active);
-    console.log(pings);
     const {direction} = this.state;
     const selected = this.selected;
 
