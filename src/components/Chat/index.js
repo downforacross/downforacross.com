@@ -45,10 +45,12 @@ export default class Chat extends Component {
     localStorage.setItem(this.usernameKey, username);
   };
 
-  handleChangeUsername = (username) => {
+  handleUpdateDisplayName = (username) => {
     if (!this.usernameInput.current.focused) {
       username = username || nameGenerator();
     }
+    const {id} = this.props;
+    this.props.onUpdateDisplayName(id, username);
     this.setState({username});
   };
 
@@ -86,9 +88,9 @@ export default class Chat extends Component {
   }
 
   getMessageColor(senderId, isOpponent) {
-    const {colors} = this.props;
+    const {users} = this.props;
     if (isOpponent === undefined) {
-      return colors[senderId];
+      return users[senderId].color;
     }
     return isOpponent ? 'rgb(220, 107, 103)' : 'rgb(47, 137, 141)';
   }
@@ -143,7 +145,7 @@ export default class Chat extends Component {
           className="chat--username--input"
           mobile={this.props.mobile}
           value={this.state.username}
-          onChange={this.handleChangeUsername}
+          onChange={this.handleUpdateDisplayName}
           onBlur={this.handleBlur}
           onUnfocus={this.focus}
         />
@@ -152,23 +154,7 @@ export default class Chat extends Component {
   }
 
   renderUsersPresent() {
-    return this.props.hideChatBar ? null : (
-      <div className="chat--users-present">
-        {messages.map((message, i) => (
-          <div key={i}>{this.renderMessage(message)}</div>
-        ))}
-        {'You are '}
-        <EditableSpan
-          ref={this.usernameInput}
-          className="chat--username--input"
-          mobile={this.props.mobile}
-          value={this.state.username}
-          onChange={this.handleChangeUsername}
-          onBlur={this.handleBlur}
-          onUnfocus={this.focus}
-        />
-      </div>
-    );
+    return this.props.hideChatBar ? null : <div className="chat--users-present" />;
   }
 
   renderChatBar() {
@@ -283,6 +269,7 @@ export default class Chat extends Component {
 
   render() {
     const messages = this.mergeMessages(this.props.data, this.props.opponentData);
+    console.log(this.props.users);
 
     return (
       <Flex column grow={1}>

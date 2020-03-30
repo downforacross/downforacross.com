@@ -44,8 +44,10 @@ const reducers = {
         paused: true,
       },
       cursors = [],
-      usernames = {}, // mapping from id -> user display name
-      colors = {},
+      // users is a mapping from id -> user info. fields include:
+      // color: string
+      // displayName: string
+      users = {},
       solved = false,
       themeColor = MAIN_BLUE_3,
       // themeColor = GREENISH,
@@ -62,8 +64,7 @@ const reducers = {
       clock,
       solved,
       cursors,
-      usernames,
-      colors,
+      users,
       themeColor,
     };
   },
@@ -113,31 +114,35 @@ const reducers = {
     };
   },
 
-  updateUsername: (game, params) => {
-    let {usernames = {}} = game;
-
-    const {id, username} = params;
-    usernames = {
-      ...usernames,
-      [id]: username,
+  updateDisplayName: (game, params) => {
+    let {users = {}} = game;
+    const {id, displayName} = params;
+    users = {
+      ...users,
+      [id]: {
+        ...users[id],
+        displayName,
+      },
     };
     return {
       ...game,
-      usernames,
+      users,
     };
   },
 
   updateColor: (game, params) => {
-    let {colors = {}} = game;
-
+    let {users = {}} = game;
     const {id, color} = params;
-    colors = {
-      ...colors,
-      [id]: color,
+    users = {
+      ...users,
+      [id]: {
+        ...users[id],
+        color,
+      },
     };
     return {
       ...game,
-      colors,
+      users,
     };
   },
 

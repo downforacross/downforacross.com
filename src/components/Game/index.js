@@ -161,7 +161,7 @@ export default class Game extends Component {
       return <div>Loading...</div>;
     }
 
-    const {grid, circles, shades, cursors, pings, colors, clues, solved, solution, themeColor} = this.game;
+    const {grid, circles, shades, cursors, pings, users, clues, solved, solution, themeColor} = this.game;
     const opponentGrid = this.opponentGame && this.opponentGame.grid;
     const {screenWidth} = this.state;
     const themeStyles = {
@@ -204,7 +204,7 @@ export default class Game extends Component {
         id={id}
         cursors={cursors}
         pings={pings}
-        colors={colors}
+        users={users}
         frozen={solved}
         myColor={myColor}
         updateGrid={this.handleUpdateGrid}

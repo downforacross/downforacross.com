@@ -194,8 +194,8 @@ export default class Game extends Component {
     this.gameModel.chat(username, id, message);
   };
 
-  handleChangeUsername = (username, id, message) => {
-    this.gameModel.chat(username, id, message);
+  handleUpdateDisplayName = (id, displayName) => {
+    this.gameModel.updateDisplayName(id, displayName);
   };
 
   updateSeenChatMessage = (message) => {
@@ -294,11 +294,11 @@ export default class Game extends Component {
         }}
         info={this.game.info}
         data={this.game.chat}
-        colors={this.game.colors}
+        users={this.game.users}
         id={id}
         myColor={color}
         onChat={this.handleChat}
-        onChangeUsername={this.handleChangeUsername}
+        onUpdateDisplayName={this.handleUpdateDisplayName}
         onUnfocus={this.handleUnfocusChat}
         onToggleChat={this.handleToggleChat}
         mobile={mobile}
