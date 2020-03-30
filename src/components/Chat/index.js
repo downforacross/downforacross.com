@@ -161,7 +161,8 @@ export default class Chat extends Component {
     };
     return (
       <span key={id} style={style}>
-        {'\u25CF'} {displayName}
+        <span className="dot">{'\u25CF'}</span>
+        {displayName}{' '}
       </span>
     );
   }
