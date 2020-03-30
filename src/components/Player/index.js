@@ -273,7 +273,7 @@ export default class Player extends Component {
       updateGrid,
       frozen,
       myColor,
-      colors = {},
+      users = {},
       id,
       pickups,
       clueBarStyle = {},
@@ -286,17 +286,16 @@ export default class Player extends Component {
     const cursors = allCursors.filter((cursor) => cursor.id !== id).map((cursor) => ({
       ...cursor,
       active: cursor.timestamp > currentTime - CURSOR_TIMEOUT,
-      color: colors[cursor.id],
+      color: users[cursor.id].color,
     }));
     const pings = allPings
       .map((ping) => ({
         ...ping,
         active: ping.timestamp > currentTime - PING_TIMEOUT,
         age: (currentTime - ping.timestamp) / PING_TIMEOUT,
-        color: colors[ping.id],
+        color: users[ping.id].color,
       }))
       .filter(({active}) => active);
-    console.log(pings);
     const {direction} = this.state;
     const selected = this.selected;
 

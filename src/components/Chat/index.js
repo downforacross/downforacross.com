@@ -32,6 +32,7 @@ export default class Chat extends Component {
     if (battleName && !localStorage.getItem(this.usernameKey)) {
       this.setState({username: battleName});
     }
+    this.handleUpdateDisplayName(this.state.username);
   }
 
   get usernameKey() {
@@ -39,17 +40,20 @@ export default class Chat extends Component {
   }
 
   handleSendMessage = (message) => {
-    const {username} = this.state;
     const {id} = this.props;
+    const username = this.props.users[id].displayName;
     this.props.onChat(username, id, message);
     localStorage.setItem(this.usernameKey, username);
   };
 
-  handleChangeUsername = (username) => {
+  handleUpdateDisplayName = (username) => {
     if (!this.usernameInput.current.focused) {
       username = username || nameGenerator();
     }
+    const {id} = this.props;
+    this.props.onUpdateDisplayName(id, username);
     this.setState({username});
+    localStorage.setItem(this.usernameKey, username);
   };
 
   handleUnfocus = () => {
@@ -86,9 +90,9 @@ export default class Chat extends Component {
   }
 
   getMessageColor(senderId, isOpponent) {
-    const {colors} = this.props;
+    const {users} = this.props;
     if (isOpponent === undefined) {
-      return colors[senderId];
+      return users[senderId].color;
     }
     return isOpponent ? 'rgb(220, 107, 103)' : 'rgb(47, 137, 141)';
   }
@@ -143,7 +147,7 @@ export default class Chat extends Component {
           className="chat--username--input"
           mobile={this.props.mobile}
           value={this.state.username}
-          onChange={this.handleChangeUsername}
+          onChange={this.handleUpdateDisplayName}
           onBlur={this.handleBlur}
           onUnfocus={this.focus}
         />
@@ -151,11 +155,28 @@ export default class Chat extends Component {
     );
   }
 
-  renderChatBar() {
-    if (this.props.hideChatBar) {
-      return null;
-    }
+  renderUserPresent(id, displayName, color) {
+    const style = color && {
+      color,
+    };
     return (
+      <span key={id} style={style}>
+        <span className="dot">{'\u25CF'}</span>
+        {displayName}{' '}
+      </span>
+    );
+  }
+
+  renderUsersPresent(users) {
+    return this.props.hideChatBar ? null : (
+      <div className="chat--users--present">
+        {Object.keys(users).map((id) => this.renderUserPresent(id, users[id].displayName, users[id].color))}
+      </div>
+    );
+  }
+
+  renderChatBar() {
+    return this.props.hideChatBar ? null : (
       <ChatBar
         ref={this.chatBar}
         mobile={this.props.mobile}
@@ -238,11 +259,11 @@ export default class Chat extends Component {
     const {text, senderId: id, isOpponent} = message;
     const big = text.length <= 10 && isEmojis(text);
     const color = this.getMessageColor(id, isOpponent);
+    const users = this.props.users;
 
-    this.props.updateSeenChatMessage && this.props.updateSeenChatMessage(message);
     return (
       <div className={'chat--message' + (big ? ' big' : '')}>
-        {this.renderMessageSender(message.sender, color)}
+        {this.renderMessageSender(users[id].displayName, color)}
         {':'}
         {this.renderMessageText(message.text)}
       </div>
@@ -263,6 +284,7 @@ export default class Chat extends Component {
 
   render() {
     const messages = this.mergeMessages(this.props.data, this.props.opponentData);
+    const users = this.props.users;
 
     return (
       <Flex column grow={1}>
@@ -270,6 +292,7 @@ export default class Chat extends Component {
         <div className="chat">
           {this.renderChatHeader()}
           {this.renderUsernameInput()}
+          {this.renderUsersPresent(users)}
           <div
             ref={(el) => {
               if (el) {

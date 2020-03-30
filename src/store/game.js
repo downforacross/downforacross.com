@@ -135,6 +135,17 @@ export default class Game extends EventEmitter {
     });
   }
 
+  updateDisplayName(id, displayName) {
+    this.events.push({
+      timestamp: SERVER_TIME,
+      type: 'updateDisplayName',
+      params: {
+        id,
+        displayName,
+      },
+    });
+  }
+
   updateColor(id, color) {
     this.events.push({
       timestamp: SERVER_TIME,
