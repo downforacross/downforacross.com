@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 
 import Clock from './Clock';
 import ActionMenu from './ActionMenu';
+import Popup from './Popup';
 import Flex from 'react-flexview';
 import {Link} from 'react-router-dom';
 
@@ -126,6 +127,24 @@ export default class Toolbar extends Component {
     );
   }
 
+  renderInfo() {
+    return (
+      <div className={'toolbar--info'}>
+        <Popup icon="fa-info-circle" onBlur={this.handleBlur}>
+          <strong>How to Enter Answers:</strong>
+          <ul>
+            <li>
+              You can click a square once to enter an answer, and click that same square again to switch
+              between a down or across for that square
+            </li>
+            <li>You can also click the questions to go straight to answering them</li>
+            <li>You can hold down the shift key to enter multiple characters for rebus answers</li>
+          </ul>
+        </Popup>
+      </div>
+    );
+  }
+
   check(scopeString) {
     this.props.onCheck(scopeString);
   }
@@ -185,6 +204,7 @@ export default class Toolbar extends Component {
         {solved ? null : this.renderRevealMenu()}
         <div className="toolbar--menu reset">{this.renderResetMenu()}</div>
         {this.renderPencil()}
+        {this.renderInfo()}
       </div>
     );
   }

@@ -77,6 +77,10 @@
   cursor: pointer;
 }
 
+.toolbar--info {
+  cursor: pointer;
+}
+
 .toolbar--pencil.on .fa-pencil {
   color: var(--main-blue) !important;
 }
