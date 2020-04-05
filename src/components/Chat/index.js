@@ -125,13 +125,18 @@ export default class Chat extends Component {
   renderChatHeader() {
     if (this.props.header) return this.props.header;
     const {info = {}, bid} = this.props;
-    const {title, author, type} = info;
+    const {title, description, author, type} = info;
 
     return (
       <div className="chat--header">
         <div className="chat--header--title">{title}</div>
-
         <div className="chat--header--subtitle">{type && `${type} | By ${author}`}</div>
+        {description && (
+          <div className="chat--header--description">
+            <strong>Note: </strong>
+            {description}
+          </div>
+        )}
 
         {bid && <div className="chat--header--subtitle">Battle {bid}</div>}
       </div>
