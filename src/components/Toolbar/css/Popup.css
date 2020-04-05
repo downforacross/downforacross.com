@@ -2,6 +2,21 @@
   font-size: 14px;
 }
 
+.popup-menu table {
+  border-collapse: collapse;
+}
+
+.popup-menu--content tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.popup-menu table,
+th,
+td {
+  border: 1px solid black;
+  padding: 10px;
+}
+
 .popup-menu--button:hover {
   background-color: white;
   color: #000;
@@ -14,7 +29,7 @@
   padding: 20px;
   display: none;
   z-index: 12;
-  width: 33%;
+  width: 40%;
   color: #000;
 }
 
@@ -32,6 +47,7 @@
 
 .active .popup-menu--content {
   display: block;
+  cursor: auto;
 }
 
 .popup-menu--content--popup:first-child {
@@ -44,7 +60,6 @@
   border-left: 1px solid var(--main-gray-2);
   border-bottom: 1px solid var(--main-gray-2);
   border-right: 1px solid var(--main-gray-2);
-  cursor: pointer;
 }
 
 .toolbar--mobile--top .popup-menu--list--popup {
