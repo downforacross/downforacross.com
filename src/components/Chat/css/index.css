@@ -3,8 +3,8 @@
   flex-grow: 1;
   flex-shrink: 1;
   padding-top: 10px;
-  padding-left: 30px;
-  padding-right: 30px;
+  padding-left: 25px;
+  padding-right: 25px;
   border-left: 1px solid #e2e2e2;
   min-width: 300px;
   display: flex;
@@ -17,7 +17,7 @@
 
 .chat--header {
   border-bottom: 1px solid #e2e2e2;
-  padding-bottom: 2px;
+  padding-bottom: 5px;
   display: flex;
   flex-shrink: 0;
   flex-direction: column;
@@ -37,8 +37,17 @@
   font-weight: 500;
 }
 
+.chat--header--description {
+  margin-top: 5px;
+  margin-bottom: 2px;
+  font-size: 12px;
+  font-weight: 500;
+  font-style: italic;
+}
+
 .chat--username {
   padding: 5px;
+  padding-top: 10px;
 }
 
 .chat--username--input {
