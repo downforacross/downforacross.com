@@ -1,3 +1,8 @@
+code {
+  font-family: monospace;
+  background-color: rgb(223, 223, 223);
+}
+
 .toolbar {
   padding: 10px 10px 8px 50px;
   min-height: 20px;
@@ -74,6 +79,10 @@
 }
 
 .toolbar--pencil {
+  cursor: pointer;
+}
+
+.toolbar--info {
   cursor: pointer;
 }
 
