@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import _ from 'lodash';
 import Flex from 'react-flexview';
 import FontAwesome from 'react-fontawesome';
 import {Link} from 'react-router-dom';
@@ -39,7 +40,8 @@ export default class Entry extends Component {
   }
 
   render() {
-    const {title, author, pid, status} = this.props;
+    const {title, author, pid, status, stats = {}} = this.props;
+    const numSolves = _.size(stats.solves);
     const faName = status === 'started' ? 'circle-o' : status === 'solved' ? 'check-circle' : '';
     return (
       <Link to={`/beta/play/${pid}`} style={{textDecoration: 'none', color: 'initial'}}>
@@ -63,6 +65,11 @@ export default class Entry extends Component {
                 {title}
               </p>
             </Flex>
+          </Flex>
+          <Flex className="entry--details">
+            <p style={{fontSize: '75%', paddingLeft: 12}}>
+              Solved {numSolves} {numSolves === 1 ? 'time' : 'times'}
+            </p>
           </Flex>
         </Flex>
       </Link>

@@ -231,6 +231,12 @@ export default class Game extends Component {
       });
     }
     if (this.game.solved) {
+      if (this.gameModel.puzzleModel) {
+        this.gameModel.puzzleModel.logSolve(this.state.gid, {
+          solved: true,
+          totalTime: this.game.clock.totalTime,
+        });
+      }
       this.user.markSolved(this.state.gid);
       if (this.battleModel) {
         this.battleModel.setSolved(this.state.team);
@@ -265,6 +271,7 @@ export default class Game extends Component {
         gameModel={this.gameModel}
         onUnfocus={this.handleUnfocusGame}
         onChange={this.handleChange}
+        onSolve={this.handleSolve}
         onToggleChat={this.handleToggleChat}
         mobile={mobile}
         opponentHistoryWrapper={

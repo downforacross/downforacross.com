@@ -20,6 +20,9 @@ function setPuzzle(pid, puzzle) {
     private: private_,
     author,
     importedTime: getTime(),
+    stats: {
+      solves: {},
+    },
   });
   db.ref(`puzzle/${pid}`).set({
     ...puzzle,

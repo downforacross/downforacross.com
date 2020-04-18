@@ -82,19 +82,19 @@ export default class Game extends EventEmitter {
     if (!this.createEvent) return;
     const {pid} = this.createEvent.params;
     if (!pid) return;
-    const puzzle = new Puzzle(`/puzzle/${pid}`, pid);
-    puzzle.on('ready', () => {
+    this.puzzleModel = new Puzzle(`/puzzle/${pid}`, pid);
+    this.puzzleModel.on('ready', () => {
       const event = {
         ...this.createEvent,
         params: {
           ...this.createEvent.params,
-          game: puzzle.toGame(),
+          game: this.puzzleModel.toGame(),
         },
       };
       this.createEvent = event;
       this.emit('createEvent', event);
     });
-    puzzle.attach();
+    this.puzzleModel.attach();
   }
 
   updateCell(r, c, id, color, pencil, value) {

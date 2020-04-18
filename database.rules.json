@@ -24,7 +24,14 @@
     "puzzle": {
       ".read": true,
       "$pid": {
-        ".write": "!data.exists()"
+        ".write": "!data.exists()",
+        "stats": {
+          "solves": {
+            "$gid": {
+              ".write": "!data.exists()"
+            }
+          }
+        }
       }
     },
     "puzzlelist": {
