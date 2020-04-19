@@ -9,7 +9,6 @@ import classnames from 'classnames';
 import _ from 'lodash';
 import GridObject from '../../lib/wrappers/GridWrapper';
 import * as gameUtils from '../../lib/gameUtils';
-import {focusKeyboard} from './MobileKeyboard';
 
 const CLUE_ANIMATION_TIME = 0.3; // in seconds
 
@@ -22,11 +21,8 @@ export default class MobileGridControls extends GridControls {
       transform: {scale: 1, translateX: 0, translateY: 0},
     };
     this.prvInput = '';
+    this.inputRef = React.createRef();
     this.zoomContainer = React.createRef();
-  }
-
-  componentDidMount() {
-    focusKeyboard(this._handleKeyDown);
   }
 
   componentDidUpdate(prevProps) {
@@ -74,6 +70,7 @@ export default class MobileGridControls extends GridControls {
   }
 
   handleClueBarTouchMove = (e) => {
+    if (!this.props.enableClueBarGestures) return;
     e.preventDefault();
     const touch = e.touches[0];
     this.setState({
@@ -82,6 +79,11 @@ export default class MobileGridControls extends GridControls {
   };
 
   handleClueBarTouchEnd = (e) => {
+    if (!this.props.enableClueBarGestures) {
+      this.flipDirection();
+      this.keepFocus();
+      return;
+    }
     e.preventDefault();
     const clueBarGesture = this.clueBarGesture;
     let stateUpdates = {
@@ -114,6 +116,7 @@ export default class MobileGridControls extends GridControls {
   };
 
   handleClueBarTouchStart = (e) => {
+    if (!this.props.enableClueBarGestures) return;
     e.preventDefault();
     const touch = e.touches[0];
     this.setState({
@@ -124,7 +127,6 @@ export default class MobileGridControls extends GridControls {
   };
 
   handleTouchStart = (e) => {
-    console.log('touch start', e.touches.length);
     if (e.touches.length === 2) {
       this.props.onSetCursorLock(true);
     }
@@ -150,18 +152,16 @@ export default class MobileGridControls extends GridControls {
         touchPosition: {x, y},
       };
     });
-    const dbgstr = JSON.stringify(_.map(anchors, ({touchPosition}) => touchPosition), null, 2);
     this.setState({
       anchors,
       transform: this.getTransform(anchors, transform),
-      dbgstr,
     });
   };
 
   handleTouchEnd = (e) => {
-    console.log('touch end', e.touches.length);
     if (e.touches.length === 0 && this.state.anchors.length === 1) {
       this.props.onSetCursorLock(false);
+      this.focusKeyboard();
     }
     e.preventDefault();
     this.handleTouchMove(e);
@@ -173,6 +173,7 @@ export default class MobileGridControls extends GridControls {
     } else {
       this.handleAction('down');
     }
+    this.keepFocus();
   };
 
   handleLeftArrowTouchEnd = (e) => {
@@ -181,9 +182,14 @@ export default class MobileGridControls extends GridControls {
     } else {
       this.handleAction('up');
     }
+    this.keepFocus();
   };
 
   getTransform(anchors, {scale, translateX, translateY}) {
+    if (!this.props.enablePan) {
+      return {scale: 1, translateX: 0, translateY: 0};
+    }
+
     const getCenterAndDistance = (point1, point2) => {
       if (!point1) {
         return {
@@ -330,7 +336,11 @@ export default class MobileGridControls extends GridControls {
     };
     return (
       <Flex className="mobile-grid-controls--clue-bar-container">
-        <div className="mobile-grid-controls--intra-clue left" onTouchEnd={this.handleLeftArrowTouchEnd}>
+        <div
+          className="mobile-grid-controls--intra-clue left"
+          onTouchEnd={this.handleLeftArrowTouchEnd}
+          onClick={this.keepFocus}
+        >
           {'<'}
         </div>
         <Flex
@@ -340,6 +350,7 @@ export default class MobileGridControls extends GridControls {
           onTouchStart={this.handleClueBarTouchStart}
           onTouchEnd={this.handleClueBarTouchEnd}
           onTouchMove={this.handleClueBarTouchMove}
+          onClick={this.keepFocus}
         >
           <div className="mobile-grid-controls--clue-bar--clues--container" style={style}>
             <div className="mobile-grid-controls--clue-bar--main">
@@ -362,7 +373,7 @@ export default class MobileGridControls extends GridControls {
         </Flex>
         <div
           className="mobile-grid-controls--intra-clue left"
-          onTouchStart={this.handleRightArrowTouchStart}
+          onClick={this.keepFocus}
           onTouchEnd={this.handleRightArrowTouchEnd}
         >
           {'>'}
@@ -371,21 +382,107 @@ export default class MobileGridControls extends GridControls {
     );
   }
 
-  renderMobileKeyboard() {
+  focusKeyboard() {
+    this.inputRef.current.focus();
+  }
+
+  keepFocus = () => {
+    if (!this.wasUnfocused || this.wasUnfocused >= Date.now() - 500) {
+      this.focusKeyboard();
+    }
+  };
+
+  handleInputFocus = (e) => {
+    this.focusKeyboard();
+    this.setState({dbgstr: `INPUT FOCUS ${e.target.name}`});
+    if (e.target.name === '1') {
+      this.selectNextClue(true);
+    } else if (e.target.name === '3') {
+      this.selectNextClue(false);
+    }
+    this.wasUnfocused = null;
+  };
+
+  handleInputBlur = (e) => {
+    if (e.target.name === '2') {
+      this.wasUnfocused = Date.now();
+    }
+  };
+
+  handleInputChange = (e) => {
+    let input = e.target.value;
+    this.setState({dbgstr: `INPUT IS [${input}]`});
+
+    if (input === '') {
+      this.backspace();
+      return;
+    }
+
+    // get rid of the $ at the beginning
+    input = input.substring(1);
+    if (input === ' ' || input === '@') {
+      // hack hack
+      // for some reason, email input [on ios safari & chrome mobile inspector] doesn't fire onChange at all when pressing spacebar
+      this.handleAction('space');
+    } else if (input === '.') {
+      this.props.onPressPeriod && this.props.onPressPeriod();
+    } else {
+      // support gesture-based keyboards that allow inputting words at a time
+      let delay = 0;
+      for (const char of input) {
+        if (this.validLetter(char.toUpperCase())) {
+          this.setState({dbgstr: `TYPE letter ${char.toUpperCase()}`});
+          if (delay) {
+            setTimeout(() => {
+              this.typeLetter(char.toUpperCase(), char.toUpperCase() === char, {nextClueIfFilled: true});
+            }, delay);
+          } else {
+            this.typeLetter(char.toUpperCase(), char.toUpperCase() === char, {nextClueIfFilled: true});
+          }
+          delay += 20;
+        }
+      }
+    }
+  };
+
+  handleKeyUp = (ev) => {
+    this.setState({dbgstr: `[${ev.target.value}]`});
+  };
+
+  renderMobileInputs() {
+    const inputProps = {
+      value: '$',
+      type: 'email',
+      style: {
+        opacity: 0,
+        width: 0,
+        height: 0,
+        pointerEvents: 'none',
+        touchEvents: 'none',
+        position: 'absolute',
+      },
+      onBlur: this.handleInputBlur,
+      onFocus: this.handleInputFocus,
+      onChange: this.handleInputChange,
+    };
     return (
-      <Flex className="mobile-grid-controls--keyboard">
-        <MobileKeyboard />
-      </Flex>
+      <>
+        <input name="1" {...inputProps} />
+        <input name="2" ref={this.inputRef} {...inputProps} onKeyUp={this.handleKeyUp} />
+        <input name="3" {...inputProps} />
+      </>
     );
   }
 
   render() {
     return (
       <div ref="gridControls" className="mobile-grid-controls">
+        {this.renderClueBar()}
         {this.renderGridContent()}
         {this.renderClueBar()}
-        {this.renderMobileKeyboard()}
-        {/*this.state.dbgstr*/}
+        {this.renderMobileInputs()}
+        {/* {this.renderMobileKeyboard()} */}
+        {this.props.enableDebug && (this.state.dbgstr || 'No message')}
       </div>
     );
   }

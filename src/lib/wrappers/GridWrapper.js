@@ -107,6 +107,8 @@ export default class GridWrapper {
   }
 
   getNextEmptyCell(r, c, direction, options = {}) {
+    const _r = r,
+      _c = c;
     let {noWraparound = false, skipFirst = false} = options;
 
     while (this.isWriteable(r, c)) {
@@ -139,9 +141,11 @@ export default class GridWrapper {
       }
 
       // recurse but not infinitely
-      return this.getNextEmptyCell(r, c, direction, {
+      const result = this.getNextEmptyCell(r, c, direction, {
         noWraparound: true,
       });
+      if (!result || (result.r === _r && result.c === _c)) return undefined;
+      else return result;
     }
     return undefined;
   }

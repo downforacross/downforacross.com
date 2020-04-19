@@ -165,7 +165,7 @@ export default class GridControls extends Component {
     }
   }
 
-  goToNextEmptyCell() {
+  goToNextEmptyCell({nextClueIfFilled = false} = {}) {
     let {r, c} = this.props.selected;
     const nextEmptyCell = this.grid.getNextEmptyCell(r, c, this.props.direction, {
       skipFirst: true,
@@ -178,6 +178,8 @@ export default class GridControls extends Component {
       if (nextCell) {
         this.setSelected(nextCell);
         return nextCell;
+      } else if (nextClueIfFilled) {
+        this.selectNextClue();
       }
     }
   }
@@ -213,14 +215,18 @@ export default class GridControls extends Component {
     }
   }
 
-  typeLetter(letter, isRebus) {
-    if (letter === '/') isRebus = true;
-    const {r, c} = this.props.selected;
-    const value = this.props.grid[r][c].value;
-    if (!isRebus) {
-      this.goToNextEmptyCell();
-    }
-    this.props.updateGrid(r, c, isRebus ? (value || '').substr(0, 10) + letter : letter);
+  typeLetter(letter, isRebus, {nextClueIfFilled} = {}) {
+    if (!this.nextTime) this.nextTime = Date.now();
+    setTimeout(() => {
+      if (letter === '/') isRebus = true;
+      const {r, c} = this.props.selected;
+      const value = this.props.grid[r][c].value;
+      if (!isRebus) {
+        this.goToNextEmptyCell({nextClueIfFilled});
+      }
+      this.props.updateGrid(r, c, isRebus ? (value || '').substr(0, 10) + letter : letter);
+    }, Math.max(0, this.nextTime - Date.now()));
+    this.nextTime = Math.max(this.nextTime, Date.now()) + 30;
   }
 
   // Returns true if the letter was successfully deleted

@@ -334,6 +334,7 @@ export default class Player extends Component {
             grid={grid}
             clues={clues}
             onSetCursorLock={this.handleSetCursorLock}
+            enableDebug={window.location.search.indexOf('debug') !== -1}
           >
             <div className="player--mobile" ref={this.mobileContainer}>
               <div className={'player--mobile--grid' + (frozen ? ' frozen' : '')}>
