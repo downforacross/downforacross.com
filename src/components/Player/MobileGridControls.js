@@ -23,6 +23,7 @@ export default class MobileGridControls extends GridControls {
     this.prvInput = '';
     this.inputRef = React.createRef();
     this.zoomContainer = React.createRef();
+    this.wasUnfocused = Date.now() - 1000;
   }
 
   componentDidUpdate(prevProps) {
