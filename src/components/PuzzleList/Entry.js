@@ -41,7 +41,6 @@ export default class Entry extends Component {
 
   render() {
     const {title, author, pid, status, stats = {}} = this.props;
-    const showDetails = window.location.search.indexOf('beta') !== -1;
     const numSolves = _.size(stats.solves);
     const faName = status === 'started' ? 'circle-o' : status === 'solved' ? 'check-circle' : '';
     return (
@@ -67,13 +66,11 @@ export default class Entry extends Component {
               </p>
             </Flex>
           </Flex>
-          {showDetails && (
-            <Flex className="entry--details">
-              <p style={{fontSize: '75%', paddingLeft: 12}}>
-                Solved {numSolves} {numSolves === 1 ? 'time' : 'times'}
-              </p>
-            </Flex>
-          )}
+          <Flex className="entry--details">
+            <p style={{fontSize: '75%', paddingLeft: 12}}>
+              Solved {numSolves} {numSolves === 1 ? 'time' : 'times'}
+            </p>
+          </Flex>
         </Flex>
       </Link>
     );
