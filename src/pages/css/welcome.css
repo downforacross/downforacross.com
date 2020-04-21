@@ -141,7 +141,7 @@
   position: relative;
   display: block;
   border: 1px solid silver;
-  border-radius: 8px;
+  border-radius: 12px;
   margin-bottom: 18px;
   display: flex;
   flex-direction: column;

@@ -2,7 +2,6 @@ import './css/editableSpan.css';
 import React, {PureComponent} from 'react';
 import Caret from '../../lib/caret';
 import _ from 'lodash';
-import {focusKeyboard, onUnfocusKeyboard} from '../Player/MobileKeyboard';
 
 export default class EditableSpan extends PureComponent {
   constructor() {
@@ -10,9 +9,6 @@ export default class EditableSpan extends PureComponent {
     this.span = React.createRef();
     this.prevPosition = 0;
     this.focused = false;
-    this.state = {
-      mobileFocused: false,
-    };
   }
 
   componentDidMount() {
@@ -41,24 +37,6 @@ export default class EditableSpan extends PureComponent {
       this.setState({caret: this.text.length});
     }
   }
-
-  focusMobile = () => {
-    const shouldCapitalize = this.text.endsWith(' ') || this.text.length === 0;
-    const layout = shouldCapitalize ? 'uppercase' : 'lowercase';
-    console.log('focusmobile', layout);
-    focusKeyboard(this.handleKeyDownMobile, layout);
-    this.setState({
-      mobileFocused: true,
-      caret: this.text.length,
-    });
-    onUnfocusKeyboard(() => {
-      if (this.mounted) {
-        this.setState({
-          mobileFocused: false,
-        });
-      }
-    });
-  };
 
   focus() {
     this.span.current && this.span.current.focus();
@@ -123,7 +101,6 @@ export default class EditableSpan extends PureComponent {
     }
     this.props.onChange(this.text);
     this.setState({caret: newCaret});
-    this.focusMobile();
   };
 
   handleKeyDown = (e) => {
@@ -141,22 +118,6 @@ export default class EditableSpan extends PureComponent {
     this.props.onChange(this.text);
   }, 500);
 
-  renderCaret() {
-    if (!this.state.mobileFocused) {
-      return;
-    }
-    const caret = this.state.caret;
-    return (
-      <div
-        className={'editable-span ' + (this.props.className || '')}
-        style={{width: '100%', position: 'absolute', top: 0, left: 0, ...this.props.style}}
-      >
-        <span style={{opacity: 0}}>{this.text.substring(0, caret)}</span>
-        <span className="editable-span--caret" />
-      </div>
-    );
-  }
-
   render() {
     const {hidden, style, containerStyle} = this.props;
     if (hidden) return null;
@@ -169,7 +130,6 @@ export default class EditableSpan extends PureComponent {
           position: 'relative',
           ...containerStyle,
         }}
-        onTouchStart={this.focusMobile}
       >
         <div
           style={style}
@@ -181,7 +141,6 @@ export default class EditableSpan extends PureComponent {
           onKeyDown={this.handleKeyDown}
           onKeyUp={this.handleKeyUp}
         />
-        {this.renderCaret()}
       </div>
     );
   }

@@ -313,7 +313,6 @@ export default class Chat extends Component {
 
           {this.renderChatBar()}
         </div>
-        {this.renderMobileKeyboard()}
       </Flex>
     );
   }
