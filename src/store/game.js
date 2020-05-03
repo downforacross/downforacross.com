@@ -58,12 +58,12 @@ export default class Game extends EventEmitter {
     console.log('subscribing to ws events');
     this.socket.on('game_event', (event) => {
       console.log('got game_event', event);
-    });
 
-    if (false) {
-      console.log('[WS] createEvent', event);
-      console.log('[WS] event', event);
-    }
+      if (false) {
+        console.log('[WS] createEvent', event);
+        console.log('[WS] event', event);
+      }
+    });
   }
 
   // Firebase Code
@@ -87,19 +87,13 @@ export default class Game extends EventEmitter {
     this.ref.child('archivedEvents').once('value', async (snapshot) => {
       const archiveInfo = snapshot.val();
       if (!archiveInfo) {
-        console.log('nothing to unarchive');
         return;
       }
-      const {url, count, archivedAt, unarchivedAt} = archiveInfo;
+      const {url, unarchivedAt} = archiveInfo;
       if (unarchivedAt) {
-        console.log('already unarchived at', unarchivedAt);
       }
       if (url) {
-        console.log('loading', count, ' events from', archivedAt);
-        console.log(url);
         const events = await (await fetch(url)).json();
-        console.log(events);
-        console.log('populating realtime database with new /events');
         this.ref.child('archivedEvents/unarchivedAt').set(SERVER_TIME);
         this.ref.child('events').set(events);
       }
@@ -113,10 +107,10 @@ export default class Game extends EventEmitter {
         this.attached = true;
         this.createEvent = event;
         this.subscribeToPuzzle();
-        console.log('[FB] createEvent', event);
+        console.debug('[FB] createEvent', event);
         this.emit('createEvent', event);
       } else {
-        console.log('[FB] event', event);
+        console.debug('[FB] event', event);
         this.emit('event', event);
       }
     });
