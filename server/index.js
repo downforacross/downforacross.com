@@ -11,4 +11,4 @@ io.on('connection', (socket) => {
 
 app.get('/test', (req, res) => res.send('Hello World!'));
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+server.listen(port, () => console.log(`Listening on port ${port}`));
