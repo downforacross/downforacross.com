@@ -19,6 +19,10 @@ export default class Game extends EventEmitter {
     this.checkArchive();
   }
 
+  addEvent(event) {
+    this.events.push(event);
+  }
+
   checkArchive() {
     this.ref.child('archivedEvents').once('value', (snapshot) => {
       const archiveInfo = snapshot.val();
@@ -98,7 +102,7 @@ export default class Game extends EventEmitter {
   }
 
   updateCell(r, c, id, color, pencil, value) {
-    this.events.push({
+    this.addEvent({
       timestamp: SERVER_TIME,
       type: 'updateCell',
       params: {
@@ -112,7 +116,7 @@ export default class Game extends EventEmitter {
   }
 
   updateCursor(r, c, id) {
-    this.events.push({
+    this.addEvent({
       timestamp: SERVER_TIME,
       type: 'updateCursor',
       params: {
@@ -124,7 +128,7 @@ export default class Game extends EventEmitter {
   }
 
   addPing(r, c, id) {
-    this.events.push({
+    this.addEvent({
       timestamp: SERVER_TIME,
       type: 'addPing',
       params: {
@@ -136,7 +140,7 @@ export default class Game extends EventEmitter {
   }
 
   updateDisplayName(id, displayName) {
-    this.events.push({
+    this.addEvent({
       timestamp: SERVER_TIME,
       type: 'updateDisplayName',
       params: {
@@ -147,7 +151,7 @@ export default class Game extends EventEmitter {
   }
 
   updateColor(id, color) {
-    this.events.push({
+    this.addEvent({
       timestamp: SERVER_TIME,
       type: 'updateColor',
       params: {
@@ -158,7 +162,7 @@ export default class Game extends EventEmitter {
   }
 
   updateClock(action) {
-    this.events.push({
+    this.addEvent({
       timestamp: SERVER_TIME,
       type: 'updateClock',
       params: {
@@ -169,7 +173,7 @@ export default class Game extends EventEmitter {
   }
 
   check(scope) {
-    this.events.push({
+    this.addEvent({
       timestamp: SERVER_TIME,
       type: 'check',
       params: {
@@ -179,7 +183,7 @@ export default class Game extends EventEmitter {
   }
 
   reveal(scope) {
-    this.events.push({
+    this.addEvent({
       timestamp: SERVER_TIME,
       type: 'reveal',
       params: {
@@ -189,7 +193,7 @@ export default class Game extends EventEmitter {
   }
 
   reset(scope) {
-    this.events.push({
+    this.addEvent({
       timestamp: SERVER_TIME,
       type: 'reset',
       params: {
@@ -199,7 +203,7 @@ export default class Game extends EventEmitter {
   }
 
   chat(username, id, text) {
-    this.events.push({
+    this.addEvent({
       timestamp: SERVER_TIME,
       type: 'chat',
       params: {
@@ -246,7 +250,7 @@ export default class Game extends EventEmitter {
     const version = CURRENT_VERSION;
     // nuke existing events
     this.events.set({}).then(() => {
-      this.events.push({
+      this.addEvent({
         timestamp: SERVER_TIME,
         type: 'create',
         params: {
