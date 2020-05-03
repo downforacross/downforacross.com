@@ -34,7 +34,10 @@
     "request-promise": "^4.2.5",
     "superagent": "^5.0.2",
     "typescript": "^3.8.3",
-    "utility-types": "^3.10.0"
+    "utility-types": "^3.10.0",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
+    "superagent": "^5.0.2"
   },
   "type": "module",
   "devDependencies": {

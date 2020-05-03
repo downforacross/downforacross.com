@@ -1,9 +1,12 @@
 import EventEmitter from 'events';
+import io from 'socket.io-client';
+
 import {db, SERVER_TIME} from './firebase';
 
 import Puzzle from './puzzle';
 import * as colors from '../lib/colors';
 
+const SOCKET_HOST = 'localhost:3020/'; // TODO different in prod
 // a wrapper class that models Game
 
 const CURRENT_VERSION = 1.0;
@@ -17,6 +20,15 @@ export default class Game extends EventEmitter {
     this.createEvent = null;
     this.attached = false;
     this.checkArchive();
+  }
+
+  attachToSocket() {
+    console.log('entering attachToSocket');
+    const socket = io(SOCKET_HOST);
+    this.socket = socket;
+    window.socket = socket;
+
+    console.log('exiting attachToSocket');
   }
 
   addEvent(event) {
@@ -62,6 +74,7 @@ export default class Game extends EventEmitter {
   }
 
   attach() {
+    this.attachToSocket();
     this.events.on('child_added', (snapshot) => {
       const event = snapshot.val();
       if (event.type === 'create') {
