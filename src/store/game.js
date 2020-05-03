@@ -22,6 +22,10 @@ export default class Game extends EventEmitter {
     this.checkArchive();
   }
 
+  get gid() {
+    // WARNING: this is a string that looks like "/game/39-vosk"
+    return this.path.substring(6);
+  }
   // Websocket code
   connectToWebsocket() {
     if (!this.websocketPromise) {
@@ -40,21 +44,28 @@ export default class Game extends EventEmitter {
     this.events.push(event);
     if (this.socket) {
       this.connectToWebsocket().then(() => {
-        this.pushEventToWebsocket();
+        this.pushEventToWebsocket(event);
       });
     }
   }
 
-  pushEventToWebsocket() {
+  pushEventToWebsocket(event) {
     if (!this.socket || !this.socket.connected) {
       throw new Error('Not connected to websocket');
     }
+
+    console.log('emit message', event, this.gid);
+    this.socket.emit('message', {
+      event,
+      gid: this.gid,
+    });
   }
 
   subscribeToWebsocketEvents() {
     if (!this.socket || !this.socket.connected) {
       throw new Error('Not connected to websocket');
     }
+    this.socket.emit('join', this.gid);
     console.log('subscribing to ws events');
     this.socket.on('game_event', (event) => {
       console.log('got game_event', event);
@@ -107,10 +118,10 @@ export default class Game extends EventEmitter {
         this.attached = true;
         this.createEvent = event;
         this.subscribeToPuzzle();
-        console.debug('[FB] createEvent', event);
+        // console.debug('[FB] createEvent', event);
         this.emit('createEvent', event);
       } else {
-        console.debug('[FB] event', event);
+        // console.debug('[FB] event', event);
         this.emit('event', event);
       }
     });
