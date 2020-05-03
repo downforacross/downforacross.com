@@ -16,3 +16,8 @@
 - Dev: localhost:3020 (using [CRA proxy](https://create-react-app.dev/docs/proxying-api-requests-in-development/))
 - Responsibilities
   - MVP: Handle pub/sub for game events
+
+### database
+
+- Prod: TBD
+- Dev: local redis instance
