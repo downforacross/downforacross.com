@@ -22,18 +22,51 @@ export default class Game extends EventEmitter {
     this.checkArchive();
   }
 
-  attachToSocket() {
-    console.log('entering attachToSocket');
-    const socket = io(SOCKET_HOST);
-    this.socket = socket;
-    window.socket = socket;
+  // Websocket code
+  connectToWebsocket() {
+    if (!this.websocketPromise) {
+      console.log('entering connectToWebsocket');
+      const socket = io(SOCKET_HOST);
+      this.socket = socket;
+      window.socket = socket;
 
-    console.log('exiting attachToSocket');
+      console.log('exiting connectToWebsocket');
+      this.websocketPromise = new Promise((resolve) => socket.on('connect', resolve));
+    }
+    return this.websocketPromise;
   }
 
   addEvent(event) {
     this.events.push(event);
+    if (this.socket) {
+      this.connectToWebsocket().then(() => {
+        this.pushEventToWebsocket();
+      });
+    }
   }
+
+  pushEventToWebsocket() {
+    if (!this.socket || !this.socket.connected) {
+      throw new Error('Not connected to websocket');
+    }
+  }
+
+  subscribeToWebsocketEvents() {
+    if (!this.socket || !this.socket.connected) {
+      throw new Error('Not connected to websocket');
+    }
+    console.log('subscribing to ws events');
+    this.socket.on('game_event', (event) => {
+      console.log('got game_event', event);
+    });
+
+    if (false) {
+      console.log('[WS] createEvent', event);
+      console.log('[WS] event', event);
+    }
+  }
+
+  // Firebase Code
 
   checkArchive() {
     this.ref.child('archivedEvents').once('value', (snapshot) => {
@@ -73,21 +106,29 @@ export default class Game extends EventEmitter {
     });
   }
 
-  attach() {
-    this.attachToSocket();
+  subscribeToFirebaseEvents() {
     this.events.on('child_added', (snapshot) => {
       const event = snapshot.val();
       if (event.type === 'create') {
         this.attached = true;
         this.createEvent = event;
         this.subscribeToPuzzle();
+        console.log('[FB] createEvent', event);
         this.emit('createEvent', event);
       } else {
+        console.log('[FB] event', event);
         this.emit('event', event);
       }
     });
+  }
+
+  attach() {
+    this.subscribeToFirebaseEvents(); // TODO only subscribe to websocket
     this.ref.child('battleData').on('value', (snapshot) => {
       this.emit('battleData', snapshot.val());
+    });
+    this.connectToWebsocket().then(() => {
+      this.subscribeToWebsocketEvents();
     });
   }
 

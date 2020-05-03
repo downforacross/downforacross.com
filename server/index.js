@@ -7,6 +7,7 @@ const io = require('socket.io')(server);
 
 io.on('connection', (socket) => {
   console.log('a user connected');
+  socket.emit('game_event', {a: {b: ['c']}});
 });
 
 app.get('/test', (req, res) => res.send('Hello World!'));
