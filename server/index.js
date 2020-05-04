@@ -10,7 +10,11 @@ const Promise = require('bluebird');
 const redis = require('redis');
 Promise.promisifyAll(redis);
 const client = redis.createClient();
+
 // ============= Database Operations ============
+
+// TODO redis should not contain more than ~10 MB (which is > 100 concurrent games)
+// Back it w/ S3
 
 const getEventsKey = (gid) => {
   return `events_${gid}`;
@@ -23,6 +27,7 @@ class GameModel {
   async getEvents(gid) {
     const serializedEvents = await client.lrangeAsync(getEventsKey(gid), 0, MAX_EVENTS);
     const events = serializedEvents.map(JSON.parse);
+    console.log('getEvents', events[0].params.game);
     return events;
   }
 
@@ -40,8 +45,16 @@ const gameModel = new GameModel();
 const gameToSocket = new Map();
 const socketToGame = new Map(); // Redundancy for sake of correctness
 
+const assignTimestamp = (event) => {
+  return {
+    ...event,
+    timestampWS: Date.now(),
+  };
+};
+
 // Precondition: gid's game is "hot"
 const addEvent = (gid, event) => {
+  event = assignTimestamp(event);
   // 1. save to DB
   gameModel.addEvent(gid, event);
   // 2. emit to all live clients
