@@ -1,13 +1,17 @@
 import EventEmitter from 'events';
 import io from 'socket.io-client';
+import Promise from 'bluebird';
 
 import {db, SERVER_TIME} from './firebase';
 
 import Puzzle from './puzzle';
 import * as colors from '../lib/colors';
+Promise.promisifyAll(io);
 
 const SOCKET_HOST = 'localhost:3020/'; // TODO different in prod
 // a wrapper class that models Game
+
+const emitAsync = (socket, ...args) => new Promise((resolve) => socket.emit(...args, resolve));
 
 const CURRENT_VERSION = 1.0;
 export default class Game extends EventEmitter {
@@ -29,23 +33,27 @@ export default class Game extends EventEmitter {
   // Websocket code
   connectToWebsocket() {
     if (!this.websocketPromise) {
-      console.log('entering connectToWebsocket');
-      const socket = io(SOCKET_HOST);
-      this.socket = socket;
-      window.socket = socket;
+      this.websocketPromise = (async () => {
+        const socket = io(SOCKET_HOST);
+        this.socket = socket;
+        window.socket = socket;
 
-      console.log('exiting connectToWebsocket');
-      this.websocketPromise = new Promise((resolve) => socket.on('connect', resolve));
+        await this.socket.onceAsync('connect');
+        await emitAsync(this.socket, 'join', this.gid);
+      })();
     }
     return this.websocketPromise;
   }
 
-  addEvent(event) {
+  emitEvent(event) {
+    this.emit(event.type === 'create' ? 'createEvent' : 'event', event);
+  }
+
+  async addEvent(event) {
     this.events.push(event);
     if (this.socket) {
-      this.connectToWebsocket().then(() => {
-        this.pushEventToWebsocket(event);
-      });
+      await this.connectToWebsocket();
+      await this.pushEventToWebsocket(event);
     }
   }
 
@@ -54,27 +62,26 @@ export default class Game extends EventEmitter {
       throw new Error('Not connected to websocket');
     }
 
-    console.log('emit message', event, this.gid);
     this.socket.emit('message', {
       event,
       gid: this.gid,
     });
   }
 
-  subscribeToWebsocketEvents() {
+  async subscribeToWebsocketEvents() {
     if (!this.socket || !this.socket.connected) {
       throw new Error('Not connected to websocket');
     }
-    this.socket.emit('join', this.gid);
-    console.log('subscribing to ws events');
-    this.socket.on('game_event', (event) => {
-      console.log('got game_event', event);
 
-      if (false) {
-        console.log('[WS] createEvent', event);
-        console.log('[WS] event', event);
-      }
+    // TODO figure out order of these
+    await this.socket.on('game_event', (event) => {
+      this.emitEvent(event);
     });
+    const response = await emitAsync(this.socket, 'sync_all', this.gid);
+    response.forEach((event) => {
+      this.emitEvent(event);
+    });
+    this.attached = true;
   }
 
   // Firebase Code
@@ -128,7 +135,7 @@ export default class Game extends EventEmitter {
   }
 
   attach() {
-    this.subscribeToFirebaseEvents(); // TODO only subscribe to websocket
+    // this.subscribeToFirebaseEvents(); // TODO only subscribe to websocket
     this.ref.child('battleData').on('value', (snapshot) => {
       this.emit('battleData', snapshot.val());
     });
@@ -308,8 +315,9 @@ export default class Game extends EventEmitter {
     };
     const version = CURRENT_VERSION;
     // nuke existing events
-    this.events.set({}).then(() => {
-      this.addEvent({
+    this.events.set({}).then(async () => {
+      await this.connectToWebsocket();
+      await this.addEvent({
         timestamp: SERVER_TIME,
         type: 'create',
         params: {
@@ -318,13 +326,12 @@ export default class Game extends EventEmitter {
           game,
         },
       });
+      cbk && cbk();
     });
     this.ref.child('pid').set(pid);
 
     if (battleData) {
       this.ref.child('battleData').set(battleData);
     }
-
-    cbk && cbk();
   }
 }
