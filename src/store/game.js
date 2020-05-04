@@ -6,7 +6,24 @@ import {db, SERVER_TIME} from './firebase';
 
 import Puzzle from './puzzle';
 import * as colors from '../lib/colors';
+import _ from 'lodash';
 Promise.promisifyAll(io);
+
+// ============ Serialize / Deserialize Helpers ========== //
+
+// Recursively walks obj and converts `null` to `undefined`
+const castNullsToUndefined = (obj) => {
+  if (_.isNil(obj)) {
+    return undefined;
+  } else if (typeof obj === 'object') {
+    return Object.assign(
+      obj.constructor(),
+      _.fromPairs(_.keys(obj).map((key) => [key, castNullsToUndefined(obj[key])]))
+    );
+  } else {
+    return obj;
+  }
+};
 
 const SOCKET_HOST = 'localhost:3020/'; // TODO different in prod
 // a wrapper class that models Game
@@ -27,9 +44,10 @@ export default class Game extends EventEmitter {
   }
 
   get gid() {
-    // WARNING: this is a string that looks like "/game/39-vosk"
+    // NOTE: path is a string that looks like "/game/39-vosk"
     return this.path.substring(6);
   }
+
   // Websocket code
   connectToWebsocket() {
     if (!this.websocketPromise) {
@@ -75,10 +93,12 @@ export default class Game extends EventEmitter {
 
     // TODO figure out order of these
     await this.socket.on('game_event', (event) => {
+      event = castNullsToUndefined(event);
       this.emitEvent(event);
     });
     const response = await emitAsync(this.socket, 'sync_all', this.gid);
     response.forEach((event) => {
+      event = castNullsToUndefined(event);
       this.emitEvent(event);
     });
     this.attached = true;
@@ -125,10 +145,8 @@ export default class Game extends EventEmitter {
         this.attached = true;
         this.createEvent = event;
         this.subscribeToPuzzle();
-        // console.debug('[FB] createEvent', event);
         this.emit('createEvent', event);
       } else {
-        // console.debug('[FB] event', event);
         this.emit('event', event);
       }
     });
