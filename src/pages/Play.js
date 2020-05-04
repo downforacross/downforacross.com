@@ -98,7 +98,7 @@ export default class Play extends Component {
             v2: true,
           })
           .then(() => {
-            // redirect(`/beta/game/${gid}`);
+            redirect(`/beta/game/${gid}`);
           });
       });
     });
