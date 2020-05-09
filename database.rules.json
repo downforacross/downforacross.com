@@ -2,6 +2,10 @@
   "rules": {
     ".write": false,
     ".read": false,
+    "battle": {
+      ".write": true,
+      ".read": true
+    },
     "game": {
       ".read": "false",
       ".indexOn": ["pid"],
@@ -18,6 +22,10 @@
           "$eventId": {
             ".write": "!data.exists()"
           }
+        },
+        "battleData": {
+          ".read": true,
+          ".write": true
         }
       }
     },
