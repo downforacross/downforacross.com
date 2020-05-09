@@ -1,7 +1,6 @@
 import React from 'react';
 import EmojiPicker from './EmojiPicker';
 import * as emojiLib from '../../lib/emoji';
-import EditableSpan from '../common/EditableSpan';
 
 const MAX_EMOJIS = 150;
 export default class ChatBar extends React.Component {
@@ -114,25 +113,10 @@ export default class ChatBar extends React.Component {
   }
 
   renderInput() {
-    if (this.props.mobile) {
-      return (
-        <div>
-          <EditableSpan
-            mobile={this.props.mobile}
-            value={this.state.message}
-            key_={this.state.enters}
-            onChange={this.handleChangeMobile}
-            onPressEnter={this.handlePressEnter}
-            style={{height: 24}}
-            containerStyle={{display: 'block'}}
-          />
-        </div>
-      );
-    }
     return (
       <input
         ref={this.input}
-        className="chat--bar--input"
+        className={this.props.mobile ? 'chat--bar--input--mobile' : 'chat--bar--input'}
         placeholder="[Enter] to chat"
         value={this.state.message}
         onChange={this.handleChange}
