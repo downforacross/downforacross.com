@@ -18,8 +18,6 @@ const allEmojiData = {
   ...custom,
 };
 const allEmojis = _.keys(allEmojiData);
-console.log(pricklyPear);
-console.log(partyParrot);
 const getScore = (emoji, pattern) => {
   if (emoji === pattern) return 60;
   if (emoji.startsWith(pattern)) return 50;

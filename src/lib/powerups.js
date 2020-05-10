@@ -97,13 +97,13 @@ export const applyOneTimeEffects = (p, args) => {
 const powerups = {
   REVERSE: {
     name: 'Reverse!',
-    icon: 'steven',
+    icon: 'cactus_cheers',
     duration: 15,
     action: ({ownGame, opponentGame}) => ({ownGame, opponentGame: reverseClues(opponentGame)}),
   },
   DARK_MODE: {
     name: 'Dark Mode',
-    icon: 'dark_moon',
+    icon: 'dark_sunglasses',
     duration: 30,
     action: ({ownGame, opponentGame}) => ({ownGame, opponentGame: hideSquares(opponentGame)}),
   },
