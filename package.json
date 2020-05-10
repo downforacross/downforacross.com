@@ -27,10 +27,14 @@
     "react-router-dom": "^4.1.2",
     "react-simple-keyboard": "^1.15.2",
     "react-timestamp": "^4.4.0",
+    "request-promise": "^4.2.5",
     "superagent": "^5.0.2",
     "typescript": "^3.8.3"
   },
+  "type": "module",
   "devDependencies": {
+    "@types/argparse": "^1.0.38",
+    "argparse": "^1.0.10",
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-es2015-destructuring": "^6.23.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
