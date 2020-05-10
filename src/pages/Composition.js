@@ -12,7 +12,6 @@ import Editor from '../components/Player/Editor';
 import FileUploader from '../components/Upload/FileUploader';
 import {CompositionModel, getUser} from '../store';
 import ComposeHistoryWrapper from '../lib/wrappers/ComposeHistoryWrapper';
-import Chat from '../components/Chat';
 import EditableSpan from '../components/common/EditableSpan';
 import redirect from '../lib/redirect';
 import {downloadBlob, isMobile} from '../lib/jsUtils';
@@ -40,10 +39,6 @@ export default class Composition extends Component {
 
   get composition() {
     return this.historyWrapper.getSnapshot();
-  }
-
-  get showingChat() {
-    return this.historyWrapper && this.historyWrapper.createEvent;
   }
 
   initializeUser() {
@@ -87,14 +82,6 @@ export default class Composition extends Component {
   get otherCursors() {
     return _.filter(this.composition.cursors, ({id}) => id !== this.user.id);
   }
-
-  handlePressEnter = (el) => {
-    if (el === this.chat) {
-      this.game && this.game.focus();
-    } else if (el === this.game) {
-      this.chat && this.chat.focus();
-    }
-  };
 
   handleUpdate = _.debounce(
     () => {
@@ -297,24 +284,6 @@ export default class Composition extends Component {
     );
   }
 
-  renderChat() {
-    const {id, color} = this.user;
-    return (
-      <Chat
-        ref={(c) => {
-          this.chat = c;
-        }}
-        header={this.renderChatHeader()}
-        info={this.composition.info}
-        data={this.composition.chat}
-        id={id}
-        myColor={color}
-        onChat={this.handleChat}
-        onUnfocus={this.handleUnfocusChat}
-      />
-    );
-  }
-
   render() {
     const style = {
       padding: 20,
@@ -337,7 +306,6 @@ export default class Composition extends Component {
           <Flex column shrink={0}>
             {this.renderEditor()}
           </Flex>
-          <Flex grow={1}>{this.showingChat && this.renderChat()}</Flex>
           <Flex column>
             <FileUploader success={this.handleUploadSuccess} fail={this.handleUploadFail} v2 />
             <button onClick={this.handleExportClick}>Export to puz</button>
