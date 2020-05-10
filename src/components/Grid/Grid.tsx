@@ -2,30 +2,62 @@ import './css/index.css';
 
 import React from 'react';
 import _ from 'lodash';
-import GridObject from '../../lib/wrappers/GridWrapper';
+import GridWrapper from '../../lib/wrappers/GridWrapper';
 import Cell from './Cell';
+import {
+  GridData,
+  CellCoords,
+  CellIndex,
+  Cursor,
+  ClueCoords,
+  BattlePickup,
+  toCellIndex,
+  CellStyles,
+  Ping,
+} from './types';
 
-/*
- * Summary of Grid component
- *
- * Props: { grid, size, selected, direction, cursors, onSetSelected, onChangeDirection }
- *
- * State: {}
- *
- * Children: [Cell x "n^2"]
- *
- * Potential parents (so far):
- * - Player, Editor
- * - Previewer (TODO)
- * */
+interface GridProps {
+  // Grid data
+  solution: string[][];
+  grid: GridData;
+  opponentGrid: GridData;
 
-export default class Grid extends React.PureComponent {
+  // Cursor state
+  selected: CellCoords;
+  direction: 'across' | 'down';
+
+  // Cell annotations
+  circles?: CellIndex[];
+  shades?: CellIndex[];
+  pings?: Ping[];
+  cursors: Cursor[];
+
+  // Styles & related
+  references: ClueCoords[];
+  pickups?: BattlePickup[];
+  cellStyle: CellStyles;
+  myColor: string;
+
+  // Edit modes
+  size: number;
+  editMode: boolean;
+  frozen: boolean;
+
+  // callbacks
+  onChangeDirection(): void;
+  onSetSelected(cellCoords: CellCoords): void;
+  onPing?(r: number, c: number): void;
+  canFlipColor?(r: number, c: number): boolean;
+  onFlipColor?(r: number, c: number): void;
+}
+
+export default class Grid extends React.PureComponent<GridProps> {
   get grid() {
-    return new GridObject(this.props.grid);
+    return new GridWrapper(this.props.grid);
   }
 
   get opponentGrid() {
-    return this.props.opponentGrid && new GridObject(this.props.opponentGrid);
+    return this.props.opponentGrid && new GridWrapper(this.props.opponentGrid);
   }
 
   get selectedIsWhite() {
@@ -33,18 +65,18 @@ export default class Grid extends React.PureComponent {
     return this.grid.isWhite(selected.r, selected.c);
   }
 
-  isSelected(r, c) {
+  isSelected(r: number, c: number) {
     const {selected} = this.props;
     return r === selected.r && c === selected.c;
   }
 
-  isCircled(r, c) {
+  isCircled(r: number, c: number) {
     const {grid, circles} = this.props;
-    const idx = c + r * grid[0].length;
+    const idx = toCellIndex(r, c, grid.length);
     return (circles || []).indexOf(idx) !== -1;
   }
 
-  isDoneByOpponent(r, c) {
+  isDoneByOpponent(r: number, c: number) {
     if (!this.opponentGrid || !this.props.solution) {
       return false;
     }
@@ -53,13 +85,13 @@ export default class Grid extends React.PureComponent {
     );
   }
 
-  isShaded(r, c) {
+  isShaded(r: number, c: number) {
     const {grid, shades} = this.props;
-    const idx = c + r * grid[0].length;
+    const idx = toCellIndex(r, c, grid[0].length);
     return (shades || []).indexOf(idx) !== -1 || this.isDoneByOpponent(r, c);
   }
 
-  isHighlighted(r, c) {
+  isHighlighted(r: number, c: number) {
     if (!this.selectedIsWhite) return false;
     const {selected, direction} = this.props;
     const selectedParent = this.grid.getParent(selected.r, selected.c, direction);
@@ -70,18 +102,21 @@ export default class Grid extends React.PureComponent {
     );
   }
 
-  isReferenced(r, c) {
+  isReferenced(r: number, c: number) {
     return this.props.references.some((clue) => this.clueContainsSquare(clue, r, c));
   }
 
-  getPickup(r, c) {
+  getPickup(r: number, c: number) {
     return (
       this.props.pickups &&
-      _.get(_.find(this.props.pickups, ({i, j, pickedUp}) => i === r && j === c && !pickedUp), 'type')
+      _.get(
+        _.find(this.props.pickups, ({i, j, pickedUp}) => i === r && j === c && !pickedUp),
+        'type'
+      )
     );
   }
 
-  handleClick(r, c) {
+  handleClick(r: number, c: number) {
     if (!this.grid.isWhite(r, c) && !this.props.editMode) return;
     if (this.isSelected(r, c)) {
       this.props.onChangeDirection();
@@ -90,7 +125,7 @@ export default class Grid extends React.PureComponent {
     }
   }
 
-  handleRightClick(r, c) {
+  handleRightClick(r: number, c: number) {
     this.props.onPing && this.props.onPing(r, c);
   }
 
@@ -98,11 +133,11 @@ export default class Grid extends React.PureComponent {
     return this.grid.keys().map(([r, c]) => ({r, c}));
   }
 
-  clueContainsSquare({ori, num}, r, c) {
+  clueContainsSquare({ori, num}: ClueCoords, r: number, c: number) {
     return this.grid.isWhite(r, c) && this.grid.getParent(r, c, ori) === num;
   }
 
-  getSizeClass(size) {
+  getSizeClass(size: number) {
     if (size < 20) {
       return 'tiny';
     }
@@ -143,18 +178,18 @@ export default class Grid extends React.PureComponent {
                   <Cell
                     {...cell}
                     onClick={(e) => {
-                      if (e) e.preventDefault();
-                      if (e) e.stopPropagation();
+                      e?.preventDefault?.();
+                      e?.stopPropagation?.();
                       this.handleClick(r, c);
                     }}
                     onContextMenu={(e) => {
-                      if (e) e.preventDefault();
-                      if (e) e.stopPropagation();
+                      e?.preventDefault?.();
+                      e?.stopPropagation?.();
                       this.handleRightClick(r, c);
                     }}
-                    canFlipColor={this.props.canFlipColor && this.props.canFlipColor(r, c)}
+                    canFlipColor={!!this.props.canFlipColor?.(r, c)}
                     onFlipColor={() => {
-                      this.props.onFlipColor && this.props.onFlipColor(r, c);
+                      this.props.onFlipColor?.(r, c);
                     }}
                     selected={this.isSelected(r, c)}
                     referenced={this.isReferenced(r, c)}

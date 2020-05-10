@@ -29,7 +29,8 @@
     "react-timestamp": "^4.4.0",
     "request-promise": "^4.2.5",
     "superagent": "^5.0.2",
-    "typescript": "^3.8.3"
+    "typescript": "^3.8.3",
+    "utility-types": "^3.10.0"
   },
   "type": "module",
   "devDependencies": {
@@ -43,7 +44,7 @@
     "babel-preset-node6-es6": "^11.2.5",
     "babel-preset-stage-3": "^6.24.1",
     "husky": "^1.0.0-rc.15",
-    "prettier": "^1.13.7",
+    "prettier": "^2.0.5",
     "pretty-quick": "^1.7.0",
     "react-scripts": "^3.4.1"
   },

@@ -3,57 +3,40 @@ import * as _ from 'lodash';
 
 import Emoji from '../common/Emoji';
 import powerups from '../../lib/powerups';
-
+import {Cursor, Ping, CellStyles} from './types';
 import './css/cell.css';
 
-interface Cursor {
-  id: string;
-  r: number; // Row in puzzle
-  c: number; // Column in puzzle
-  timestamp: number;
-  color: string;
-  active: boolean;
-}
-
-interface Ping extends Cursor {
-  age: number;
-}
-
-interface CellStyle {
-  backgroundColor: string;
-}
-interface CellStyles {
-  selected: CellStyle;
-  highlighted: CellStyle;
-  frozen: CellStyle;
-}
-
 interface Props {
-  value: string;
-  number: number;
+  // Cell data
+  value?: string;
+  number?: number;
+  revealed?: boolean;
+  bad?: boolean;
+  good?: boolean;
+  pencil?: boolean;
+  black?: boolean;
+
   // Player interactions
   cursors: Cursor[];
   pings: Ping[];
+
   // Cell states
-  black: boolean;
   selected: boolean;
   highlighted: boolean;
   frozen: boolean;
   circled: boolean;
   shaded: boolean;
-  revealed: boolean;
-  bad: boolean;
-  good: boolean;
-  pencil: boolean;
   referenced: boolean;
   canFlipColor: boolean;
   pickupType: keyof typeof powerups;
+
   // Styles
   cellStyle: CellStyles;
   myColor: string;
+
   // Callbacks
-  onClick: () => void;
-  onContextMenu: () => void;
+  onClick: (e?: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+  onContextMenu: (e?: React.MouseEvent<HTMLElement, MouseEvent>) => void;
   onFlipColor: () => void;
 }
 /*
@@ -203,14 +186,16 @@ export default class Cell extends React.Component<Props> {
     const style = this.getStyle();
     return (
       <div
-        className={`${(selected ? 'selected ' : '') +
+        className={`${
+          (selected ? 'selected ' : '') +
           (highlighted ? 'highlighted ' : '') +
           (referenced ? 'referenced ' : '') +
           (shaded ? 'shaded ' : '') +
           (bad ? 'bad ' : '') +
           (good ? 'good ' : '') +
           (revealed ? 'revealed ' : '') +
-          (pencil ? 'pencil ' : '')}cell`}
+          (pencil ? 'pencil ' : '')
+        }cell`}
         style={style}
         onClick={onClick}
         onContextMenu={onContextMenu}

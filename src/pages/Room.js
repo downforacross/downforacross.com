@@ -6,7 +6,7 @@ import _ from 'lodash';
 import Flex from 'react-flexview';
 import {RoomModel, getUser} from '../store';
 import HistoryWrapper from '../utils/historyWrapper';
-import Game from '../components/Game';
+import Game from '../components/Game/Game';
 import {pure} from '../jsUtils';
 
 const GameLink = pure(({onSelectGame, info, progress, createdAt, updatedAt, gid, selectedGid}) => (
