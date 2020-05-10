@@ -103,7 +103,7 @@ const powerups = {
   },
   DARK_MODE: {
     name: 'Dark Mode',
-    icon: 'dark_sunglasses',
+    icon: 'cactus_yorick',
     duration: 30,
     action: ({ownGame, opponentGame}) => ({ownGame, opponentGame: hideSquares(opponentGame)}),
   },
