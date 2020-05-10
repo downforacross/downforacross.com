@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as _ from 'lodash';
-
+import clsx from 'clsx';
 import Emoji from '../common/Emoji';
 import powerups from '../../lib/powerups';
 import {Cursor, Ping, CellStyles} from './types';
@@ -65,7 +65,10 @@ export default class Cell extends React.Component<Props> {
         {cursors.map(({color, active}, i) => (
           <div
             key={i}
-            className={`cell--cursor ${active ? 'active' : 'inactive'}`}
+            className={clsx('cell--cursor', {
+              active,
+              inactive: !active,
+            })}
             style={{
               borderColor: color,
               zIndex: Math.min(2 + cursors.length - i, 9),
@@ -84,7 +87,10 @@ export default class Cell extends React.Component<Props> {
         {pings.map(({color, active}, i) => (
           <div
             key={i}
-            className={`cell--ping ${active ? 'active' : 'inactive'}`}
+            className={clsx('cell--ping', {
+              active,
+              inactive: !active,
+            })}
             style={{
               borderColor: color,
               zIndex: Math.min(2 + pings.length - i, 9),
@@ -170,7 +176,9 @@ export default class Cell extends React.Component<Props> {
     if (black) {
       return (
         <div
-          className={`cell black ${selected ? 'selected' : ''}`}
+          className={clsx('cell', 'black', {
+            selected,
+          })}
           style={selected ? {borderColor: myColor} : undefined}
           onClick={onClick}
           onContextMenu={onContextMenu}
@@ -186,16 +194,16 @@ export default class Cell extends React.Component<Props> {
     const style = this.getStyle();
     return (
       <div
-        className={`${
-          (selected ? 'selected ' : '') +
-          (highlighted ? 'highlighted ' : '') +
-          (referenced ? 'referenced ' : '') +
-          (shaded ? 'shaded ' : '') +
-          (bad ? 'bad ' : '') +
-          (good ? 'good ' : '') +
-          (revealed ? 'revealed ' : '') +
-          (pencil ? 'pencil ' : '')
-        }cell`}
+        className={clsx('cell', {
+          selected,
+          highlighted,
+          referenced,
+          shaded,
+          bad,
+          good,
+          revealed,
+          pencil,
+        })}
         style={style}
         onClick={onClick}
         onContextMenu={onContextMenu}
@@ -216,7 +224,13 @@ export default class Cell extends React.Component<Props> {
         }}
       >
         <div className="cell--wrapper">
-          <div className={`cell--number${number ? ' nonempty' : ''}`}>{number}</div>
+          <div
+            className={clsx('cell--number', {
+              nonempty: !!number,
+            })}
+          >
+            {number}
+          </div>
           {this.renderFlipButton()}
           {this.renderCircle()}
           {this.renderShade()}
