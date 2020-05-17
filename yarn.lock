@@ -11844,8 +11844,8 @@ react-app-polyfill@^1.0.6:
 
 react-confetti@^5.0.1:
   version "5.0.1"
-  resolved "https://unpm.uberinternal.com/react-confetti/-/react-confetti-5.0.1.tgz#3003570778cafad4db0ab5513018d4c10e9d1271"
-  integrity sha1-MANXB3jK+tTbCrVRMBjUwQ6dEnE=
+  resolved "https://registry.yarnpkg.com/react-confetti/-/react-confetti-5.0.1.tgz#3003570778cafad4db0ab5513018d4c10e9d1271"
+  integrity sha512-mMxg2JPiRynzWEcfdsUVciRSKr2Mm3pFVKSGng/9Rgg1fYLxVj5XgSqiCP7kz2fN8/xfC79Rbgp1JRyCYssBkA==
   dependencies:
     tween-functions "^1.2.0"
 
@@ -13940,7 +13940,7 @@ tunnel-agent@^0.6.0:
 
 tween-functions@^1.2.0:
   version "1.2.0"
-  resolved "https://unpm.uberinternal.com/tween-functions/-/tween-functions-1.2.0.tgz#1ae3a50e7c60bb3def774eac707acbca73bbc3ff"
+  resolved "https://registry.yarnpkg.com/tween-functions/-/tween-functions-1.2.0.tgz#1ae3a50e7c60bb3def774eac707acbca73bbc3ff"
   integrity sha1-GuOlDnxguz3vd06scHrLynO7w/8=
 
 tweetnacl@^0.14.3, tweetnacl@~0.14.0:
