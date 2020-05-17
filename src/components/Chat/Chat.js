@@ -9,6 +9,7 @@ import _ from 'lodash';
 import MobileKeyboard from '../Player/MobileKeyboard';
 import Flex from 'react-flexview';
 import {Link} from 'react-router-dom';
+import {MdClose} from 'react-icons/md';
 
 const isEmojis = (str) => {
   const res = str.match(/[A-Za-z,.0-9!-]/g);
@@ -98,19 +99,7 @@ export default class Chat extends Component {
   }
 
   renderGameButton() {
-    return (
-      <svg
-        onClick={this.handleToggleChat}
-        className="toolbar--game"
-        viewBox="0 0 90 90"
-        enableBackground="0 0 90 90"
-        space="preserve"
-        xmlns="http://www.w3.org/2000/svg"
-        xmlnsXlink="http://www.w3.org/1999/xlink"
-      >
-        <path d="M72.55664,51.2041c3.0874-3.93164,4.87598-8.56836,4.87598-13.53711c0-14.18066-14.52051-25.67578-32.43262-25.67578  S12.56738,23.48633,12.56738,37.66699c0,14.17969,14.52051,25.67578,32.43262,25.67578c2.61572,0,5.15625-0.25195,7.59277-0.71484  v15.38086L72.55664,51.2041z" />
-      </svg>
-    );
+    return <MdClose onClick={this.handleToggleChat} className="toolbar--game" />;
   }
 
   renderToolbar() {

@@ -27,21 +27,21 @@ code {
 }
 
 .toolbar--chat {
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
+  padding: 12px;
   fill: white;
-  margin-right: 23px;
 }
 
 .toolbar--game {
-  width: 30px;
-  height: 30px;
-  fill: black;
-  margin-right: 23px;
+  width: 24px;
+  height: 24px;
+  padding: 12px;
+  fill: white;
 }
 
 .toolbar--mobile a {
-  margin-left: 25px;
+  margin-left: 16px;
   color: white;
   text-decoration: none;
   font-weight: 600;
@@ -50,9 +50,10 @@ code {
 .toolbar--mobile button {
   background-color: transparent;
   border: none;
-  padding: 7px;
+  padding: 16px;
   color: white;
   font-size: 14px;
+  height: 48px;
 }
 
 .toolbar button {
