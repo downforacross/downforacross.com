@@ -2,6 +2,7 @@ import 'react-flexview/lib/flexView.css';
 
 import React, {Component} from 'react';
 import Flex from 'react-flexview';
+import Confetti from './Confetti.js';
 import _ from 'lodash';
 
 import * as powerups from '../../lib/powerups';
@@ -260,6 +261,7 @@ export default class Game extends Component {
         >
           {this.renderPlayer()}
         </Flex>
+        {this.game.solved && !this.props.mobile && <Confetti />}
       </Flex>
     );
   }
