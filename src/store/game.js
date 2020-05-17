@@ -73,7 +73,7 @@ export default class Game extends EventEmitter {
 
   async addEvent(event) {
     event.id = uuid.v4();
-    this.events.push(event);
+    // this.events.push(event);
     if (this.socket) {
       await this.connectToWebsocket();
       await this.pushEventToWebsocket(event);
