@@ -3,6 +3,10 @@
   margin-top: 25px;
 }
 
+.entry--icon {
+  fill: #6aa9f4;
+}
+
 .mobile .entry--container {
   margin: 18px auto 0;
 }

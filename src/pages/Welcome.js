@@ -3,6 +3,7 @@ import './css/welcome.css';
 import React, {Component} from 'react';
 import {Helmet} from 'react-helmet';
 import Flex from 'react-flexview';
+import {MdSearch} from 'react-icons/md';
 import _ from 'lodash';
 import Nav from '../components/common/Nav';
 import Upload from '../components/Upload';
@@ -286,13 +287,6 @@ export default class Welcome extends Component {
     };
   }
 
-  get iconStyle() {
-    return {
-      position: 'absolute',
-      left: '10px',
-    };
-  }
-
   get searchIconGraphicsStyle() {
     if (!this.mobile) return undefined;
     const stroke = colorAverage(BLUE, WHITE, this.colorMotion);
@@ -311,14 +305,7 @@ export default class Welcome extends Component {
     const {search} = this.state;
     const hAlignContent = this.mobile ? 'right' : 'left';
     const grow = this.mobile ? 0 : 1;
-    const searchIcon = (
-      <div className="welcome--searchicon">
-        <svg viewBox="0 0 40 40">
-          <circle cx={20} cy={20} r={15} style={this.searchIconGraphicsStyle} />
-          <line x1={30} y1={30} x2={40} y2={40} style={this.searchIconGraphicsStyle} />
-        </svg>
-      </div>
-    );
+    const searchIcon = <MdSearch className="welcome--searchicon" />;
     return (
       <Flex className="welcome--searchbar--container" shrink={0} hAlignContent={hAlignContent}>
         <Flex
@@ -327,9 +314,7 @@ export default class Welcome extends Component {
           grow={grow}
           className="welcome--searchbar--wrapper"
         >
-          <div style={this.iconStyle} onTouchEnd={this.handleSearchIconTouchEnd}>
-            {searchIcon}
-          </div>
+          <MdSearch className="welcome--searchicon" onTouchEnd={this.handleSearchIconTouchEnd} />
           <input
             ref={this.searchInput}
             style={this.searchInputStyle}

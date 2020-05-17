@@ -76,17 +76,12 @@
   position: relative;
 }
 
-.welcome--searchicon svg circle,
-.welcome--searchicon svg line {
-  stroke: var(--main-blue);
-  stroke-width: 5px;
-  fill: none;
-}
-
 .welcome--searchicon {
   color: var(--main-blue);
-  height: 20px;
-  width: 20px;
+  height: 24px;
+  width: 24px;
+  padding: 8px;
+  position: absolute;
 }
 
 .filters label {
