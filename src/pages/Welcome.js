@@ -3,7 +3,7 @@ import './css/welcome.css';
 import React, {Component} from 'react';
 import {Helmet} from 'react-helmet';
 import Flex from 'react-flexview';
-import {MdSearch} from 'react-icons/md';
+import {MdSearch, MdCheckBoxOutlineBlank, MdCheckBox} from 'react-icons/md';
 import _ from 'lodash';
 import Nav from '../components/common/Nav';
 import Upload from '../components/Upload';
@@ -229,8 +229,12 @@ export default class Welcome extends Component {
                 handleChange(header, name, e.target.checked);
               }}
             />
-            <div className="checkmark" />
-            {name}
+            {items[name] ? (
+              <MdCheckBox className="checkbox-icon" />
+            ) : (
+              <MdCheckBoxOutlineBlank className="checkbox-icon" />
+            )}
+            <span>{name}</span>
           </label>
         ))}
       </Flex>
