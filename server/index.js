@@ -45,15 +45,23 @@ const gameToSocket = new Map();
 const socketToGame = new Map(); // Redundancy for sake of correctness
 
 const assignTimestamp = (event) => {
-  return {
-    ...event,
-    timestampWS: Date.now(),
-  };
+  if (event && typeof event === 'object') {
+    if (event['.sv'] === 'timestamp') {
+      return Date.now();
+    }
+    const result = event.constructor();
+    for (const key in event) {
+      result[key] = assignTimestamp(event[key]);
+    }
+    return result;
+  }
+  return event;
 };
 
 // Precondition: gid's game is "hot"
 const addEvent = async (gid, event) => {
   event = assignTimestamp(event);
+
   // 1. save to DB
   gameModel.addEvent(gid, event);
   // 2. emit to all live clients
