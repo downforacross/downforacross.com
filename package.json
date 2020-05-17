@@ -20,6 +20,7 @@
     "moment": "^2.20.1",
     "puzjs": "^1.0.2",
     "react": "^16.12",
+    "react-confetti": "^5.0.1",
     "react-dom": "^16.12",
     "react-dropzone": "^4.0.0",
     "react-flexview": "^3.0.1",
