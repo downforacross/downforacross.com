@@ -98,6 +98,11 @@ export default class Game extends Component {
       this.handleChange();
       this.handleUpdate();
     });
+    this.gameModel.on('optimisticEvent', (event) => {
+      this.historyWrapper.addOptimisticEvent(event);
+      this.handleChange();
+      this.handleUpdate();
+    });
 
     this.gameModel.on('archived', (event) => {
       this.setState({

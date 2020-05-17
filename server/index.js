@@ -27,7 +27,6 @@ class GameModel {
   async getEvents(gid) {
     const serializedEvents = await client.lrangeAsync(getEventsKey(gid), 0, MAX_EVENTS);
     const events = serializedEvents.map(JSON.parse);
-    console.log('getEvents', events[0].params.game);
     return events;
   }
 
@@ -53,13 +52,14 @@ const assignTimestamp = (event) => {
 };
 
 // Precondition: gid's game is "hot"
-const addEvent = (gid, event) => {
+const addEvent = async (gid, event) => {
   event = assignTimestamp(event);
   // 1. save to DB
   gameModel.addEvent(gid, event);
   // 2. emit to all live clients
+
   if (gameToSocket.get(gid)) {
-    gameToSocket.get(gid).forEach((socket) => {
+    gameToSocket.get(gid).forEach(async (socket) => {
       socket.emit('game_event', event);
     });
   }

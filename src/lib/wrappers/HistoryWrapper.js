@@ -6,6 +6,7 @@ const MEMO_RATE = 10;
 export default class HistoryWrapper {
   constructor(history = []) {
     this.history = [];
+    this.optimisticEvents = [];
     this.memo = [];
     this.createEvent = null;
     history.forEach((event) => {
@@ -50,7 +51,7 @@ export default class HistoryWrapper {
   }
 
   // returns result of [0, index]
-  getSnapshotAtIndex(index) {
+  getSnapshotAtIndex(index, {optimistic = false} = {}) {
     const _i = _.sortedLastIndexBy(this.memo, {index}, (memoItem) => memoItem.index);
     const memoItem = this.memo[_i - 1];
     let {game} = memoItem;
@@ -58,12 +59,18 @@ export default class HistoryWrapper {
       const event = this.history[i];
       game = this.reduce(game, event);
     }
+    if (optimistic) {
+      for (const event of this.optimisticEvents) {
+        game = this.reduce(game, event);
+      }
+    }
+
     return game;
   }
 
   // the current snapshot
   getSnapshot() {
-    return this.getSnapshotAtIndex(this.history.length - 1);
+    return this.getSnapshotAtIndex(this.history.length - 1, {optimistic: true});
   }
 
   // this is used for replay
@@ -79,6 +86,7 @@ export default class HistoryWrapper {
   }
 
   addEvent(event) {
+    this.optimisticEvents = this.optimisticEvents.filter((ev) => ev.id !== event.id);
     // we must support retroactive updates to the event log
     const insertPoint = _.sortedLastIndexBy(this.history, event, (event) => event.timestamp);
     this.history.splice(insertPoint, 0, event);
@@ -93,5 +101,9 @@ export default class HistoryWrapper {
         this.memoize(index);
       }
     });
+  }
+
+  addOptimisticEvent(event) {
+    this.optimisticEvents.push(event);
   }
 }

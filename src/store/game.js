@@ -1,12 +1,12 @@
 import EventEmitter from 'events';
 import io from 'socket.io-client';
 import Promise from 'bluebird';
+import uuid from 'uuid';
+import _ from 'lodash';
 
 import {db, SERVER_TIME} from './firebase';
-
 import Puzzle from './puzzle';
 import * as colors from '../lib/colors';
-import _ from 'lodash';
 Promise.promisifyAll(io);
 
 // ============ Serialize / Deserialize Helpers ========== //
@@ -67,11 +67,17 @@ export default class Game extends EventEmitter {
     this.emit(event.type === 'create' ? 'createEvent' : 'event', event);
   }
 
+  emitOptimisticEvent(event) {
+    this.emit('optimisticEvent', event);
+  }
+
   async addEvent(event) {
+    event.id = uuid.v4();
     this.events.push(event);
     if (this.socket) {
       await this.connectToWebsocket();
       await this.pushEventToWebsocket(event);
+      this.emitOptimisticEvent(event);
     }
   }
 
@@ -298,7 +304,7 @@ export default class Game extends EventEmitter {
     });
   }
 
-  initialize(rawGame, battleData, cbk) {
+  async initialize(rawGame, battleData, cbk) {
     const {
       info = {},
       grid = [[{}]],
@@ -333,19 +339,19 @@ export default class Game extends EventEmitter {
     };
     const version = CURRENT_VERSION;
     // nuke existing events
-    this.events.set({}).then(async () => {
-      await this.connectToWebsocket();
-      await this.addEvent({
-        timestamp: SERVER_TIME,
-        type: 'create',
-        params: {
-          pid,
-          version,
-          game,
-        },
-      });
-      cbk && cbk();
+
+    await this.events.set({});
+    await this.connectToWebsocket();
+    await this.addEvent({
+      timestamp: SERVER_TIME,
+      type: 'create',
+      params: {
+        pid,
+        version,
+        game,
+      },
     });
+    cbk && cbk();
     this.ref.child('pid').set(pid);
 
     if (battleData) {

@@ -88,18 +88,17 @@ export default class Play extends Component {
       const game = new GameModel(`/game/${gid}`);
       const puzzle = new PuzzleModel(`/puzzle/${this.pid}`);
       puzzle.attach();
-      puzzle.once('ready', () => {
+      puzzle.once('ready', async () => {
         const rawGame = puzzle.toGame();
-        game.initialize(rawGame);
-        this.user
-          .joinGame(gid, {
+        await Promise.all([
+          game.initialize(rawGame),
+          this.user.joinGame(gid, {
             pid: this.pid,
             solved: false,
             v2: true,
-          })
-          .then(() => {
-            redirect(`/beta/game/${gid}`);
-          });
+          }),
+        ]);
+        redirect(`/beta/game/${gid}`);
       });
     });
   }
