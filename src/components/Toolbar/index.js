@@ -216,7 +216,7 @@ export default class Toolbar extends Component {
       return (
         <Flex className="toolbar--mobile" vAlignContent="center">
           <Flex className="toolbar--mobile--top" grow={1} vAlignContent="center">
-            <Link to={'/'}>Down for a Cross</Link>{' '}
+            <Link to={'/'}>DFAC</Link>{' '}
             <Clock
               v2={this.props.v2}
               startTime={startTime}

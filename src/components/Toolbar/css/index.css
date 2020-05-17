@@ -20,10 +20,10 @@ code {
 }
 
 .toolbar--mobile {
-  height: 52px;
-  max-height: 52px;
+  height: 48px;
   background-color: var(--main-blue);
   justify-content: space-between;
+  font-size: 14px;
 }
 
 .toolbar--chat {
@@ -45,7 +45,6 @@ code {
   color: white;
   text-decoration: none;
   font-weight: 600;
-  font-size: 17px;
 }
 
 .toolbar--mobile button {
@@ -53,12 +52,11 @@ code {
   border: none;
   padding: 7px;
   color: white;
-  font-size: 11px;
+  font-size: 14px;
 }
 
 .toolbar button {
   color: var(--main-gray-1);
-  font-size: 14px;
   padding: 7px 10px 7px 10px;
   border-radius: 5px;
   background-color: white;
@@ -91,7 +89,6 @@ code {
 }
 
 .toolbar--mobile--top {
-  font-size: 15px;
   justify-content: space-between;
   align-items: center;
   position: relative;

@@ -480,7 +480,6 @@ export default class MobileGridControls extends GridControls {
       <div ref="gridControls" className="mobile-grid-controls">
         {this.renderClueBar()}
         {this.renderGridContent()}
-        {this.renderClueBar()}
         {this.renderMobileInputs()}
         {/* {this.renderMobileKeyboard()} */}
         {this.props.enableDebug && (this.state.dbgstr || 'No message')}
