@@ -104,8 +104,9 @@ export default class HistoryWrapper {
   }
 
   addOptimisticEvent(event) {
-    if (this.optimisticEvents.length > 10000) {
+    if (this.optimisticEvents.length > 100) {
       alert('You have been disconnected, please refresh');
+      return;
     }
     this.optimisticEvents.push(event);
   }
