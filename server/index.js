@@ -9,7 +9,15 @@ const _ = require('lodash');
 const Promise = require('bluebird');
 const redis = require('redis');
 Promise.promisifyAll(redis);
-const client = redis.createClient();
+
+let redisOptions;
+if (process.env.REDIS_HOST) {
+  console.log(`Connecting to redis @ ${process.env.REDIS_HOST}`);
+  redisOptions = {
+    host: process.env.REDIS_HOST,
+  };
+}
+const client = redis.createClient(redisOptions);
 
 // ============= Database Operations ============
 
@@ -88,8 +96,9 @@ io.on('connection', (socket) => {
     gameToSocket.get(gid).push(socket);
     socketToGame.set(socket, gid);
 
-    socket.on('message', (message) => {
+    socket.on('message', (message, cbk) => {
       addEvent(message.gid, message.event);
+      cbk();
     });
     ack();
   });
