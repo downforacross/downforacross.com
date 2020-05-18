@@ -25,8 +25,8 @@ const castNullsToUndefined = (obj) => {
   }
 };
 
-// const SOCKET_HOST = 'http://54.151.18.249:3021'; // TODO different in prod
-const SOCKET_HOST = 'http://localhost:3021'; // TODO different in prod
+const SOCKET_HOST = 'http://54.151.18.249:3021'; // TODO different in prod
+// const SOCKET_HOST = 'http://localhost:3021'; // TODO different in prod
 // a wrapper class that models Game
 
 const emitAsync = (socket, ...args) => new Promise((resolve) => socket.emit(...args, resolve));
