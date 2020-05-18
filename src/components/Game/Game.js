@@ -156,7 +156,7 @@ export default class Game extends Component {
   }
 
   renderPlayer() {
-    const {id, myColor, mobile} = this.props;
+    const {id, myColor, mobile, beta} = this.props;
     if (!this.game) {
       return <div>Loading...</div>;
     }
@@ -191,6 +191,7 @@ export default class Game extends Component {
         ref={(c) => {
           this.player = c;
         }}
+        beta={beta}
         size={size}
         grid={grid}
         solution={solution}

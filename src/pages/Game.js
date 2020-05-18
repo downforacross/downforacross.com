@@ -190,6 +190,10 @@ export default class Game extends Component {
     return lastMessage > this.state.lastReadChat;
   }
 
+  get beta() {
+    return true; // TODO store whether or not a game is "beta" in firebase
+  }
+
   handleToggleChat = () => {
     const toggledMode = this.state.mode === 'game' ? 'chat' : 'game';
     this.setState({mode: toggledMode});
@@ -270,6 +274,7 @@ export default class Game extends Component {
         ref={(c) => {
           this.gameComponent = c;
         }}
+        beta={this.beta}
         id={id}
         myColor={color}
         historyWrapper={this.historyWrapper}
