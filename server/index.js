@@ -106,7 +106,7 @@ io.on('connection', (socket) => {
     gameToSocket.get(gid).push(socket);
     socketToGame.set(socket, gid);
 
-    socket.on('message', (message, cbk) => {
+    socket.on('game_event', (message, cbk) => {
       console.log('[message]', message);
       addEvent(message.gid, message.event);
       cbk();

@@ -91,7 +91,7 @@ export default class Game extends EventEmitter {
       throw new Error('Not connected to websocket');
     }
 
-    return emitAsync(this.socket, 'message', {
+    return emitAsync(this.socket, 'game_event', {
       event,
       gid: this.gid,
     });
