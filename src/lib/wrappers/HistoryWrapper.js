@@ -62,7 +62,9 @@ export default class HistoryWrapper {
     }
     if (optimistic) {
       for (const event of this.optimisticEvents) {
-        game = this.reduce(game, event);
+        game = this.reduce(game, event, {
+          isOptimistic: true,
+        });
       }
     }
 
