@@ -101,19 +101,17 @@ export default class Game extends EventEmitter {
     if (!this.socket || !this.socket.connected) {
       throw new Error('Not connected to websocket');
     }
+    this.attached = true;
 
-    // TODO figure out order of these
     await this.socket.on('game_event', (event) => {
       event = castNullsToUndefined(event);
       this.emitEvent(event);
     });
     const response = await emitAsync(this.socket, 'sync_all', this.gid);
-    console.log('done sync all');
     response.forEach((event) => {
       event = castNullsToUndefined(event);
       this.emitEvent(event);
     });
-    this.attached = true;
   }
 
   // Firebase Code
