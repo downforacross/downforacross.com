@@ -30,7 +30,12 @@
 
 .mobile-grid-controls--intra-clue {
   background-color: var(--main-blue-3);
-  padding: 20px;
+  width: 24px;
+  height: 24px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .mobile-grid-controls--clue-bar {

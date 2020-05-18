@@ -2,6 +2,7 @@ import './css/mobileGridControls.css';
 
 import React from 'react';
 import Flex from 'react-flexview';
+import {MdKeyboardArrowLeft, MdKeyboardArrowRight} from 'react-icons/md';
 import Clue from './ClueText';
 import GridControls from './GridControls';
 import MobileKeyboard from './MobileKeyboard';
@@ -337,13 +338,11 @@ export default class MobileGridControls extends GridControls {
     };
     return (
       <Flex className="mobile-grid-controls--clue-bar-container">
-        <div
+        <MdKeyboardArrowLeft
           className="mobile-grid-controls--intra-clue left"
           onTouchEnd={this.handleLeftArrowTouchEnd}
           onClick={this.keepFocus}
-        >
-          {'<'}
-        </div>
+        />
         <Flex
           grow={1}
           vAlignContent="center"
@@ -372,13 +371,11 @@ export default class MobileGridControls extends GridControls {
             </div>
           </div>
         </Flex>
-        <div
+        <MdKeyboardArrowRight
           className="mobile-grid-controls--intra-clue left"
           onClick={this.keepFocus}
           onTouchEnd={this.handleRightArrowTouchEnd}
-        >
-          {'>'}
-        </div>
+        />
       </Flex>
     );
   }
@@ -480,7 +477,6 @@ export default class MobileGridControls extends GridControls {
       <div ref="gridControls" className="mobile-grid-controls">
         {this.renderClueBar()}
         {this.renderGridContent()}
-        {this.renderClueBar()}
         {this.renderMobileInputs()}
         {/* {this.renderMobileKeyboard()} */}
         {this.props.enableDebug && (this.state.dbgstr || 'No message')}

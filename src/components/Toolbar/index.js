@@ -1,5 +1,6 @@
 import './css/index.css';
 import React, {Component} from 'react';
+import {MdChatBubble} from 'react-icons/md';
 
 import Clock from './Clock';
 import ActionMenu from './ActionMenu';
@@ -97,20 +98,7 @@ export default class Toolbar extends Component {
   }
 
   renderChatButton() {
-    return (
-      <svg
-        onClick={this.handleToggleChat}
-        className="toolbar--chat"
-        viewBox="0 0 90 90"
-        enableBackground="0 0 90 90"
-        space="preserve"
-        xmlns="http://www.w3.org/2000/svg"
-        xmlnsXlink="http://www.w3.org/1999/xlink"
-      >
-        <path d="M72.55664,51.2041c3.0874-3.93164,4.87598-8.56836,4.87598-13.53711c0-14.18066-14.52051-25.67578-32.43262-25.67578  S12.56738,23.48633,12.56738,37.66699c0,14.17969,14.52051,25.67578,32.43262,25.67578c2.61572,0,5.15625-0.25195,7.59277-0.71484  v15.38086L72.55664,51.2041z" />
-        {this.props.unreads && <circle stroke="none" fill="red" cx="70" cy="20" r="20" />}
-      </svg>
-    );
+    return <MdChatBubble onClick={this.handleToggleChat} className="toolbar--chat" />;
   }
 
   renderPencil() {
@@ -216,7 +204,7 @@ export default class Toolbar extends Component {
       return (
         <Flex className="toolbar--mobile" vAlignContent="center">
           <Flex className="toolbar--mobile--top" grow={1} vAlignContent="center">
-            <Link to={'/'}>Down for a Cross</Link>{' '}
+            <Link to={'/'}>DFAC</Link>{' '}
             <Clock
               v2={this.props.v2}
               startTime={startTime}

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import _ from 'lodash';
 import Flex from 'react-flexview';
-import FontAwesome from 'react-fontawesome';
+import {MdRadioButtonUnchecked, MdCheckCircle} from 'react-icons/md';
 import {Link} from 'react-router-dom';
 
 export default class Entry extends Component {
@@ -42,7 +42,6 @@ export default class Entry extends Component {
   render() {
     const {title, author, pid, status, stats = {}} = this.props;
     const numSolves = _.size(stats.solves);
-    const faName = status === 'started' ? 'circle-o' : status === 'solved' ? 'check-circle' : '';
     return (
       <Link to={`/beta/play/${pid}`} style={{textDecoration: 'none', color: 'initial'}}>
         <Flex className="entry" column onClick={this.handleClick} onMouseLeave={this.handleMouseLeave}>
@@ -55,8 +54,9 @@ export default class Entry extends Component {
                 {author} | {this.size}
               </p>
             </Flex>
-            <Flex className="entry--icon">
-              <FontAwesome name={faName} style={{color: '#6AA9F4'}} />
+            <Flex>
+              {status === 'started' && <MdRadioButtonUnchecked className="entry--icon" />}
+              {status === 'solved' && <MdCheckCircle className="entry--icon" />}
             </Flex>
           </Flex>
           <Flex className="entry--main">
