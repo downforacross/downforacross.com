@@ -25,9 +25,9 @@ const castNullsToUndefined = (obj) => {
   }
 };
 
-const SOCKET_HOST_HTTPS = 'https://downforacross.com/socket.io';
+const SOCKET_HOST_HTTPS = 'https://downforacross.com';
 const SOCKET_HOST_HTTP = '54.151.18.249:3021';
-const SOCKET_HOST = window.location.protocol === 'https' ? SOCKET_HOST_HTTPS : SOCKET_HOST_HTTP;
+const SOCKET_HOST = window.location.protocol === 'https:' ? SOCKET_HOST_HTTPS : SOCKET_HOST_HTTP;
 // a wrapper class that models Game
 
 const emitAsync = (socket, ...args) => new Promise((resolve) => socket.emit(...args, resolve));
