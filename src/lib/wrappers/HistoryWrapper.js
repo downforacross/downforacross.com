@@ -87,6 +87,7 @@ export default class HistoryWrapper {
   }
 
   addEvent(event) {
+    console.log('addevent', event, this.optimisticEvents);
     this.optimisticEvents = this.optimisticEvents.filter((ev) => ev.id !== event.id);
     // we must support retroactive updates to the event log
     const insertPoint = _.sortedLastIndexBy(this.history, event, (event) => event.timestamp);

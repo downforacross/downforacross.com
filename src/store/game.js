@@ -78,10 +78,10 @@ export default class Game extends EventEmitter {
     event.id = uuid.v4();
     // this.events.push(event);
     if (this.socket) {
+      this.emitOptimisticEvent(event);
       await this.connectToWebsocket();
       console.log('start');
       await this.pushEventToWebsocket(event);
-      this.emitOptimisticEvent(event);
       console.log('done');
     }
   }
