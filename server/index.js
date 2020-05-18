@@ -85,7 +85,9 @@ const addEvent = async (gid, event) => {
 };
 
 io.on('connection', (socket) => {
+  console.log('[connect]', socket.id);
   socket.on('join', async (gid, ack) => {
+    console.log('[join]', gid);
     if (socketToGame.has(socket)) {
       throw new Error(`Socket ${socket.id} already joined ${socketToGame.get(socket)}, cannot join ${gid}`);
     }
@@ -97,6 +99,7 @@ io.on('connection', (socket) => {
     socketToGame.set(socket, gid);
 
     socket.on('message', (message, cbk) => {
+      console.log('[message]', message);
       addEvent(message.gid, message.event);
       cbk();
     });
@@ -105,11 +108,13 @@ io.on('connection', (socket) => {
 
   // Perform the "initial sync"
   socket.on('sync_all', async (gid, cbk) => {
+    console.log('[sync_all]', gid);
     const events = await gameModel.getEvents(gid);
     cbk(events);
   });
 
   socket.on('disconnect', () => {
+    console.log('[disconnect]', socket.id);
     if (!socketToGame.has(socket)) {
       return;
     }

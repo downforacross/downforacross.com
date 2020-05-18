@@ -25,7 +25,8 @@ const castNullsToUndefined = (obj) => {
   }
 };
 
-const SOCKET_HOST = 'localhost:3020/'; // TODO different in prod
+// const SOCKET_HOST = 'http://54.151.18.249:3021'; // TODO different in prod
+const SOCKET_HOST = 'http://localhost:3021'; // TODO different in prod
 // a wrapper class that models Game
 
 const emitAsync = (socket, ...args) => new Promise((resolve) => socket.emit(...args, resolve));
@@ -64,6 +65,7 @@ export default class Game extends EventEmitter {
   }
 
   emitEvent(event) {
+    console.log('event', event);
     this.emit(event.type === 'create' ? 'createEvent' : 'event', event);
   }
 
@@ -76,8 +78,10 @@ export default class Game extends EventEmitter {
     // this.events.push(event);
     if (this.socket) {
       await this.connectToWebsocket();
+      console.log('start');
       await this.pushEventToWebsocket(event);
       this.emitOptimisticEvent(event);
+      console.log('done');
     }
   }
 
@@ -86,7 +90,7 @@ export default class Game extends EventEmitter {
       throw new Error('Not connected to websocket');
     }
 
-    this.socket.emit('message', {
+    return emitAsync(this.socket, 'message', {
       event,
       gid: this.gid,
     });
@@ -103,6 +107,7 @@ export default class Game extends EventEmitter {
       this.emitEvent(event);
     });
     const response = await emitAsync(this.socket, 'sync_all', this.gid);
+    console.log('done sync all');
     response.forEach((event) => {
       event = castNullsToUndefined(event);
       this.emitEvent(event);

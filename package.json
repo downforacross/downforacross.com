@@ -2,7 +2,6 @@
   "name": "downforacross",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:3021",
   "engines": {
     "node": "^10.0.0"
   },

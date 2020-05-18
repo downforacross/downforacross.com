@@ -5,6 +5,7 @@ const MEMO_RATE = 10;
 
 export default class HistoryWrapper {
   constructor(history = []) {
+    window.historyWrapper = this;
     this.history = [];
     this.optimisticEvents = [];
     this.memo = [];
