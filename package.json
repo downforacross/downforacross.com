@@ -62,6 +62,7 @@
     "start": "yarn devfrontend",
     "devfrontend": "PORT=3020 react-scripts start",
     "devbackend": "PORT=3021 nodemon --exec babel-node server/index.js",
+    "servebackend": "PORT=3021 babel-node server/index.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
