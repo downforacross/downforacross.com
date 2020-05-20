@@ -101,7 +101,6 @@ export default class Game extends EventEmitter {
     if (!this.socket || !this.socket.connected) {
       throw new Error('Not connected to websocket');
     }
-    this.attached = true;
 
     await this.socket.on('game_event', (event) => {
       event = castNullsToUndefined(event);
@@ -152,7 +151,6 @@ export default class Game extends EventEmitter {
     this.events.on('child_added', (snapshot) => {
       const event = snapshot.val();
       if (event.type === 'create') {
-        this.attached = true;
         this.createEvent = event;
         this.subscribeToPuzzle();
         this.emit('createEvent', event);
@@ -162,14 +160,21 @@ export default class Game extends EventEmitter {
     });
   }
 
-  attach() {
-    // this.subscribeToFirebaseEvents(); // TODO only subscribe to websocket
+  async attach() {
     this.ref.child('battleData').on('value', (snapshot) => {
       this.emit('battleData', snapshot.val());
     });
-    this.connectToWebsocket().then(() => {
-      this.subscribeToWebsocketEvents();
-    });
+    console.log('attaching...');
+
+    const beta = await this.ref.child('isbeta').once('value');
+    console.log('attaching... beta is ', beta);
+    if (beta) {
+      await this.connectToWebsocket();
+      await this.subscribeToWebsocketEvents();
+    } else {
+      await this.subscribeToFirebaseEvents(); // TODO only subscribe to websocket
+    }
+    this.attached = true;
   }
 
   detach() {
