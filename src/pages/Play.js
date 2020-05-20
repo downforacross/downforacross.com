@@ -95,7 +95,7 @@ export default class Play extends Component {
       puzzle.once('ready', async () => {
         const rawGame = puzzle.toGame();
         await Promise.all([
-          game.initialize(rawGame, {beta: this.props.beta}),
+          game.initialize(rawGame, {beta: this.beta}),
           this.user.joinGame(gid, {
             pid: this.pid,
             solved: false,

@@ -363,6 +363,7 @@ export default class Game extends Component {
   }
 
   render() {
+    console.log(this);
     return (
       <Flex
         className="room"

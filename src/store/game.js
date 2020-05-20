@@ -68,8 +68,12 @@ export default class Game extends EventEmitter {
   }
 
   emitEvent(event) {
-    console.log('event', event);
-    this.emit(event.type === 'create' ? 'createEvent' : 'event', event);
+    if (event.type === 'create') {
+      this.attached = true;
+      this.emit('createEvent', event);
+    } else {
+      this.emit('event', event);
+    }
   }
 
   emitOptimisticEvent(event) {
@@ -81,9 +85,7 @@ export default class Game extends EventEmitter {
     if (this.beta) {
       this.emitOptimisticEvent(event);
       await this.connectToWebsocket();
-      console.log('start');
       await this.pushEventToWebsocket(event);
-      console.log('done');
     } else {
       this.eventsRef.push(event);
     }
@@ -105,7 +107,7 @@ export default class Game extends EventEmitter {
       throw new Error('Not connected to websocket');
     }
 
-    await this.socket.on('game_event', (event) => {
+    this.socket.on('game_event', (event) => {
       event = castNullsToUndefined(event);
       this.emitEvent(event);
     });
@@ -151,15 +153,16 @@ export default class Game extends EventEmitter {
   }
 
   subscribeToFirebaseEvents() {
-    this.eventsRef.on('child_added', (snapshot) => {
-      const event = snapshot.val();
-      if (event.type === 'create') {
-        this.createEvent = event;
-        this.subscribeToPuzzle();
-        this.emit('createEvent', event);
-      } else {
-        this.emit('event', event);
-      }
+    return new Promise((resolve, reject) => {
+      this.eventsRef.on('child_added', (snapshot) => {
+        const event = snapshot.val();
+        if (event.type === 'create') {
+          this.createEvent = event;
+          this.subscribeToPuzzle();
+          resolve();
+        }
+        this.emitEvent(event);
+      });
     });
   }
 
@@ -167,17 +170,17 @@ export default class Game extends EventEmitter {
     this.ref.child('battleData').on('value', (snapshot) => {
       this.emit('battleData', snapshot.val());
     });
-    console.log('attaching...');
 
-    const beta = await this.ref.child('isbeta').once('value');
-    console.log('attaching... beta is ', beta);
-    if (beta) {
+    this.beta = !!(await this.betaRef.once('value')).val();
+
+    console.log('attaching... beta is ', this.beta);
+    if (this.beta) {
       await this.connectToWebsocket();
       await this.subscribeToWebsocketEvents();
     } else {
+      console.log('subscribed');
       await this.subscribeToFirebaseEvents(); // TODO only subscribe to websocket
     }
-    this.attached = true;
   }
 
   detach() {
