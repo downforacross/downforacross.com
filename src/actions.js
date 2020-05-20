@@ -1,5 +1,5 @@
 import {gameWords} from './lib/names';
-import {makeGame, makeGrid} from './lib/gameUtils';
+import {makeGrid} from './lib/gameUtils';
 import firebase, {SERVER_TIME, getTime} from './store/firebase';
 import {GameModel, PuzzleModel} from './store';
 
@@ -81,43 +81,6 @@ const actions = {
     }
   },
 
-  createGame: ({name, pid, gid}, cbk) => {
-    db.ref('counters').transaction(
-      (counters) => {
-        let nextGid = (counters && counters.gid) || 0;
-        if (!gid) {
-          // then auto-assign the next one by incrementing
-          nextGid += 1; // if this isn't an int we are fucked lol
-        }
-        return {
-          ...counters,
-          gid: nextGid,
-        };
-      },
-      (error, committed, snapshot) => {
-        if (error || !committed) {
-          console.error('could not create game');
-          return;
-        }
-        if (!gid) {
-          // auto assign the result of our increment
-          // should be atomic or something
-          gid = snapshot.child('gid').val();
-        }
-        db.ref(`puzzle/${pid}`).once('value', (puzzle) => {
-          const game = makeGame(gid, name, puzzle.val());
-          db.ref(`game/${gid}`).set(game);
-          db.ref(`history/${gid}`).push({
-            timestamp: SERVER_TIME,
-            type: 'create',
-            params: {game},
-          });
-        });
-        cbk && cbk(gid);
-      }
-    );
-  },
-
   // TODO: this should probably be createGame and the above should be deleted but idk what it does...
   createGameForBattle: ({pid, battleData}, cbk) => {
     actions.getNextGid((gid) => {
@@ -126,7 +89,7 @@ const actions = {
       puzzle.attach();
       puzzle.once('ready', () => {
         const rawGame = puzzle.toGame();
-        game.initialize(rawGame, battleData, () => {
+        game.initialize(rawGame, {battleData}).then(() => {
           cbk && cbk(gid);
         });
       });

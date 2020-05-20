@@ -76,13 +76,14 @@ export default class Game extends EventEmitter {
 
   async addEvent(event) {
     event.id = uuid.v4();
-    // this.events.push(event);
-    if (this.socket) {
+    if (this.beta) {
       this.emitOptimisticEvent(event);
       await this.connectToWebsocket();
       console.log('start');
       await this.pushEventToWebsocket(event);
       console.log('done');
+    } else {
+      this.events.push(event);
     }
   }
 
@@ -313,7 +314,7 @@ export default class Game extends EventEmitter {
     });
   }
 
-  async initialize(rawGame, battleData, cbk) {
+  async initialize(rawGame, {beta, battleData} = {}) {
     const {
       info = {},
       grid = [[{}]],
@@ -349,8 +350,9 @@ export default class Game extends EventEmitter {
     const version = CURRENT_VERSION;
     // nuke existing events
 
+    await this.betaRef.set(beta);
     await this.events.set({});
-    await this.connectToWebsocket();
+    this.beta = beta;
     await this.addEvent({
       timestamp: SERVER_TIME,
       type: 'create',
@@ -360,7 +362,6 @@ export default class Game extends EventEmitter {
         game,
       },
     });
-    cbk && cbk();
     this.ref.child('pid').set(pid);
 
     if (battleData) {
