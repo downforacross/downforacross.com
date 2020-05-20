@@ -9,8 +9,6 @@ export default class Puzzle extends EventEmitter {
   constructor(path, pid) {
     super();
     this.ref = db.ref(path);
-    this.betaRef = this.ref.child('beta');
-    this.beta = false;
     this.pid = pid;
   }
 

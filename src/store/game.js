@@ -39,7 +39,9 @@ export default class Game extends EventEmitter {
     window.game = this;
     this.path = path;
     this.ref = db.ref(path);
-    this.events = this.ref.child('events');
+    this.betaRef = this.ref.child('beta');
+    this.beta = false;
+    this.eventsRef = this.ref.child('events');
     this.createEvent = null;
     this.attached = false;
     this.checkArchive();
@@ -83,7 +85,7 @@ export default class Game extends EventEmitter {
       await this.pushEventToWebsocket(event);
       console.log('done');
     } else {
-      this.events.push(event);
+      this.eventsRef.push(event);
     }
   }
 
@@ -149,7 +151,7 @@ export default class Game extends EventEmitter {
   }
 
   subscribeToFirebaseEvents() {
-    this.events.on('child_added', (snapshot) => {
+    this.eventsRef.on('child_added', (snapshot) => {
       const event = snapshot.val();
       if (event.type === 'create') {
         this.createEvent = event;
@@ -179,7 +181,7 @@ export default class Game extends EventEmitter {
   }
 
   detach() {
-    this.events.off('child_added');
+    this.eventsRef.off('child_added');
   }
 
   subscribeToPuzzle() {
@@ -351,7 +353,7 @@ export default class Game extends EventEmitter {
     // nuke existing events
 
     await this.betaRef.set(beta);
-    await this.events.set({});
+    await this.eventsRef.set({});
     this.beta = beta;
     await this.addEvent({
       timestamp: SERVER_TIME,
