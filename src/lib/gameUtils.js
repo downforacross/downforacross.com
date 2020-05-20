@@ -1,5 +1,4 @@
 import GridWrapper from './wrappers/GridWrapper';
-import {getTime} from '../store/firebase';
 
 export const getOppositeDirection = (direction) =>
   ({

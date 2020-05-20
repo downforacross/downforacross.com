@@ -4,7 +4,6 @@ import React from 'react';
 import Flex from 'react-flexview';
 import Clue from './ClueText';
 import GridControls from './GridControls';
-import MobileKeyboard from './MobileKeyboard';
 import classnames from 'classnames';
 import _ from 'lodash';
 import GridObject from '../../lib/wrappers/GridWrapper';

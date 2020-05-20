@@ -1,6 +1,6 @@
 import {gameWords} from './lib/names';
 import {makeGrid} from './lib/gameUtils';
-import firebase, {SERVER_TIME, getTime} from './store/firebase';
+import firebase, {getTime} from './store/firebase';
 import {GameModel, PuzzleModel} from './store';
 
 // for interfacing with firebase
