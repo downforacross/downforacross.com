@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import Promise from 'bluebird';
 import uuid from 'uuid';
 import _ from 'lodash';
-
+import {SOCKET_HOST} from './api';
 import {db, SERVER_TIME} from './firebase';
 import Puzzle from './puzzle';
 import * as colors from '../lib/colors';
@@ -25,11 +25,6 @@ const castNullsToUndefined = (obj) => {
   }
 };
 
-const REMOTE_SOCKET_HOST_HTTPS = 'https://downforacross.com';
-const REMOTE_SOCKET_HOST_HTTP = '54.151.18.249:3021';
-const REMOTE_SOCKET_HOST =
-  window.location.protocol === 'https:' ? REMOTE_SOCKET_HOST_HTTPS : REMOTE_SOCKET_HOST_HTTP;
-const SOCKET_HOST = process.env.REACT_APP_USE_LOCAL_SERVER ? 'localhost:3021' : REMOTE_SOCKET_HOST;
 // a wrapper class that models Game
 
 const emitAsync = (socket, ...args) => new Promise((resolve) => socket.emit(...args, resolve));
@@ -65,7 +60,7 @@ export default class Game extends EventEmitter {
         console.log('Connected!');
       })();
     }
-    return Promise.race([this.websocketPromise, Promise.delay(10000)]);
+    return Promise.race([this.websocketPromise, Promise.delay(3000)]);
   }
 
   emitEvent(event) {
@@ -92,11 +87,12 @@ export default class Game extends EventEmitter {
     event.id = uuid.v4();
     await this.eventsRef.push(event);
     try {
-      (async () => {
+      const promise = (async () => {
         this.emitOptimisticEvent(event);
         await this.connectToWebsocket();
         await this.pushEventToWebsocket(event);
       })();
+      await Promise.race([promise, Promise.delay(3000)]);
     } catch (e) {
       // it's ok
     }
