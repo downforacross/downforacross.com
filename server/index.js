@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
+const EventEmitter = require('events');
 
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
@@ -52,88 +53,168 @@ class GameModel {
   }
 }
 
-const gameModel = new GameModel();
-
 // ============== Socket Manager ==============
 
-// Todo socket.js, make it a class SocketManager
-const gameToSocket = new Map();
-const socketToGame = new Map(); // Redundancy for sake of correctness
-
-const assignTimestamp = (event) => {
-  if (event && typeof event === 'object') {
-    if (event['.sv'] === 'timestamp') {
-      return Date.now();
-    }
-    const result = event.constructor();
-    for (const key in event) {
-      result[key] = assignTimestamp(event[key]);
-    }
-    return result;
-  }
-  return event;
-};
-
-// Precondition: gid's game is "hot"
-const addEvent = async (gid, event) => {
-  event = assignTimestamp(event);
-
-  // 1. save to DB
-  gameModel.addEvent(gid, event);
-  // 2. emit to all live clients
-
-  if (gameToSocket.get(gid)) {
-    gameToSocket.get(gid).forEach(async (socket) => {
-      socket.emit('game_event', event);
-    });
+class SocketManager extends EventEmitter {
+  constructor(gameModel) {
+    super();
+    this.gameToSocket = new Map();
+    this.socketToGame = new Map(); // Redundancy for sake of correctness
+    this.gameModel = gameModel;
   }
 
-  // 3. don't forget to do the SERVER_TIME thing
-  // MVP: start w/ getting step 2 working
-};
-
-io.on('connection', (socket) => {
-  console.log('[connect]', socket.id);
-  socket.on('join', async (gid, ack) => {
-    console.log('[join]', gid);
-    if (socketToGame.has(socket)) {
-      throw new Error(`Socket ${socket.id} already joined ${socketToGame.get(socket)}, cannot join ${gid}`);
+  assignTimestamp(event) {
+    if (event && typeof event === 'object') {
+      if (event['.sv'] === 'timestamp') {
+        return Date.now();
+      }
+      const result = event.constructor();
+      for (const key in event) {
+        result[key] = this.assignTimestamp(event[key]);
+      }
+      return result;
     }
+    return event;
+  }
 
-    if (!gameToSocket.get(gid)) {
-      gameToSocket.set(gid, []);
+  // Precondition: gid's game is "hot"
+  async addEvent(gid, event) {
+    this.emit('event', gid, event);
+    event = this.assignTimestamp(event);
+
+    // 1. save to DB
+    gameModel.addEvent(gid, event);
+    // 2. emit to all live clients
+
+    if (this.gameToSocket.get(gid)) {
+      this.gameToSocket.get(gid).forEach(async (socket) => {
+        socket.emit('game_event', event);
+      });
     }
-    gameToSocket.get(gid).push(socket);
-    socketToGame.set(socket, gid);
+  }
 
-    socket.on('game_event', (message, cbk) => {
-      console.log('[message]', message);
-      addEvent(message.gid, message.event);
-      cbk();
+  listen() {
+    io.on('connection', (socket) => {
+      console.log('[connect]', socket.id);
+      socket.on('join', async (gid, ack) => {
+        console.log('[join]', gid);
+        if (this.socketToGame.has(socket)) {
+          throw new Error(
+            `Socket ${socket.id} already joined ${this.socketToGame.get(socket)}, cannot join ${gid}`
+          );
+        }
+
+        if (!this.gameToSocket.get(gid)) {
+          this.gameToSocket.set(gid, []);
+        }
+        this.gameToSocket.get(gid).push(socket);
+        this.socketToGame.set(socket, gid);
+
+        socket.on('game_event', (message, cbk) => {
+          console.log('emit game event');
+          console.log('[message]', message);
+          this.addEvent(message.gid, message.event);
+          cbk();
+        });
+        ack();
+      });
+
+      // Perform the "initial sync"
+      socket.on('sync_all', async (gid, cbk) => {
+        console.log('[sync_all]', gid);
+        const events = await gameModel.getEvents(gid);
+        cbk(events);
+      });
+
+      socket.on('disconnect', () => {
+        console.log('[disconnect]', socket.id);
+        if (!this.socketToGame.has(socket)) {
+          return;
+        }
+        const gid = this.socketToGame.get(socket);
+        _.remove(this.gameToSocket.get(gid), socket);
+        this.socketToGame.delete(socket);
+      });
     });
-    ack();
-  });
-
-  // Perform the "initial sync"
-  socket.on('sync_all', async (gid, cbk) => {
-    console.log('[sync_all]', gid);
-    const events = await gameModel.getEvents(gid);
-    cbk(events);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('[disconnect]', socket.id);
-    if (!socketToGame.has(socket)) {
-      return;
-    }
-    const gid = socketToGame.get(socket);
-    _.remove(gameToSocket.get(gid), socket);
-    socketToGame.delete(socket);
-  });
-});
+  }
+}
 
 // ============== End Socket Manager ==============
 
+// ================== Begin Stats ====================
+
+function getStatsForTimeWindow(socketManager, seconds) {
+  const stats = {
+    windowStart: Date.now(),
+    prevCounts: {
+      gameEvents: 0,
+      activeGames: 0,
+      bytesTransferred: 0,
+    },
+    counts: {
+      gameEvents: 0,
+      activeGames: 0,
+      bytesTransferred: 0,
+    },
+    activeGids: [],
+  };
+  const activeGames = new Set();
+  socketManager.on('event', (gid, event) => {
+    stats.counts.gameEvents++;
+    stats.counts.bytesTransferred += JSON.stringify(event).length;
+    if (!activeGames.has(gid)) {
+      activeGames.add(gid);
+      stats.counts.activeGames++;
+      stats.activeGids.push(gid);
+    }
+  });
+
+  setInterval(() => {
+    for (const key in stats.counts) {
+      stats.prevCounts[key] = stats.counts[key];
+      stats.counts[key] = 0;
+    }
+    activeGames.clear();
+    stats.activeGids = [];
+    stats.windowStart = Date.now();
+  }, seconds * 1000);
+  setInterval(() => {
+    stats.percentComplete = (Date.now() - stats.windowStart) / (seconds * 1000);
+  }, 500);
+  return stats;
+}
+
+const STAT_DEFS = [
+  {
+    name: 'minute',
+    secs: 60,
+  },
+  {
+    name: 'hour',
+    secs: 60 * 60,
+  },
+  {
+    name: 'day',
+    secs: 60 * 60 * 24,
+  },
+  {
+    name: 'week',
+    secs: 60 * 60 * 24 * 7,
+  },
+];
+// ================== End Stats ================
+
+const gameModel = new GameModel();
+const socketManager = new SocketManager();
+socketManager.listen();
+
+const stats = STAT_DEFS.map(({name, secs}) => ({
+  name,
+  stats: getStatsForTimeWindow(socketManager, secs),
+}));
 app.get('/test', (req, res) => res.send('Hello World!'));
-app.get('/socket.io', (req, res) => res.send('HELLO!!'));
+app.get('/api/stats', (req, res) => {
+  // TODO cap the number of games returned?
+  res.status(200).json(stats);
+});
 server.listen(port, () => console.log(`Listening on port ${port}`));
