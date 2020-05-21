@@ -39,11 +39,8 @@ export default class Game extends EventEmitter {
     window.game = this;
     this.path = path;
     this.ref = db.ref(path);
-    this.betaRef = this.ref.child('beta');
-    this.beta = false;
     this.eventsRef = this.ref.child('events');
     this.createEvent = null;
-    this.attached = false;
     this.checkArchive();
   }
 
@@ -69,26 +66,30 @@ export default class Game extends EventEmitter {
 
   emitEvent(event) {
     if (event.type === 'create') {
-      this.attached = true;
       this.emit('createEvent', event);
     } else {
       this.emit('event', event);
     }
   }
 
+  emitWSEvent(event) {
+    if (event.type === 'create') {
+      this.emit('wsCreateEvent', event);
+    } else {
+      this.emit('wsEvent', event);
+    }
+  }
+
   emitOptimisticEvent(event) {
-    this.emit('optimisticEvent', event);
+    this.emit('wsOptimisticEvent', event);
   }
 
   async addEvent(event) {
     event.id = uuid.v4();
-    if (this.beta) {
-      this.emitOptimisticEvent(event);
-      await this.connectToWebsocket();
-      await this.pushEventToWebsocket(event);
-    } else {
-      this.eventsRef.push(event);
-    }
+    this.eventsRef.push(event);
+    this.emitOptimisticEvent(event);
+    await this.connectToWebsocket();
+    await this.pushEventToWebsocket(event);
   }
 
   pushEventToWebsocket(event) {
@@ -109,12 +110,12 @@ export default class Game extends EventEmitter {
 
     this.socket.on('game_event', (event) => {
       event = castNullsToUndefined(event);
-      this.emitEvent(event);
+      this.emitWSEvent(event);
     });
     const response = await emitAsync(this.socket, 'sync_all', this.gid);
     response.forEach((event) => {
       event = castNullsToUndefined(event);
-      this.emitEvent(event);
+      this.emitWSEvent(event);
     });
   }
 
@@ -153,9 +154,11 @@ export default class Game extends EventEmitter {
   }
 
   subscribeToFirebaseEvents() {
+    console.log('sub fb');
     return new Promise((resolve, reject) => {
       this.eventsRef.on('child_added', (snapshot) => {
         const event = snapshot.val();
+        console.log('child added', event);
         if (event.type === 'create') {
           this.createEvent = event;
           this.subscribeToPuzzle();
@@ -171,16 +174,10 @@ export default class Game extends EventEmitter {
       this.emit('battleData', snapshot.val());
     });
 
-    this.beta = !!(await this.betaRef.once('value')).val();
-
-    console.log('attaching... beta is ', this.beta);
-    if (this.beta) {
-      await this.connectToWebsocket();
-      await this.subscribeToWebsocketEvents();
-    } else {
-      console.log('subscribed');
-      await this.subscribeToFirebaseEvents(); // TODO only subscribe to websocket
-    }
+    await this.connectToWebsocket();
+    await this.subscribeToWebsocketEvents();
+    console.log('subscribed');
+    await this.subscribeToFirebaseEvents(); // TODO only subscribe to websocket
   }
 
   detach() {
@@ -319,7 +316,7 @@ export default class Game extends EventEmitter {
     });
   }
 
-  async initialize(rawGame, {beta, battleData} = {}) {
+  async initialize(rawGame, {battleData} = {}) {
     const {
       info = {},
       grid = [[{}]],
@@ -355,9 +352,7 @@ export default class Game extends EventEmitter {
     const version = CURRENT_VERSION;
     // nuke existing events
 
-    await this.betaRef.set(beta);
     await this.eventsRef.set({});
-    this.beta = beta;
     await this.addEvent({
       timestamp: SERVER_TIME,
       type: 'create',

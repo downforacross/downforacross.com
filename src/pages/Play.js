@@ -31,10 +31,6 @@ export default class Play extends Component {
     }
   }
 
-  get beta() {
-    return !!this.query.beta;
-  }
-
   get pid() {
     return Number(this.props.match.params.pid);
   }
@@ -95,7 +91,7 @@ export default class Play extends Component {
       puzzle.once('ready', async () => {
         const rawGame = puzzle.toGame();
         await Promise.all([
-          game.initialize(rawGame, {beta: this.beta}),
+          game.initialize(rawGame),
           this.user.joinGame(gid, {
             pid: this.pid,
             solved: false,

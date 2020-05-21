@@ -23,6 +23,10 @@ export default class HistoryWrapper {
     return reduce;
   }
 
+  get ready() {
+    return !!this.createEvent;
+  }
+
   initializeMemo() {
     if (!this.createEvent) {
       return;
