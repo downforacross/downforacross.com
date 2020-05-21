@@ -211,7 +211,7 @@ socketManager.listen();
 
 const stats = STAT_DEFS.map(({name, secs}) => ({
   name,
-  ...getStatsForTimeWindow(socketManager, secs),
+  stats: getStatsForTimeWindow(socketManager, secs),
 }));
 app.get('/test', (req, res) => res.send('Hello World!'));
 app.get('/api/stats', (req, res) => {

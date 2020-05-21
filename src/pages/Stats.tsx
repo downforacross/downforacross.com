@@ -18,7 +18,8 @@ const Stats: React.FC<{}> = () => {
       <h2>Live Stats</h2>
       {_.map(allStats, (stats) => (
         <div className={classes.container}>
-          <div className={classes.header}>{stats.name}</div>
+          <div className={classes.header}>In the last {stats.name}</div>
+          <div className={classes.counts}>{stats.prevCounts.gameEvents}</div>
           <div className={classes.counts}>{stats.counts.gameEvents}</div>
         </div>
       ))}
