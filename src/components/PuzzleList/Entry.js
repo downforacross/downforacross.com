@@ -41,7 +41,9 @@ export default class Entry extends Component {
 
   render() {
     const {title, author, pid, status, stats = {}} = this.props;
-    const numSolves = _.size(stats.solves);
+    const numSolvesOld = _.size(stats.solves);
+    const numSolves = numSolvesOld + (stats.numSolves || 0);
+    console.log({numSolves, numSolvesOld});
     return (
       <Link to={`/beta/play/${pid}`} style={{textDecoration: 'none', color: 'initial'}}>
         <Flex className="entry" column onClick={this.handleClick} onMouseLeave={this.handleMouseLeave}>

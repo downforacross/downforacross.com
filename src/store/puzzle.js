@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-
+import _ from 'lodash';
 import {db, getTime} from './firebase';
 import {makeGrid} from '../lib/gameUtils';
 
@@ -24,9 +24,16 @@ export default class Puzzle extends EventEmitter {
   }
 
   logSolve(gid, stats) {
-    const puzzleListPath = `/puzzlelist/${this.pid}`;
-    const puzzleListRef = db.ref(puzzleListPath);
-    puzzleListRef.child('stats/solves').child(gid).set(stats);
+    const statsPath = `/stats/${this.pid}`;
+    const statsRef = db.ref(statsPath);
+    const puzzlelistPath = `/puzzlelist/${this.pid}`;
+    const puzzlelistRef = db.ref(puzzlelistPath);
+    statsRef.child('solves').child(gid).set(stats);
+    statsRef.once('value').then((snapshot) => {
+      const stats = snapshot.val();
+      const numSolves = _.keys(stats).length;
+      puzzlelistRef.child('stats/numSolves').set(numSolves);
+    });
   }
 
   toGame() {

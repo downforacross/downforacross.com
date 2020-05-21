@@ -40,10 +40,19 @@
       "$pid": {
         ".write": "!data.exists()",
         "stats": {
-          "solves": {
-            "$gid": {
-              ".write": true
-            }
+          "numSolves": {
+            ".write": true
+          }
+        }
+      }
+    },
+    "stats": {
+      ".read": true,
+      "$pid": {
+        ".write": "!data.exists()",
+        "solves": {
+          "$gid": {
+            ".write": true
           }
         }
       }

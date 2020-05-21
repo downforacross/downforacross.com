@@ -22,6 +22,7 @@ function setPuzzle(pid, puzzle) {
     importedTime: getTime(),
     stats: {
       solves: {},
+      numSolves: 0,
     },
   });
   db.ref(`puzzle/${pid}`).set({
