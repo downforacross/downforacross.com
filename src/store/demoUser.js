@@ -1,7 +1,5 @@
 import User from './user';
 
-console.log('require demouser');
-
 export default class DemoUser extends User {
   constructor(fb) {
     super();
