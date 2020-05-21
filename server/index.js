@@ -146,6 +146,7 @@ class SocketManager extends EventEmitter {
 function getStatsForTimeWindow(socketManager, seconds) {
   const stats = {
     windowStart: Date.now(),
+    prevCounts: {},
     counts: {
       gameEvents: 0,
       activeGames: 0,
@@ -164,6 +165,7 @@ function getStatsForTimeWindow(socketManager, seconds) {
 
   setInterval(() => {
     for (const key in stats.counts) {
+      stats.prevCounts[key] = stats.counts[key];
       stats.counts[key] = 0;
     }
     activeGames.clear();
