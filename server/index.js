@@ -135,5 +135,5 @@ io.on('connection', (socket) => {
 // ============== End Socket Manager ==============
 
 app.get('/test', (req, res) => res.send('Hello World!'));
-
+app.get('/socket.io', (req, res) => res.send('HELLO!!'));
 server.listen(port, () => console.log(`Listening on port ${port}`));

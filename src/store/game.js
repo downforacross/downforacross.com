@@ -94,7 +94,8 @@ export default class Game extends EventEmitter {
 
   pushEventToWebsocket(event) {
     if (!this.socket || !this.socket.connected) {
-      throw new Error('Not connected to websocket');
+      return;
+      // throw new Error('Not connected to websocket');
     }
 
     return emitAsync(this.socket, 'game_event', {
@@ -174,10 +175,11 @@ export default class Game extends EventEmitter {
       this.emit('battleData', snapshot.val());
     });
 
+    await this.subscribeToFirebaseEvents(); // TODO only subscribe to websocket
+    console.log('subscribed');
+
     await this.connectToWebsocket();
     await this.subscribeToWebsocketEvents();
-    console.log('subscribed');
-    await this.subscribeToFirebaseEvents(); // TODO only subscribe to websocket
   }
 
   detach() {
