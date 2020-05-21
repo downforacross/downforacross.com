@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {makeStyles, createStyles} from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import {fetchStats, TimeWindowStats} from '../store/api';
 import _ from 'lodash';
 

@@ -309,7 +309,6 @@ export default class Welcome extends Component {
     const {search} = this.state;
     const hAlignContent = this.mobile ? 'right' : 'left';
     const grow = this.mobile ? 0 : 1;
-    const searchIcon = <MdSearch className="welcome--searchicon" />;
     return (
       <Flex className="welcome--searchbar--container" shrink={0} hAlignContent={hAlignContent}>
         <Flex
