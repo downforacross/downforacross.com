@@ -5,7 +5,6 @@ import Flex from 'react-flexview';
 import {MdKeyboardArrowLeft, MdKeyboardArrowRight} from 'react-icons/md';
 import Clue from './ClueText';
 import GridControls from './GridControls';
-import MobileKeyboard from './MobileKeyboard';
 import classnames from 'classnames';
 import _ from 'lodash';
 import GridObject from '../../lib/wrappers/GridWrapper';

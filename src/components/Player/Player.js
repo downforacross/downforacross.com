@@ -254,9 +254,12 @@ export default class Player extends Component {
   }
 
   handleSetCursorLock = (val) => {
-    setTimeout(() => {
-      this.cursorLocked = val;
-    }, val ? 0 : 150);
+    setTimeout(
+      () => {
+        this.cursorLocked = val;
+      },
+      val ? 0 : 150
+    );
   };
 
   /* Render */
@@ -268,6 +271,7 @@ export default class Player extends Component {
       grid,
       clues,
       circles,
+      beta,
       cursors: allCursors = [],
       pings: allPings = [],
       updateGrid,
@@ -283,11 +287,13 @@ export default class Player extends Component {
     const {cellStyle = {}} = gridStyle;
 
     const currentTime = getTime();
-    const cursors = allCursors.filter((cursor) => cursor.id !== id).map((cursor) => ({
-      ...cursor,
-      active: cursor.timestamp > currentTime - CURSOR_TIMEOUT,
-      color: users[cursor.id].color,
-    }));
+    const cursors = allCursors
+      .filter((cursor) => cursor.id !== id)
+      .map((cursor) => ({
+        ...cursor,
+        active: cursor.timestamp > currentTime - CURSOR_TIMEOUT,
+        color: users[cursor.id].color,
+      }));
     const pings = allPings
       .map((ping) => ({
         ...ping,
@@ -360,6 +366,7 @@ export default class Player extends Component {
           updateGrid={updateGrid}
           grid={grid}
           clues={clues}
+          beta={beta}
         >
           <div className="player--main">
             <div className="player--main--left">
@@ -390,6 +397,16 @@ export default class Player extends Component {
             </div>
           </div>
         </GridControls>
+        {this.props.beta && (
+          <span
+            style={{
+              color: 'gray',
+              margin: '0 auto',
+            }}
+          >
+            {this.props.optimisticCounter ? <>{this.props.optimisticCounter} ahead</> : <>Synced</>}
+          </span>
+        )}
       </div>
     );
   }

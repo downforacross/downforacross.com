@@ -1,5 +1,4 @@
 import GridWrapper from './wrappers/GridWrapper';
-import {getTime} from '../store/firebase';
 
 export const getOppositeDirection = (direction) =>
   ({
@@ -111,29 +110,6 @@ export const convertGridForComposition = (grid) =>
       value,
     }))
   );
-
-export const makeGame = (gid, name, puzzle) => {
-  const grid = makeGrid(puzzle.grid);
-  const clues = grid.alignClues(puzzle.clues);
-  const game = {
-    gid,
-    name,
-    info: puzzle.info,
-    circles: puzzle.circles || [],
-    shades: puzzle.shades || [],
-    clues,
-    solution: puzzle.grid,
-    pid: puzzle.pid || null,
-    grid: grid.toArray(),
-    createTime: getTime(),
-    startTime: null,
-    chat: {
-      users: [],
-      messages: [],
-    },
-  };
-  return game;
-};
 
 export const makeEmptyClues = (gridArray) => {
   const grid = new GridWrapper(gridArray);

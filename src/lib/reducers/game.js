@@ -66,6 +66,7 @@ const reducers = {
       cursors,
       users,
       themeColor,
+      optimisticCounter: 0,
     };
   },
 
@@ -78,14 +79,16 @@ const reducers = {
       timestamp,
     } = params;
 
-    cursors = cursors.filter((cursor) => cursor.id !== id).concat([
-      {
-        r,
-        c,
-        id,
-        timestamp,
-      },
-    ]);
+    cursors = cursors
+      .filter((cursor) => cursor.id !== id)
+      .concat([
+        {
+          r,
+          c,
+          id,
+          timestamp,
+        },
+      ]);
 
     return {
       ...game,
@@ -176,16 +179,15 @@ const reducers = {
     let {grid, solution} = game;
     const scopeGrid = getScopeGrid(grid, scope);
     grid = grid.map((row, i) =>
-      row.map(
-        (cell, j) =>
-          scopeGrid[i][j]
-            ? {
-                ...cell,
-                good: cell.value !== '' && cell.value === solution[i][j],
-                bad: cell.value !== '' && cell.value !== solution[i][j],
-                pencil: false,
-              }
-            : cell
+      row.map((cell, j) =>
+        scopeGrid[i][j]
+          ? {
+              ...cell,
+              good: cell.value !== '' && cell.value === solution[i][j],
+              bad: cell.value !== '' && cell.value !== solution[i][j],
+              pencil: false,
+            }
+          : cell
       )
     );
     return {
@@ -199,17 +201,16 @@ const reducers = {
     let {grid, solution} = game;
     const scopeGrid = getScopeGrid(grid, scope);
     grid = grid.map((row, i) =>
-      row.map(
-        (cell, j) =>
-          scopeGrid[i][j]
-            ? {
-                ...cell,
-                value: solution[i][j],
-                good: true,
-                pencil: false,
-                revealed: cell.revealed || cell.value !== solution[i][j],
-              }
-            : cell
+      row.map((cell, j) =>
+        scopeGrid[i][j]
+          ? {
+              ...cell,
+              value: solution[i][j],
+              good: true,
+              pencil: false,
+              revealed: cell.revealed || cell.value !== solution[i][j],
+            }
+          : cell
       )
     );
     return {
@@ -223,18 +224,17 @@ const reducers = {
     let {grid} = game;
     const scopeGrid = getScopeGrid(grid, scope);
     grid = grid.map((row, i) =>
-      row.map(
-        (cell, j) =>
-          scopeGrid[i][j]
-            ? {
-                ...cell,
-                value: '',
-                good: false,
-                bad: false,
-                revealed: false,
-                pencil: false,
-              }
-            : cell
+      row.map((cell, j) =>
+        scopeGrid[i][j]
+          ? {
+              ...cell,
+              value: '',
+              good: false,
+              bad: false,
+              revealed: false,
+              pencil: false,
+            }
+          : cell
       )
     );
     return {
@@ -287,6 +287,11 @@ const reducers = {
   },
 };
 
+const incrementOptimisticCounter = (game) => ({
+  ...game,
+  optimisticCounter: game.optimisticCounter + 1,
+});
+
 export const tick = (game, timestamp, isPause) => {
   if (!timestamp) {
     return game;
@@ -317,7 +322,7 @@ const checkSolved = (game) => ({
   solved: isSolved(game),
 });
 
-export const reduce = (game, action) => {
+export const reduce = (game, action, options = {}) => {
   const {timestamp, type, params} = action;
   if (!(type in reducers)) {
     console.error('action', type, 'not found');
@@ -329,7 +334,11 @@ export const reduce = (game, action) => {
     game = checkSolved(game);
     const isPause =
       (type === 'updateClock' && params && params.action === 'pause') || type === 'create' || game.solved;
-    game = tick(game, timestamp, isPause);
+    if (options.isOptimistic) {
+      game = incrementOptimisticCounter(game);
+    } else {
+      game = tick(game, timestamp, isPause);
+    }
   } catch (e) {
     console.error('Error handling action', action);
   }

@@ -132,48 +132,52 @@ export default class Toolbar extends Component {
           </ul>
           <h4>Keyboard Shortcuts</h4>
           <table>
-            <tr>
-              <th>Shortcut</th>
-              <th>Description</th>
-            </tr>
-            <tr>
-              <td>Letter / Number</td>
-              <td>Fill in current cell and advance cursor to next unfilled cell in the same word, if any</td>
-            </tr>
-            <tr>
-              <td>
-                <code>.</code> (period)
-              </td>
-              <td>Toggle pencil mode on/off</td>
-            </tr>
-            <tr>
-              <td>Arrow keys</td>
-              <td>
-                Either move cursor along current orientation or change orientation without moving cursor
-              </td>
-            </tr>
-            <tr>
-              <td>Space bar</td>
-              <td>Flip orientation between down/across</td>
-            </tr>
-            <tr>
-              <td>
-                <code>[</code> and <code>]</code>
-              </td>
-              <td>Move cursor perpendicular to current orientation without changing orientation</td>
-            </tr>
-            <tr>
-              <td>
-                <code>Tab</code> and <code>Shift+Tab</code>
-              </td>
-              <td>Move cursor to first unfilled square of next or previous unfilled clue</td>
-            </tr>
-            <tr>
-              <td>
-                <code>Delete</code> or <code>Backspace</code>
-              </td>
-              <td>Clear current cell</td>
-            </tr>
+            <tbody>
+              <tr>
+                <th>Shortcut</th>
+                <th>Description</th>
+              </tr>
+              <tr>
+                <td>Letter / Number</td>
+                <td>
+                  Fill in current cell and advance cursor to next unfilled cell in the same word, if any
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <code>.</code> (period)
+                </td>
+                <td>Toggle pencil mode on/off</td>
+              </tr>
+              <tr>
+                <td>Arrow keys</td>
+                <td>
+                  Either move cursor along current orientation or change orientation without moving cursor
+                </td>
+              </tr>
+              <tr>
+                <td>Space bar</td>
+                <td>Flip orientation between down/across</td>
+              </tr>
+              <tr>
+                <td>
+                  <code>[</code> and <code>]</code>
+                </td>
+                <td>Move cursor perpendicular to current orientation without changing orientation</td>
+              </tr>
+              <tr>
+                <td>
+                  <code>Tab</code> and <code>Shift+Tab</code>
+                </td>
+                <td>Move cursor to first unfilled square of next or previous unfilled clue</td>
+              </tr>
+              <tr>
+                <td>
+                  <code>Delete</code> or <code>Backspace</code>
+                </td>
+                <td>Clear current cell</td>
+              </tr>
+            </tbody>
           </table>
         </Popup>
       </div>

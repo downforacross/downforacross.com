@@ -3,6 +3,7 @@ import 'react-flexview/lib/flexView.css';
 import React, {Component} from 'react';
 import Nav from '../components/common/Nav';
 import _ from 'lodash';
+import querystring from 'querystring';
 import {Helmet} from 'react-helmet';
 import Flex from 'react-flexview';
 
@@ -19,6 +20,7 @@ import * as powerupLib from '../lib/powerups';
 export default class Game extends Component {
   constructor(props) {
     super();
+    window.gameComponent = this;
     this.state = {
       gid: undefined,
       mobile: isMobile(),
@@ -42,6 +44,14 @@ export default class Game extends Component {
       rid: props.match.params.rid,
       gid: props.match.params.gid,
     };
+  }
+
+  get beta() {
+    return !!this.query.beta || !!this.query.ws;
+  }
+
+  get query() {
+    return querystring.parse(this.props.location.search.slice(1));
   }
 
   initializeUser() {
@@ -89,15 +99,32 @@ export default class Game extends Component {
     this.gameModel.once('battleData', (battleData) => {
       this.initializeBattle(battleData);
     });
-    this.gameModel.on('createEvent', (event) => {
-      this.historyWrapper.setCreateEvent(event);
-      this.handleUpdate();
-    });
-    this.gameModel.on('event', (event) => {
-      this.historyWrapper.addEvent(event);
-      this.handleChange();
-      this.handleUpdate();
-    });
+    if (this.beta) {
+      this.gameModel.on('wsCreateEvent', (event) => {
+        this.historyWrapper.setCreateEvent(event);
+        this.handleUpdate();
+      });
+      this.gameModel.on('wsEvent', (event) => {
+        this.historyWrapper.addEvent(event);
+        this.handleChange();
+        this.handleUpdate();
+      });
+      this.gameModel.on('wsOptimisticEvent', (event) => {
+        this.historyWrapper.addOptimisticEvent(event);
+        this.handleChange();
+        this.handleUpdate();
+      });
+    } else {
+      this.gameModel.on('createEvent', (event) => {
+        this.historyWrapper.setCreateEvent(event);
+        this.handleUpdate();
+      });
+      this.gameModel.on('event', (event) => {
+        this.historyWrapper.addEvent(event);
+        this.handleChange();
+        this.handleUpdate();
+      });
+    }
 
     this.gameModel.on('archived', (event) => {
       this.setState({
@@ -174,7 +201,7 @@ export default class Game extends Component {
   }
 
   get opponentGame() {
-    if (!this.opponentGameModel || !this.opponentGameModel.attached || !this.opponentHistoryWrapper) {
+    if (!this.opponentGameModel || !this.opponentHistoryWrapper.ready || !this.opponentHistoryWrapper) {
       return undefined;
     }
     return this.opponentHistoryWrapper.getSnapshot();
@@ -223,6 +250,10 @@ export default class Game extends Component {
   );
 
   handleChange = _.debounce(({isEdit = false} = {}) => {
+    if (!this.gameModel || !this.historyWrapper.ready) {
+      return;
+    }
+
     if (isEdit) {
       this.user.joinGame(this.state.gid, {
         pid: this.game.pid,
@@ -252,7 +283,7 @@ export default class Game extends Component {
   // Render Methods
 
   renderGame() {
-    if (!this.gameModel || !this.gameModel.attached) {
+    if (!this.gameModel || !this.historyWrapper.ready) {
       return;
     }
 
@@ -265,6 +296,7 @@ export default class Game extends Component {
         ref={(c) => {
           this.gameComponent = c;
         }}
+        beta={this.beta}
         id={id}
         myColor={color}
         historyWrapper={this.historyWrapper}
@@ -275,7 +307,7 @@ export default class Game extends Component {
         onToggleChat={this.handleToggleChat}
         mobile={mobile}
         opponentHistoryWrapper={
-          this.opponentGameModel && this.opponentGameModel.attached && this.opponentHistoryWrapper
+          this.opponentGameModel && this.opponentHistoryWrapper.ready && this.opponentHistoryWrapper
         }
         ownPowerups={ownPowerups}
         opponentPowerups={opponentPowerups}
@@ -288,7 +320,7 @@ export default class Game extends Component {
   }
 
   renderChat() {
-    if (!this.gameModel || !this.gameModel.attached) {
+    if (!this.gameModel || !this.historyWrapper.ready) {
       return;
     }
 
@@ -317,7 +349,7 @@ export default class Game extends Component {
   }
 
   getPuzzleTitle() {
-    if (!this.gameModel || !this.gameModel.attached) {
+    if (!this.gameModel || !this.historyWrapper.ready) {
       return;
     }
     const game = this.historyWrapper.getSnapshot();

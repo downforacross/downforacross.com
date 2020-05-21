@@ -157,12 +157,24 @@ export default class Game extends Component {
   }
 
   renderPlayer() {
-    const {id, myColor, mobile} = this.props;
+    const {id, myColor, mobile, beta} = this.props;
     if (!this.game) {
       return <div>Loading...</div>;
     }
 
-    const {grid, circles, shades, cursors, pings, users, clues, solved, solution, themeColor} = this.game;
+    const {
+      grid,
+      circles,
+      shades,
+      cursors,
+      pings,
+      users,
+      clues,
+      solved,
+      solution,
+      themeColor,
+      optimisticCounter,
+    } = this.game;
     const opponentGrid = this.opponentGame && this.opponentGame.grid;
     const {screenWidth} = this.state;
     const themeStyles = {
@@ -192,6 +204,7 @@ export default class Game extends Component {
         ref={(c) => {
           this.player = c;
         }}
+        beta={beta}
         size={size}
         grid={grid}
         solution={solution}
@@ -215,6 +228,7 @@ export default class Game extends Component {
         onPressPeriod={this.handlePressPeriod}
         mobile={mobile}
         pickups={this.props.pickups}
+        optimisticCounter={optimisticCounter}
         {...themeStyles}
       />
     );
