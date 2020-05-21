@@ -16,11 +16,12 @@ const Stats: React.FC<{}> = () => {
   return (
     <>
       <h2>Live Stats</h2>
-      {_.map(allStats, (stats) => (
+      {_.map(allStats, ({name, stats}) => (
         <div className={classes.container}>
-          <div className={classes.header}>In the last {stats.name}</div>
-          <div className={classes.counts}>{stats.prevCounts.gameEvents}</div>
-          <div className={classes.counts}>{stats.counts.gameEvents}</div>
+          <div className={classes.header}>{name}</div>
+          Previous interval: <div className={classes.counts}>{stats.prevCounts.gameEvents}</div> game events
+          Current interval: ({(stats.percentComplete * 100).toFixed(2)}% complete){' '}
+          <div className={classes.counts}>{stats.counts.gameEvents}</div> game events
         </div>
       ))}
     </>

@@ -12,16 +12,19 @@ export const SOCKET_HOST = SERVER_URL;
 // ========== GET /api/stats ============
 export interface TimeWindowStats {
   name: string;
-  windowStart: number;
-  prevCounts: {
-    gameEvents: number;
-    activeGames: number;
+  stats: {
+    windowStart: number;
+    prevCounts: {
+      gameEvents: number;
+      activeGames: number;
+    };
+    counts: {
+      gameEvents: number;
+      activeGames: number;
+    };
+    activeGids: string[];
+    percentComplete: number;
   };
-  counts: {
-    gameEvents: number;
-    activeGames: number;
-  };
-  activeGids: string[];
 }
 
 export async function fetchStats() {
