@@ -25,9 +25,11 @@ const castNullsToUndefined = (obj) => {
   }
 };
 
-const SOCKET_HOST_HTTPS = 'https://downforacross.com';
-const SOCKET_HOST_HTTP = '54.151.18.249:3021';
-const SOCKET_HOST = window.location.protocol === 'https:' ? SOCKET_HOST_HTTPS : SOCKET_HOST_HTTP;
+const REMOTE_SOCKET_HOST_HTTPS = 'https://downforacross.com';
+const REMOTE_SOCKET_HOST_HTTP = '54.151.18.249:3021';
+const REMOTE_SOCKET_HOST =
+  window.location.protocol === 'https:' ? REMOTE_SOCKET_HOST_HTTPS : REMOTE_SOCKET_HOST_HTTP;
+const SOCKET_HOST = process.env.REACT_APP_USE_LOCAL_SERVER ? 'localhost:3021' : REMOTE_SOCKET_HOST;
 // a wrapper class that models Game
 
 const emitAsync = (socket, ...args) => new Promise((resolve) => socket.emit(...args, resolve));
@@ -57,11 +59,13 @@ export default class Game extends EventEmitter {
         this.socket = socket;
         window.socket = socket;
 
+        console.log('Connecting to', SOCKET_HOST);
         await this.socket.onceAsync('connect');
         await emitAsync(this.socket, 'join', this.gid);
+        console.log('Connected!');
       })();
     }
-    return this.websocketPromise;
+    return Promise.race(this.websocketPromise, Promise.delay(10000));
   }
 
   emitEvent(event) {
@@ -86,10 +90,16 @@ export default class Game extends EventEmitter {
 
   async addEvent(event) {
     event.id = uuid.v4();
-    this.eventsRef.push(event);
-    this.emitOptimisticEvent(event);
-    await this.connectToWebsocket();
-    await this.pushEventToWebsocket(event);
+    await this.eventsRef.push(event);
+    try {
+      (async () => {
+        this.emitOptimisticEvent(event);
+        await this.connectToWebsocket();
+        await this.pushEventToWebsocket(event);
+      })();
+    } catch (e) {
+      // it's ok
+    }
   }
 
   pushEventToWebsocket(event) {
@@ -354,6 +364,7 @@ export default class Game extends EventEmitter {
     const version = CURRENT_VERSION;
     // nuke existing events
 
+    this.ref.child('pid').set(pid);
     await this.eventsRef.set({});
     await this.addEvent({
       timestamp: SERVER_TIME,
@@ -364,7 +375,6 @@ export default class Game extends EventEmitter {
         game,
       },
     });
-    this.ref.child('pid').set(pid);
 
     if (battleData) {
       this.ref.child('battleData').set(battleData);
