@@ -146,7 +146,10 @@ class SocketManager extends EventEmitter {
 function getStatsForTimeWindow(socketManager, seconds) {
   const stats = {
     windowStart: Date.now(),
-    prevCounts: {},
+    prevCounts: {
+      gameEvents: 0,
+      activeGames: 0,
+    },
     counts: {
       gameEvents: 0,
       activeGames: 0,
@@ -172,6 +175,9 @@ function getStatsForTimeWindow(socketManager, seconds) {
     stats.activeGids = [];
     stats.windowStart = Date.now();
   }, seconds * 1000);
+  setInterval(() => {
+    stats.percentComplete = (Date.now() - stats.windowStart) / (seconds * 1000);
+  }, 10000);
   return stats;
 }
 
@@ -203,9 +209,10 @@ const gameModel = new GameModel();
 const socketManager = new SocketManager();
 socketManager.listen();
 
-const stats = _.fromPairs(
-  STAT_DEFS.map(({name, secs}) => [name, getStatsForTimeWindow(socketManager, secs)])
-);
+const stats = STAT_DEFS.map(({name, secs}) => ({
+  name,
+  ...getStatsForTimeWindow(socketManager, secs),
+}));
 app.get('/test', (req, res) => res.send('Hello World!'));
 app.get('/api/stats', (req, res) => {
   res.status(200).json(stats);
