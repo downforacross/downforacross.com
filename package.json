@@ -6,6 +6,7 @@
     "node": "^10.0.0"
   },
   "dependencies": {
+    "@material-ui/core": "^4.9.14",
     "@types/jest": "^25.2.1",
     "@types/lodash": "^4.14.150",
     "@types/node": "^13.13.5",

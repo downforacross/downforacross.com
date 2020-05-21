@@ -10,18 +10,19 @@ export const SERVER_URL = process.env.REACT_APP_USE_LOCAL_SERVER
 export const SOCKET_HOST = SERVER_URL;
 
 // ========== GET /api/stats ============
+
+interface Counts {
+  gameEvents: number;
+  activeGames: number;
+  bytesTransferred: number;
+}
+
 export interface TimeWindowStats {
   name: string;
   stats: {
     windowStart: number;
-    prevCounts: {
-      gameEvents: number;
-      activeGames: number;
-    };
-    counts: {
-      gameEvents: number;
-      activeGames: number;
-    };
+    prevCounts: Counts;
+    counts: Counts;
     activeGids: string[];
     percentComplete: number;
   };

@@ -149,16 +149,19 @@ function getStatsForTimeWindow(socketManager, seconds) {
     prevCounts: {
       gameEvents: 0,
       activeGames: 0,
+      bytesTransferred: 0,
     },
     counts: {
       gameEvents: 0,
       activeGames: 0,
+      bytesTransferred: 0,
     },
     activeGids: [],
   };
   const activeGames = new Set();
   socketManager.on('event', (gid, event) => {
     stats.counts.gameEvents++;
+    stats.counts.bytesTransferred += JSON.stringify(event).length;
     if (!activeGames.has(gid)) {
       activeGames.add(gid);
       stats.counts.activeGames++;
@@ -177,7 +180,7 @@ function getStatsForTimeWindow(socketManager, seconds) {
   }, seconds * 1000);
   setInterval(() => {
     stats.percentComplete = (Date.now() - stats.windowStart) / (seconds * 1000);
-  }, 10000);
+  }, 500);
   return stats;
 }
 
