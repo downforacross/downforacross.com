@@ -4,7 +4,7 @@ import React from 'react';
 
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import {isMobile} from './lib/jsUtils';
-import {Account, Battle, Compose, Composition, Game, Play, Replay, Replays, Welcome} from './pages/index';
+import {Account, Battle, Compose, Composition, Game, Play, Replay, Replays, Welcome, Stats} from './pages';
 import GlobalContext from './lib/GlobalContext';
 
 import './style.css';
@@ -22,6 +22,7 @@ const Root = () => {
       <GlobalContext.Provider value={{toggleMolesterMoons}}>
         <div className={classnames('router-wrapper', {mobile: isMobile(), dark: darkMode})}>
           <Route exact path="/" component={Welcome} />
+          <Route exact path="/stats" component={Stats} />
           <Route exact path="/game/:gid" component={Game} />
           <Route exact path="/replay/:gid" component={Replay} />
           <Route exact path="/beta/replay/:gid" component={Replay} />
