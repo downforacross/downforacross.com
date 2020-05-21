@@ -165,7 +165,6 @@ export default class Game extends EventEmitter {
     return new Promise((resolve, reject) => {
       this.eventsRef.on('child_added', (snapshot) => {
         const event = snapshot.val();
-        console.log('child added', event);
         if (event.type === 'create') {
           this.createEvent = event;
           this.subscribeToPuzzle();
