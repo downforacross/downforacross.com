@@ -47,7 +47,7 @@ export default class Game extends Component {
   }
 
   get beta() {
-    return !!this.query.beta;
+    return !!this.query.beta || !!this.query.ws;
   }
 
   get query() {
