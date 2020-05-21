@@ -198,10 +198,6 @@ const STAT_DEFS = [
     name: 'week',
     secs: 60 * 60 * 24 * 7,
   },
-  {
-    name: 'month',
-    secs: 60 * 60 * 24 * 31,
-  },
 ];
 // ================== End Stats ================
 
