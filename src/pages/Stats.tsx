@@ -32,7 +32,6 @@ const Stats: React.FC<{}> = () => {
     }
     refresh();
   }, []);
-  console.log(allStats);
   return (
     <div className={classes.page}>
       {_.map(allStats, ({name, stats}) => (
