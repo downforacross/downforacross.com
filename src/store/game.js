@@ -65,7 +65,7 @@ export default class Game extends EventEmitter {
         console.log('Connected!');
       })();
     }
-    return Promise.race(this.websocketPromise, Promise.delay(10000));
+    return Promise.race([this.websocketPromise, Promise.delay(10000)]);
   }
 
   emitEvent(event) {
