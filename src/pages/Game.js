@@ -296,6 +296,7 @@ export default class Game extends Component {
         ref={(c) => {
           this.gameComponent = c;
         }}
+        beta={this.beta}
         id={id}
         myColor={color}
         historyWrapper={this.historyWrapper}

@@ -397,6 +397,16 @@ export default class Player extends Component {
             </div>
           </div>
         </GridControls>
+        {this.props.beta && (
+          <span
+            style={{
+              color: 'gray',
+              margin: '0 auto',
+            }}
+          >
+            {this.props.optimisticCounter ? <>{this.props.optimisticCounter} ahead</> : <>Synced</>}
+          </span>
+        )}
       </div>
     );
   }
