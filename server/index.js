@@ -192,15 +192,15 @@ const STAT_DEFS = [
   },
   {
     name: 'day',
-    secs: 60 * 24,
+    secs: 60 * 60 * 24,
   },
   {
     name: 'week',
-    secs: 60 * 24 * 7,
+    secs: 60 * 60 * 24 * 7,
   },
   {
     name: 'month',
-    secs: 60 * 24 * 31,
+    secs: 60 * 60 * 24 * 31,
   },
 ];
 // ================== End Stats ================
@@ -215,6 +215,7 @@ const stats = STAT_DEFS.map(({name, secs}) => ({
 }));
 app.get('/test', (req, res) => res.send('Hello World!'));
 app.get('/api/stats', (req, res) => {
+  // TODO cap the number of games returned?
   res.status(200).json(stats);
 });
 server.listen(port, () => console.log(`Listening on port ${port}`));
