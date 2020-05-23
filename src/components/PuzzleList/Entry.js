@@ -43,6 +43,7 @@ export default class Entry extends Component {
     const {title, author, pid, status, stats = {}} = this.props;
     const numSolvesOld = _.size(stats.solves);
     const numSolves = numSolvesOld + (stats.numSolves || 0);
+    const displayName = _.compact([author.trim(), this.size]).join(' | ');
     return (
       <Link to={`/beta/play/${pid}`} style={{textDecoration: 'none', color: 'initial'}}>
         <Flex className="entry" column onClick={this.handleClick} onMouseLeave={this.handleMouseLeave}>
@@ -50,9 +51,9 @@ export default class Entry extends Component {
             <Flex grow={0}>
               <p
                 style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden'}}
-                title={`${author} | ${this.size}`}
+                title={displayName}
               >
-                {author} | {this.size}
+                {displayName}
               </p>
             </Flex>
             <Flex>
