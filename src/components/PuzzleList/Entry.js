@@ -35,7 +35,7 @@ export default class Entry extends Component {
     } else if (type === 'Mini Puzzle') {
       return 'Mini';
     } else {
-      return '';
+      return 'Puzzle'; // shouldn't get here???
     }
   }
 
