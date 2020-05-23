@@ -35,6 +35,7 @@
 .welcome--sidebar {
   padding-bottom: 20px;
   border-right: 2px solid var(--main-blue);
+  overflow: auto;
 }
 
 .welcome--sidebar > div {
