@@ -19,6 +19,7 @@ const useStyles = makeStyles({
   },
   table: {
     borderCollapse: 'collapse',
+    textAlign: 'right',
   },
 });
 
