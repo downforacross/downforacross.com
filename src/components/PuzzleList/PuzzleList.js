@@ -136,7 +136,6 @@ export default class PuzzleList extends PureComponent {
         style={{
           display: 'flex',
           flexWrap: 'wrap',
-          // justifyContent: 'space-around',
           overflowY: 'auto',
         }}
         className="puzzlelist"

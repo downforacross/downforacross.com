@@ -114,16 +114,13 @@
 .entry {
   cursor: pointer;
   white-space: nowrap;
-  /* margin-right: 25px; */
   position: relative;
-  display: block;
   border: 1px solid silver;
   border-radius: 12px;
-  margin-bottom: 18px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 15px;
+  padding: 25px;
   font-size: 15px;
   width: 330px;
 }
@@ -132,16 +129,19 @@
   font-size: 15px;
   font-weight: 400;
   color: rgba(0, 0, 0, 0.7);
-  /* margin-left: 10px; */
-  /* margin-right: 10px; */
-  padding: 10px;
-  padding-bottom: 0;
   justify-content: space-between;
 }
 
 .entry--main {
-  padding-top: 0px;
-  padding: 10px;
+  padding-top: 10px;
+}
+
+.entry--details {
+  padding-top: 10px;
+}
+
+.entry--details > p {
+  font-size: 0.75em;
 }
 
 .entry--icon {

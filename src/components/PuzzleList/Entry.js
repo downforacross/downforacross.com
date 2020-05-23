@@ -43,7 +43,6 @@ export default class Entry extends Component {
     const {title, author, pid, status, stats = {}} = this.props;
     const numSolvesOld = _.size(stats.solves);
     const numSolves = numSolvesOld + (stats.numSolves || 0);
-    console.log({numSolves, numSolvesOld});
     return (
       <Link to={`/beta/play/${pid}`} style={{textDecoration: 'none', color: 'initial'}}>
         <Flex className="entry" column onClick={this.handleClick} onMouseLeave={this.handleMouseLeave}>
@@ -69,7 +68,7 @@ export default class Entry extends Component {
             </Flex>
           </Flex>
           <Flex className="entry--details">
-            <p style={{fontSize: '75%', paddingLeft: 12}}>
+            <p>
               Solved {numSolves} {numSolves === 1 ? 'time' : 'times'}
             </p>
           </Flex>
