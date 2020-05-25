@@ -110,9 +110,8 @@ class SocketManager extends EventEmitter {
 
   listen() {
     io.on('connection', (socket) => {
-      console.log('[connect]', socket.id);
+      this.emit('connect', socket.id, socket.handshake.address.address + ':' + socket.handshake.address.port);
       socket.on('join', async (gid, ack) => {
-        console.log('[join]', gid);
         if (this.socketToGame.has(socket)) {
           throw new Error(
             `Socket ${socket.id} already joined ${this.socketToGame.get(socket)}, cannot join ${gid}`
@@ -126,8 +125,6 @@ class SocketManager extends EventEmitter {
         this.socketToGame.set(socket, gid);
 
         socket.on('game_event', (message, cbk) => {
-          console.log('emit game event');
-          console.log('[message]', message);
           this.addEvent(message.gid, message.event);
           cbk();
         });
@@ -137,25 +134,35 @@ class SocketManager extends EventEmitter {
 
       // Perform the "initial sync"
       socket.on('sync_all', async (gid, cbk) => {
-        console.log('[sync_all]', gid);
         const events = await gameModel.getEvents(gid);
         cbk(events);
         this.emit('sync_all', gid, events);
       });
 
       socket.on('disconnect', () => {
-        console.log('[disconnect]', socket.id);
+        this.emit(
+          'disconnect',
+          socket.id,
+          socket.handshake.address.address + ':' + socket.handshake.address.port
+        );
         if (!this.socketToGame.has(socket)) {
           return;
         }
         const gid = this.socketToGame.get(socket);
-        _.remove(this.gameToSocket.get(gid), socket);
         this.socketToGame.delete(socket);
-        if (!this.gameToSocket.get(gid).size) {
-          this.gameToSocket.delete(gid);
+        if (this.gameToSocket.get(gid)) {
+          _.remove(this.gameToSocket.get(gid), socket);
+          if (!this.gameToSocket.get(gid).size) {
+            this.gameToSocket.delete(gid);
+          }
         }
       });
     });
+  }
+
+  emit(type, ...args) {
+    super.emit('*', type, ...args);
+    return super.emit(type, ...args) || super.emit('', ...args);
   }
 }
 
@@ -194,12 +201,12 @@ function getStatsForTimeWindow(socketManager, seconds) {
       stats.activeGids.push(gid);
     }
   });
-  socketManager.on('join', (gid) => {
+
+  socketManager.on('connect', (gid) => {
     stats.counts.connections += 1;
   });
 
   socketManager.on('sync_all', (gid, events) => {
-    stats.counts.connections += 1;
     const bytes = JSON.stringify(events).length;
     stats.counts.bytesSent += bytes;
   });
@@ -260,3 +267,10 @@ app.get('/api/stats', (req, res) => {
   res.status(200).json(stats);
 });
 server.listen(port, () => console.log(`Listening on port ${port}`));
+
+// ================== Logging ================
+
+const out = console;
+socketManager.on('*', (event, ...args) => {
+  out.log(`[${event}]`, _.truncate(JSON.stringify(args), {length: 100}));
+});
