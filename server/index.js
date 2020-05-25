@@ -96,6 +96,18 @@ class SocketManager extends EventEmitter {
     }
   }
 
+  getGameConnectionsCount(gid) {
+    return this.gameToSocket.get(gid).length;
+  }
+
+  getTotalConnectionsCount() {
+    return this.socketToGame.size;
+  }
+
+  getTotalGamesCount() {
+    return this.gameToSocket.size;
+  }
+
   listen() {
     io.on('connection', (socket) => {
       console.log('[connect]', socket.id);
@@ -120,6 +132,7 @@ class SocketManager extends EventEmitter {
           cbk();
         });
         ack();
+        this.emit('join', gid);
       });
 
       // Perform the "initial sync"
@@ -127,6 +140,7 @@ class SocketManager extends EventEmitter {
         console.log('[sync_all]', gid);
         const events = await gameModel.getEvents(gid);
         cbk(events);
+        this.emit('sync_all', gid, events);
       });
 
       socket.on('disconnect', () => {
@@ -137,6 +151,9 @@ class SocketManager extends EventEmitter {
         const gid = this.socketToGame.get(socket);
         _.remove(this.gameToSocket.get(gid), socket);
         this.socketToGame.delete(socket);
+        if (!this.gameToSocket.get(gid).size) {
+          this.gameToSocket.delete(gid);
+        }
       });
     });
   }
@@ -152,24 +169,39 @@ function getStatsForTimeWindow(socketManager, seconds) {
     prevCounts: {
       gameEvents: 0,
       activeGames: 0,
-      bytesTransferred: 0,
+      bytesSent: 0,
+      bytesReceived: 0,
+      connections: 0,
     },
     counts: {
       gameEvents: 0,
       activeGames: 0,
-      bytesTransferred: 0,
+      bytesSent: 0,
+      bytesReceived: 0,
+      connections: 0,
     },
     activeGids: [],
   };
   const activeGames = new Set();
   socketManager.on('event', (gid, event) => {
     stats.counts.gameEvents++;
-    stats.counts.bytesTransferred += JSON.stringify(event).length;
+    const bytes = JSON.stringify(event).length;
+    stats.counts.bytesReceived += bytes;
+    stats.counts.bytesSent += bytes * socketManager.getGameConnectionsCount(gid);
     if (!activeGames.has(gid)) {
       activeGames.add(gid);
       stats.counts.activeGames++;
       stats.activeGids.push(gid);
     }
+  });
+  socketManager.on('join', (gid) => {
+    stats.counts.connections += 1;
+  });
+
+  socketManager.on('sync_all', (gid, events) => {
+    stats.counts.connections += 1;
+    const bytes = JSON.stringify(events).length;
+    stats.counts.bytesSent += bytes;
   });
 
   setInterval(() => {
@@ -211,13 +243,20 @@ const gameModel = new GameModel();
 const socketManager = new SocketManager();
 socketManager.listen();
 
-const stats = STAT_DEFS.map(({name, secs}) => ({
+const timeWindowStats = STAT_DEFS.map(({name, secs}) => ({
   name,
   stats: getStatsForTimeWindow(socketManager, secs),
 }));
 app.get('/test', (req, res) => res.send('Hello World!'));
 app.get('/api/stats', (req, res) => {
-  // TODO cap the number of games returned?
+  const liveStats = {
+    gamesCount: socketManager.getTotalGamesCount(),
+    connectionsCount: socketManager.getTotalConnectionsCount(),
+  };
+  const stats = {
+    liveStats,
+    timeWindowStats,
+  };
   res.status(200).json(stats);
 });
 server.listen(port, () => console.log(`Listening on port ${port}`));

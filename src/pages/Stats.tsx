@@ -1,15 +1,17 @@
 import React, {useEffect} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
-import {fetchStats, TimeWindowStats} from '../store/api';
+import {fetchStats, AllStats} from '../store/api';
 import _ from 'lodash';
 
 const useStyles = makeStyles({
   page: {
     padding: 16,
   },
-  container: {
+  liveContainer: {
     padding: 16,
-    // backgroundColor: 'red',
+  },
+  timeWindowContainer: {
+    padding: 16,
   },
   header: {
     fontSize: '200%',
@@ -25,7 +27,7 @@ const useStyles = makeStyles({
 
 const Stats: React.FC<{}> = () => {
   const classes = useStyles();
-  const [allStats, setAllStats] = React.useState([] as TimeWindowStats[]);
+  const [allStats, setAllStats] = React.useState({} as AllStats);
   useEffect(() => {
     async function refresh() {
       const allStats = await fetchStats();
@@ -35,8 +37,15 @@ const Stats: React.FC<{}> = () => {
   }, []);
   return (
     <div className={classes.page}>
-      {_.map(allStats, ({name, stats}) => (
-        <div key={name} className={classes.container}>
+      {allStats.liveStats && (
+        <div className={classes.liveContainer}>
+          <div className={classes.header}>Live Stats</div>
+          <div>{allStats.liveStats.connectionsCount} users online</div>
+          <div>{allStats.liveStats.gamesCount} games being played</div>
+        </div>
+      )}
+      {_.map(allStats.timeWindowStats, ({name, stats}) => (
+        <div key={name} className={classes.timeWindowContainer}>
           <div className={classes.header}>{_.capitalize(name)} Stats</div>
           <table className={classes.table}>
             <tbody>
@@ -45,21 +54,27 @@ const Stats: React.FC<{}> = () => {
                 <th>Percent Complete</th>
                 <th>Active Games</th>
                 <th>Game Events</th>
-                <th>Bytes Transferred</th>
+                <th>New Connections</th>
+                <th>Bytes Received</th>
+                <th>Bytes Sent</th>
               </tr>
               <tr>
                 <td>Previous Interval</td>
                 <td>100%</td>
                 <td>{stats.prevCounts.activeGames}</td>
                 <td>{stats.prevCounts.gameEvents}</td>
-                <td>{stats.prevCounts.bytesTransferred}</td>
+                <td>{stats.prevCounts.connections}</td>
+                <td>{stats.prevCounts.bytesReceived}</td>
+                <td>{stats.prevCounts.bytesSent}</td>
               </tr>
               <tr>
                 <td>Current Interval</td>
                 <td>{(stats.percentComplete * 100).toFixed(2)}%</td>
                 <td>{stats.counts.activeGames}</td>
                 <td>{stats.counts.gameEvents}</td>
-                <td>{stats.counts.bytesTransferred}</td>
+                <td>{stats.counts.connections}</td>
+                <td>{stats.counts.bytesReceived}</td>
+                <td>{stats.counts.bytesSent}</td>
               </tr>
             </tbody>
           </table>

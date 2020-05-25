@@ -14,7 +14,14 @@ export const SOCKET_HOST = SERVER_URL;
 interface Counts {
   gameEvents: number;
   activeGames: number;
-  bytesTransferred: number;
+  connections: number;
+  bytesReceived: number;
+  bytesSent: number;
+}
+
+interface LiveStats {
+  gamesCount: number;
+  connectionsCount: number;
 }
 
 export interface TimeWindowStats {
@@ -28,9 +35,14 @@ export interface TimeWindowStats {
   };
 }
 
+export interface AllStats {
+  timeWindowStats?: TimeWindowStats[];
+  liveStats?: LiveStats;
+}
+
 export async function fetchStats() {
   const resp = await fetch(`${SERVER_URL}/api/stats`);
   const json = await resp.json();
-  const timeWindowStats: TimeWindowStats[] = json;
-  return timeWindowStats;
+  const allStats: AllStats = json;
+  return allStats;
 }
