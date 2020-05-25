@@ -97,7 +97,8 @@ class SocketManager extends EventEmitter {
   }
 
   getGameConnectionsCount(gid) {
-    return this.gameToSocket.get(gid).length;
+    const connections = this.gameToSocket.get(gid);
+    return connections ? connections.length : 0;
   }
 
   getTotalConnectionsCount() {
@@ -110,7 +111,7 @@ class SocketManager extends EventEmitter {
 
   listen() {
     io.on('connection', (socket) => {
-      this.emit('connect', socket.id, socket.handshake.address.address + ':' + socket.handshake.address.port);
+      this.emit('connect', socket.id, socket.handshake.headers['x-real-ip']);
       socket.on('join', async (gid, ack) => {
         if (this.socketToGame.has(socket)) {
           throw new Error(
@@ -140,11 +141,7 @@ class SocketManager extends EventEmitter {
       });
 
       socket.on('disconnect', () => {
-        this.emit(
-          'disconnect',
-          socket.id,
-          socket.handshake.address.address + ':' + socket.handshake.address.port
-        );
+        this.emit('disconnect', socket.id, socket.handshake.headers['x-real-ip']);
         if (!this.socketToGame.has(socket)) {
           return;
         }
@@ -272,5 +269,9 @@ server.listen(port, () => console.log(`Listening on port ${port}`));
 
 const out = console;
 socketManager.on('*', (event, ...args) => {
-  out.log(`[${event}]`, _.truncate(JSON.stringify(args), {length: 100}));
+  try {
+    out.log(`[${event}]`, _.truncate(JSON.stringify(args), {length: 100}));
+  } catch (e) {
+    out.log(`[${event}]`, args);
+  }
 });
