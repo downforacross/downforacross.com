@@ -40,8 +40,14 @@ const Stats: React.FC<{}> = () => {
       {allStats.liveStats && (
         <div className={classes.liveContainer}>
           <div className={classes.header}>Live Stats</div>
-          <div>{allStats.liveStats.connectionsCount} users online</div>
-          <div>{allStats.liveStats.gamesCount} games being played</div>
+          <div>
+            {allStats.liveStats.connectionsCount}{' '}
+            {allStats.liveStats.connectionsCount === 1 ? 'user' : 'users'} online
+          </div>
+          <div>
+            {allStats.liveStats.gamesCount} {allStats.liveStats.gamesCount === 1 ? 'game' : 'games'} being
+            played
+          </div>
         </div>
       )}
       {_.map(allStats.timeWindowStats, ({name, stats}) => (
