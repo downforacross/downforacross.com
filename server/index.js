@@ -39,6 +39,7 @@ const getEventsKey = (gid) => {
 
 const MAX_EVENTS = 1e7;
 
+const DEFAULT_TTL_SECS = 60 * 60 * 24 * 7; // expire after a week -- archive them beforehand if possible
 class GameModel {
   // throws error if db is corrupted!
   async getEvents(gid) {
@@ -49,7 +50,9 @@ class GameModel {
 
   async addEvent(gid, event) {
     const serializedEvent = JSON.stringify(event);
-    await client.rpushAsync(getEventsKey(gid), serializedEvent);
+    const key = getEventsKey(gid);
+    await client.expire(key, DEFAULT_TTL_SECS);
+    await client.rpushAsync(key, serializedEvent);
   }
 }
 
