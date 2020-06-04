@@ -6,6 +6,7 @@ import partyParrot from './emojiPacks/partyParrot';
 import joku from './emojiPacks/joku';
 import sugarCubs from './emojiPacks/sugarCubs';
 import bun from './emojiPacks/bun';
+import yoyo from './emojiPacks/yoyo';
 
 // spread in reverse-order of priority, in case of name collisions
 const allEmojiData = {
@@ -15,6 +16,7 @@ const allEmojiData = {
   ...joku,
   ...sugarCubs,
   ...bun,
+  ...yoyo,
   ...custom,
 };
 const allEmojis = _.keys(allEmojiData);
