@@ -3,7 +3,8 @@ import {parseRawUrls} from '../common';
 export default parseRawUrls({
   rilakkuma: 'http://www.stickpng.com/assets/thumbs/5a67a25201d15068bdfe87c9.png',
   rilakkuma1: 'https://i.pinimg.com/originals/1b/c3/3b/1bc33bdfd0ec831221b6ba454419001c.png',
-  rilakkuma_and_friends: 'http://www.stickpng.com/assets/images/5a67a15c01d15068bdfe87bb.png',
+  rilakkuma_and_friends:
+    'https://lh3.googleusercontent.com/proxy/MijjSe3PS3XFNz36jTBCatc8Nw5hXkNYrvbgwOOheLF6AEPj0_tu1DdiA1M_2GON15ZTTM0Mpj-ACOOxO8CMADgrTldJcSJErZUsIWRjoup2sBC3-wo',
   pawn:
     'https://www.google.com/imgres?imgurl=https%3A%2F%2Fcdn3.vectorstock.com%2Fi%2F1000x1000%2F75%2F07%2Fchess-pawn-vector-347507.jpg&imgrefurl=https%3A%2F%2Fwww.vectorstock.com%2Froyalty-free-vector%2Fchess-pawn-vector-347507&docid=L8AObIMKdgXVoM&tbnid=xc5DNeckuBfYyM%3A&vet=10ahUKEwj5oZSB8bHdAhUKllQKHbMHB3MQMwjWASgDMAM..i&w=700&h=1080&bih=617&biw=1120&q=pawn&ved=0ahUKEwj5oZSB8bHdAhUKllQKHbMHB3MQMwjWASgDMAM&iact=mrc&uact=8',
   knight: 'https://static.thenounproject.com/png/337860-200.png',
