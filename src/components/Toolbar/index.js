@@ -7,6 +7,7 @@ import ActionMenu from './ActionMenu';
 import Popup from './Popup';
 import Flex from 'react-flexview';
 import {Link} from 'react-router-dom';
+import swal from 'sweetalert';
 
 export default class Toolbar extends Component {
   handleBlur = (e) => {
@@ -189,7 +190,16 @@ export default class Toolbar extends Component {
   }
 
   reveal(scopeString) {
-    this.props.onReveal(scopeString);
+    swal({
+      title: 'Are you sure you want to reveal the answer?',
+      icon: 'warning',
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        this.props.onReveal(scopeString);
+      }
+    });
   }
 
   reset(scopeString) {
