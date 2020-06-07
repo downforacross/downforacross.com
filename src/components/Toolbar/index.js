@@ -191,7 +191,8 @@ export default class Toolbar extends Component {
 
   reveal(scopeString) {
     swal({
-      title: 'Are you sure you want to reveal the answer?',
+      title: `Are you sure you want to show the ${scopeString}?`,
+      text: `All players will be able to see the ${scopeString}'s answer.`,
       icon: 'warning',
       buttons: true,
       dangerMode: true,
