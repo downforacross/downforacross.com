@@ -196,8 +196,8 @@ export default class Toolbar extends Component {
       icon: 'warning',
       buttons: true,
       dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
+    }).then((shouldReveal) => {
+      if (shouldReveal) {
         this.props.onReveal(scopeString);
       }
     });
