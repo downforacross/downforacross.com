@@ -169,12 +169,18 @@ export default class Game extends Component {
       cursors,
       pings,
       users,
-      clues,
       solved,
       solution,
       themeColor,
       optimisticCounter,
     } = this.game;
+    const clues = {
+      ...this.game.clues,
+    };
+    if (window.location.host === 'foracross.com' || window.location.host.includes('.foracross.com')) {
+      const dirToHide = window.location.host.includes('down') ? 'across' : 'down';
+      clues[dirToHide] = clues[dirToHide].map((val) => val && '-');
+    }
     const opponentGrid = this.opponentGame && this.opponentGame.grid;
     const {screenWidth} = this.state;
     const themeStyles = {
