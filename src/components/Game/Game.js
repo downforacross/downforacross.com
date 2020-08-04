@@ -179,7 +179,7 @@ export default class Game extends Component {
     };
     if (window.location.host === 'foracross.com' || window.location.host.includes('.foracross.com')) {
       const dirToHide = window.location.host.includes('down') ? 'across' : 'down';
-      clues[dirToHide] = clues[dirToHide].map((val) => val && '-');
+      clues[dirToHide] = _.assign([], clues[dirToHide]).map((val) => val && '-');
     }
     const opponentGrid = this.opponentGame && this.opponentGame.grid;
     const {screenWidth} = this.state;
