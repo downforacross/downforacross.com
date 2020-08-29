@@ -59,8 +59,8 @@
     "pretty-quick": "^1.7.0"
   },
   "scripts": {
-    "start": "yarn devfrontend",
-    "devfrontend": "PORT=3020 react-scripts start",
+    "start": "PORT=3020 react-scripts start",
+    "devfrontend": "REACT_APP_USE_LOCAL_SERVER=1 PORT=3020 react-scripts start",
     "devbackend": "PORT=3021 nodemon --exec babel-node server/index.js",
     "servebackend": "PORT=3021 babel-node server/server.js",
     "build": "react-scripts build",
