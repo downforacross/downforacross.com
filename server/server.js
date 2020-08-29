@@ -9,24 +9,11 @@ const _ = require('lodash');
 const cors = require('cors');
 
 const Promise = require('bluebird');
-const redis = require('redis');
-Promise.promisifyAll(redis);
 
 // ======== HTTP Server Config ==========
 
 io.origins('*:*'); // allow CORS for socket.io route
 app.use(cors()); // allow CORS for all express routes
-
-// ======== Redis Config ===========
-
-let redisOptions;
-if (process.env.REDIS_HOST) {
-  console.log(`Connecting to redis @ ${process.env.REDIS_HOST}`);
-  redisOptions = {
-    host: process.env.REDIS_HOST,
-  };
-}
-const client = redis.createClient(redisOptions);
 
 // ============= Database Operations ============
 
@@ -43,16 +30,16 @@ const DEFAULT_TTL_SECS = 60 * 60 * 24 * 7; // expire after a week -- archive the
 class GameModel {
   // throws error if db is corrupted!
   async getEvents(gid) {
-    const serializedEvents = await client.lrangeAsync(getEventsKey(gid), 0, MAX_EVENTS);
-    const events = serializedEvents.map(JSON.parse);
-    return events;
+    //   const serializedEvents = await client.lrangeAsync(getEventsKey(gid), 0, MAX_EVENTS);
+    //   const events = serializedEvents.map(JSON.parse);
+    //   return events;
   }
 
   async addEvent(gid, event) {
-    const serializedEvent = JSON.stringify(event);
-    const key = getEventsKey(gid);
-    await client.expire(key, DEFAULT_TTL_SECS);
-    await client.rpushAsync(key, serializedEvent);
+    //   const serializedEvent = JSON.stringify(event);
+    //   const key = getEventsKey(gid);
+    //   await client.expire(key, DEFAULT_TTL_SECS);
+    //   await client.rpushAsync(key, serializedEvent);
   }
 }
 

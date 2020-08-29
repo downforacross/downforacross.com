@@ -37,7 +37,6 @@
     "react-router-dom": "^4.1.2",
     "react-simple-keyboard": "^1.15.2",
     "react-timestamp": "^4.4.0",
-    "redis": "^3.0.2",
     "request-promise": "^4.2.5",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
@@ -66,7 +65,7 @@
     "start": "yarn devfrontend",
     "devfrontend": "PORT=3020 react-scripts start",
     "devbackend": "PORT=3021 nodemon --exec babel-node server/index.js",
-    "servebackend": "PORT=3021 babel-node server/index.js",
+    "servebackend": "PORT=3021 babel-node server/server.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
