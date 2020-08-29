@@ -49,14 +49,11 @@
   },
   "type": "module",
   "devDependencies": {
+    "@babel/core": "^7.11.4",
+    "@babel/node": "^7.10.5",
+    "@babel/preset-env": "^7.11.0",
     "@types/argparse": "^1.0.38",
     "argparse": "^1.0.10",
-    "babel-plugin-transform-es2015-destructuring": "^6.23.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-node6-es6": "^11.2.5",
-    "babel-preset-stage-3": "^6.24.1",
     "husky": "^1.0.0-rc.15",
     "prettier": "^2.0.5",
     "pretty-quick": "^1.7.0"
