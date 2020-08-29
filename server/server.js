@@ -33,6 +33,7 @@ class GameModel {
     //   const serializedEvents = await client.lrangeAsync(getEventsKey(gid), 0, MAX_EVENTS);
     //   const events = serializedEvents.map(JSON.parse);
     //   return events;
+    return [];
   }
 
   async addEvent(gid, event) {
