@@ -51,6 +51,8 @@ CREATE TABLE game_events(
 psql -c 'create database dfac'
 ```
 
+(`createdb` if this fails)
+
 2. Create the game_events table
 
 ```
@@ -60,6 +62,7 @@ psql dfac < create_game_events.sql
 #### Run your local websocket server
 
 `yarn devbackend`
+This command expects you to have PGDATABASE env var set and a postgres server running. See `.envrc.template`.
 
 #### Run your local frontend server
 
