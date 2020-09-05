@@ -29,7 +29,6 @@ const castNullsToUndefined = (obj) => {
 
 const emitAsync = (socket, ...args) =>
   new Promise((resolve) => {
-    console.log('emit', ...args);
     socket.emit(...args, resolve);
   });
 
@@ -75,12 +74,10 @@ export default class Game extends EventEmitter {
   }
 
   emitWSEvent(event) {
-    console.log('emitting wsevent', event);
     if (event.type === 'create') {
       this.emit('wsCreateEvent', event);
       console.log('Connected!');
       console.log(event);
-      alert('Connected to experimental game server');
     } else {
       this.emit('wsEvent', event);
     }
@@ -91,9 +88,9 @@ export default class Game extends EventEmitter {
   }
 
   async addEvent(event) {
-    console.log('add event');
+    console.log('add event', event);
     event.id = uuid.v4();
-    // await this.eventsRef.push(event);
+    await this.eventsRef.push(event);
     try {
       const promise = (async () => {
         this.emitOptimisticEvent(event);
@@ -188,11 +185,12 @@ export default class Game extends EventEmitter {
       this.emit('battleData', snapshot.val());
     });
 
-    // await this.subscribeToFirebaseEvents(); // TODO only subscribe to websocket
+    const firebasePromise = this.subscribeToFirebaseEvents(); // TODO only subscribe to websocket
     console.log('subscribed');
 
-    await this.connectToWebsocket();
-    await this.subscribeToWebsocketEvents();
+    const websocketPromise = this.connectToWebsocket().then(() => this.subscribeToWebsocketEvents());
+    await firebasePromise; // wait for both
+    await websocketPromise;
   }
 
   detach() {
@@ -369,7 +367,7 @@ export default class Game extends EventEmitter {
     // nuke existing events
 
     this.ref.child('pid').set(pid);
-    // await this.eventsRef.set({});
+    await this.eventsRef.set({});
     await this.addEvent({
       timestamp: SERVER_TIME,
       type: 'create',

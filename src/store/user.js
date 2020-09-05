@@ -43,7 +43,7 @@ export default class User extends EventEmitter {
   // read methods
   get id() {
     if (!this.attached) {
-      return undefined;
+      return '';
     }
     if (this.fb) {
       return this.fb.uid;
@@ -68,30 +68,24 @@ export default class User extends EventEmitter {
   // write methods
   joinComposition(cid, {title, author, published = false}) {
     // safe to call this multiple times
-    return this.ref
-      .child('compositions')
-      .child(cid)
-      .set({
-        title,
-        author,
-        published,
-        updateTime: SERVER_TIME,
-      });
+    return this.ref.child('compositions').child(cid).set({
+      title,
+      author,
+      published,
+      updateTime: SERVER_TIME,
+    });
   }
 
   joinGame(gid, {pid = -1, solved = false, v2 = false}) {
     const time = getTime();
     // safe to call this multiple times
-    return this.ref
-      .child('history')
-      .child(gid)
-      .set({
-        pid,
-        solved,
-        // progress: game.progress,
-        time,
-        v2,
-      });
+    return this.ref.child('history').child(gid).set({
+      pid,
+      solved,
+      // progress: game.progress,
+      time,
+      v2,
+    });
   }
 
   markSolved(gid) {
