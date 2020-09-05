@@ -25,7 +25,12 @@ const getEventsKey = (gid) => {
 const MAX_EVENTS = 1e7;
 class GameModel {
   constructor() {
-    this.client = new pg.Client({database: process.env.PGDATABASE});
+    this.client = new pg.Client({
+      host: process.env.PGHOST || 'localhost',
+      user: process.env.PGUSER || process.env.USER,
+      password: process.env.PGPASSWORD,
+      database: process.env.PGDATABASE,
+    });
     this.connecting = false;
   }
 
