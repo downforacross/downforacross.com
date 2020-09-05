@@ -40,6 +40,7 @@ const Stats: React.FC<{}> = () => {
       {allStats.liveStats && (
         <div className={classes.liveContainer}>
           <div className={classes.header}>Live Stats</div>
+          <div>Server last restarted {allStats.liveStats.serverStartDate}</div>
           <div>
             {allStats.liveStats.connectionsCount}{' '}
             {allStats.liveStats.connectionsCount === 1 ? 'user' : 'users'} online

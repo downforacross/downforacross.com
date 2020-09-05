@@ -20,6 +20,7 @@ interface Counts {
 }
 
 interface LiveStats {
+  serverStartDate: string;
   gamesCount: number;
   connectionsCount: number;
 }

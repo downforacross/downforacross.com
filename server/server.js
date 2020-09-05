@@ -265,6 +265,7 @@ function logAllEvents(socketManager, log) {
 // ================== Main Entrypoint ================
 
 async function runServer() {
+  const serverStartDate = new Date().toString();
   const gameModel = new GameModel();
   const socketManager = new SocketManager(gameModel);
   socketManager.listen();
@@ -277,6 +278,7 @@ async function runServer() {
   app.get('/test', (req, res) => res.send('Hello World!'));
   app.get('/api/stats', (req, res) => {
     const liveStats = {
+      serverStartDate,
       gamesCount: socketManager.getTotalGamesCount(),
       connectionsCount: socketManager.getTotalConnectionsCount(),
     };
