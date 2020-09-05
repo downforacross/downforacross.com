@@ -57,7 +57,6 @@ export default class Game extends EventEmitter {
         console.log('Connecting to', SOCKET_HOST);
         await this.socket.onceAsync('connect');
         await emitAsync(this.socket, 'join', this.gid);
-        console.log('Connected!');
       })();
     }
     return Promise.race([this.websocketPromise, Promise.delay(3000)]);
@@ -74,6 +73,9 @@ export default class Game extends EventEmitter {
   emitWSEvent(event) {
     if (event.type === 'create') {
       this.emit('wsCreateEvent', event);
+      console.log('Connected!');
+      console.log(event);
+      alert('Connected to experimental game server');
     } else {
       this.emit('wsEvent', event);
     }
@@ -85,7 +87,7 @@ export default class Game extends EventEmitter {
 
   async addEvent(event) {
     event.id = uuid.v4();
-    await this.eventsRef.push(event);
+    // await this.eventsRef.push(event);
     try {
       const promise = (async () => {
         this.emitOptimisticEvent(event);
@@ -100,8 +102,7 @@ export default class Game extends EventEmitter {
 
   pushEventToWebsocket(event) {
     if (!this.socket || !this.socket.connected) {
-      return;
-      // throw new Error('Not connected to websocket');
+      throw new Error('Not connected to websocket');
     }
 
     return emitAsync(this.socket, 'game_event', {
@@ -180,7 +181,7 @@ export default class Game extends EventEmitter {
       this.emit('battleData', snapshot.val());
     });
 
-    await this.subscribeToFirebaseEvents(); // TODO only subscribe to websocket
+    // await this.subscribeToFirebaseEvents(); // TODO only subscribe to websocket
     console.log('subscribed');
 
     await this.connectToWebsocket();

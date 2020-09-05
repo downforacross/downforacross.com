@@ -25,6 +25,7 @@
     "lodash": "^4.17.13",
     "moment": "^2.20.1",
     "nodemon": "^2.0.3",
+    "pg": "^8.3.3",
     "puzjs": "^1.0.2",
     "react": "^16.12",
     "react-confetti": "^5.0.1",
@@ -63,8 +64,8 @@
     "react-scripts": "^3.4.1"
   },
   "scripts": {
-    "start": "yarn devfrontend",
-    "devfrontend": "PORT=3020 react-scripts start",
+    "start": "PORT=3020 react-scripts start",
+    "devfrontend": "REACT_APP_USE_LOCAL_SERVER=1 PORT=3020 react-scripts start",
     "devbackend": "PORT=3021 nodemon --exec babel-node server/server.js",
     "servebackend": "PORT=3021 babel-node server/server.js",
     "build": "react-scripts build",
