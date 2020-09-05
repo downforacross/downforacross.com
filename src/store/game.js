@@ -27,7 +27,11 @@ const castNullsToUndefined = (obj) => {
 
 // a wrapper class that models Game
 
-const emitAsync = (socket, ...args) => new Promise((resolve) => socket.emit(...args, resolve));
+const emitAsync = (socket, ...args) =>
+  new Promise((resolve) => {
+    console.log('emit', ...args);
+    socket.emit(...args, resolve);
+  });
 
 const CURRENT_VERSION = 1.0;
 export default class Game extends EventEmitter {
@@ -71,6 +75,7 @@ export default class Game extends EventEmitter {
   }
 
   emitWSEvent(event) {
+    console.log('emitting wsevent', event);
     if (event.type === 'create') {
       this.emit('wsCreateEvent', event);
       console.log('Connected!');
@@ -86,6 +91,7 @@ export default class Game extends EventEmitter {
   }
 
   async addEvent(event) {
+    console.log('add event');
     event.id = uuid.v4();
     // await this.eventsRef.push(event);
     try {
@@ -101,6 +107,7 @@ export default class Game extends EventEmitter {
   }
 
   pushEventToWebsocket(event) {
+    console.log('push to ws', event);
     if (!this.socket || !this.socket.connected) {
       throw new Error('Not connected to websocket');
     }
@@ -325,6 +332,7 @@ export default class Game extends EventEmitter {
   }
 
   async initialize(rawGame, {battleData} = {}) {
+    console.log('initialize');
     const {
       info = {},
       grid = [[{}]],
@@ -361,7 +369,7 @@ export default class Game extends EventEmitter {
     // nuke existing events
 
     this.ref.child('pid').set(pid);
-    await this.eventsRef.set({});
+    // await this.eventsRef.set({});
     await this.addEvent({
       timestamp: SERVER_TIME,
       type: 'create',
