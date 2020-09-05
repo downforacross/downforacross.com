@@ -90,17 +90,21 @@ export default class Game extends EventEmitter {
   async addEvent(event) {
     console.log('add event', event);
     event.id = uuid.v4();
-    await this.eventsRef.push(event);
-    try {
-      const promise = (async () => {
-        this.emitOptimisticEvent(event);
-        await this.connectToWebsocket();
-        await this.pushEventToWebsocket(event);
-      })();
-      await Promise.race([promise, Promise.delay(3000)]);
-    } catch (e) {
-      // it's ok
-    }
+    const firebasePromise = this.eventsRef.push(event);
+    const wsPromise = (async () => {
+      try {
+        const promise = (async () => {
+          this.emitOptimisticEvent(event);
+          await this.connectToWebsocket();
+          await this.pushEventToWebsocket(event);
+        })();
+        await Promise.race([promise, Promise.delay(3000)]);
+      } catch (e) {
+        // it's ok
+      }
+    })();
+    await firebasePromise;
+    await wsPromise;
   }
 
   pushEventToWebsocket(event) {
