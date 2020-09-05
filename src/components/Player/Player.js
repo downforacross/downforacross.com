@@ -292,14 +292,14 @@ export default class Player extends Component {
       .map((cursor) => ({
         ...cursor,
         active: cursor.timestamp > currentTime - CURSOR_TIMEOUT,
-        color: users[cursor.id].color,
+        color: users[cursor.id]?.color || 'blue',
       }));
     const pings = allPings
       .map((ping) => ({
         ...ping,
         active: ping.timestamp > currentTime - PING_TIMEOUT,
         age: (currentTime - ping.timestamp) / PING_TIMEOUT,
-        color: users[ping.id].color,
+        color: users[ping.id]?.color || 'blue',
       }))
       .filter(({active}) => active);
     const {direction} = this.state;
