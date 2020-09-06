@@ -90,7 +90,6 @@ export default class Game extends EventEmitter {
   async addEvent(event) {
     console.log('add event', event);
     event.id = uuid.v4();
-    const firebasePromise = this.eventsRef.push(event);
     const wsPromise = (async () => {
       try {
         const promise = (async () => {
@@ -103,7 +102,6 @@ export default class Game extends EventEmitter {
         // it's ok
       }
     })();
-    await firebasePromise;
     await wsPromise;
   }
 
@@ -169,31 +167,14 @@ export default class Game extends EventEmitter {
     });
   }
 
-  subscribeToFirebaseEvents() {
-    console.log('sub fb');
-    return new Promise((resolve, reject) => {
-      this.eventsRef.on('child_added', (snapshot) => {
-        const event = snapshot.val();
-        if (event.type === 'create') {
-          this.createEvent = event;
-          this.subscribeToPuzzle();
-          resolve();
-        }
-        this.emitEvent(event);
-      });
-    });
-  }
-
   async attach() {
     this.ref.child('battleData').on('value', (snapshot) => {
       this.emit('battleData', snapshot.val());
     });
 
-    const firebasePromise = this.subscribeToFirebaseEvents(); // TODO only subscribe to websocket
     console.log('subscribed');
 
     const websocketPromise = this.connectToWebsocket().then(() => this.subscribeToWebsocketEvents());
-    await firebasePromise; // wait for both
     await websocketPromise;
   }
 
