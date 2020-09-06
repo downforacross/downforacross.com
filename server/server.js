@@ -293,7 +293,12 @@ async function runServer() {
     };
     res.status(200).json(stats);
   });
-  console.log('connecting to database...');
+  console.log(
+    'connecting to database...',
+    process.env.PGDATABASE,
+    process.env.PGUSER,
+    process.env.PGPASSWORD
+  );
   await gameModel.connect();
   console.log('connected to database...');
   server.listen(port, () => console.log(`Listening on port ${port}`));

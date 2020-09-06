@@ -63,7 +63,8 @@
     "start": "PORT=3020 react-scripts start",
     "devfrontend": "REACT_APP_USE_LOCAL_SERVER=1 PORT=3020 react-scripts start",
     "devbackend": "PORT=3021 nodemon --exec babel-node server/server.js",
-    "servebackend": "PORT=3021 babel-node server/server.js",
+    "servebackendprod": "while true; do env $(cat .env.prod | xargs) PORT=3021 babel-node server/server.js || true; done",
+    "servebackendstaging": "while true; do env $(cat .env.staging | xargs) PORT=4021 babel-node server/server.js || true; done",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
