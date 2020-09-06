@@ -99,8 +99,11 @@ export default class Game extends Component {
     this.gameModel.once('battleData', (battleData) => {
       this.initializeBattle(battleData);
     });
+    console.log('initialize game');
     if (this.beta) {
+      console.log('listening ws');
       this.gameModel.on('wsCreateEvent', (event) => {
+        console.log('create event', event);
         this.historyWrapper.setCreateEvent(event);
         this.handleUpdate();
       });

@@ -27,7 +27,10 @@ const castNullsToUndefined = (obj) => {
 
 // a wrapper class that models Game
 
-const emitAsync = (socket, ...args) => new Promise((resolve) => socket.emit(...args, resolve));
+const emitAsync = (socket, ...args) =>
+  new Promise((resolve) => {
+    socket.emit(...args, resolve);
+  });
 
 const CURRENT_VERSION = 1.0;
 export default class Game extends EventEmitter {
@@ -57,7 +60,6 @@ export default class Game extends EventEmitter {
         console.log('Connecting to', SOCKET_HOST);
         await this.socket.onceAsync('connect');
         await emitAsync(this.socket, 'join', this.gid);
-        console.log('Connected!');
       })();
     }
     return Promise.race([this.websocketPromise, Promise.delay(3000)]);
@@ -74,6 +76,8 @@ export default class Game extends EventEmitter {
   emitWSEvent(event) {
     if (event.type === 'create') {
       this.emit('wsCreateEvent', event);
+      console.log('Connected!');
+      console.log(event);
     } else {
       this.emit('wsEvent', event);
     }
@@ -84,24 +88,29 @@ export default class Game extends EventEmitter {
   }
 
   async addEvent(event) {
+    console.log('add event', event);
     event.id = uuid.v4();
-    await this.eventsRef.push(event);
-    try {
-      const promise = (async () => {
-        this.emitOptimisticEvent(event);
-        await this.connectToWebsocket();
-        await this.pushEventToWebsocket(event);
-      })();
-      await Promise.race([promise, Promise.delay(3000)]);
-    } catch (e) {
-      // it's ok
-    }
+    const firebasePromise = this.eventsRef.push(event);
+    const wsPromise = (async () => {
+      try {
+        const promise = (async () => {
+          this.emitOptimisticEvent(event);
+          await this.connectToWebsocket();
+          await this.pushEventToWebsocket(event);
+        })();
+        await Promise.race([promise, Promise.delay(3000)]);
+      } catch (e) {
+        // it's ok
+      }
+    })();
+    await firebasePromise;
+    await wsPromise;
   }
 
   pushEventToWebsocket(event) {
+    console.log('push to ws', event);
     if (!this.socket || !this.socket.connected) {
-      return;
-      // throw new Error('Not connected to websocket');
+      throw new Error('Not connected to websocket');
     }
 
     return emitAsync(this.socket, 'game_event', {
@@ -180,11 +189,12 @@ export default class Game extends EventEmitter {
       this.emit('battleData', snapshot.val());
     });
 
-    await this.subscribeToFirebaseEvents(); // TODO only subscribe to websocket
+    const firebasePromise = this.subscribeToFirebaseEvents(); // TODO only subscribe to websocket
     console.log('subscribed');
 
-    await this.connectToWebsocket();
-    await this.subscribeToWebsocketEvents();
+    const websocketPromise = this.connectToWebsocket().then(() => this.subscribeToWebsocketEvents());
+    await firebasePromise; // wait for both
+    await websocketPromise;
   }
 
   detach() {
@@ -324,6 +334,7 @@ export default class Game extends EventEmitter {
   }
 
   async initialize(rawGame, {battleData} = {}) {
+    console.log('initialize');
     const {
       info = {},
       grid = [[{}]],

@@ -7,52 +7,65 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const _ = require('lodash');
 const cors = require('cors');
-
-const Promise = require('bluebird');
-const redis = require('redis');
-Promise.promisifyAll(redis);
+const pg = require('pg');
 
 // ======== HTTP Server Config ==========
 
 io.origins('*:*'); // allow CORS for socket.io route
 app.use(cors()); // allow CORS for all express routes
 
-// ======== Redis Config ===========
-
-let redisOptions;
-if (process.env.REDIS_HOST) {
-  console.log(`Connecting to redis @ ${process.env.REDIS_HOST}`);
-  redisOptions = {
-    host: process.env.REDIS_HOST,
-  };
-}
-const client = redis.createClient(redisOptions);
-
 // ============= Database Operations ============
 
-// TODO redis should not contain more than ~10 MB (which is > 100 concurrent games)
-// Back it w/ S3
+(async () => {})();
 
 const getEventsKey = (gid) => {
   return `events_${gid}`;
 };
 
 const MAX_EVENTS = 1e7;
-
-const DEFAULT_TTL_SECS = 60 * 60 * 24 * 7; // expire after a week -- archive them beforehand if possible
 class GameModel {
-  // throws error if db is corrupted!
+  constructor() {
+    this.client = new pg.Client({
+      host: process.env.PGHOST || 'localhost',
+      user: process.env.PGUSER || process.env.USER,
+      password: process.env.PGPASSWORD,
+      database: process.env.PGDATABASE,
+    });
+    this.connecting = false;
+  }
+
+  async connect() {
+    if (this.connected || this.connecting) return;
+    this.connecting = true;
+    await this.client.connect();
+    this.connecting = false;
+    this.connected = true;
+  }
+
+  disconnect() {
+    // not used
+    return this.client.end();
+  }
+
   async getEvents(gid) {
-    const serializedEvents = await client.lrangeAsync(getEventsKey(gid), 0, MAX_EVENTS);
-    const events = serializedEvents.map(JSON.parse);
+    if (!this.connected) throw new Error('not connected');
+    console.log('[GameModel] listing events', gid);
+    const res = await this.client.query('SELECT event_payload FROM game_events WHERE gid=$1', [gid]);
+    console.log(res);
+    // const serializedEvents = await client.lrangeAsync(getEventsKey(gid), 0, MAX_EVENTS);
+    const events = _.map(res.rows, 'event_payload');
     return events;
   }
 
   async addEvent(gid, event) {
-    const serializedEvent = JSON.stringify(event);
-    const key = getEventsKey(gid);
-    await client.expire(key, DEFAULT_TTL_SECS);
-    await client.rpushAsync(key, serializedEvent);
+    if (!this.connected) throw new Error('not connected');
+    console.log('[GameModel] Persisting event', gid, event);
+    await this.client.query(
+      `
+      INSERT INTO game_events (gid, uid, ts, event_type, event_payload)
+      VALUES ($1, $2, $3, $4, $5)`,
+      [gid, event.user, new Date(event.timestamp).toISOString(), event.type, event]
+    );
   }
 }
 
@@ -86,7 +99,7 @@ class SocketManager extends EventEmitter {
     event = this.assignTimestamp(event);
 
     // 1. save to DB
-    gameModel.addEvent(gid, event);
+    this.gameModel.addEvent(gid, event);
     // 2. emit to all live clients
 
     if (this.gameToSocket.get(gid)) {
@@ -135,7 +148,7 @@ class SocketManager extends EventEmitter {
 
       // Perform the "initial sync"
       socket.on('sync_all', async (gid, cbk) => {
-        const events = await gameModel.getEvents(gid);
+        const events = await this.gameModel.getEvents(gid);
         cbk(events);
         this.emit('sync_all', gid, events);
       });
@@ -241,37 +254,49 @@ const STAT_DEFS = [
     secs: 60 * 60 * 24 * 7,
   },
 ];
-// ================== End Stats ================
-
-const gameModel = new GameModel();
-const socketManager = new SocketManager();
-socketManager.listen();
-
-const timeWindowStats = STAT_DEFS.map(({name, secs}) => ({
-  name,
-  stats: getStatsForTimeWindow(socketManager, secs),
-}));
-app.get('/test', (req, res) => res.send('Hello World!'));
-app.get('/api/stats', (req, res) => {
-  const liveStats = {
-    gamesCount: socketManager.getTotalGamesCount(),
-    connectionsCount: socketManager.getTotalConnectionsCount(),
-  };
-  const stats = {
-    liveStats,
-    timeWindowStats,
-  };
-  res.status(200).json(stats);
-});
-server.listen(port, () => console.log(`Listening on port ${port}`));
 
 // ================== Logging ================
 
-const out = console;
-socketManager.on('*', (event, ...args) => {
-  try {
-    out.log(`[${event}]`, _.truncate(JSON.stringify(args), {length: 100}));
-  } catch (e) {
-    out.log(`[${event}]`, args);
-  }
-});
+function logAllEvents(socketManager, log) {
+  socketManager.on('*', (event, ...args) => {
+    try {
+      log(`[${event}]`, _.truncate(JSON.stringify(args), {length: 100}));
+    } catch (e) {
+      log(`[${event}]`, args);
+    }
+  });
+}
+
+// ================== Main Entrypoint ================
+
+async function runServer() {
+  const serverStartDate = new Date().toString();
+  const gameModel = new GameModel();
+  const socketManager = new SocketManager(gameModel);
+  socketManager.listen();
+  logAllEvents(socketManager, console.log);
+
+  const timeWindowStats = STAT_DEFS.map(({name, secs}) => ({
+    name,
+    stats: getStatsForTimeWindow(socketManager, secs),
+  }));
+  app.get('/test', (req, res) => res.send('Hello World!'));
+  app.get('/api/stats', (req, res) => {
+    const liveStats = {
+      serverStartDate,
+      gamesCount: socketManager.getTotalGamesCount(),
+      connectionsCount: socketManager.getTotalConnectionsCount(),
+    };
+    const stats = {
+      liveStats,
+      timeWindowStats,
+    };
+    res.status(200).json(stats);
+  });
+  console.log('connecting to database...');
+  await gameModel.connect();
+  console.log('connected to database...');
+  server.listen(port, () => console.log(`Listening on port ${port}`));
+}
+
+runServer();

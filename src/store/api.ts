@@ -1,5 +1,5 @@
 const REMOTE_SERVER_HTTPS = 'https://downforacross.com';
-const REMOTE_SERVER_HTTP = 'http://54.151.18.249:3021';
+const REMOTE_SERVER_HTTP = 'http://52.38.73.59:3021';
 const REMOTE_SERVER_URL = window.location.protocol === 'https:' ? REMOTE_SERVER_HTTPS : REMOTE_SERVER_HTTP;
 
 export const SERVER_URL = process.env.REACT_APP_USE_LOCAL_SERVER
@@ -20,6 +20,7 @@ interface Counts {
 }
 
 interface LiveStats {
+  serverStartDate: string;
   gamesCount: number;
   connectionsCount: number;
 }
