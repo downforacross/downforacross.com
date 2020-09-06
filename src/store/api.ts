@@ -1,6 +1,10 @@
 const REMOTE_SERVER_HTTPS = 'https://downforacross.com';
-const REMOTE_SERVER_HTTP = 'http://52.38.73.59:3021';
+const REMOTE_SERVER_HTTP =
+  process.env.NODE_ENV === 'production' ? 'http://52.38.73.59:3021' : 'http://52.38.73.59:4021';
 const REMOTE_SERVER_URL = window.location.protocol === 'https:' ? REMOTE_SERVER_HTTPS : REMOTE_SERVER_HTTP;
+if (window.location.protocol === 'https' && process.env.NODE_ENV === 'development') {
+  throw new Error('Please use http in development');
+}
 
 export const SERVER_URL = process.env.REACT_APP_USE_LOCAL_SERVER
   ? 'http://localhost:3021'
