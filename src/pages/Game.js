@@ -47,7 +47,7 @@ export default class Game extends Component {
   }
 
   get beta() {
-    return !!this.query.beta || !!this.query.ws;
+    return true;
   }
 
   get query() {
@@ -100,34 +100,22 @@ export default class Game extends Component {
       this.initializeBattle(battleData);
     });
     console.log('initialize game');
-    if (this.beta) {
-      console.log('listening ws');
-      this.gameModel.on('wsCreateEvent', (event) => {
-        console.log('create event', event);
-        this.historyWrapper.setCreateEvent(event);
-        this.handleUpdate();
-      });
-      this.gameModel.on('wsEvent', (event) => {
-        this.historyWrapper.addEvent(event);
-        this.handleChange();
-        this.handleUpdate();
-      });
-      this.gameModel.on('wsOptimisticEvent', (event) => {
-        this.historyWrapper.addOptimisticEvent(event);
-        this.handleChange();
-        this.handleUpdate();
-      });
-    } else {
-      this.gameModel.on('createEvent', (event) => {
-        this.historyWrapper.setCreateEvent(event);
-        this.handleUpdate();
-      });
-      this.gameModel.on('event', (event) => {
-        this.historyWrapper.addEvent(event);
-        this.handleChange();
-        this.handleUpdate();
-      });
-    }
+    console.log('listening ws');
+    this.gameModel.on('wsCreateEvent', (event) => {
+      console.log('create event', event);
+      this.historyWrapper.setCreateEvent(event);
+      this.handleUpdate();
+    });
+    this.gameModel.on('wsEvent', (event) => {
+      this.historyWrapper.addEvent(event);
+      this.handleChange();
+      this.handleUpdate();
+    });
+    this.gameModel.on('wsOptimisticEvent', (event) => {
+      this.historyWrapper.addOptimisticEvent(event);
+      this.handleChange();
+      this.handleUpdate();
+    });
 
     this.gameModel.on('archived', (event) => {
       this.setState({
