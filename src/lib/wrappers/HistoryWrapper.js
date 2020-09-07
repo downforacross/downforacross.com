@@ -112,9 +112,13 @@ export default class HistoryWrapper {
 
   addOptimisticEvent(event) {
     if (this.optimisticEvents.length > 20) {
-      alert('You have been disconnected, please refresh');
-      this.optimisticEvents = [];
-      return;
+      setTimeout(() => {
+        if (this.optimisticEvents.length > 20) {
+          console.log('Detected websocket drop, reconnecting...');
+          this.optimisticEvents = [];
+          window.socket.reconnect();
+        }
+      }, 5000);
     }
     this.optimisticEvents.push(event);
   }

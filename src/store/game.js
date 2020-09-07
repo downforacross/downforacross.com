@@ -76,6 +76,11 @@ export default class Game extends EventEmitter {
     return this.websocketPromise;
   }
 
+  async reconnect() {
+    await this.socket.close();
+    await this.socket.open();
+  }
+
   emitEvent(event) {
     if (event.type === 'create') {
       this.emit('createEvent', event);
