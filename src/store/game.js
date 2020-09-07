@@ -69,6 +69,7 @@ export default class Game extends EventEmitter {
           console.log('reconnecting...');
           emitAsync(this.socket, 'join', this.gid);
           console.log('reconnected...');
+          this.emitReconnect();
         });
       })();
     }
@@ -95,6 +96,10 @@ export default class Game extends EventEmitter {
 
   emitOptimisticEvent(event) {
     this.emit('wsOptimisticEvent', event);
+  }
+
+  emitReconnect() {
+    this.emit('reconnect');
   }
 
   async addEvent(event) {

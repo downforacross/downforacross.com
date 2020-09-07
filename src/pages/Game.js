@@ -116,6 +116,11 @@ export default class Game extends Component {
       this.handleChange();
       this.handleUpdate();
     });
+    this.gameModel.on('reconnect', () => {
+      this.historyWrapper.clearOptimisticEvents();
+      this.handleChange();
+      this.handleUpdate();
+    });
 
     this.gameModel.on('archived', (event) => {
       this.setState({
