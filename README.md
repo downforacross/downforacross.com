@@ -12,7 +12,7 @@ Hosted [here](http://www.downforacross.com)
    `yarn`
 
 3. Run frontend server
-   `yarn devfrontend`
+   `yarn start`
 
 ### Contributing
 
