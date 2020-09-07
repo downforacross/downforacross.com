@@ -2,7 +2,7 @@ import classnames from 'classnames';
 import ReactDOM from 'react-dom';
 import React from 'react';
 
-import {BrowserRouter as Router, Route} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Redirect} from 'react-router-dom';
 import {isMobile} from './lib/jsUtils';
 import {Account, Battle, Compose, Composition, Game, Play, Replay, Replays, Welcome, Stats} from './pages';
 import GlobalContext from './lib/GlobalContext';
@@ -35,6 +35,14 @@ const Root = () => {
           <Route path="/account" component={Account} />
           <Route exact path="/compose" component={Compose} />
           <Route exact path="/composition/:cid" component={Composition} />
+          <Route
+            exact
+            path="/discord"
+            component={() => {
+              window.location.href = 'https://discord.gg/KjPHFw8';
+              return null;
+            }}
+          />
         </div>
       </GlobalContext.Provider>
     </Router>
