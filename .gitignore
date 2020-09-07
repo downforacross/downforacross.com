@@ -28,3 +28,5 @@ yarn-error.log*
 .idea/
 backfills/*.json
 .envrc
+.env.production
+.env.staging
