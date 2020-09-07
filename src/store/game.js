@@ -53,6 +53,8 @@ export default class Game extends EventEmitter {
   connectToWebsocket() {
     if (!this.websocketPromise) {
       this.websocketPromise = (async () => {
+        // Note: In attempt to increase websocket limit, use upgrade false
+        // https://stackoverflow.com/questions/15872788/maximum-concurrent-socket-io-connections
         const socket = io(SOCKET_HOST, {upgrade: false, transports: ['websocket']});
 
         this.socket = socket;
