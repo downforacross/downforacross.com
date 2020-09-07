@@ -9,9 +9,11 @@ It is hosted at http://www.downforacross.com.
 If you notice a bug or have a feature request, feel free to open an issue.
 
 ### Getting Started
+
 1. Install `nvm` and `yarn`
 
 2. Clone repo and cd to repo root.
+
 ```
 git clone https://github.com/downforacross/downforacross.com.git
 cd downforacross.com
@@ -41,6 +43,8 @@ Developing for mobile web:
 - Remote debugging (e.g. safari developer mode) tips: https://support.brightcove.com/debugging-mobile-devices
 
 ### Other resources
+
 - https://firebase.google.com/docs/database/web/start (intro to firebase realtime database)
 - https://reactjs.org/tutorial/tutorial.html (intro to react)
 - https://www.messenger.com/t/steven.hao.14 (helpline)
+- https://discord.gg/KjPHFw8 (community discord)
