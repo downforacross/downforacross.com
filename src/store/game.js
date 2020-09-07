@@ -63,6 +63,12 @@ export default class Game extends EventEmitter {
         console.log('Connecting to', SOCKET_HOST);
         await this.socket.onceAsync('connect');
         await emitAsync(this.socket, 'join', this.gid);
+
+        // handle future reconnects
+        this.socket.on('connect', () => {
+          console.log('reconnecting...');
+          emitAsync(this.socket, 'join', this.gid);
+        });
       })();
     }
     return Promise.race([this.websocketPromise, Promise.delay(3000)]);
