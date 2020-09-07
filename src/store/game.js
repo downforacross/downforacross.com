@@ -68,10 +68,11 @@ export default class Game extends EventEmitter {
         this.socket.on('connect', () => {
           console.log('reconnecting...');
           emitAsync(this.socket, 'join', this.gid);
+          console.log('reconnected...');
         });
       })();
     }
-    return Promise.race([this.websocketPromise, Promise.delay(3000)]);
+    return this.websocketPromise;
   }
 
   emitEvent(event) {
@@ -99,19 +100,9 @@ export default class Game extends EventEmitter {
   async addEvent(event) {
     console.log('add event', event);
     event.id = uuid.v4();
-    const wsPromise = (async () => {
-      try {
-        const promise = (async () => {
-          this.emitOptimisticEvent(event);
-          await this.connectToWebsocket();
-          await this.pushEventToWebsocket(event);
-        })();
-        await Promise.race([promise, Promise.delay(3000)]);
-      } catch (e) {
-        // it's ok
-      }
-    })();
-    await wsPromise;
+    this.emitOptimisticEvent(event);
+    await this.connectToWebsocket();
+    await this.pushEventToWebsocket(event);
   }
 
   pushEventToWebsocket(event) {
