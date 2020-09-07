@@ -53,7 +53,8 @@ export default class Game extends EventEmitter {
   connectToWebsocket() {
     if (!this.websocketPromise) {
       this.websocketPromise = (async () => {
-        const socket = io(SOCKET_HOST);
+        const socket = io(SOCKET_HOST, {upgrade: false, transports: ['websocket']});
+
         this.socket = socket;
         window.socket = socket;
 
