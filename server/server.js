@@ -15,11 +15,8 @@ const pg = require('pg');
 
 io.origins('*:*'); // allow CORS for socket.io route
 app.use(cors()); // allow CORS for all express routes
-app.use(morgan('combined'))(
-  // ============= Database Operations ============
-
-  async () => {}
-)();
+app.use(morgan('combined'));
+// ============= Database Operations ============
 
 const getEventsKey = (gid) => {
   return `events_${gid}`;
