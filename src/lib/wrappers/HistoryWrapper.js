@@ -113,12 +113,12 @@ export default class HistoryWrapper {
   addOptimisticEvent(event) {
     if (this.optimisticEvents.length > 20) {
       setTimeout(() => {
+        // This is a HACK
         if (this.optimisticEvents.length > 20) {
           console.log('Detected websocket drop, reconnecting...');
           this.optimisticEvents = [];
-          window.socket.close().then(() => {
-            window.socket.open();
-          });
+          window.socket.close();
+          window.socket.open();
         }
       }, 5000);
     }
