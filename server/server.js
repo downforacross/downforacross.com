@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+const morgan = require('morgan');
+
 const port = process.env.PORT || 3000;
 const EventEmitter = require('events');
 
@@ -13,10 +15,11 @@ const pg = require('pg');
 
 io.origins('*:*'); // allow CORS for socket.io route
 app.use(cors()); // allow CORS for all express routes
+app.use(morgan('combined'))(
+  // ============= Database Operations ============
 
-// ============= Database Operations ============
-
-(async () => {})();
+  async () => {}
+)();
 
 const getEventsKey = (gid) => {
   return `events_${gid}`;
@@ -103,7 +106,7 @@ class SocketManager extends EventEmitter {
     // 2. emit to all live clients
 
     if (this.gameToSocket.get(gid)) {
-      this.gameToSocket.get(gid).forEach(async (socket) => {
+      this.gameToSocket.get(gid).forEach((socket) => {
         socket.emit('game_event', event);
       });
     }
