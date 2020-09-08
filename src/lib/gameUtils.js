@@ -158,7 +158,7 @@ export const getReferencedClues = (str, clues) => {
   if (referencesStars) {
     ['down', 'across'].forEach((dir) => {
       clues[dir].forEach((clueText, i) => {
-        const hasStar = clueText.trim().startsWith('*') || clueText.trim().endsWith('*');
+        const hasStar = clueText && (clueText.trim().startsWith('*') || clueText.trim().endsWith('*'));
         if (hasStar) {
           res.push({
             ori: dir,
