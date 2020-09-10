@@ -59,15 +59,32 @@ export default class Game extends EventEmitter {
 
         this.socket = socket;
         window.socket = socket;
+        socket.on('connect', (event) => {
+          console.debug('[ws connect]', event);
+        });
+        socket.on('connect', (event) => {
+          console.debug('[ws connect]', event);
+        });
+        socket.on('ping', (event) => {
+          console.debug('[ws ping]', Date.now());
+        });
+        socket.on('pong', (event) => {
+          console.debug('[ws pong]', Date.now());
+        });
 
         console.log('Connecting to', SOCKET_HOST);
         await this.socket.onceAsync('connect');
         await emitAsync(this.socket, 'join', this.gid);
 
+        this.socket.on('disconnect', () => {
+          console.log('received disconnect from server');
+          this.disconnected = true;
+        });
+
         // handle future reconnects
-        this.socket.on('connect', () => {
+        this.socket.on('connect', async () => {
           console.log('reconnecting...');
-          emitAsync(this.socket, 'join', this.gid);
+          await emitAsync(this.socket, 'join', this.gid);
           console.log('reconnected...');
           this.emitReconnect();
         });
@@ -113,6 +130,7 @@ export default class Game extends EventEmitter {
   pushEventToWebsocket(event) {
     console.log('push to ws', event);
     if (!this.socket || !this.socket.connected) {
+      this.socket && this.socket.close().open(); // HACK try to fix the disconnection bug
       throw new Error('Not connected to websocket');
     }
 
