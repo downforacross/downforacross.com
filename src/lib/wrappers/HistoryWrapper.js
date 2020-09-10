@@ -115,9 +115,8 @@ export default class HistoryWrapper {
       if (this.optimisticEvents.includes(event)) {
         console.log('Detected websocket drop, reconnecting...');
         this.optimisticEvents = [];
-        window.socket.close().then(() => {
-          window.socket.open();
-        });
+        window.socket.close();
+        window.socket.open();
       }
     }, 5000);
     this.optimisticEvents.push(event);
