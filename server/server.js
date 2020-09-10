@@ -6,7 +6,7 @@ const port = process.env.PORT || 3000;
 const EventEmitter = require('events');
 
 const server = require('http').Server(app);
-const io = require('socket.io')(server);
+const io = require('socket.io')(server, {pingInterval: 2000, pingTimeout: 5000});
 const _ = require('lodash');
 const cors = require('cors');
 const pg = require('pg');
@@ -260,7 +260,7 @@ const STAT_DEFS = [
 function logAllEvents(socketManager, log) {
   socketManager.on('*', (event, ...args) => {
     try {
-      log(`[${event}]`, _.truncate(JSON.stringify(args), {length: 100}));
+      log(`[${event}]`, _.truncate(JSON.stringify(args), {length: 10}));
     } catch (e) {
       log(`[${event}]`, args);
     }
