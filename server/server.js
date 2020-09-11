@@ -39,22 +39,25 @@ class GameModel {
 
   async getEvents(gid) {
     if (!this.connected) throw new Error('not connected');
-    console.log('[GameModel] listing events', gid);
+    const startTime = Date.now();
     const res = await this.client.query('SELECT event_payload FROM game_events WHERE gid=$1', [gid]);
-    // const serializedEvents = await client.lrangeAsync(getEventsKey(gid), 0, MAX_EVENTS);
     const events = _.map(res.rows, 'event_payload');
+    const ms = Date.now() - startTime;
+    console.log(`getEvents(${gid}) took ${ms}ms`);
     return events;
   }
 
   async addEvent(gid, event) {
     if (!this.connected) throw new Error('not connected');
-    console.log('[GameModel] Persisting event', gid, event.type);
+    const startTime = Date.now();
     await this.client.query(
       `
       INSERT INTO game_events (gid, uid, ts, event_type, event_payload)
       VALUES ($1, $2, $3, $4, $5)`,
       [gid, event.user, new Date(event.timestamp).toISOString(), event.type, event]
     );
+    const ms = Date.now() - startTime;
+    console.log(`addEvent(${gid}, ${event.type}) took ${ms}ms`);
   }
 }
 
