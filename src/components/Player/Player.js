@@ -11,6 +11,7 @@ import Clues from './Clues';
 import Clue from './ClueText';
 import GridControls from './GridControls';
 import MobileGridControls from './MobileGridControls';
+import ConnectionStats from './ConnectionStats';
 
 import * as gameUtils from '../../lib/gameUtils';
 
@@ -398,14 +399,19 @@ export default class Player extends Component {
           </div>
         </GridControls>
         {this.props.beta && (
-          <span
+          <div
             style={{
               color: 'gray',
               margin: '0 auto',
             }}
           >
-            {this.props.optimisticCounter ? <>{this.props.optimisticCounter} ahead</> : <>Synced</>}
-          </span>
+            <div>
+              {this.props.optimisticCounter ? <>{this.props.optimisticCounter} ahead</> : <>Synced</>}
+            </div>
+            <div>
+              <ConnectionStats />
+            </div>
+          </div>
         )}
       </div>
     );

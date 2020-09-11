@@ -59,6 +59,14 @@ export default class Game extends EventEmitter {
 
         this.socket = socket;
         window.socket = socket;
+
+        socket.on('pong', function (ms) {
+          window.connectionStatus = {
+            latency: ms,
+            timestamp: Date.now(),
+          };
+        });
+
         socket.on('connect', (event) => {
           console.debug('[ws connect]', event);
         });
