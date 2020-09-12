@@ -98,6 +98,20 @@ export default class Toolbar extends Component {
     );
   }
 
+  renderKeybindMenu() {
+    const {vimMode, vimInsert} = this.props;
+    return (
+      <ActionMenu
+        label={vimMode ? `VIM ${vimInsert ? 'Insert' : 'Normal'}` : 'Normal'}
+        onBlur={this.handleBlur}
+        actions={{
+          Normal: this.keybind.bind(this, 'normal'),
+          Vim: this.keybind.bind(this, 'vim'),
+        }}
+      />
+    );
+  }
+
   renderChatButton() {
     return <MdChatBubble onClick={this.handleToggleChat} className="toolbar--chat" />;
   }
@@ -207,6 +221,10 @@ export default class Toolbar extends Component {
     this.props.onReset(scopeString);
   }
 
+  keybind(mode) {
+    this.props.onKeybind(mode);
+  }
+
   resetPuzzleAndTimer() {
     this.reset('puzzle');
     this.props.onResetClock();
@@ -253,6 +271,7 @@ export default class Toolbar extends Component {
         {solved ? null : this.renderCheckMenu()}
         {solved ? null : this.renderRevealMenu()}
         <div className="toolbar--menu reset">{this.renderResetMenu()}</div>
+        {this.renderKeybindMenu()}
         {this.renderPencil()}
         {this.renderInfo()}
       </div>

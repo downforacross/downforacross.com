@@ -119,6 +119,7 @@ export default class GridControls extends Component {
 
   // takes in key, a string
   _handleKeyDown = (key, shiftKey) => {
+    console.log(key);
     const actionKeys = {
       ArrowLeft: 'left',
       ArrowUp: 'up',
@@ -154,12 +155,51 @@ export default class GridControls extends Component {
     }
   };
 
+  _handleKeyDownVim = (key, shiftKey) => {
+    const normalModeActionKeys = {
+      h: 'left',
+      j: 'down',
+      k: 'up',
+      l: 'right',
+      Tab: 'tab',
+      ' ': 'space',
+      '[': 'backward',
+      ']': 'forward',
+    };
+
+    const insertModeActionKeys = {
+      Backspace: 'backspace',
+      '{del}': 'backspace',
+      Delete: 'delete',
+    };
+
+    const {onVimNormal, onVimInsert, vimInsert} = this.props;
+    if (!vimInsert && key in normalModeActionKeys) {
+      this.handleAction(normalModeActionKeys[key], shiftKey);
+    } else if (vimInsert && key in insertModeActionKeys) {
+      this.handleAction(insertModeActionKeys[key], shiftKey);
+    } else if (key === 'Escape') {
+      onVimNormal && onVimNormal();
+    } else if (!vimInsert && (key === 'i' || key === 'a')) {
+      onVimInsert && onVimInsert();
+    } else if (vimInsert && !this.props.frozen) {
+      const letter = key.toUpperCase();
+      if (this.validLetter(letter)) {
+        this.typeLetter(letter, shiftKey);
+        return true;
+      }
+    }
+  };
+
   // takes in a Keyboard Event
   handleKeyDown(ev) {
+    const {vimMode} = this.props;
+    const _handleKeyDown = vimMode ? this._handleKeyDownVim : this._handleKeyDown;
+
     if (ev.target.tagName === 'INPUT' || ev.metaKey || ev.ctrlKey) {
       return;
     }
-    if (this._handleKeyDown(ev.key, ev.shiftKey)) {
+    if (_handleKeyDown(ev.key, ev.shiftKey)) {
       ev.preventDefault();
       ev.stopPropagation();
     }

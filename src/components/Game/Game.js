@@ -18,6 +18,8 @@ export default class Game extends Component {
     this.state = {
       pencilMode: false,
       screenWidth: 0,
+      vimMode: false,
+      vimInsert: false,
     };
   }
 
@@ -132,6 +134,24 @@ export default class Game extends Component {
     this.props.gameModel.reset(scope);
   };
 
+  handleKeybind = (mode) => {
+    this.setState({
+      vimMode: mode === 'vim',
+    });
+  };
+
+  handleVimInsert = () => {
+    this.setState({
+      vimInsert: true,
+    });
+  };
+
+  handleVimNormal = () => {
+    this.setState({
+      vimInsert: false,
+    });
+  };
+
   handleTogglePencil = () => {
     this.setState({
       pencilMode: !this.state.pencilMode,
@@ -232,6 +252,10 @@ export default class Game extends Component {
         addPing={this.handleAddPing}
         onPressEnter={this.handlePressEnter}
         onPressPeriod={this.handlePressPeriod}
+        vimMode={this.state.vimMode}
+        vimInsert={this.state.vimInsert}
+        onVimInsert={this.handleVimInsert}
+        onVimNormal={this.handleVimNormal}
         mobile={mobile}
         pickups={this.props.pickups}
         optimisticCounter={optimisticCounter}
@@ -244,7 +268,7 @@ export default class Game extends Component {
     if (!this.game) return;
     const {clock} = this.game;
     const {mobile} = this.props;
-    const {pencilMode} = this.state;
+    const {pencilMode, vimMode, vimInsert} = this.state;
     const {lastUpdated: startTime, totalTime: pausedTime, paused: isPaused} = clock;
     return (
       <Toolbar
@@ -254,12 +278,15 @@ export default class Game extends Component {
         pausedTime={pausedTime}
         isPaused={isPaused}
         pencilMode={pencilMode}
+        vimMode={vimMode}
+        vimInsert={vimInsert}
         onStartClock={this.handleStartClock}
         onPauseClock={this.handlePauseClock}
         onResetClock={this.handleResetClock}
         onCheck={this.handleCheck}
         onReveal={this.handleReveal}
         onReset={this.handleReset}
+        onKeybind={this.handleKeybind}
         onTogglePencil={this.handleTogglePencil}
         onToggleChat={this.handleToggleChat}
         onRefocus={this.handleRefocus}

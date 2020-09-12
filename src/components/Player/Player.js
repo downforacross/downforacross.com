@@ -269,6 +269,10 @@ export default class Player extends Component {
       mobile,
       onPressEnter,
       onPressPeriod,
+      vimMode,
+      vimInsert,
+      onVimNormal,
+      onVimInsert,
       grid,
       clues,
       circles,
@@ -359,6 +363,10 @@ export default class Player extends Component {
           ref="gridControls"
           onPressEnter={onPressEnter}
           onPressPeriod={onPressPeriod}
+          vimMode={vimMode}
+          vimInsert={vimInsert}
+          onVimInsert={onVimInsert}
+          onVimNormal={onVimNormal}
           selected={selected}
           direction={direction}
           onSetDirection={this._setDirection}
