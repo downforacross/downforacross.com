@@ -154,12 +154,69 @@ export default class GridControls extends Component {
     }
   };
 
+  _handleKeyDownVim = (key, shiftKey) => {
+    const actionKeys = {
+      ArrowLeft: 'left',
+      ArrowUp: 'up',
+      ArrowDown: 'down',
+      ArrowRight: 'right',
+      Backspace: 'backspace',
+      '{del}': 'backspace',
+      Delete: 'delete',
+      Tab: 'tab',
+      ' ': 'space',
+      '[': 'backward',
+      ']': 'forward',
+    };
+
+    const normalModeActionKeys = {
+      h: 'left',
+      j: 'down',
+      k: 'up',
+      l: 'right',
+      x: 'delete',
+    };
+
+    const {onVimNormal, onVimInsert, vimInsert, onPressEnter, onPressPeriod} = this.props;
+    if (key in actionKeys) {
+      this.handleAction(actionKeys[key], shiftKey);
+      return true;
+    } else if (!vimInsert) {
+      if (key in normalModeActionKeys) {
+        this.handleAction(normalModeActionKeys[key], shiftKey);
+      } else if (key === 'w') {
+        this.selectNextClue(false);
+      } else if (key === 'b') {
+        this.selectNextClue(true);
+      } else if (key === 'i') {
+        onVimInsert && onVimInsert();
+      }
+    } else if (key === '.') {
+      onPressPeriod && onPressPeriod();
+      return true;
+    } else if (key === 'Enter') {
+      onPressEnter && onPressEnter();
+      return true;
+    } else if (key === 'Escape') {
+      onVimNormal && onVimNormal();
+    } else if (vimInsert && !this.props.frozen) {
+      const letter = key.toUpperCase();
+      if (this.validLetter(letter)) {
+        this.typeLetter(letter, shiftKey);
+        return true;
+      }
+    }
+  };
+
   // takes in a Keyboard Event
   handleKeyDown(ev) {
+    const {vimMode} = this.props;
+    const _handleKeyDown = vimMode ? this._handleKeyDownVim : this._handleKeyDown;
+
     if (ev.target.tagName === 'INPUT' || ev.metaKey || ev.ctrlKey) {
       return;
     }
-    if (this._handleKeyDown(ev.key, ev.shiftKey)) {
+    if (_handleKeyDown(ev.key, ev.shiftKey)) {
       ev.preventDefault();
       ev.stopPropagation();
     }
