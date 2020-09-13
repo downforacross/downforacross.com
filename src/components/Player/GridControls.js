@@ -119,7 +119,6 @@ export default class GridControls extends Component {
 
   // takes in key, a string
   _handleKeyDown = (key, shiftKey) => {
-    console.log(key);
     const actionKeys = {
       ArrowLeft: 'left',
       ArrowUp: 'up',
