@@ -156,28 +156,42 @@ export default class GridControls extends Component {
   };
 
   _handleKeyDownVim = (key, shiftKey) => {
-    const normalModeActionKeys = {
-      h: 'left',
-      j: 'down',
-      k: 'up',
-      l: 'right',
+    const actionKeys = {
+      ArrowLeft: 'left',
+      ArrowUp: 'up',
+      ArrowDown: 'down',
+      ArrowRight: 'right',
+      Backspace: 'backspace',
+      '{del}': 'backspace',
+      Delete: 'delete',
       Tab: 'tab',
       ' ': 'space',
       '[': 'backward',
       ']': 'forward',
     };
 
-    const insertModeActionKeys = {
-      Backspace: 'backspace',
-      '{del}': 'backspace',
-      Delete: 'delete',
+    const normalModeActionKeys = {
+      h: 'left',
+      j: 'down',
+      k: 'up',
+      l: 'right',
+      x: 'delete',
+      ' ': 'space',
+      '[': 'backward',
+      ']': 'forward',
     };
 
-    const {onVimNormal, onVimInsert, vimInsert} = this.props;
-    if (!vimInsert && key in normalModeActionKeys) {
+    const {onVimNormal, onVimInsert, vimInsert, onPressEnter, onPressPeriod} = this.props;
+    if (key in actionKeys) {
+      this.handleAction(actionKeys[key], shiftKey);
+    } else if (!vimInsert && key in normalModeActionKeys) {
       this.handleAction(normalModeActionKeys[key], shiftKey);
-    } else if (vimInsert && key in insertModeActionKeys) {
-      this.handleAction(insertModeActionKeys[key], shiftKey);
+    } else if (key === '.') {
+      onPressPeriod && onPressPeriod();
+      return true;
+    } else if (key === 'Enter') {
+      onPressEnter && onPressEnter();
+      return true;
     } else if (key === 'Escape') {
       onVimNormal && onVimNormal();
     } else if (!vimInsert && (key === 'i' || key === 'a')) {
