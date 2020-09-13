@@ -102,7 +102,7 @@ export default class Toolbar extends Component {
     const {vimMode, vimInsert} = this.props;
     return (
       <ActionMenu
-        label={vimMode ? `VIM ${vimInsert ? 'Insert' : 'Normal'}` : 'Normal'}
+        label={vimMode ? `Vim${vimInsert ? ' (Insert)' : ''}` : 'Normal'}
         onBlur={this.handleBlur}
         actions={{
           Normal: this.keybind.bind(this, 'normal'),

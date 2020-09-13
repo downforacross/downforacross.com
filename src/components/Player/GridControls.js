@@ -176,16 +176,22 @@ export default class GridControls extends Component {
       k: 'up',
       l: 'right',
       x: 'delete',
-      ' ': 'space',
-      '[': 'backward',
-      ']': 'forward',
     };
 
     const {onVimNormal, onVimInsert, vimInsert, onPressEnter, onPressPeriod} = this.props;
     if (key in actionKeys) {
       this.handleAction(actionKeys[key], shiftKey);
-    } else if (!vimInsert && key in normalModeActionKeys) {
-      this.handleAction(normalModeActionKeys[key], shiftKey);
+      return true;
+    } else if (!vimInsert) {
+      if (key in normalModeActionKeys) {
+        this.handleAction(normalModeActionKeys[key], shiftKey);
+      } else if (key === 'w') {
+        this.selectNextClue(false);
+      } else if (key === 'b') {
+        this.selectNextClue(true);
+      } else if (key === 'i') {
+        onVimInsert && onVimInsert();
+      }
     } else if (key === '.') {
       onPressPeriod && onPressPeriod();
       return true;
@@ -194,8 +200,6 @@ export default class GridControls extends Component {
       return true;
     } else if (key === 'Escape') {
       onVimNormal && onVimNormal();
-    } else if (!vimInsert && (key === 'i' || key === 'a')) {
-      onVimInsert && onVimInsert();
     } else if (vimInsert && !this.props.frozen) {
       const letter = key.toUpperCase();
       if (this.validLetter(letter)) {
