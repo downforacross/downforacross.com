@@ -80,10 +80,11 @@ export default class PuzzleList extends PureComponent {
     const searchMatches = search
       .toLowerCase()
       .split(/\s/)
-      .every((token) => {
-        // Each token can be either in the author's name or in the puzzle's title
-        author.includes(token) || title.includes(token);
-      });
+      .every(
+        (token) =>
+          // Each token can be either in the author's name or in the puzzle's title
+          author.includes(token) || title.includes(token)
+      );
 
     return statusFilter[status] && sizeFilter[size] && searchMatches;
   };
