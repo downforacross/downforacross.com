@@ -73,16 +73,18 @@ export default class PuzzleList extends PureComponent {
       started: 'In progress',
     }[this.puzzleStatuses[entry.pid]];
 
-    const matches = (str, expr) => {
-      if (expr.toLowerCase() === expr) {
-        // case insensitive
-        return str.toLowerCase().indexOf(expr) !== -1;
-      } else {
-        // case sensitive
-        return str.indexOf(expr) !== -1;
-      }
-    };
-    const searchMatches = matches(entry.info.author, search) || matches(entry.info.title, search);
+    // Normalise case, and do it outside the filter loop for performance reasons
+    const author = entry.info.author.toLowerCase();
+    const title = entry.info.title.toLowerCase();
+    // Next, we normalise the search term, and then split it to allow for non-contiguous searches
+    const searchMatches = search
+      .toLowerCase()
+      .split(/\s/)
+      .every((token) => {
+        // Each token can be either in the author's name or in the puzzle's title
+        author.includes(token) || title.includes(token);
+      });
+
     return statusFilter[status] && sizeFilter[size] && searchMatches;
   };
 
