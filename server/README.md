@@ -7,8 +7,8 @@
 
 ### http server (host = downforacross.com)
 
-- Prod: TBD, probably downforacross.com/api??, probably a separate process
-- Dev: localhost:3020 (using [CRA proxy](https://create-react-app.dev/docs/proxying-api-requests-in-development/))
+- Prod: Hosts are both api.foracross.com/
+- Staging: Hosted at api-staging.foracross.com, or `localhost:3021` if running `yarn devbackend` locally.
 
 ### websocket server
 
@@ -16,9 +16,16 @@
 - Dev: localhost:3020 (using [CRA proxy](https://create-react-app.dev/docs/proxying-api-requests-in-development/))
 - Responsibilities
   - MVP: Handle pub/sub for game events
+  
+## client config
+- Production build has `SERVER_URL = "https://api.foracross.com"`
+  - This is `yarn build`, used by vercel for both production and preview deployments
+- Development build (e.g. `yarn start`) has `SERVER_URL = "https://api-staging.foracross.com"`.
+  - This is `yarn start`
+- Development with `process.env.REACT_APP_USE_LOCAL_SERVER=1` has `SERVER_URL = localhost:3021`
+  - This is `yarn devfrontend`
 
 ### Database
-
 All game events are stored in postgres
 Postgres schemas:
 
@@ -35,6 +42,8 @@ CREATE TABLE game_events(
 ```
 
 ### Getting Started
+
+Important: If you aren't making changes to `server/server.js`, you don't need to run the backend locally. In this case, just run `yarn start`.
 
 #### Run your local db
 
@@ -62,13 +71,17 @@ psql dfac < create_game_events.sql
 #### Run your local websocket server
 
 `yarn devbackend`
+
 This command expects you to have PGDATABASE env var set and a postgres server running. See `.envrc.template`.
+This will run a backend server on `localhost:3021`
 
 #### Run your local frontend server
 
-`yarn devbackend`
+`yarn devfrontend`
 
-This should open localhost:3020.
+This will run a frontend server on localhost:3020, that talks to your server on `localhost:3021`.
+
+Note that you can also run 
 
 #### Test manually
 
