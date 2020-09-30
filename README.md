@@ -2,7 +2,7 @@
 
 Downforacross is an online website for sharing crosswords and playing collaboratively with friends in real time.
 
-It is hosted at http://www.downforacross.com.
+It is hosted at https://downforacross.com/.
 
 ## Contributing
 
