@@ -11,6 +11,7 @@ import {getUser, PuzzlelistModel} from '../store';
 import PuzzleList from '../components/PuzzleList';
 import {isMobile, colorAverage} from '../lib/jsUtils';
 import classnames from 'classnames';
+import {fetchPuzzleList} from '../store/api';
 
 const BLUE = '#6aa9f4';
 const WHITE = '#FFFFFF';
@@ -60,9 +61,12 @@ export default class Welcome extends Component {
     this.user.onAuth(this.handleAuth);
   }
 
+  get pageSize() {
+    return 40;
+  }
+
   get done() {
-    const {pages, puzzles} = this.state;
-    return puzzles.length < pages * this.puzzleList.pageSize;
+    return this.state.puzzles.length < this.state.pages * this.pageSize;
   }
 
   get showingSidebar() {
@@ -70,27 +74,26 @@ export default class Welcome extends Component {
     return !this.mobile;
   }
 
-  nextPage = () => {
+  nextPage = async () => {
     const {pages} = this.state;
     if (this.loading || this.done) {
       return;
     }
     this.loading = true;
-    this.puzzleList.getPages(pages + 1, (page) => {
-      this.setState(
-        {
-          puzzles: page,
-          pages: pages + 1,
-        },
-        () => {
-          this.loading = false;
-        }
-      );
+    const query = {
+      page: this.state.pages,
+      pageSize: this.pageSize,
+    };
+
+    const puzzles = await fetchPuzzleList(query);
+    this.setState({
+      puzzles,
+      pages: pages + 1,
     });
+    this.loading = false;
   };
 
   initializePuzzlelist() {
-    this.puzzleList = new PuzzlelistModel();
     this.nextPage();
   }
 

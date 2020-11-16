@@ -1,3 +1,5 @@
+import _ from 'lodash';
+import qs from 'querystringify';
 const REMOTE_SERVER =
   process.env.NODE_ENV === 'development' ? 'api-staging.foracross.com' : 'api.foracross.com';
 const REMOTE_SERVER_URL = `${window.location.protocol}//${REMOTE_SERVER}`;
@@ -49,4 +51,45 @@ export async function fetchStats() {
   const json = await resp.json();
   const allStats: AllStats = json;
   return allStats;
+}
+
+// ========== GET /api/puzzlelist ============
+
+export interface PuzzleList {
+  pid: number;
+  private: boolean;
+  author: string;
+  title: string;
+  importedTime: number;
+  info: {
+    author: string;
+    descripton: string;
+    title: string;
+    type: string;
+  };
+  stats: {
+    numSolves: number;
+  };
+}
+
+export async function fetchPuzzleList(query: {page: number; pageSize: number}) {
+  const url = `${SERVER_URL}/api/puzzles?${qs.stringify(query)}`;
+  const resp = await fetch(url);
+  const json = await resp.json();
+  const puzzleList: PuzzleList = json;
+  return puzzleList;
+}
+
+export async function createNewPuzzle(puzzle: {}, opts: {isPublic?: boolean} = {}) {
+  const url = `${SERVER_URL}/api/puzzle`;
+  const data = {
+    puzzle,
+    isPublic: !!opts.isPublic,
+  };
+  const resp = await fetch(url, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+  const pid: string = await resp.text();
+  return pid;
 }
