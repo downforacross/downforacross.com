@@ -1,8 +1,10 @@
 const _ = require('lodash');
 const {pid} = require('process');
+const {connectPG} = require('./connectPG');
+
 class PuzzleModel {
-  constructor(client) {
-    this.client = client;
+  constructor() {
+    this.client = connectPG();
   }
 
   async listPuzzles(filter, limit, offset) {

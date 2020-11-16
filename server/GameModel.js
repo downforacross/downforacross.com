@@ -1,7 +1,9 @@
 const _ = require('lodash');
+const {connectPG} = require('./connectPG');
+
 class GameModel {
-  constructor(client) {
-    this.client = client;
+  constructor() {
+    this.client = connectPG();
   }
 
   async getEvents(gid) {
