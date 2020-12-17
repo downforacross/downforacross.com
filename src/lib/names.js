@@ -6,31 +6,31 @@ export const gameWords = 'troff glon yomp bruss jank fress masp smub zint jeft v
 // Used for generating usernames
 // copied from some random website's list of animals and adjectives
 const rawAdjectiveList = `
-  	Able, Abundant, Accepting, Accommodating, Active, Addictive, Adequate, Aggressive, AMERICAN, Amazing, Amiable, Amicable, Amusing, Antagonistic, Anxious, Anxious, Apathetic, Aquatic, Arrogant, Articulate, Artistic, Attentive, Attractive, Authoritative, Awesome,
+    Able, Abundant, Accepting, Accommodating, Active, Addictive, Adequate, Aggressive, American, Amazing, Amiable, Amicable, Amusing, Antagonistic, Anxious, Apathetic, Aquatic, Arrogant, Articulate, Artistic, Attentive, Attractive, Authoritative, Awesome,
 	Barren, Benevolent, Biodegradable, Blase, Bold, Bonding, Boorish, Bountiful, Braggart, Brave, Brilliant, Busy,
-	Callow, Captious, CARING, Celestial, Chaste, Cheerful, Churlish, Civil, Clean, Clever, Coastal, Cold, Colossal, Combustible, Comfortable, Commercial, Communicative, Compact, Competitive, Compulsive, Confident, Conflicted, Congenial, Conscientious, Conservative, Considerate, Conspicuous, Contemptible, Contiguous, COOPERATIVE, Cordial, COURAGEOUS, Courteous, Covetous, Creative, Critical, Critical, Crucial, Crude, Culpable, Curious, Current, Curt, Cynical,
+	Callow, Captious, Caring, Celestial, Chaste, Cheerful, Churlish, Civil, Clean, Clever, Coastal, Cold, Colossal, Combustible, Comfortable, Commercial, Communicative, Compact, Competitive, Compulsive, Confident, Conflicted, Congenial, Conscientious, Conservative, Considerate, Conspicuous, Contemptible, Contiguous, Cooperative, Cordial, Courageous, Courteous, Covetous, Creative, Critical, Crucial, Crude, Culpable, Curious, Current, Curt, Cynical,
 	Decent, Decorous, Defensive, Deferential, Deft, Dejected, Delightful, Demeaning, Demise, Dependable, Deplorable, Depressed, Destructive, Devious, Devoted, Dictatorial, Diligent, Diminutive, Diplomatic, Discreet, Disdainful, Dishonesty, Dishonorable, Disposable, Disrespectful, Distracted, Docile, Downcast, Dynamic,
 	Earnest, Earthy, Ecological, Efficient, Egotistical, Electrifying, Elitist, Empathetic, Endangered, Endemic, Energetic, Enigmatic, Enthusiastic, Esteemed, Estimable, Ethical, Euphoric, Evergreen, Exclusive, Expectant, Explosive, Exquisite, Extravagant, Extrovert, Exuberant,
-	FAIR, Faithful, Fallow, Falseness, Famous, Fancy, Ferocious, Fertile, Fervent, Fervid, Fibrous, Fierce, Flexible, Focused, Forgiving, Forlorn, Frailty,
+	Fair, Faithful, Fallow, Falseness, Famous, Fancy, Ferocious, Fertile, Fervent, Fervid, Fibrous, Fierce, Flexible, Focused, Forgiving, Forlorn, Frailty,
 	Generous, Genial, Genteel, Gentle, Genuine, Gifted, Gigantic, Glib, Gloomy, Good, Gorgeous, Gracious, Grand, Grateful, Gravity, Green, Grouchy, Guilty, Gusty,
-	Happy, Hard-hearted, Healing, Heedless, Helpfulness, Heroic, HONEST, Honorable, Hopeful, Hostile, Humane, Humble, Humorous, Hygienic, Hysterical,
+	Happy, Hard-hearted, Healing, Heedless, Helpfulness, Heroic, Honest, Honorable, Hopeful, Hostile, Humane, Humble, Humorous, Hygienic, Hysterical,
 	Idealistic, Idolize, Ignoble, Ignorant, Ill-tempered, Impartial, Impolite, Improper, Imprudent, Impudent, Indecent, Indecorous, Indifferent, Indigenous, Industrious, Ingenuous, Innocent, Innovative, Insightful, Insolent, Inspirational, Instructive, Insulting, Intense, Intolerant, Introvert, Intuitive, Inventive, Investigative, Irascible, Irresponsible,
-	Jaundiced, Jealous, Jealous, Jocular, Jolly, Jovial, Joyful, Jubilant, Just, Juvenile,
+	Jaundiced, Jealous, Jocular, Jolly, Jovial, Joyful, Jubilant, Just, Juvenile,
 	Keen, Kind, Kindred, Knowledgeable,
-	Liberal, Loathsome, Loving, LOYAL,
+	Liberal, Loathsome, Loving, Loyal,
 	Magical, Magnificence, Magnificent, Malevolent, Malicious, Mammoth, Manipulative, Masterful, Meddling, Meritorious, Meticulous, Migratory, Minuscule, Miserable, Mistrustful, Modest, Moral, Mysterious,
-	Naive, Nascent, Native, Natural, Natural, Nature, Needy, Nefarious, Negative, Neglected, Neglectful, Negligent, Nice, Noble, Notorious,
+	Naive, Nascent, Native, Natural, Nature, Needy, Nefarious, Negative, Neglected, Neglectful, Negligent, Nice, Noble, Notorious,
 	Obedient, Observant, Open, Open-minded, Opinionated, Oppressive, Orderly, Oriented, Original, Outrageous, Outspoken,
-	Parasitic, Partial, Passionate, Patient, Patriotic, Perceptive, Personable, Personal, Petulant, Pleasant, Poise, Polite, Pollutant, Popular, Powerful, Prejudicial, Preposterous, Pretentious, Prideful, Principled, Pristine, Prompt, Proper, PUNCTUAL, Purposeful,
+	Parasitic, Partial, Passionate, Patient, Patriotic, Perceptive, Personable, Personal, Petulant, Pleasant, Poise, Polite, Pollutant, Popular, Powerful, Prejudicial, Preposterous, Pretentious, Prideful, Principled, Pristine, Prompt, Proper, Punctual, Purposeful,
 	Quaint, Quarrelsome, Quick, Quiet, Quirky,
-	Radioactive, Rancorous, Rational, Reasonable, Reckless, Refined, Reflective, RELIANT, Remarkable, Remorseful, Renewable, Reproductive, Repugnant, Resilient, Resolute, Resourceful, Respectful, Responsible, Responsive, Restorative, Reverent, Rotting, Rude, Ruthless,
+	Radioactive, Rancorous, Rational, Reasonable, Reckless, Refined, Reflective, Reliant, Remarkable, Remorseful, Renewable, Reproductive, Repugnant, Resilient, Resolute, Resourceful, Respectful, Responsible, Responsive, Restorative, Reverent, Rotting, Rude, Ruthless,
 	Sadness, Safe, Scornful, Scrumptious, Selfish, Sensible, Sensitive, Sharing, Simple, Sober, Solar, Solemn, Solitary, Soluble, Sour, Spatial, Special, Splendid, Staunch, Stern, Stunning, Successful, Sullen, Superb, Superior, Supportive, Surly, Suspicious, Sweet, Sympathetic,
-	Tactful, Taint, Temperate, Temperate, Tenacious, Terrific, Testy, Thoughtful, Thoughtless, Tolerant, Towering, Toxic, Treacherous, Tropical, TRUSTWORTHY, Truthful,
-	Ultimate, Uncivil, Uncouth, Undeveloped, Unethical, Unfair, Unique, Unique, United, Unmannerly, Unrefined, Unsavory, Unworthy, Uplifting, Upright, Uproot, Upstanding,
-	Valiant, Veracious, Versatile, Vicious, Vigilant, Vigorous, Villainous, Virtuous, Visible, Visible, Vivacious, Vocal, Volatile, Volunteering, Vulnerable,
+	Tactful, Taint, Temperate, Tenacious, Terrific, Testy, Thoughtful, Thoughtless, Tolerant, Towering, Toxic, Treacherous, Tropical, Trustworthy, Truthful,
+	Ultimate, Uncivil, Uncouth, Undeveloped, Unethical, Unfair, Unique, United, Unmannerly, Unrefined, Unsavory, Unworthy, Uplifting, Upright, Uproot, Upstanding,
+	Valiant, Veracious, Versatile, Vicious, Vigilant, Vigorous, Villainous, Virtuous, Visible, Vivacious, Vocal, Volatile, Volunteering, Vulnerable,
 	Warm, Wary, Waspish, Watchful, Welcoming, Wicked, Wild, Willingness, Winning, Winsome, Wise, Wishy-washy, Wistful, Witty, Woeful, Wonderful, Worldwide, Worrier, Worthwhile, Worthy,
 	Yearning, Yielding, Youthful,
-  Zany, Zealot, Zealous, Zealous, Zero-tolerant, Zero-tolerant`;
+    Zany, Zealot, Zealous, Zero-tolerant`;
 
 const rawNounList = `
 Aardvark
