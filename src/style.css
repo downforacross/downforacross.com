@@ -5,6 +5,8 @@ html {
 
 html,
 body,
+input,
+button,
 #root,
 .router-wrapper {
   display: flex;
