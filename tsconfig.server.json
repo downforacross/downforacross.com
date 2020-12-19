@@ -1,4 +1,7 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["src"]
+  "exclude": ["src"],
+  "compilerOptions": {
+    "noImplicitAny": true
+  }
 }
