@@ -1,16 +1,33 @@
 import './css/puzzleList.css';
-import React, {useEffect, useRef} from 'react';
-import _, {get, isEmpty} from 'lodash';
+import React, {useRef} from 'react';
+import _ from 'lodash';
 import Entry from './Entry';
 
 interface NewPuzzleListProps {}
-const NewPuzzleList: React.FC<PuzzleListProps> = (props) => {
+
+// TODO move to Entry.tsx
+interface EntryProps {
+  info: {
+    type: string;
+  };
+  title: string;
+  author: string;
+  pid: string;
+  status: string;
+  stats: {
+    numSolves: number;
+  };
+}
+const NewPuzzleList: React.FC<NewPuzzleListProps> = () => {
   const containerRef = useRef<HTMLDivElement>();
   const handlePlay = () => {};
   const handleTouchEnd = () => {};
   const handleScroll = () => {};
 
-  const puzzleData = [];
+  const puzzleData: {
+    entryProps: EntryProps;
+    status: 'unstarted' | 'started' | 'solved';
+  }[] = [];
   return (
     <div
       ref={containerRef}
