@@ -11,7 +11,7 @@ import {getUser, PuzzlelistModel} from '../store';
 import PuzzleList from '../components/PuzzleList';
 import {isMobile, colorAverage} from '../lib/jsUtils';
 import classnames from 'classnames';
-import {fetchPuzzleList} from '../store/api';
+import {fetchPuzzleList} from '../api/puzzle_list';
 
 const BLUE = '#6aa9f4';
 const WHITE = '#FFFFFF';

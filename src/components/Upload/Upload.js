@@ -2,7 +2,7 @@ import './css/index.css';
 
 import FileUploader from './FileUploader';
 import React, {Component} from 'react';
-import {createNewPuzzle} from '../../store/api';
+import {createNewPuzzle} from '../../api/puzzle';
 
 export default class Upload extends Component {
   constructor() {

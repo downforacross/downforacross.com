@@ -1,5 +1,8 @@
 // ========== GET /api/puzzlelist ============
 
+import qs from 'qs';
+import {SERVER_URL} from './constants';
+
 export interface PuzzleList {
   puzzles: {
     pid: number;
