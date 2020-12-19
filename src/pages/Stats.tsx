@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
-import {fetchStats, AllStats} from '../store/api';
+import {fetchStats, AllStats} from '../api/stats';
 import _ from 'lodash';
 
 const useStyles = makeStyles({
