@@ -2,6 +2,7 @@
   "extends": "./tsconfig.json",
   "exclude": ["server"],
   "compilerOptions": {
+    "noImplicitAny": false,
     "outDir": "./dist/",
     "sourceMap": true,
     "strictNullChecks": true,
