@@ -22,7 +22,7 @@ app.use(cors()); // allow CORS for all express routes
 if (process.env.NODE_ENV === 'production') {
   app.use(morgan('combined'));
 } else {
-  app.use(morgan('simple'));
+  app.use(morgan('tiny'));
 }
 
 app.get('/api/puzzles', async (req, res) => {

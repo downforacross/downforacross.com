@@ -9,6 +9,8 @@ class PuzzleModel {
   }
 
   async listPuzzles(filter, limit, offset) {
+    await this.client.connect();
+
     const startTime = Date.now();
     const res = await this.client.query(
       'SELECT event_payload FROM puzzles ORDER BY pid DESC LIMIT $1 OFFSET $2',
@@ -21,6 +23,8 @@ class PuzzleModel {
   }
 
   async addPuzzle(puzzle, isPublic = false) {
+    await this.client.connect();
+
     let pid = uuid.v4().substr(0, 8);
     const uploaded_at = Date.now();
     await this.client.query(

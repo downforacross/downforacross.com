@@ -7,6 +7,8 @@ class GameModel {
   }
 
   async getEvents(gid) {
+    await this.client.connect();
+
     const startTime = Date.now();
     const res = await this.client.query('SELECT event_payload FROM game_events WHERE gid=$1', [gid]);
     const events = _.map(res.rows, 'event_payload');
@@ -16,6 +18,7 @@ class GameModel {
   }
 
   async addEvent(gid, event) {
+    await this.client.connect();
     const startTime = Date.now();
     await this.client.query(
       `
