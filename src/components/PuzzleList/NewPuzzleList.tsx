@@ -19,7 +19,7 @@ interface EntryProps {
   };
 }
 const NewPuzzleList: React.FC<NewPuzzleListProps> = () => {
-  const containerRef = useRef<HTMLDivElement>();
+  const containerRef = useRef<HTMLDivElement>(null);
   const handlePlay = () => {};
   const handleTouchEnd = () => {};
   const handleScroll = () => {};
