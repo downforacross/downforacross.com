@@ -86,6 +86,7 @@ export default class Welcome extends Component {
     };
 
     const puzzles = await fetchPuzzleList(query);
+    console.log('setting puzzles', puzzles);
     this.setState({
       puzzles,
       pages: pages + 1,

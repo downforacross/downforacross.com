@@ -1,9 +1,15 @@
-const _ = require('lodash');
-
 // ============= Server Values ===========
 
+import _ from 'lodash';
+import socketIo from 'socket.io';
+import {addEvent, GameEvent, getEvents} from './model/game';
+
+interface SocketEvent {
+  [key: string]: any;
+}
+
 // Look for { .sv: 'timestamp' } and relpcae with Date.now()
-function assignTimestamp(event) {
+function assignTimestamp(event: SocketEvent) {
   if (event && typeof event === 'object') {
     if (event['.sv'] === 'timestamp') {
       return Date.now();
@@ -20,15 +26,15 @@ function assignTimestamp(event) {
 // ============== Socket Manager ==============
 
 class SocketManager {
-  constructor(gameModel, io) {
-    this.gameModel = gameModel;
+  io: socketIo.Server;
+  constructor(io: socketIo.Server) {
     this.io = io;
   }
 
-  async addEvent(gid, event) {
-    event = assignTimestamp(event);
+  async addEvent(gid: string, event: SocketEvent) {
+    const gameEvent: GameEvent = assignTimestamp(event);
 
-    await this.gameModel.addEvent(gid, event);
+    await addEvent(gid, gameEvent);
     this.io.to(`game-${gid}`).emit('game_event', event);
   }
 
@@ -44,7 +50,7 @@ class SocketManager {
       });
 
       socket.on('sync_all', async (gid, ack) => {
-        const events = await this.gameModel.getEvents(gid);
+        const events = await getEvents(gid);
         ack(events);
       });
 
@@ -55,4 +61,5 @@ class SocketManager {
     });
   }
 }
-exports.SocketManager = SocketManager;
+
+export default SocketManager;
