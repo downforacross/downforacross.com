@@ -15,6 +15,7 @@
     "@types/react-dom": "^16.9.7",
     "aws-sdk": "^2.496.0",
     "bluebird": "^3.7.2",
+    "body-parser": "^1.19.0",
     "clsx": "^1.1.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
@@ -64,7 +65,7 @@
   "scripts": {
     "start": "PORT=3020 react-scripts start",
     "devfrontend": "REACT_APP_USE_LOCAL_SERVER=1 PORT=3020 react-scripts start",
-    "devbackend": "PORT=3021 nodemon --exec babel-node server/server.js",
+    "devbackend": "PORT=3021 nodemon --exec npx babel-node -- server/server.js",
     "servebackendprod": "while true; do env $(cat .env.prod | xargs) PORT=3021 babel-node server/server.js || true; done",
     "servebackendstaging": "while true; do env $(cat .env.staging | xargs) PORT=4021 babel-node server/server.js || true; done",
     "build": "react-scripts build",

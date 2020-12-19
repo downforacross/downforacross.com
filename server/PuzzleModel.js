@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const uuid = require('uuid');
 const {pid} = require('process');
 const {connectPG} = require('./connectPG');
 

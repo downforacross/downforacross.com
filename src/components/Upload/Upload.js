@@ -1,9 +1,8 @@
 import './css/index.css';
 
-import actions from '../../actions';
 import FileUploader from './FileUploader';
-
 import React, {Component} from 'react';
+import {createNewPuzzle} from '../../store/api';
 
 export default class Upload extends Component {
   constructor() {
@@ -23,21 +22,20 @@ export default class Upload extends Component {
     });
   };
 
-  create = () => {
-    const {puzzle, unlistedCheckboxChecked} = this.state;
-    const isPrivate = unlistedCheckboxChecked;
-    if (isPrivate) {
-      puzzle.private = true;
-    }
-    actions.createPuzzle(puzzle, (pid) => {
-      this.setState({puzzle: null});
-      this.props.onCreate && this.props.onCreate();
-      if (isPrivate) {
-        this.setState({
-          recentlyCreatedPuzzleId: pid,
-        });
-      }
+  create = async () => {
+    await createNewPuzzle(this.state.puzzle, {
+      isPublic: !this.state.unlistedCheckboxChecked,
     });
+    console.log('created puzzle!');
+    // actions.createPuzzle(puzzle, (pid) => {
+    //   this.setState({puzzle: null});
+    //   this.props.onCreate && this.props.onCreate();
+    //   if (isPrivate) {
+    //     this.setState({
+    //       recentlyCreatedPuzzleId: pid,
+    //     });
+    //   }
+    // });
   };
 
   fail = () => {};

@@ -88,8 +88,11 @@ export async function createNewPuzzle(puzzle: {}, opts: {isPublic?: boolean} = {
   };
   const resp = await fetch(url, {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(data),
   });
-  const pid: string = await resp.text();
+  const {pid}: {pid: string} = await resp.json();
   return pid;
 }

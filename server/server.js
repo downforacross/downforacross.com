@@ -1,7 +1,8 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
-
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
 const port = process.env.PORT || 3000;
 
 const server = require('http').Server(app);
@@ -20,6 +21,8 @@ io.origins('*:*'); // allow CORS for socket.io route
 app.use(cors()); // allow CORS for all express routes
 if (process.env.NODE_ENV === 'production') {
   app.use(morgan('combined'));
+} else {
+  app.use(morgan('simple'));
 }
 
 app.get('/api/puzzles', async (req, res) => {
@@ -35,9 +38,18 @@ app.get('/api/puzzles', async (req, res) => {
   });
 });
 
+app.post('/api/puzzle', async (req, res) => {
+  console.log('got req', req.headers, req.body);
+  puzzleModel.addPuzzle(req.body.puzzle, req.body.isPublic);
+  const pid = 123;
+  res.json({
+    pid,
+  });
+});
+
 // ================== Logging ================
 
-function logAllEvents(socketManager, log) {
+function logAllEvents(log) {
   io.on('*', (event, ...args) => {
     try {
       log(`[${event}]`, _.truncate(JSON.stringify(args), {length: 100}));
@@ -53,12 +65,13 @@ async function runServer() {
   const gameModel = new GameModel();
   const socketManager = new SocketManager(gameModel, io);
   socketManager.listen();
-  logAllEvents(socketManager, console.log);
-  console.log('connected to database...');
+  logAllEvents(console.log);
   server.listen(port, () => console.log(`Listening on port ${port}`));
   process.once('SIGUSR2', () => {
     server.close(() => {
+      console.log('exiting...');
       process.kill(process.pid, 'SIGUSR2');
+      console.log('exited');
     });
   });
 }
