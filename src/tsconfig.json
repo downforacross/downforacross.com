@@ -1,6 +1,5 @@
 {
-  "extends": "./tsconfig.json",
-  "exclude": ["server"],
+  "include": ["."],
   "compilerOptions": {
     "noImplicitAny": false,
     "outDir": "./dist/",

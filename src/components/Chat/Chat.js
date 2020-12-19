@@ -18,6 +18,7 @@ const isEmojis = (str) => {
 
 export default class Chat extends Component {
   constructor() {
+    super();
     const username = localStorage.getItem(this.usernameKey) || nameGenerator();
     this.state = {
       username,
