@@ -3,14 +3,12 @@ const {connectPG} = require('./connectPG');
 
 class GameModel {
   constructor() {
-    this.client = connectPG();
+    this.pool = connectPG();
   }
 
   async getEvents(gid) {
-    await this.client.connect();
-
     const startTime = Date.now();
-    const res = await this.client.query('SELECT event_payload FROM game_events WHERE gid=$1', [gid]);
+    const res = await this.pool.query('SELECT event_payload FROM game_events WHERE gid=$1', [gid]);
     const events = _.map(res.rows, 'event_payload');
     const ms = Date.now() - startTime;
     console.log(`getEvents(${gid}) took ${ms}ms`);
@@ -18,9 +16,8 @@ class GameModel {
   }
 
   async addEvent(gid, event) {
-    await this.client.connect();
     const startTime = Date.now();
-    await this.client.query(
+    await this.pool.query(
       `
       INSERT INTO game_events (gid, uid, ts, event_type, event_payload)
       VALUES ($1, $2, $3, $4, $5)`,
