@@ -90,7 +90,6 @@ export default class PuzzleList extends PureComponent {
   };
 
   get puzzles() {
-    console.log('get puzzles', this.props.puzzles);
     const {puzzles} = this.props;
     const list = [...puzzles]
       .reverse()
