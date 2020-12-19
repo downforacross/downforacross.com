@@ -7,6 +7,7 @@ import socketIo from 'socket.io';
 import _ from 'lodash';
 import cors from 'cors';
 import SocketManager from './SocketManager';
+import apiRouter from './api/router';
 
 const app = express();
 const server = new http.Server(app);
@@ -24,7 +25,6 @@ if (process.env.NODE_ENV === 'production') {
   app.use(morgan('tiny'));
 }
 
-import apiRouter from './api/router';
 app.use('/api', apiRouter);
 
 // ================== Logging ================
