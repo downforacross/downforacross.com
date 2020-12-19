@@ -1,4 +1,4 @@
-const pg = require('pg');
+import pg from 'pg';
 // ============= Database Operations ============
 
 export const pool = new pg.Pool({

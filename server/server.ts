@@ -24,8 +24,8 @@ if (process.env.NODE_ENV === 'production') {
   app.use(morgan('tiny'));
 }
 
-const apiRouter = require('./api/router');
-// app.use('/api', apiRouter);
+import apiRouter from './api/router';
+app.use('/api', apiRouter);
 
 // ================== Logging ================
 
