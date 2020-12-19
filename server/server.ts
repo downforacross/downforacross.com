@@ -25,7 +25,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const apiRouter = require('./api/router');
-app.use('/api', apiRouter);
+// app.use('/api', apiRouter);
 
 // ================== Logging ================
 

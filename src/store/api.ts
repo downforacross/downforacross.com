@@ -55,7 +55,7 @@ export async function fetchStats() {
 
 // ========== GET /api/puzzlelist ============
 
-export interface PuzzleList {
+export type PuzzleList = {
   pid: number;
   private: boolean;
   author: string;
@@ -70,8 +70,7 @@ export interface PuzzleList {
   stats: {
     numSolves: number;
   };
-}
-[];
+}[];
 
 export async function fetchPuzzleList(query: {page: number; pageSize: number}): Promise<PuzzleList> {
   const url = `${SERVER_URL}/api/puzzle_list?${qs.stringify(query)}`;
