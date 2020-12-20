@@ -7,7 +7,7 @@ import {MdSearch, MdCheckBoxOutlineBlank, MdCheckBox} from 'react-icons/md';
 import _ from 'lodash';
 import Nav from '../components/common/Nav';
 import Upload from '../components/Upload';
-import {getUser, PuzzlelistModel} from '../store';
+import {getUser} from '../store';
 import PuzzleList from '../components/PuzzleList';
 import {isMobile, colorAverage} from '../lib/jsUtils';
 import classnames from 'classnames';
@@ -85,7 +85,7 @@ export default class Welcome extends Component {
       pageSize: this.pageSize,
     };
 
-    const puzzles = await fetchPuzzleList(query);
+    const {puzzles} = await fetchPuzzleList(query);
     console.log('setting puzzles', puzzles);
     this.setState({
       puzzles,
