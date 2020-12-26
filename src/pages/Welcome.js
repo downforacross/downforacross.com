@@ -7,11 +7,10 @@ import {MdSearch, MdCheckBoxOutlineBlank, MdCheckBox} from 'react-icons/md';
 import _ from 'lodash';
 import Nav from '../components/common/Nav';
 import Upload from '../components/Upload';
-import {getUser} from '../store';
+import {getUser, PuzzlelistModel} from '../store';
 import PuzzleList from '../components/PuzzleList';
 import {isMobile, colorAverage} from '../lib/jsUtils';
 import classnames from 'classnames';
-import {fetchPuzzleList} from '../api/puzzle_list';
 
 const BLUE = '#6aa9f4';
 const WHITE = '#FFFFFF';
@@ -61,12 +60,9 @@ export default class Welcome extends Component {
     this.user.onAuth(this.handleAuth);
   }
 
-  get pageSize() {
-    return 40;
-  }
-
   get done() {
-    return this.state.puzzles.length < this.state.pages * this.pageSize;
+    const {pages, puzzles} = this.state;
+    return puzzles.length < pages * this.puzzleList.pageSize;
   }
 
   get showingSidebar() {
@@ -74,27 +70,27 @@ export default class Welcome extends Component {
     return !this.mobile;
   }
 
-  nextPage = async () => {
+  nextPage = () => {
     const {pages} = this.state;
     if (this.loading || this.done) {
       return;
     }
     this.loading = true;
-    const query = {
-      page: this.state.pages,
-      pageSize: this.pageSize,
-    };
-
-    const {puzzles} = await fetchPuzzleList(query);
-    console.log('setting puzzles', puzzles);
-    this.setState({
-      puzzles,
-      pages: pages + 1,
+    this.puzzleList.getPages(pages + 1, (page) => {
+      this.setState(
+        {
+          puzzles: page,
+          pages: pages + 1,
+        },
+        () => {
+          this.loading = false;
+        }
+      );
     });
-    this.loading = false;
   };
 
   initializePuzzlelist() {
+    this.puzzleList = new PuzzlelistModel();
     this.nextPage();
   }
 
