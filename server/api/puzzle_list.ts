@@ -1,15 +1,10 @@
+import {ListPuzzleResponse} from '@shared/types';
 import express from 'express';
 import _ from 'lodash';
-import {listPuzzles, PuzzleJson} from '../model/puzzle';
+import {listPuzzles} from '../model/puzzle';
 
 const router = express.Router();
 
-interface ListPuzzleResponse {
-  puzzles: {
-    pid: string;
-    content: PuzzleJson;
-  }[];
-}
 router.get<{}, ListPuzzleResponse>('/', async (req, res, next) => {
   console.log('got req', req.query);
   const page = Number.parseInt(req.query.page as string);

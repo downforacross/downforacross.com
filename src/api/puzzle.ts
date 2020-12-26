@@ -1,6 +1,7 @@
 import {SERVER_URL} from './constants';
+import {AddPuzzleRequest} from '@shared/types';
 
-export async function createNewPuzzle(puzzle: {}, opts: {isPublic?: boolean} = {}) {
+export async function createNewPuzzle(puzzle: AddPuzzleRequest, opts: {isPublic?: boolean} = {}) {
   const url = `${SERVER_URL}/api/puzzle`;
   const data = {
     puzzle,

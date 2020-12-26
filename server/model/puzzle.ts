@@ -2,26 +2,7 @@ import _ from 'lodash';
 import uuid from 'uuid';
 import {pid} from 'process';
 import {pool} from './pool';
-
-// ============ PUZtoJSON Types =========== //
-// TODO move these into d.ts declaration files
-// TODO create @types/puzjs?
-// TODO https://www.typescriptlang.org/docs/handbook/project-references.html ?
-
-/**
- * PuzzleJson: the json object returned by puzjs's PUZtoJSON function
- */
-export interface PuzzleJson {
-  grid: {
-    type: 'white' | 'black';
-    solution?: string;
-  }[][];
-  info: string[];
-  circles: string[];
-  shades: string[];
-  across: string[];
-  down: string[];
-}
+import {PuzzleJson} from '@shared/types';
 
 // ================ Read and Write methods used to interface with postgres ========== //
 
