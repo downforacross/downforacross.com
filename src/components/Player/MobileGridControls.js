@@ -245,7 +245,7 @@ export default class MobileGridControls extends GridControls {
   }
 
   getClueText({clueNumber = '', direction = ''} = {}) {
-    return this.props.clues[direction][clueNumber];
+    return this.props.clues[direction]?.[clueNumber] ?? '';
   }
 
   get mainClue() {
