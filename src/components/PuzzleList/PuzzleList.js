@@ -2,6 +2,7 @@ import React, {PureComponent} from 'react';
 import _ from 'lodash';
 import Entry from './Entry';
 import './css/puzzleList.css';
+import NewPuzzleList from './NewPuzzleList';
 
 export default class PuzzleList extends PureComponent {
   constructor() {
@@ -132,6 +133,10 @@ export default class PuzzleList extends PureComponent {
   }
 
   render() {
+    if (localStorage.newPuzzleListEnabled) {
+      return <NewPuzzleList />;
+    }
+
     const lastUpdateTime = this.lastUpdateTime;
     return (
       <div

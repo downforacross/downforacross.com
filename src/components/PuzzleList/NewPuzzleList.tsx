@@ -18,7 +18,7 @@ interface EntryProps {
     numSolves: number;
   };
 }
-const NewPuzzleList: React.FC<NewPuzzleListProps> = () => {
+const NewPuzzleList: React.FC<NewPuzzleListProps> = (props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const handlePlay = () => {};
   const handleTouchEnd = () => {};
@@ -28,6 +28,7 @@ const NewPuzzleList: React.FC<NewPuzzleListProps> = () => {
     entryProps: EntryProps;
     status: 'unstarted' | 'started' | 'solved';
   }[] = [];
+  console.log('Render new puzzle list', props);
   return (
     <div
       ref={containerRef}
