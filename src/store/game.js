@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import Promise from 'bluebird';
 import uuid from 'uuid';
 import _ from 'lodash';
-import {SOCKET_HOST} from './api';
+import {SOCKET_HOST} from '../api/constants';
 import {db, SERVER_TIME} from './firebase';
 import Puzzle from './puzzle';
 import * as colors from '../lib/colors';
