@@ -3,30 +3,64 @@ import uuid from 'uuid';
 import {pid} from 'process';
 import {pool} from './pool';
 
-async function listPuzzles(filter: {}, limit: number, offset: number) {
+// ============ PUZtoJSON Types =========== //
+// TODO move these into d.ts declaration files
+// TODO create @types/puzjs?
+// TODO https://www.typescriptlang.org/docs/handbook/project-references.html ?
+
+/**
+ * PuzzleJson: the json object returned by puzjs's PUZtoJSON function
+ */
+export interface PuzzleJson {
+  grid: {
+    type: 'white' | 'black';
+    solution?: string;
+  }[][];
+  info: string[];
+  circles: string[];
+  shades: string[];
+  across: string[];
+  down: string[];
+}
+
+// ================ Read and Write methods used to interface with postgres ========== //
+
+export async function listPuzzles(
+  filter: {},
+  limit: number,
+  offset: number
+): Promise<
+  {
+    pid: string;
+    content: PuzzleJson;
+  }[]
+> {
   const startTime = Date.now();
   const {rows} = await pool.query(
     `
-      SELECT pid, uploaded_at, is_public, content
+      SELECT pid, uploaded_at, content
       FROM puzzles
+      WHERE is_public = true
       ORDER BY pid DESC 
       LIMIT $1
       OFFSET $2
     `,
     [limit, offset]
   );
-  const puzzles = rows.map((row: {pid: string; uploaded_at: string; is_public: boolean; content: string}) => {
-    console.log('row', row);
-    return {};
-  }); // TODO omit the clues to save bandwidth
+  const puzzles = rows.map(
+    (row: {pid: string; uploaded_at: string; is_public: boolean; content: PuzzleJson}) => {
+      return {
+        ...row,
+      };
+    }
+  );
   const ms = Date.now() - startTime;
   console.log(`listPuzzles (${pid}) took ${ms}ms`);
   console.log('returning', puzzles);
   return puzzles;
 }
 
-interface AddPuzzleRequest {}
-async function addPuzzle(puzzle: AddPuzzleRequest, isPublic = false) {
+export async function addPuzzle(puzzle: PuzzleJson, isPublic = false) {
   let pid = uuid.v4().substr(0, 8);
   const uploaded_at = Date.now();
   await pool.query(
@@ -37,5 +71,3 @@ async function addPuzzle(puzzle: AddPuzzleRequest, isPublic = false) {
   );
   return pid;
 }
-
-export {listPuzzles, addPuzzle};
