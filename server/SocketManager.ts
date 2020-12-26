@@ -33,9 +33,8 @@ class SocketManager {
 
   async addEvent(gid: string, event: SocketEvent) {
     const gameEvent: GameEvent = assignTimestamp(event);
-
     await addEvent(gid, gameEvent);
-    this.io.to(`game-${gid}`).emit('game_event', event);
+    this.io.to(`game-${gid}`).emit('game_event', gameEvent);
   }
 
   getLiveSocketsCount() {
