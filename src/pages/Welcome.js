@@ -76,11 +76,11 @@ export default class Welcome extends Component {
       return;
     }
     this.loading = true;
-    this.puzzleList.getPages(pages + 1, (page) => {
+    this.puzzleList.getPages(pages + 10, (page) => {
       this.setState(
         {
           puzzles: page,
-          pages: pages + 1,
+          pages: pages + 10,
         },
         () => {
           this.loading = false;
