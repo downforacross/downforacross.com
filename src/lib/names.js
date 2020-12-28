@@ -18,7 +18,7 @@ const rawAdjectiveList = `
 	Jocular, Jolly, Jovial, Joyful, Jubilant, Just, Juvenile,
 	Keen, Kind, Kindred, Knowledgeable,
 	Liberal, Loving, Loyal,
-	Magical, Magnificence, Magnificent, Malevolent, Malicious, Mammoth, Manipulative, Masterful, Meddling, Meritorious, Meticulous, Migratory, Minuscule, Miserable, Mistrustful, Modest, Moral, Mysterious,
+	Magical, Magnificent, Malicious, Mammoth, Masterful, Meddling, Meritorious, Meticulous, Migratory, Minuscule, Miserable, Mistrustful, Modest, Moral, Mysterious,
 	Naive, Nascent, Native, Natural, Nature, Needy, Nefarious,  Negligent, Nice, Noble, Notorious,
 	Obedient, Observant, Open, Open-minded, Opinionated, Orderly, Oriented, Original, Outrageous, Outspoken,
 	Partial, Passionate, Patient, Patriotic, Perceptive, Personable, Personal, Petulant, Pleasant, Poise, Polite, Popular, Powerful, Prejudicial, Preposterous, Pretentious, Prideful, Principled, Pristine, Prompt, Proper, Punctual, Purposeful,
@@ -32,6 +32,100 @@ const rawAdjectiveList = `
 	Yearning, Yielding, Youthful,
     Zany, Zealot, Zealous, Zero-tolerant`;
 
+// https://www.citationmachine.net/resources/grammar-guides/adjectives/positive-negative/
+const positiveAdjectiveList = `
+	Able
+    Abundant
+    Above-board
+    Accurate
+    Achieving
+    Adept
+    Affordable
+    Adaptable
+    Amazing
+    Ambitious
+    Awesome
+	Careful
+    Caring
+    Calm
+    Capable
+    Certain
+    Charming
+    Cheerful
+    Cheery
+    Cherished
+    Chic
+    Civil
+    Clean
+    Clever
+    Comfortable
+    Cooperative
+    Cordial
+    Creative
+    Cute
+	Natural
+    Naturalistic
+    Neat
+    New
+    Nifty
+    Nice
+    Notable
+    Nourishing
+    Novel
+    Nurturing
+	Tactful
+    Talented
+    Taxing
+    Teachable
+    Thankful
+    Thoughtful
+    Thorough
+    Thrifty
+    Thrilled
+    Thriving
+    Timeless
+    Tolerant
+    Top-notch
+    Touching
+
+    Tantalizing
+    Tasteful
+    Terrific
+    Tidy
+    Toned
+    Tranquil
+    Tremendous
+    Treasured
+    Triumphant
+    Trusted
+    Trusting
+    Trustworthy
+    Truthful
+
+	Beloved
+    Dapper
+    Dazzling
+    Excellent
+    Expressive
+    Faithful
+    Flashy
+    Forgiving
+    Glamorous
+    Healing
+    Heroic
+    Kind-hearted
+    Legit
+    Loving
+    Luxurious
+    Optimistic
+    Peaceful
+    Perfect
+    Romantic
+    Soothing
+    Stunning
+    Valuable
+	Wonderful
+	`;
 const rawNounList = `
 Aardvark
 Aardwolf
@@ -499,5 +593,6 @@ Zempoaltépec vole
 
 export const nameWords = {
   adjectives: rawAdjectiveList,
+  positiveAdjectives: positiveAdjectiveList,
   nouns: rawNounList,
 };

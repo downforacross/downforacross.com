@@ -1,6 +1,10 @@
 import {nameWords} from './names';
 
-const {adjectives: rawAdjectiveList, nouns: rawNounList} = nameWords;
+const {
+  adjectives: rawAdjectiveList,
+  nouns: rawNounList,
+  positiveAdjectives: positiveAdjectiveList,
+} = nameWords;
 
 function capitalize(s) {
   s = s.toLowerCase();
@@ -14,11 +18,7 @@ function isAlpha(s) {
 
 function sanitize(s) {
   s = s.trim();
-  s = s
-    .split(' ')
-    .filter(isAlpha)
-    .map(capitalize)
-    .join(' ');
+  s = s.split(' ').filter(isAlpha).map(capitalize).join(' ');
   return s;
 }
 
@@ -37,18 +37,15 @@ function sample(lst) {
   return lst[Math.floor(Math.random() * lst.length)];
 }
 
-const adjectives = rawAdjectiveList
-  .split(',')
-  .map(sanitize)
-  .filter(adjFilter);
-const nouns = rawNounList
-  .split('\n')
-  .map(sanitize)
-  .filter(nounFilter);
+const adjectives = rawAdjectiveList.split(',').map(sanitize).filter(adjFilter);
+const positiveAdjectives = positiveAdjectiveList.split('\n').map(sanitize).filter(adjFilter);
+const nouns = rawNounList.split('\n').map(sanitize).filter(nounFilter);
 
 export default function nameGenerator() {
   function f() {
-    const adj = sample(adjectives);
+    debugger;
+
+    const adj = Math.random() < 0.9 ? sample(positiveAdjectives) : sample(adjectives);
     const noun = sample(nouns);
     return `${adj} ${noun}`;
   }
