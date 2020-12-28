@@ -155,9 +155,6 @@ export default class Welcome extends Component {
   }
 
   handleCreatePuzzle = () => {
-    this.setState({
-      pages: 0,
-    });
     this.nextPage();
   };
 
