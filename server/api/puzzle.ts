@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post<{}, AddPuzzleResponse, AddPuzzleRequest>('/', async (req, res) => {
   console.log('got req', req.headers, req.body);
-  const pid = await addPuzzle(req.body.puzzle, req.body.isPublic);
+  const pid = await addPuzzle(req.body.puzzle, req.body.isPublic, req.body.pid);
   res.json({
     pid,
   });

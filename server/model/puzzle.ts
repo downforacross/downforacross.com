@@ -55,8 +55,10 @@ export async function listPuzzles(
   return puzzles;
 }
 
-export async function addPuzzle(puzzle: PuzzleJson, isPublic = false) {
-  let pid = uuid.v4().substr(0, 8);
+export async function addPuzzle(puzzle: PuzzleJson, isPublic = false, pid?: string) {
+  if (!pid) {
+    pid = uuid.v4().substr(0, 8);
+  }
   const uploaded_at = Date.now();
   await pool.query(
     `
