@@ -4,7 +4,8 @@
     "strictNullChecks": true,
     "esModuleInterop": true,
     "paths": {
-      "@shared/*": ["../src/shared/*"]
+      "@shared/*": ["../src/shared/*"],
+      "@lib/*": ["../src/lib/*"]
     }
   },
   "include": ["."]

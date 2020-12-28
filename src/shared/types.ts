@@ -1,5 +1,6 @@
 /**
- * PuzzleJson: the json object returned by puzjs's PUZtoJSON function
+ * PuzzleJson: the json format of puzzles stored in the db (both firebase & postgres)
+ * Fields are a bit messy & don't correspond perfectly with puzjs formats... see logic in FileUploader.js
  */
 
 export interface PuzzleJson {
@@ -16,8 +17,10 @@ export interface PuzzleJson {
   };
   circles: string[];
   shades: string[];
-  across: string[];
-  down: string[];
+  clues: {
+    across: string[];
+    down: string[];
+  };
 }
 
 export interface PuzzleStatsJson {
@@ -39,4 +42,11 @@ export interface ListPuzzleResponse {
     content: PuzzleJson;
     stats: PuzzleStatsJson;
   }[];
+}
+
+export interface CreateGameResponse {}
+
+export interface CreateGameRequest {
+  gid: string;
+  pid: string;
 }
