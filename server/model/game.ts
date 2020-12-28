@@ -11,10 +11,21 @@ export async function getEvents(gid: string) {
 }
 
 export interface GameEvent {
-  user: any;
-  timestamp: Date;
-  type: any;
+  user?: string; // always null actually
+  timestamp: number;
+  type: string; // todo string literal union type
+  params: any; // todo extend GameEvent w/ specific types of game events
 }
+
+export interface InitialGameEvent extends GameEvent {
+  type: 'create';
+  params: {
+    pid: string;
+    version: string;
+    game: any;
+  };
+}
+
 export async function addEvent(gid: string, event: GameEvent) {
   const startTime = Date.now();
   await pool.query(

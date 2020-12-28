@@ -1,10 +1,15 @@
 import {SERVER_URL} from './constants';
-import {AddPuzzleRequest} from '@shared/types';
+import {AddPuzzleRequest, AddPuzzleResponse} from '@shared/types';
 
-export async function createNewPuzzle(puzzle: AddPuzzleRequest, opts: {isPublic?: boolean} = {}) {
+export async function createNewPuzzle(
+  puzzle: AddPuzzleRequest,
+  pid: string | undefined,
+  opts: {isPublic?: boolean} = {}
+): Promise<AddPuzzleResponse> {
   const url = `${SERVER_URL}/api/puzzle`;
   const data = {
     puzzle,
+    pid,
     isPublic: !!opts.isPublic,
   };
   const resp = await fetch(url, {
@@ -14,6 +19,5 @@ export async function createNewPuzzle(puzzle: AddPuzzleRequest, opts: {isPublic?
     },
     body: JSON.stringify(data),
   });
-  const {pid}: {pid: string} = await resp.json();
-  return pid;
+  return resp.json();
 }

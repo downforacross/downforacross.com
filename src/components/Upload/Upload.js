@@ -10,7 +10,7 @@ export default class Upload extends Component {
     super();
     this.state = {
       puzzle: null,
-      recentlyCreatedPuzzleId: null,
+      recentUnlistedPid: null,
       unlistedCheckboxChecked: false,
     };
   }
@@ -18,29 +18,29 @@ export default class Upload extends Component {
   success = (puzzle) => {
     this.setState({
       puzzle: {...puzzle},
-      recentlyCreatedPuzzleId: null,
+      recentUnlistedPid: null,
       unlistedCheckboxChecked: false,
     });
   };
 
   create = async () => {
-    if (this.state.unlistedCheckboxChecked) {
-      actions.createPuzzle({...this.state.puzzle, private: true}, (pid) => {
-        this.setState({puzzle: null});
-        this.props.onCreate && this.props.onCreate();
-        this.setState({
-          recentlyCreatedPuzzleId: pid,
-        });
+    const isPublic = !this.state.unlistedCheckboxChecked;
+    const puzzle = {
+      ...this.state.puzzle,
+      private: !isPublic,
+    };
+    // store in both firebase & pg
+    actions.createPuzzle(puzzle, (pid) => {
+      this.setState({puzzle: null});
+      this.props.onCreate && this.props.onCreate();
+      this.setState({
+        recentUnlistedPid: isPublic ? undefined : pid,
       });
-    } else {
-      actions.createPuzzle(this.state.puzzle, (pid) => {
-        this.setState({puzzle: null});
-        this.props.onCreate && this.props.onCreate();
+
+      createNewPuzzle(this.state.puzzle, pid, {
+        isPublic,
       });
-    }
-    // await createNewPuzzle(this.state.puzzle, {
-    //   isPublic: !this.state.d,
-    // });
+    });
   };
 
   fail = () => {};
@@ -88,11 +88,11 @@ export default class Upload extends Component {
   }
 
   renderRecentlyCreatedPuzzleMessage() {
-    if (!this.state.recentlyCreatedPuzzleId) {
+    if (!this.state.recentUnlistedPid) {
       return;
     }
 
-    const url = `/beta/play/${this.state.recentlyCreatedPuzzleId}`;
+    const url = `/beta/play/${this.state.recentUnlistedPid}`;
 
     return (
       <p style={{marginTop: 10, marginBottom: 10}}>
