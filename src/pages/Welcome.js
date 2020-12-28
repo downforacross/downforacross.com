@@ -71,16 +71,16 @@ export default class Welcome extends Component {
   }
 
   nextPage = () => {
-    const {pages} = this.state;
     if (this.loading || this.done) {
       return;
     }
     this.loading = true;
-    this.puzzleList.getPages(pages + 10, (page) => {
+    const nextPages = this.state.pages * 2 + 1; // double the number of pages loaded every time
+    this.puzzleList.getPages(nextPages, (page) => {
       this.setState(
         {
           puzzles: page,
-          pages: pages + 10,
+          pages: nextPages,
         },
         () => {
           this.loading = false;
