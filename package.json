@@ -43,6 +43,7 @@
     "react-scripts": "^3.4.3",
     "react-simple-keyboard": "^1.15.2",
     "react-timestamp": "^4.4.0",
+    "react-use": "^15.3.4",
     "request": "^2.34",
     "request-promise": "^4.2.5",
     "socket.io": "^2.3.0",

@@ -38,9 +38,9 @@ export default class Upload extends Component {
         this.props.onCreate && this.props.onCreate();
       });
     }
-    // await createNewPuzzle(this.state.puzzle, {
-    //   isPublic: !this.state.d,
-    // });
+    await createNewPuzzle(this.state.puzzle, {
+      isPublic: !this.state.d,
+    });
   };
 
   fail = () => {};
