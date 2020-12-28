@@ -10,6 +10,7 @@ export default class Puzzlelist extends EventEmitter {
   }
 
   getPages(pages, cbk) {
+    pages = Math.min(pages, 100);
     return this.ref
       .orderByKey()
       .limitToLast(pages * this.pageSize)
