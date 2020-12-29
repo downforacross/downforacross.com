@@ -23,6 +23,11 @@ export default class Toolbar extends Component {
     this.props.onTogglePencil();
   };
 
+  handleAutocheckClick = (e) => {
+    e.preventDefault();
+    this.props.onToggleAutocheck();
+  };
+
   handleToggleChat = (e) => {
     e.preventDefault();
     this.props.onToggleChat();
@@ -126,6 +131,20 @@ export default class Toolbar extends Component {
         title={'Shortcut: .'}
       >
         <i className="fa fa-pencil" />
+      </div>
+    );
+  }
+
+  renderAutocheck() {
+    const {autocheckMode} = this.props;
+    return (
+      <div
+        className={'toolbar--autocheck' + (autocheckMode ? ' on' : '')}
+        onClick={this.handleAutocheckClick}
+        onMouseDown={this.handleMouseDown}
+        title={'Autocheck'}
+      >
+        <i className="fa fa-check-square" />
       </div>
     );
   }
@@ -273,6 +292,7 @@ export default class Toolbar extends Component {
         <div className="toolbar--menu reset">{this.renderResetMenu()}</div>
         {this.renderKeybindMenu()}
         {this.renderPencil()}
+        {this.renderAutocheck()}
         {this.renderInfo()}
       </div>
     );
