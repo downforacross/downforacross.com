@@ -17,6 +17,7 @@ export default class Game extends Component {
     super();
     this.state = {
       pencilMode: false,
+      autocheckMode: false,
       screenWidth: 0,
       vimMode: false,
       vimInsert: false,
@@ -83,7 +84,12 @@ export default class Game extends Component {
   handleUpdateGrid = (r, c, value) => {
     const {id, myColor} = this.props;
     const {pencilMode} = this.state;
-    this.gameModel.updateCell(r, c, id, myColor, pencilMode, value);
+    const {autocheckMode} = this.state;
+    if (autocheckMode) {
+      this.gameModel.updateCellAutocheck(r, c, id, myColor, pencilMode, value);
+    } else {
+      this.gameModel.updateCell(r, c, id, myColor, pencilMode, value);
+    }
     this.props.onChange({isEdit: true});
 
     this.props.battleModel && this.props.battleModel.checkPickups(r, c, this.rawGame, this.props.team);
@@ -155,6 +161,12 @@ export default class Game extends Component {
   handleTogglePencil = () => {
     this.setState({
       pencilMode: !this.state.pencilMode,
+    });
+  };
+
+  handleToggleAutocheck = () => {
+    this.setState({
+      autocheckMode: !this.state.autocheckMode,
     });
   };
 
@@ -268,7 +280,7 @@ export default class Game extends Component {
     if (!this.game) return;
     const {clock} = this.game;
     const {mobile} = this.props;
-    const {pencilMode, vimMode, vimInsert} = this.state;
+    const {pencilMode, autocheckMode, vimMode, vimInsert} = this.state;
     const {lastUpdated: startTime, totalTime: pausedTime, paused: isPaused} = clock;
     return (
       <Toolbar
@@ -278,6 +290,7 @@ export default class Game extends Component {
         pausedTime={pausedTime}
         isPaused={isPaused}
         pencilMode={pencilMode}
+        autocheckMode={autocheckMode}
         vimMode={vimMode}
         vimInsert={vimInsert}
         onStartClock={this.handleStartClock}
@@ -288,6 +301,7 @@ export default class Game extends Component {
         onReset={this.handleReset}
         onKeybind={this.handleKeybind}
         onTogglePencil={this.handleTogglePencil}
+        onToggleAutocheck={this.handleToggleAutocheck}
         onToggleChat={this.handleToggleChat}
         onRefocus={this.handleRefocus}
         unreads={this.props.unreads}

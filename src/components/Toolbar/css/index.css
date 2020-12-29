@@ -81,11 +81,19 @@ code {
   cursor: pointer;
 }
 
+.toolbar--autocheck {
+  cursor: pointer;
+}
+
 .toolbar--info {
   cursor: pointer;
 }
 
 .toolbar--pencil.on .fa-pencil {
+  color: var(--main-blue) !important;
+}
+
+.toolbar--autocheck.on .fa-check-square {
   color: var(--main-blue) !important;
 }
 
