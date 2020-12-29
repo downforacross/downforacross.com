@@ -246,17 +246,23 @@ export default class Game extends EventEmitter {
     });
   }
 
-  updateCellAutocheck(r, c, id, color, pencil, autocheck, value) {
+  updateCellAutocheck(r, c, id, color, pencil, value) {
     this.addEvent({
       timestamp: SERVER_TIME,
-      type: 'updateCellAutocheck',
+      type: 'updateCell',
       params: {
         cell: {r, c},
         value,
         color,
         pencil,
-        autocheck,
         id,
+      },
+    });
+    this.addEvent({
+      timestamp: SERVER_TIME,
+      type: 'check',
+      params: {
+        scope: [{r, c}],
       },
     });
   }

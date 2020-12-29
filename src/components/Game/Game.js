@@ -86,7 +86,7 @@ export default class Game extends Component {
     const {pencilMode} = this.state;
     const {autocheckMode} = this.state;
     if (autocheckMode) {
-      this.gameModel.updateCellAutocheck(r, c, id, myColor, pencilMode, autocheckMode, value);
+      this.gameModel.updateCellAutocheck(r, c, id, myColor, pencilMode, value);
     } else {
       this.gameModel.updateCell(r, c, id, myColor, pencilMode, value);
     }
