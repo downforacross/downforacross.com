@@ -174,26 +174,11 @@ const reducers = {
     };
   },
 
-  updateCellAutocheck: (game, params) => {
+  checkCell: (game, params) => {
     let {grid, solution} = game;
     const {
       cell: {r, c},
-      value,
-      pencil = false,
-      autocheck,
     } = params;
-    if (!game.solved && !grid[r][c].good) {
-      grid = Object.assign([], grid, {
-        [r]: Object.assign([], grid[r], {
-          [c]: {
-            ...grid[r][c],
-            value,
-            bad: false,
-            pencil,
-          },
-        }),
-      });
-    }
     if (grid[r][c].value === solution[r][c]) {
       grid[r][c].good = true;
     } else {
