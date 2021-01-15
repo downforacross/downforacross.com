@@ -38,8 +38,8 @@ interface Props {
 
   // Callbacks
   onClick: (r: number, c: number) => void;
-  onContextMenu: (e?: React.MouseEvent<HTMLElement, MouseEvent>) => void;
-  onFlipColor: () => void;
+  onContextMenu: (r: number, c: number) => void;
+  onFlipColor?: (r: number, c: number) => void;
 }
 /*
  * Summary of Cell component
@@ -113,7 +113,7 @@ export default class Cell extends React.Component<Props> {
           className="cell--flip fa fa-small fa-sticky-note"
           onClick={(e) => {
             e.stopPropagation();
-            onFlipColor();
+            onFlipColor?.(this.props.r, this.props.c);
           }}
         />
       );
@@ -166,6 +166,12 @@ export default class Cell extends React.Component<Props> {
     this.props.onClick(this.props.r, this.props.c);
   };
 
+  handleRightClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault?.();
+    e.stopPropagation?.();
+    this.props.onContextMenu(this.props.r, this.props.c);
+  };
+
   render() {
     const {
       black,
@@ -179,7 +185,6 @@ export default class Cell extends React.Component<Props> {
       value,
       myColor,
       onClick,
-      onContextMenu,
       number,
       referenced,
     } = this.props;
@@ -191,7 +196,7 @@ export default class Cell extends React.Component<Props> {
           })}
           style={selected ? {borderColor: myColor} : undefined}
           onClick={this.handleClick}
-          onContextMenu={onContextMenu}
+          onContextMenu={this.handleRightClick}
         >
           {this.renderPings()}
         </div>
@@ -216,7 +221,7 @@ export default class Cell extends React.Component<Props> {
         })}
         style={style}
         onClick={this.handleClick}
-        onContextMenu={onContextMenu}
+        onContextMenu={this.handleRightClick}
         onTouchStart={(e) => {
           const touch = e.touches[e.touches.length - 1];
           this.touchStart = {pageX: touch.pageX, pageY: touch.pageY};
@@ -229,7 +234,7 @@ export default class Cell extends React.Component<Props> {
             (Math.abs(touch.pageX - this.touchStart.pageX) < 5 &&
               Math.abs(touch.pageY - this.touchStart.pageY) < 5)
           ) {
-            onClick();
+            onClick(this.props.r, this.props.c);
           }
         }}
       >

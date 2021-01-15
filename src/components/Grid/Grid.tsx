@@ -177,16 +177,12 @@ export default class Grid extends React.PureComponent<GridProps> {
                 >
                   <Cell
                     {...cell}
+                    r={r}
+                    c={c}
                     onClick={this.handleClick}
-                    onContextMenu={(e) => {
-                      e?.preventDefault?.();
-                      e?.stopPropagation?.();
-                      this.handleRightClick(r, c);
-                    }}
+                    onContextMenu={this.handleRightClick}
                     canFlipColor={!!this.props.canFlipColor?.(r, c)}
-                    onFlipColor={() => {
-                      this.props.onFlipColor?.(r, c);
-                    }}
+                    onFlipColor={this.props.onFlipColor}
                     selected={this.isSelected(r, c)}
                     referenced={this.isReferenced(r, c)}
                     circled={this.isCircled(r, c)}
