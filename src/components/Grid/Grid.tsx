@@ -177,11 +177,7 @@ export default class Grid extends React.PureComponent<GridProps> {
                 >
                   <Cell
                     {...cell}
-                    onClick={(e) => {
-                      e?.preventDefault?.();
-                      e?.stopPropagation?.();
-                      this.handleClick(r, c);
-                    }}
+                    onClick={this.handleClick}
                     onContextMenu={(e) => {
                       e?.preventDefault?.();
                       e?.stopPropagation?.();

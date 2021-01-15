@@ -7,6 +7,8 @@ import {Cursor, Ping, CellStyles} from './types';
 import './css/cell.css';
 
 interface Props {
+  r: number;
+  c: number;
   // Cell data
   value?: string;
   number?: number;
@@ -35,7 +37,7 @@ interface Props {
   myColor: string;
 
   // Callbacks
-  onClick: (e?: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+  onClick: (r: number, c: number) => void;
   onContextMenu: (e?: React.MouseEvent<HTMLElement, MouseEvent>) => void;
   onFlipColor: () => void;
 }
@@ -54,6 +56,8 @@ export default class Cell extends React.Component<Props> {
   private touchStart: {pageX: number; pageY: number} = {pageX: 0, pageY: 0};
 
   shouldComponentUpdate(nextProps: Props) {
+    // @ts-ignore
+    console.log(_.filter(_.keys(this.props), (k) => this.props[k] !== nextProps[k]));
     if (!_.isEqual(_.omit(nextProps, 'cursors'), _.omit(this.props, 'cursors'))) return true;
     return !_.isEqual(nextProps.cursors, this.props.cursors);
   }
@@ -156,6 +160,12 @@ export default class Cell extends React.Component<Props> {
     return {};
   }
 
+  handleClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault?.();
+    e.stopPropagation?.();
+    this.props.onClick(this.props.r, this.props.c);
+  };
+
   render() {
     const {
       black,
@@ -180,7 +190,7 @@ export default class Cell extends React.Component<Props> {
             selected,
           })}
           style={selected ? {borderColor: myColor} : undefined}
-          onClick={onClick}
+          onClick={this.handleClick}
           onContextMenu={onContextMenu}
         >
           {this.renderPings()}
@@ -205,7 +215,7 @@ export default class Cell extends React.Component<Props> {
           pencil,
         })}
         style={style}
-        onClick={onClick}
+        onClick={this.handleClick}
         onContextMenu={onContextMenu}
         onTouchStart={(e) => {
           const touch = e.touches[e.touches.length - 1];
