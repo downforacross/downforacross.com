@@ -3,6 +3,8 @@ import './css/index.css';
 import React from 'react';
 import _ from 'lodash';
 import GridWrapper from '../../lib/wrappers/GridWrapper';
+import RerenderBoundary from '../RerenderBoundary';
+import {hashGridRow} from './hashGridRow';
 import Cell from './Cell';
 import {
   GridData,
@@ -154,6 +156,26 @@ export default class Grid extends React.PureComponent<GridProps> {
     const {size, cellStyle} = this.props;
     const sizeClass = this.getSizeClass(size);
     const key = `${size}-`;
+
+    const data = this.props.grid.map((row, r) =>
+      row.map((cell, c) => ({
+        ...cell,
+        r,
+        c,
+        selected: this.isSelected(r, c),
+        referenced: this.isReferenced(r, c),
+        circled: this.isCircled(r, c),
+        shaded: this.isShaded(r, c),
+        canFlipColor: !!this.props.canFlipColor?.(r, c),
+        cursors: (this.props.cursors || []).filter((cursor) => cursor.r === r && cursor.c === c),
+        pings: (this.props.pings || []).filter((ping) => ping.r === r && ping.c === c),
+        highlighted: this.isHighlighted(r, c),
+        myColor: this.props.myColor,
+        frozen: this.props.frozen,
+        pickupType: this.getPickup(r, c),
+        cellStyle: cellStyle,
+      }))
+    );
     return (
       <table
         style={{
@@ -163,7 +185,31 @@ export default class Grid extends React.PureComponent<GridProps> {
         className={`grid ${sizeClass}`}
       >
         <tbody>
-          {this.props.grid.map((row, r) => (
+          {data.map((row, i) => (
+            <RerenderBoundary key={i} hash={hashGridRow(row, {...this.props.cellStyle, size})}>
+              <tr>
+                {row.map((cellProps) => (
+                  <td
+                    key={`${cellProps.r}_${cellProps.c}`}
+                    className="grid--cell"
+                    style={{
+                      width: size,
+                      height: size,
+                      fontSize: `${size * 0.15}px`,
+                    }}
+                  >
+                    <Cell
+                      {...cellProps}
+                      onClick={this.handleClick}
+                      onContextMenu={this.handleRightClick}
+                      onFlipColor={this.props.onFlipColor}
+                    />
+                  </td>
+                ))}
+              </tr>
+            </RerenderBoundary>
+          ))}
+          {/* {this.props.grid.map((row, r) => (
             <tr key={key + r}>
               {row.map((cell, c) => (
                 <td
@@ -198,7 +244,7 @@ export default class Grid extends React.PureComponent<GridProps> {
                 </td>
               ))}
             </tr>
-          ))}
+          ))} */}
         </tbody>
       </table>
     );
