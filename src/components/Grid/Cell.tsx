@@ -56,10 +56,22 @@ export default class Cell extends React.Component<Props> {
   private touchStart: {pageX: number; pageY: number} = {pageX: 0, pageY: 0};
 
   shouldComponentUpdate(nextProps: Props) {
-    // @ts-ignore
-    console.log(_.filter(_.keys(this.props), (k) => this.props[k] !== nextProps[k]));
-    if (!_.isEqual(_.omit(nextProps, 'cursors'), _.omit(this.props, 'cursors'))) return true;
-    return !_.isEqual(nextProps.cursors, this.props.cursors);
+    const pathsToOmit = ['cursors', 'pings', 'cellStyle'] as const;
+    if (!_.isEqual(_.omit(nextProps, ...pathsToOmit), _.omit(this.props, pathsToOmit))) {
+      console.debug(
+        'cell update',
+        // @ts-ignore
+        _.filter(_.keys(this.props), (k) => this.props[k] !== nextProps[k])
+      );
+      return true;
+    }
+    if (_.some(pathsToOmit, (p) => JSON.stringify(nextProps[p]) !== JSON.stringify(this.props[p]))) {
+      console.log(nextProps);
+      console.debug('cell update for array');
+      return true;
+    }
+
+    return false;
   }
 
   renderCursors() {

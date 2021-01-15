@@ -116,18 +116,18 @@ export default class Grid extends React.PureComponent<GridProps> {
     );
   }
 
-  handleClick(r: number, c: number) {
+  handleClick = (r: number, c: number) => {
     if (!this.grid.isWhite(r, c) && !this.props.editMode) return;
     if (this.isSelected(r, c)) {
       this.props.onChangeDirection();
     } else {
       this.props.onSetSelected({r, c});
     }
-  }
+  };
 
-  handleRightClick(r: number, c: number) {
+  handleRightClick = (r: number, c: number) => {
     this.props.onPing && this.props.onPing(r, c);
-  }
+  };
 
   getAllSquares() {
     return this.grid.keys().map(([r, c]) => ({r, c}));
