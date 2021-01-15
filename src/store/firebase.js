@@ -4,7 +4,6 @@ import 'firebase/auth';
 
 let offline = true;
 offline = false;
-
 const CONFIGS = {
   production: {
     apiKey: 'AIzaSyCe4BWm9kbjXFwlZcmq4x8DvLD3TDoinhA',
@@ -24,7 +23,7 @@ const CONFIGS = {
     appId: '1:132564774895:web:a3bf48cd38c4df81e8901a',
   },
 };
-const config = CONFIGS[process.env.NODE_ENV];
+const config = CONFIGS[process.env.REACT_APP_ENV || process.env.NODE_ENV];
 
 firebase.initializeApp(config);
 const db = firebase.database();
