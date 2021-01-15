@@ -7,6 +7,8 @@ import {Cursor, Ping, CellStyles} from './types';
 import './css/cell.css';
 
 interface Props {
+  r: number;
+  c: number;
   // Cell data
   value?: string;
   number?: number;
@@ -35,9 +37,9 @@ interface Props {
   myColor: string;
 
   // Callbacks
-  onClick: (e?: React.MouseEvent<HTMLElement, MouseEvent>) => void;
-  onContextMenu: (e?: React.MouseEvent<HTMLElement, MouseEvent>) => void;
-  onFlipColor: () => void;
+  onClick: (r: number, c: number) => void;
+  onContextMenu: (r: number, c: number) => void;
+  onFlipColor?: (r: number, c: number) => void;
 }
 /*
  * Summary of Cell component
@@ -54,8 +56,22 @@ export default class Cell extends React.Component<Props> {
   private touchStart: {pageX: number; pageY: number} = {pageX: 0, pageY: 0};
 
   shouldComponentUpdate(nextProps: Props) {
-    if (!_.isEqual(_.omit(nextProps, 'cursors'), _.omit(this.props, 'cursors'))) return true;
-    return !_.isEqual(nextProps.cursors, this.props.cursors);
+    const pathsToOmit = ['cursors', 'pings', 'cellStyle'] as const;
+    if (!_.isEqual(_.omit(nextProps, ...pathsToOmit), _.omit(this.props, pathsToOmit))) {
+      console.debug(
+        'cell update',
+        // @ts-ignore
+        _.filter(_.keys(this.props), (k) => this.props[k] !== nextProps[k])
+      );
+      return true;
+    }
+    if (_.some(pathsToOmit, (p) => JSON.stringify(nextProps[p]) !== JSON.stringify(this.props[p]))) {
+      console.log(nextProps);
+      console.debug('cell update for array');
+      return true;
+    }
+
+    return false;
   }
 
   renderCursors() {
@@ -109,7 +125,7 @@ export default class Cell extends React.Component<Props> {
           className="cell--flip fa fa-small fa-sticky-note"
           onClick={(e) => {
             e.stopPropagation();
-            onFlipColor();
+            onFlipColor?.(this.props.r, this.props.c);
           }}
         />
       );
@@ -156,6 +172,18 @@ export default class Cell extends React.Component<Props> {
     return {};
   }
 
+  handleClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault?.();
+    e.stopPropagation?.();
+    this.props.onClick(this.props.r, this.props.c);
+  };
+
+  handleRightClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault?.();
+    e.stopPropagation?.();
+    this.props.onContextMenu(this.props.r, this.props.c);
+  };
+
   render() {
     const {
       black,
@@ -169,7 +197,6 @@ export default class Cell extends React.Component<Props> {
       value,
       myColor,
       onClick,
-      onContextMenu,
       number,
       referenced,
     } = this.props;
@@ -180,8 +207,8 @@ export default class Cell extends React.Component<Props> {
             selected,
           })}
           style={selected ? {borderColor: myColor} : undefined}
-          onClick={onClick}
-          onContextMenu={onContextMenu}
+          onClick={this.handleClick}
+          onContextMenu={this.handleRightClick}
         >
           {this.renderPings()}
         </div>
@@ -205,8 +232,8 @@ export default class Cell extends React.Component<Props> {
           pencil,
         })}
         style={style}
-        onClick={onClick}
-        onContextMenu={onContextMenu}
+        onClick={this.handleClick}
+        onContextMenu={this.handleRightClick}
         onTouchStart={(e) => {
           const touch = e.touches[e.touches.length - 1];
           this.touchStart = {pageX: touch.pageX, pageY: touch.pageY};
@@ -219,7 +246,7 @@ export default class Cell extends React.Component<Props> {
             (Math.abs(touch.pageX - this.touchStart.pageX) < 5 &&
               Math.abs(touch.pageY - this.touchStart.pageY) < 5)
           ) {
-            onClick();
+            onClick(this.props.r, this.props.c);
           }
         }}
       >
