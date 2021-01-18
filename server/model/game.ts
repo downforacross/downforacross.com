@@ -6,7 +6,7 @@ export async function getGameEvents(gid: string) {
   const res = await pool.query('SELECT event_payload FROM game_events WHERE gid=$1', [gid]);
   const events = _.map(res.rows, 'event_payload');
   const ms = Date.now() - startTime;
-  console.log(`getEvents(${gid}) took ${ms}ms`);
+  console.log(`getGameEvents(${gid}) took ${ms}ms`);
   return events;
 }
 
@@ -35,5 +35,5 @@ export async function addGameEvent(gid: string, event: GameEvent) {
     [gid, event.user, new Date(event.timestamp).toISOString(), event.type, event]
   );
   const ms = Date.now() - startTime;
-  console.log(`addEvent(${gid}, ${event.type}) took ${ms}ms`);
+  console.log(`addGameEvent(${gid}, ${event.type}) took ${ms}ms`);
 }
