@@ -82,7 +82,7 @@ export default class Game extends EventEmitter {
 
         console.log('Connecting to', SOCKET_HOST);
         await this.socket.onceAsync('connect');
-        await emitAsync(this.socket, 'join', this.gid);
+        await emitAsync(this.socket, 'join_game', this.gid);
 
         this.socket.on('disconnect', () => {
           console.log('received disconnect from server');
@@ -92,7 +92,7 @@ export default class Game extends EventEmitter {
         // handle future reconnects
         this.socket.on('connect', async () => {
           console.log('reconnecting...');
-          await emitAsync(this.socket, 'join', this.gid);
+          await emitAsync(this.socket, 'join_game', this.gid);
           console.log('reconnected...');
           this.emitReconnect();
         });
@@ -157,7 +157,7 @@ export default class Game extends EventEmitter {
       event = castNullsToUndefined(event);
       this.emitWSEvent(event);
     });
-    const response = await emitAsync(this.socket, 'sync_all', this.gid);
+    const response = await emitAsync(this.socket, 'sync_all_game_events', this.gid);
     response.forEach((event) => {
       event = castNullsToUndefined(event);
       this.emitWSEvent(event);
