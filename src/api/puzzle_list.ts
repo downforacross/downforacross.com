@@ -1,6 +1,6 @@
 // ========== GET /api/puzzlelist ============
 
-import {ListPuzzleResponse} from '@shared/types';
+import {ListPuzzleResponse} from '../shared/types';
 import qs from 'qs';
 import {SERVER_URL} from './constants';
 
