@@ -4,10 +4,7 @@
  */
 
 export interface PuzzleJson {
-  grid: {
-    type: 'white' | 'black';
-    solution?: string;
-  }[][];
+  grid: string[][];
   info: {
     type?: string; // this is sometimes set by the frontend, e.g. by the FileUpload module
     title: string;
@@ -21,6 +18,7 @@ export interface PuzzleJson {
     across: string[];
     down: string[];
   };
+  private?: boolean;
 }
 
 export interface PuzzleStatsJson {
