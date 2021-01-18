@@ -43,8 +43,6 @@ const nouns = rawNounList.split('\n').map(sanitize).filter(nounFilter);
 
 export default function nameGenerator() {
   function f() {
-    debugger;
-
     const adj = Math.random() < 0.9 ? sample(positiveAdjectives) : sample(adjectives);
     const noun = sample(nouns);
     return `${adj} ${noun}`;
