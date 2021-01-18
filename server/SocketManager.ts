@@ -3,6 +3,7 @@
 import _ from 'lodash';
 import socketIo from 'socket.io';
 import {addGameEvent, GameEvent, getGameEvents} from './model/game';
+import {addRoomEvent, RoomEvent, getRoomEvents} from './model/room';
 
 interface SocketEvent {
   [key: string]: any;
@@ -36,14 +37,17 @@ class SocketManager {
     await addGameEvent(gid, gameEvent);
     this.io.to(`game-${gid}`).emit('game_event', gameEvent);
   }
-  async addRoomEvent(gid: string, event: SocketEvent) {
-    const gameEvent: GameEvent = assignTimestamp(event);
-    await addGameEvent(gid, gameEvent);
-    this.io.to(`game-${gid}`).emit('game_event', gameEvent);
+  async addRoomEvent(rid: string, event: SocketEvent) {
+    const roomEvent: RoomEvent = assignTimestamp(event);
+    await addRoomEvent(rid, roomEvent);
+    this.io.to(`room-${rid}`).emit('room_event', roomEvent);
   }
 
   listen() {
     this.io.on('connection', (socket) => {
+      // ======== Game Events ========= //
+      // NOTICE: join is deprecated in favor of sync_all_game_events
+      // TODO remove once #142 is fully deployed
       socket.on('join', async (gid, ack) => {
         socket.join(`game-${gid}`);
         ack();
@@ -54,7 +58,7 @@ class SocketManager {
         ack();
       });
 
-      // Deprecated in favor of sync_all_game_events
+      // NOTICE: sync_all is deprecated in favor of sync_all_game_events
       // TODO remove once #142 is fully deployed
       socket.on('sync_all', async (gid, ack) => {
         const events = await getGameEvents(gid);
@@ -71,10 +75,22 @@ class SocketManager {
         ack();
       });
 
-      // socket.on('room_event', async (message, ack) => {
-      //   await this.addRoomEvent(message.gid, message.event);
-      //   ack();
-      // });
+      // ======== Room Events ========= //
+
+      socket.on('join_room', async (rid, ack) => {
+        socket.join(`room-${rid}`);
+        ack();
+      });
+
+      socket.on('sync_all_room_events', async (rid, ack) => {
+        const events = await getRoomEvents(rid);
+        ack(events);
+      });
+
+      socket.on('room_event', async (message, ack) => {
+        await this.addRoomEvent(message.rid, message.event);
+        ack();
+      });
     });
   }
 }
