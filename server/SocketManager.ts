@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 import socketIo from 'socket.io';
-import {addEvent, GameEvent, getEvents} from './model/game';
+import {addGameEvent, GameEvent, getGameEvents} from './model/game';
 
 interface SocketEvent {
   [key: string]: any;
@@ -31,14 +31,15 @@ class SocketManager {
     this.io = io;
   }
 
-  async addEvent(gid: string, event: SocketEvent) {
+  async addGameEvent(gid: string, event: SocketEvent) {
     const gameEvent: GameEvent = assignTimestamp(event);
-    await addEvent(gid, gameEvent);
+    await addGameEvent(gid, gameEvent);
     this.io.to(`game-${gid}`).emit('game_event', gameEvent);
   }
-
-  getLiveSocketsCount() {
-    return _.keys(this.io.sockets.sockets).length;
+  async addRoomEvent(gid: string, event: SocketEvent) {
+    const gameEvent: GameEvent = assignTimestamp(event);
+    await addGameEvent(gid, gameEvent);
+    this.io.to(`game-${gid}`).emit('game_event', gameEvent);
   }
 
   listen() {
@@ -49,14 +50,23 @@ class SocketManager {
       });
 
       socket.on('sync_all', async (gid, ack) => {
-        const events = await getEvents(gid);
+        const events = await getGameEvents(gid);
+        ack(events);
+      });
+      socket.on('sync_all_room_events', async (gid, ack) => {
+        const events = await getGameEvents(gid);
         ack(events);
       });
 
       socket.on('game_event', async (message, ack) => {
-        await this.addEvent(message.gid, message.event);
+        await this.addGameEvent(message.gid, message.event);
         ack();
       });
+
+      // socket.on('room_event', async (message, ack) => {
+      //   await this.addRoomEvent(message.gid, message.event);
+      //   ack();
+      // });
     });
   }
 }
