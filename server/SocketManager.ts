@@ -49,6 +49,11 @@ class SocketManager {
         ack();
       });
 
+      socket.on('join_game', async (gid, ack) => {
+        socket.join(`game-${gid}`);
+        ack();
+      });
+
       // Deprecated in favor of sync_all_game_events
       // TODO remove once #142 is fully deployed
       socket.on('sync_all', async (gid, ack) => {
