@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import Joi from 'joi';
 import uuid from 'uuid';
 import {pool} from './pool';
 import {PuzzleJson} from '@shared/types';
@@ -55,10 +56,37 @@ export async function listPuzzles(
   return puzzles;
 }
 
+const puzzleValidator = Joi.object({
+  grid: Joi.array().items(Joi.array().items(Joi.string())),
+  info: Joi.object({
+    type: Joi.string().optional(),
+    title: Joi.string(),
+    author: Joi.string(),
+    copyright: Joi.string().optional(),
+    description: Joi.string().optional(),
+  }),
+  circles: Joi.array().optional(),
+  shades: Joi.array().optional(),
+  clues: Joi.object({
+    across: Joi.array(),
+    down: Joi.array(),
+  }),
+  private: Joi.boolean().optional(),
+});
+
+function validatePuzzle(puzzle: any) {
+  console.log(_.keys(puzzle));
+  const {error} = puzzleValidator.validate(puzzle);
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
 export async function addPuzzle(puzzle: PuzzleJson, isPublic = false, pid?: string) {
   if (!pid) {
     pid = uuid.v4().substr(0, 8);
   }
+  validatePuzzle(puzzle);
   const uploaded_at = Date.now();
   await pool.query(
     `
