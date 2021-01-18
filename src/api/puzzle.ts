@@ -1,5 +1,5 @@
 import {SERVER_URL} from './constants';
-import {AddPuzzleRequest, AddPuzzleResponse} from '@shared/types';
+import {AddPuzzleRequest, AddPuzzleResponse} from '../shared/types';
 
 export async function createNewPuzzle(
   puzzle: AddPuzzleRequest,

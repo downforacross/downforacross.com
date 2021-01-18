@@ -1,4 +1,4 @@
-import {PuzzleJson, PuzzleStatsJson} from '@shared/types';
+import {PuzzleJson, PuzzleStatsJson} from '../../shared/types';
 import _ from 'lodash';
 import React, {useRef, useState} from 'react';
 import {useMount} from 'react-use';
