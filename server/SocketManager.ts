@@ -53,7 +53,8 @@ class SocketManager {
         const events = await getGameEvents(gid);
         ack(events);
       });
-      socket.on('sync_all_room_events', async (gid, ack) => {
+
+      socket.on('sync_all_game_events', async (gid, ack) => {
         const events = await getGameEvents(gid);
         ack(events);
       });
