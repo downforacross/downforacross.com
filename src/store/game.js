@@ -157,7 +157,7 @@ export default class Game extends EventEmitter {
       event = castNullsToUndefined(event);
       this.emitWSEvent(event);
     });
-    const response = await emitAsync(this.socket, 'sync_all', this.gid);
+    const response = await emitAsync(this.socket, 'sync_all_game_events', this.gid);
     response.forEach((event) => {
       event = castNullsToUndefined(event);
       this.emitWSEvent(event);
