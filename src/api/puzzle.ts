@@ -1,6 +1,6 @@
 import {SERVER_URL} from './constants';
 import {AddPuzzleRequest, AddPuzzleResponse} from '../shared/types';
-console.log(hi);
+
 export async function createNewPuzzle(
   puzzle: AddPuzzleRequest,
   pid: string | undefined,
