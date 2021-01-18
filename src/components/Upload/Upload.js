@@ -37,7 +37,7 @@ export default class Upload extends Component {
         recentUnlistedPid: isPublic ? undefined : pid,
       });
 
-      createNewPuzzle(this.state.puzzle, pid, {
+      createNewPuzzle(puzzle, pid, {
         isPublic,
       });
     });
