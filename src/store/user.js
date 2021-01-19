@@ -3,6 +3,8 @@ import firebase, {db, SERVER_TIME, getTime} from './firebase';
 import getLocalId from '../localAuth';
 import {rand_color} from '../lib/jsUtils';
 
+const disableFbLogin = true;
+
 export default class User extends EventEmitter {
   constructor() {
     super();
@@ -42,8 +44,11 @@ export default class User extends EventEmitter {
 
   // read methods
   get id() {
+    if (disableFbLogin) {
+      return getLocalId();
+    }
     if (!this.attached) {
-      return '';
+      return null;
     }
     if (this.fb) {
       return this.fb.uid;

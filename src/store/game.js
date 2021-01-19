@@ -3,7 +3,8 @@ import io from 'socket.io-client';
 import Promise from 'bluebird';
 import uuid from 'uuid';
 import _ from 'lodash';
-import {SOCKET_HOST} from '../api/constants';
+import {getSocket} from '../sockets/getSocket';
+import {emitAsync} from '../sockets/emitAsync';
 import {db, SERVER_TIME} from './firebase';
 import Puzzle from './puzzle';
 import * as colors from '../lib/colors';
@@ -27,11 +28,6 @@ const castNullsToUndefined = (obj) => {
 
 // a wrapper class that models Game
 
-const emitAsync = (socket, ...args) =>
-  new Promise((resolve) => {
-    socket.emit(...args, resolve);
-  });
-
 const CURRENT_VERSION = 1.0;
 export default class Game extends EventEmitter {
   constructor(path) {
@@ -50,55 +46,23 @@ export default class Game extends EventEmitter {
   }
 
   // Websocket code
-  connectToWebsocket() {
-    if (!this.websocketPromise) {
-      this.websocketPromise = (async () => {
-        // Note: In attempt to increase websocket limit, use upgrade false
-        // https://stackoverflow.com/questions/15872788/maximum-concurrent-socket-io-connections
-        const socket = io(SOCKET_HOST, {upgrade: false, transports: ['websocket']});
+  async connectToWebsocket() {
+    if (this.socket) return;
+    const socket = getSocket();
+    this.socket = socket;
+    await emitAsync(socket, 'join_game', this.gid);
 
-        this.socket = socket;
-        window.socket = socket;
+    socket.on('disconnect', () => {
+      console.log('received disconnect from server');
+    });
 
-        socket.on('pong', function (ms) {
-          window.connectionStatus = {
-            latency: ms,
-            timestamp: Date.now(),
-          };
-        });
-
-        socket.on('connect', (event) => {
-          console.debug('[ws connect]', event);
-        });
-        socket.on('connect', (event) => {
-          console.debug('[ws connect]', event);
-        });
-        socket.on('ping', (event) => {
-          console.debug('[ws ping]', Date.now());
-        });
-        socket.on('pong', (event) => {
-          console.debug('[ws pong]', Date.now());
-        });
-
-        console.log('Connecting to', SOCKET_HOST);
-        await this.socket.onceAsync('connect');
-        await emitAsync(this.socket, 'join_game', this.gid);
-
-        this.socket.on('disconnect', () => {
-          console.log('received disconnect from server');
-          this.disconnected = true;
-        });
-
-        // handle future reconnects
-        this.socket.on('connect', async () => {
-          console.log('reconnecting...');
-          await emitAsync(this.socket, 'join_game', this.gid);
-          console.log('reconnected...');
-          this.emitReconnect();
-        });
-      })();
-    }
-    return this.websocketPromise;
+    // handle future reconnects
+    socket.on('connect', async () => {
+      console.log('reconnecting...');
+      await emitAsync(socket, 'join_game', this.gid);
+      console.log('reconnected...');
+      this.emitReconnect();
+    });
   }
 
   emitEvent(event) {
