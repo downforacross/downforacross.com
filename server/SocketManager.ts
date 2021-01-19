@@ -82,6 +82,10 @@ class SocketManager {
         socket.join(`room-${rid}`);
         ack();
       });
+      socket.on('leave_room', async (rid, ack) => {
+        socket.leave(`room-${rid}`);
+        ack();
+      });
 
       socket.on('sync_all_room_events', async (rid, ack) => {
         const events = await getRoomEvents(rid);
