@@ -1,9 +1,10 @@
 // ============= Server Values ===========
 
+import {RoomEvent} from '@shared/roomEvents';
 import _ from 'lodash';
 import socketIo from 'socket.io';
 import {addGameEvent, GameEvent, getGameEvents} from './model/game';
-import {addRoomEvent, RoomEvent, getRoomEvents} from './model/room';
+import {addRoomEvent, getRoomEvents} from './model/room';
 
 interface SocketEvent {
   [key: string]: any;
