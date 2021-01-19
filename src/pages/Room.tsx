@@ -99,7 +99,7 @@ const Room: React.FC<RouteComponentProps<{rid: string}>> = (props) => {
     }
   };
   const classes = useStyles();
-  const currentGame = _.last(roomState.games);
+  const currentGame = _.first(roomState.games);
   return (
     <div className={classes.container}>
       <Helmet title={`Room ${rid}`} />
