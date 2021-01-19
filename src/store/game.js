@@ -48,7 +48,7 @@ export default class Game extends EventEmitter {
   // Websocket code
   async connectToWebsocket() {
     if (this.socket) return;
-    const socket = getSocket();
+    const socket = await getSocket();
     this.socket = socket;
     await emitAsync(socket, 'join_game', this.gid);
 
