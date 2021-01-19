@@ -3,12 +3,46 @@ import _ from 'lodash';
 import {Helmet} from 'react-helmet';
 import {RouteComponentProps} from 'react-router';
 
-import {RoomEvent, UserPingRoomEvent} from '../shared/roomEvents';
+import {RoomEvent, SetGameRoomEvent, UserPingRoomEvent} from '../shared/roomEvents';
 import {useSocket} from '../sockets/useSocket';
 import {initialRoomState, roomReducer} from '../lib/reducers/room';
 import {emitAsync} from '../sockets/emitAsync';
-import {useMount} from 'react-use';
+import {makeStyles} from '@material-ui/core';
 
+const ACTIVE_SECONDS_TIMEOUT = 60;
+
+const useStyles = makeStyles({
+  container: {
+    display: 'flex',
+    height: '100%',
+    flexDirection: 'column',
+  },
+  content: {
+    flex: 1,
+    '& iframe': {
+      border: 'none',
+      width: '100%',
+      height: '100%',
+    },
+  },
+  totalUsersParen: {
+    color: '#DDDDDD',
+  },
+  footer: {
+    padding: 12,
+    display: 'flex',
+    justifyContent: 'space-between',
+    background: 'var(--main-blue)',
+    color: '#FBFBFB',
+    '& button': {
+      border: 'none',
+      background: 'none',
+      outline: '1px solid',
+      color: '#FBFBFB',
+      cursor: 'pointer',
+    },
+  },
+});
 function subscribeToRoomEvents(
   socket: SocketIOClient.Socket | undefined,
   rid: string,
@@ -41,17 +75,34 @@ function useRoomState(events: RoomEvent[]) {
   return useMemo(() => events.reduce(roomReducer, initialRoomState), [events]);
 }
 
+const useTimer = (interval = 1000): number => {
+  const [time, setTime] = useState(Date.now());
+  useEffect(() => {
+    const itvl = setInterval(() => {
+      setTime(Date.now());
+    }, interval);
+    return () => {
+      clearInterval(itvl);
+    };
+  }, []);
+  return time;
+};
+
 const Room: React.FC<RouteComponentProps<{rid: string}>> = (props) => {
   const rid = props.match.params.rid;
   const socket = useSocket();
   const [events, setEvents] = useState<RoomEvent[]>([]);
-  console.log('events is', events);
   const roomState = useRoomState(events);
 
-  console.log('room state is', roomState);
   async function sendUserPing() {
     if (socket) {
       const event = UserPingRoomEvent();
+      emitAsync(socket, 'room_event', {rid, event});
+    }
+  }
+  async function setGame(gid: string) {
+    if (socket) {
+      const event = SetGameRoomEvent(gid);
       emitAsync(socket, 'room_event', {rid, event});
     }
   }
@@ -62,7 +113,7 @@ const Room: React.FC<RouteComponentProps<{rid: string}>> = (props) => {
     return unsubscribe;
   }, [rid, socket]);
   useEffect(() => {
-    const renewActivity = _.throttle(sendUserPing, 1000 * 60);
+    const renewActivity = _.throttle(sendUserPing, 1000 * 10);
     window.addEventListener('mousemove', renewActivity);
     window.addEventListener('keydown', renewActivity);
     return () => {
@@ -70,15 +121,36 @@ const Room: React.FC<RouteComponentProps<{rid: string}>> = (props) => {
       window.removeEventListener('keydown', renewActivity);
     };
   }, [rid, socket]);
+  const handleAddGame = () => {
+    const gameLink = window.prompt('Enter new game link');
+    const gid = _.last(gameLink?.split('/'));
+    if (gid && gid.match('[a-z0-9-]{1,15}')) {
+      setGame(gid);
+    }
+  };
+  const currentTime = useTimer();
+  const classes = useStyles();
+  const currentGame = _.first(roomState.games);
   return (
-    <div
-      style={{
-        width: '100%',
-        height: '100%',
-      }}
-    >
+    <div className={classes.container}>
       <Helmet title={`Room ${rid}`} />
-      <div>{roomState.users.length} users here</div>
+      <div className={classes.content}>
+        {currentGame && <iframe src={`/game/${currentGame.gid}`} />}
+        {!currentGame && <div>No game selected!</div>}
+      </div>
+      <div className={classes.footer}>
+        <div>
+          In this room:{' '}
+          {
+            _.filter(roomState.users, (user) => user.lastPing > currentTime - ACTIVE_SECONDS_TIMEOUT * 1000)
+              .length
+          }{' '}
+          <span className={classes.totalUsersParen}>({roomState.users.length} total)</span>
+        </div>
+        <div>
+          <button onClick={handleAddGame}>Game: {currentGame?.gid ?? 'N/A'}</button>
+        </div>
+      </div>
     </div>
   );
 };

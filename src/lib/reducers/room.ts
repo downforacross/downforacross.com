@@ -1,4 +1,10 @@
-import {RoomEventParams, RoomEventType} from '../../shared/roomEvents';
+import {
+  isSetGameEvent,
+  isUserPingEvent,
+  RoomEvent,
+  RoomEventParams,
+  RoomEventType,
+} from '../../shared/roomEvents';
 import _ from 'lodash';
 
 interface RoomState {
@@ -6,12 +12,9 @@ interface RoomState {
     uid: string;
     lastPing: number;
   }[];
-}
-
-export interface RoomEvent<T extends RoomEventType = RoomEventType> {
-  timestamp: number;
-  type: T;
-  params: RoomEventParams[T];
+  games: {
+    gid: string;
+  }[];
 }
 
 interface RoomReducerFn<T extends RoomEventType = RoomEventType> {
@@ -19,7 +22,7 @@ interface RoomReducerFn<T extends RoomEventType = RoomEventType> {
 }
 
 const userPingReducer: RoomReducerFn<RoomEventType.USER_PING> = (room, params, timestamp) => {
-  const newUsers = [
+  const nUsers = [
     {
       uid: params.uid,
       lastPing: timestamp,
@@ -28,21 +31,36 @@ const userPingReducer: RoomReducerFn<RoomEventType.USER_PING> = (room, params, t
   ];
   return {
     ...room,
-    users: newUsers,
+    users: nUsers,
+  };
+};
+
+const setGameReducer: RoomReducerFn<RoomEventType.SET_GAME> = (room, params, timestamp) => {
+  const nGames = [
+    {
+      gid: params.gid,
+    },
+    ...room.games.filter((game) => game.gid !== params.gid),
+  ];
+  return {
+    ...room,
+    games: nGames,
   };
 };
 
 export const initialRoomState: RoomState = {
   users: [],
+  games: [],
 };
 export const roomReducer = (room: RoomState, event: RoomEvent, options = {}): RoomState => {
   try {
-    switch (event.type) {
-      case RoomEventType.USER_PING:
-        return userPingReducer(room, event.params, event.timestamp);
-      default:
-        console.error('event', event.type, 'not found');
-        return room;
+    if (isUserPingEvent(event)) {
+      return userPingReducer(room, event.params, event.timestamp);
+    } else if (isSetGameEvent(event)) {
+      return setGameReducer(room, event.params, event.timestamp);
+    } else {
+      console.error('event', event.type, 'not found');
+      return room;
     }
   } catch (e) {
     console.error('Error handling event', event);
