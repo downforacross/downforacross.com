@@ -19,6 +19,8 @@ ALTER TABLE public.room_events
 -- GRANT ALL ON TABLE public.room_events TO dfac_production;
 
 GRANT ALL ON TABLE public.room_events TO dfacadmin;
+-- GRANT ALL ON TABLE public.room_events TO dfac_staging;
+-- GRANT ALL ON TABLE public.room_events TO dfac_production;
 -- Index: room_events_rid_ts_idx
 
 -- DROP INDEX public.rame_events_rid_ts_idx;
