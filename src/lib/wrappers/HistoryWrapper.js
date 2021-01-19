@@ -1,11 +1,12 @@
 import _ from 'lodash';
-import {reduce} from '../reducers/game';
+import {reduce as gameReducer} from '../reducers/game';
 
 const MEMO_RATE = 10;
 
 export default class HistoryWrapper {
-  constructor(history = []) {
+  constructor(history = [], reducer = gameReducer) {
     window.historyWrapper = this;
+    this.reducer = reducer;
     this.history = [];
     this.optimisticEvents = [];
     this.memo = [];
@@ -20,7 +21,7 @@ export default class HistoryWrapper {
   }
 
   get reduce() {
-    return reduce;
+    return this.reducer;
   }
 
   get ready() {
