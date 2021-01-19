@@ -4,7 +4,19 @@ import React from 'react';
 
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import {isMobile} from './lib/jsUtils';
-import {Account, Battle, Compose, Composition, Game, Play, Replay, Replays, Welcome, Stats} from './pages';
+import {
+  Account,
+  Battle,
+  Compose,
+  Composition,
+  Game,
+  Play,
+  Replay,
+  Replays,
+  Welcome,
+  Stats,
+  Room,
+} from './pages';
 import GlobalContext from './lib/GlobalContext';
 
 import './style.css';
@@ -24,6 +36,7 @@ const Root = () => {
           <Route exact path="/" component={Welcome} />
           <Route exact path="/stats" component={Stats} />
           <Route exact path="/game/:gid" component={Game} />
+          <Route exact path="/room/:rid" component={Room} />
           <Route exact path="/replay/:gid" component={Replay} />
           <Route exact path="/beta/replay/:gid" component={Replay} />
           <Route exact path="/replays/:pid" component={Replays} />
