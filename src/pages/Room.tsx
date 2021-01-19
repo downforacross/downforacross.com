@@ -19,6 +19,7 @@ const useStyles = makeStyles({
   },
   content: {
     flex: 1,
+    display: 'flex',
     '& iframe': {
       border: 'none',
       width: '100%',
@@ -41,6 +42,13 @@ const useStyles = makeStyles({
       color: '#FBFBFB',
       cursor: 'pointer',
     },
+  },
+  noGameMessage: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 function subscribeToRoomEvents(
@@ -136,7 +144,12 @@ const Room: React.FC<RouteComponentProps<{rid: string}>> = (props) => {
       <Helmet title={`Room ${rid}`} />
       <div className={classes.content}>
         {currentGame && <iframe src={`/game/${currentGame.gid}`} />}
-        {!currentGame && <div>No game selected!</div>}
+        {!currentGame && (
+          <div className={classes.noGameMessage}>
+            <div>No game selected!</div>
+            <div> Click the button on the bottom-right to enter a game link</div>
+          </div>
+        )}
       </div>
       <div className={classes.footer}>
         <div>
