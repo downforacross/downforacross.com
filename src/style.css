@@ -6,12 +6,16 @@ html {
 html,
 body,
 input,
-button,
 #root,
 .router-wrapper {
   display: flex;
   flex-direction: column;
   flex: 1;
+  margin: 0;
+  font-family: 'avenir next', avenir, 'Nunito', 'helvetica neue', 'Helvetica', 'arial', sans-serif;
+}
+
+button {
   margin: 0;
   font-family: 'avenir next', avenir, 'Nunito', 'helvetica neue', 'Helvetica', 'arial', sans-serif;
 }
