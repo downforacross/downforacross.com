@@ -152,6 +152,7 @@ export default class Chat extends Component {
           onChange={this.handleUpdateDisplayName}
           onBlur={this.handleBlur}
           onUnfocus={this.focus}
+          style={{color: this.props.myColor}}
         />
       </div>
     );
