@@ -16,9 +16,25 @@ function subscribeToGameEvents(
   gid: string,
   setEvents: React.Dispatch<React.SetStateAction<GameEvent[]>>
 ) {
-  // stub
-  const syncPromise = (async () => {})();
-  const unsubscribe = () => {};
+  let connected = false;
+  async function joinAndSync() {
+    if (!socket) return;
+    await emitAsync(socket, 'join_game', gid);
+    socket.on('game_event', (event: any) => {
+      if (!connected) return;
+      setEvents((events) => [...events, event]);
+    });
+    const allEvents: GameEvent[] = (await emitAsync(socket, 'sync_all_game_events', gid)) as any;
+    setEvents(allEvents);
+    connected = true;
+  }
+  function unsubscribe() {
+    if (!socket) return;
+    console.log('unsubscribing from game events...');
+    emitAsync(socket, 'leave_game', gid);
+  }
+  const syncPromise = joinAndSync();
+
   return {syncPromise, unsubscribe};
 }
 const useStyles = makeStyles({
