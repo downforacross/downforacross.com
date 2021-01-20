@@ -50,6 +50,7 @@ const Root = () => {
           <Route exact path="/compose" component={Compose} />
           <Route exact path="/composition/:cid" component={Composition} />
           <Route exact path="/fencing/:gid" component={Fencing} />
+          <Route exact path="/beta/fencing/:gid" component={Fencing} />
           <Route
             exact
             path="/discord"
