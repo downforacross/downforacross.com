@@ -59,6 +59,11 @@ class SocketManager {
         ack();
       });
 
+      socket.on('leave_game', async (gid, ack) => {
+        socket.leave(`game-${gid}`);
+        ack();
+      });
+
       // NOTICE: sync_all is deprecated in favor of sync_all_game_events
       // TODO remove once #142 is fully deployed
       socket.on('sync_all', async (gid, ack) => {
