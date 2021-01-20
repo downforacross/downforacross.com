@@ -1,4 +1,10 @@
-import {GameEvent, GameEventParams, GameEventType, isUserPingGameEvent} from '../../shared/gameEvents';
+import {
+  GameEvent,
+  GameEventParams,
+  GameEventType,
+  isInitializeGameEvent,
+  isUserPingGameEvent,
+} from '../../shared/gameEvents';
 import _ from 'lodash';
 import {InfoJson} from '../../shared/types';
 import {GridData} from '../../components/Grid/types';
@@ -28,6 +34,7 @@ from ./game.js -- which we are seeking to replace by gameV2.ts
     } = params.game;
     */
 export interface GameState {
+  loaded: boolean;
   info: InfoJson;
   grid: GridData;
   solution: string[][];
@@ -41,27 +48,34 @@ interface GameReducerFn<T extends GameEventType = GameEventType> {
 }
 
 const userPingReducer: GameReducerFn<GameEventType.USER_PING> = (game, params, timestamp) => {
-  const nUsers = [
-    {
-      uid: params.uid,
-      lastPing: timestamp,
-    },
-    ...game.users.filter((user) => user.uid !== params.uid),
-  ];
-  return {
-    ...game,
-    users: nUsers,
-  };
+  return game;
 };
 
+const initializeGameReducer: GameReducerFn<GameEventType.INITIALIZE_GAME> = (game, params) => ({
+  ...game,
+  loaded: true,
+  pid: params.pid,
+  ...params.game,
+});
+
 export const initialGameState: GameState = {
-  users: [],
-  games: [],
+  loaded: false,
+  info: {
+    title: '',
+    author: '',
+    description: '',
+    copyright: '',
+  },
+  grid: [[{}]],
+  solution: [['A']],
 };
+
 export const gameReducer = (game: GameState, event: GameEvent, options = {}): GameState => {
   try {
     if (isUserPingGameEvent(event)) {
       return userPingReducer(game, event.params, event.timestamp);
+    } else if (isInitializeGameEvent(event)) {
+      return initializeGameReducer(game, event.params, event.timestamp);
     } else {
       // @ts-ignore
       console.error('event', event.type, 'not found');
