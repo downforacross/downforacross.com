@@ -8,22 +8,25 @@ export default function ColorPicker(props) {
     <>
       <span className="dot" onClick={() => setActive(!isActive)} style={{color: props.color}}>
         {' '}
-        {'\u25CF'}
+        {'\u25CF '}
       </span>
       {isActive ? (
-        <CirclePicker
-          color={props.color}
-          triangle="hide"
-          onChangeComplete={(color) => {
-            let colorHSL = `hsl(${Math.floor(color.hsl.h)},${Math.floor(color.hsl.s * 100)}%,${Math.floor(
-              color.hsl.l * 100
-            )}%)`;
-            if (colorHSL != props.color) {
-              props.onUpdateColor(colorHSL);
-            }
-            setActive(false);
-          }}
-        ></CirclePicker>
+        <>
+          <CirclePicker
+            color={props.color}
+            triangle="hide"
+            onChangeComplete={(color) => {
+              let colorHSL = `hsl(${Math.floor(color.hsl.h)},${Math.floor(color.hsl.s * 100)}%,${Math.floor(
+                color.hsl.l * 100
+              )}%)`;
+              if (colorHSL != props.color) {
+                props.onUpdateColor(colorHSL);
+              }
+              setActive(false);
+            }}
+          ></CirclePicker>
+          <br />
+        </>
       ) : null}
     </>
   );
