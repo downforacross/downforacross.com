@@ -1,3 +1,11 @@
+export interface InfoJson {
+  type?: string; // this is sometimes set by the frontend, e.g. by the FileUpload module
+  title: string;
+  author: string;
+  copyright: string;
+  description: string;
+}
+
 /**
  * PuzzleJson: the json format of puzzles stored in the db (both firebase & postgres)
  * Fields are a bit messy & don't correspond perfectly with puzjs formats... see logic in FileUploader.js
@@ -5,13 +13,7 @@
 
 export interface PuzzleJson {
   grid: string[][];
-  info: {
-    type?: string; // this is sometimes set by the frontend, e.g. by the FileUpload module
-    title: string;
-    author: string;
-    copyright: string;
-    description: string;
-  };
+  info: InfoJson;
   circles: string[];
   shades: string[];
   clues: {
