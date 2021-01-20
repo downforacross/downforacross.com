@@ -9,5 +9,6 @@ import Play from './Play';
 import Composition from './Composition';
 import Stats from './Stats';
 import Room from './Room';
+import Fencing from './Fencing';
 
-export {Welcome, Compose, Account, Replays, Game, Play, Replay, Composition, Battle, Stats, Room};
+export {Welcome, Compose, Account, Replays, Game, Play, Replay, Composition, Battle, Stats, Room, Fencing};

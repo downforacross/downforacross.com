@@ -15,7 +15,7 @@ interface GameEvent {
 // Top Down Development / Implementation: First implement the skeleton of the code before filling out the details
 // You might invoke a helper function before actually filling it in, and just stub the implementation
 function subscribeToGameEvents(
-  socket: SocketIOClient.Socket,
+  socket: SocketIOClient.Socket | undefined,
   gid: string,
   setEvents: React.Dispatch<React.SetStateAction<GameEvent[]>>
 ) {
@@ -54,6 +54,7 @@ const Fencing: React.FC<RouteComponentProps<{gid: string}>> = (props) => {
   return (
     <div className={classes.container}>
       <Helmet title={`Fencing ${gid}`} />
+      <h1>Welcome to fencing</h1>
     </div>
   );
 };
