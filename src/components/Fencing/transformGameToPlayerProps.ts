@@ -1,4 +1,8 @@
-import {GameState} from '../../lib/reducers/gameV2';
+/**
+ * Perhaps this whole file could live elsewhere, e.g. Player/transformGameToPlayerProps?
+ * */
+import {GameJson} from '../../lib/reducers/gameV2';
+import {CluesJson} from '../../shared/types';
 import {CellIndex, Cursor, GridData, Ping} from '../Grid/types';
 
 interface PlayerProps {
@@ -10,10 +14,7 @@ interface PlayerProps {
   shades?: CellIndex[];
   pings?: Ping[];
   cursors: Cursor[];
-  clues: {
-    across: null;
-    down: null;
-  };
+  clues: CluesJson;
   id: string;
   users: any;
   frozen: any;
@@ -32,17 +33,14 @@ interface PlayerProps {
   optimisticCounter: any;
 }
 
-export const transformGameStateToPlayerProps = (gameState: GameState): PlayerProps => ({
+export const transformGameToPlayerProps = (game: GameJson): PlayerProps => ({
   beta: true,
   size: 35,
-  grid: gameState.grid,
-  solution: gameState.solution,
+  grid: game.grid,
+  solution: game.solution,
   circles: [],
   shades: [],
-  clues: {
-    across: null,
-    down: null,
-  },
+  clues: game.clues,
   id: 'null',
   cursors: [],
   pings: [],
