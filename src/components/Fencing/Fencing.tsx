@@ -7,7 +7,7 @@ import {makeStyles} from '@material-ui/core';
 import Player from '../Player';
 import {gameReducer, GameState, initialGameState} from '../../lib/reducers/gameV2';
 import {GameEvent} from '../../shared/gameEvents';
-import {transformGameStateToPlayerProps} from './transformGameStateToPlayerProps';
+import {transformGameToPlayerProps} from './transformGameToPlayerProps';
 
 // Top Down Development / Implementation: First implement the skeleton of the code before filling out the details
 // You might invoke a helper function before actually filling it in, and just stub the implementation
@@ -81,15 +81,15 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
 
   const classes = useStyles();
   const gameState = useGameState(events);
+
+  console.log('Events', events);
   console.log('Game State:', gameState);
 
-  const playerProps = transformGameStateToPlayerProps(gameState);
-  console.log('Player Props:', playerProps);
   return (
     <div className={classes.container}>
       <Helmet title={`Fencing ${gid}`} />
       <h1>Welcome to fencing</h1>
-      {gameState.loaded && <Player {...playerProps} />}
+      {gameState.loaded && <Player {...transformGameToPlayerProps(gameState.game!)} />}
       {!gameState.loaded && <div>Loading your game...</div>}
     </div>
   );
