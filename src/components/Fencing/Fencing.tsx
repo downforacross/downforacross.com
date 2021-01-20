@@ -10,8 +10,6 @@ import {GameEvent} from '../../shared/gameEvents';
 import {transformGameToPlayerProps} from './transformGameToPlayerProps';
 import {usePlayerActions} from './usePlayerActions';
 
-// Top Down Development / Implementation: First implement the skeleton of the code before filling out the details
-// You might invoke a helper function before actually filling it in, and just stub the implementation
 function subscribeToGameEvents(
   socket: SocketIOClient.Socket | undefined,
   gid: string,
