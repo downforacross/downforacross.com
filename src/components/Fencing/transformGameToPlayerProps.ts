@@ -3,8 +3,8 @@
  * */
 import {GameJson} from '../../lib/reducers/gameV2';
 import {CluesJson} from '../../shared/types';
-import {CellIndex, Cursor, GridData, Ping} from '../Grid/types';
-
+import {CellCoords, CellIndex, Cursor, GridData, Ping} from '../Grid/types';
+import {PlayerActions} from './usePlayerActions';
 interface PlayerProps {
   beta: boolean;
   size: number;
@@ -16,11 +16,11 @@ interface PlayerProps {
   cursors: Cursor[];
   clues: CluesJson;
   id: string;
+  updateCursor(nCursor: CellCoords): void;
   users: any;
   frozen: any;
   myColor: any;
   updateGrid: any;
-  updateCursor: any;
   addPing: any;
   onPressEnter: any;
   onPressPeriod: any;
@@ -33,7 +33,11 @@ interface PlayerProps {
   optimisticCounter: any;
 }
 
-export const transformGameToPlayerProps = (game: GameJson): PlayerProps => ({
+export const transformGameToPlayerProps = (
+  game: GameJson,
+  playerStateActions: PlayerActions
+): PlayerProps => ({
+  ...playerStateActions,
   beta: true,
   size: 35,
   grid: game.grid,
@@ -47,8 +51,6 @@ export const transformGameToPlayerProps = (game: GameJson): PlayerProps => ({
   users: null,
   frozen: null,
   myColor: null,
-  updateGrid: null,
-  updateCursor: null,
   addPing: null,
   onPressEnter: null,
   onPressPeriod: null,
