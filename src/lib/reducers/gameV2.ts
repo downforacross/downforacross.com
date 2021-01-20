@@ -1,14 +1,39 @@
 import {GameEvent, GameEventParams, GameEventType, isUserPingGameEvent} from '../../shared/gameEvents';
 import _ from 'lodash';
+import {InfoJson} from '../../shared/types';
+import {GridData} from '../../components/Grid/types';
 
+/*
+from ./game.js -- which we are seeking to replace by gameV2.ts
+    const {
+      info = {},
+      grid = [[{}]],
+      solution = [['']],
+      circles = [],
+      chat = {messages: []},
+      clues = {},
+      clock = {
+        lastUpdated: 0,
+        totalTime: 0,
+        paused: true,
+      },
+      cursors = [],
+      // users is a mapping from id -> user info. fields include:
+      // color: string
+      // displayName: string
+      users = {},
+      solved = false,
+      themeColor = MAIN_BLUE_3,
+      // themeColor = GREENISH,
+    } = params.game;
+    */
 export interface GameState {
-  users: {
-    uid: string;
-    lastPing: number;
-  }[];
-  games: {
-    gid: string;
-  }[];
+  info: InfoJson;
+  grid: GridData;
+  solution: string[][];
+  // a lot of the previous implementation of GameState is suboptimal
+  // TODO - add scoreboard for battle
+  // TODO - add a list of users + track their activity
 }
 
 interface GameReducerFn<T extends GameEventType = GameEventType> {
