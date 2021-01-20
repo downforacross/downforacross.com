@@ -1,6 +1,6 @@
 export enum GameEventType {
   USER_PING = 'USER_PING',
-  INITIALIZE_GAME = 'CREATE',
+  INITIALIZE_GAME = 'create',
 }
 
 export interface GameEventParams {
