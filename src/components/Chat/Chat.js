@@ -10,6 +10,7 @@ import MobileKeyboard from '../Player/MobileKeyboard';
 import Flex from 'react-flexview';
 import {Link} from 'react-router-dom';
 import {MdClose} from 'react-icons/md';
+import ColorPicker from './ColorPicker';
 
 const isEmojis = (str) => {
   const res = str.match(/[A-Za-z,.0-9!-]/g);
@@ -55,6 +56,12 @@ export default class Chat extends Component {
     this.props.onUpdateDisplayName(id, username);
     this.setState({username});
     localStorage.setItem(this.usernameKey, username);
+  };
+
+  handleUpdateColor = (color) => {
+    color = color || this.props.color;
+    const {id} = this.props;
+    this.props.onUpdateColor(id, color);
   };
 
   handleUnfocus = () => {
@@ -136,6 +143,7 @@ export default class Chat extends Component {
     return this.props.hideChatBar ? null : (
       <div className="chat--username">
         {'You are '}
+        <ColorPicker color={this.props.myColor} onUpdateColor={this.handleUpdateColor}></ColorPicker>
         <EditableSpan
           ref={this.usernameInput}
           className="chat--username--input"

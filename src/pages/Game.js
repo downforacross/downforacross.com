@@ -13,7 +13,7 @@ import GameComponent from '../components/Game';
 import MobilePanel from '../components/common/MobilePanel';
 import Chat from '../components/Chat';
 import Powerups from '../components/common/Powerups';
-import {isMobile} from '../lib/jsUtils';
+import {isMobile, rand_color} from '../lib/jsUtils';
 
 import * as powerupLib from '../lib/powerups';
 
@@ -221,6 +221,10 @@ export default class Game extends Component {
     this.gameModel.updateDisplayName(id, displayName);
   };
 
+  handleUpdateColor = (id, color) => {
+    this.gameModel.updateColor(id, color);
+  };
+
   updateSeenChatMessage = (message) => {
     if (message.timestamp > this.state.lastReadChat) {
       this.setState({lastReadChat: message.timestamp});
@@ -284,7 +288,8 @@ export default class Game extends Component {
     }
 
     const {mobile} = this.state;
-    const {id, color} = this.user;
+    const {id} = this.user;
+    const color = this.game.users[id]?.color || rand_color();
     const ownPowerups = _.get(this.state.powerups, this.state.team);
     const opponentPowerups = _.get(this.state.powerups, 1 - this.state.team);
     return (
@@ -320,7 +325,8 @@ export default class Game extends Component {
       return;
     }
 
-    const {id, color} = this.user;
+    const {id} = this.user;
+    const color = this.game.users[id]?.color || rand_color();
     const {mobile} = this.state;
     return (
       <Chat
@@ -334,6 +340,7 @@ export default class Game extends Component {
         myColor={color}
         onChat={this.handleChat}
         onUpdateDisplayName={this.handleUpdateDisplayName}
+        onUpdateColor={this.handleUpdateColor}
         onUnfocus={this.handleUnfocusChat}
         onToggleChat={this.handleToggleChat}
         mobile={mobile}

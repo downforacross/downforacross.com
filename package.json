@@ -35,6 +35,7 @@
     "puzjs": "^1.0.2",
     "querystringify": "^2.2.0",
     "react": "^16.12",
+    "react-color": "^2.19.3",
     "react-confetti": "^5.0.1",
     "react-dom": "^16.12",
     "react-dropzone": "^4.0.0",
