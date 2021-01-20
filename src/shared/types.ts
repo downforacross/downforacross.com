@@ -6,6 +6,10 @@ export interface InfoJson {
   description: string;
 }
 
+export interface CluesJson {
+  across: string[];
+  down: string[];
+}
 /**
  * PuzzleJson: the json format of puzzles stored in the db (both firebase & postgres)
  * Fields are a bit messy & don't correspond perfectly with puzjs formats... see logic in FileUploader.js
@@ -16,10 +20,7 @@ export interface PuzzleJson {
   info: InfoJson;
   circles: string[];
   shades: string[];
-  clues: {
-    across: string[];
-    down: string[];
-  };
+  clues: CluesJson;
   private?: boolean;
 }
 
