@@ -208,6 +208,17 @@ export default class Game extends Component {
     return lastMessage > this.state.lastReadChat;
   }
 
+  get userColorKey() {
+    return `user_color_${window.location.href}`;
+  }
+
+  get userColor() {
+    let color =
+      this.game.users[this.props.id]?.color || localStorage.getItem(this.userColorKey) || rand_color();
+    localStorage.setItem(this.userColorKey, color);
+    return color;
+  }
+
   handleToggleChat = () => {
     const toggledMode = this.state.mode === 'game' ? 'chat' : 'game';
     this.setState({mode: toggledMode});
@@ -223,6 +234,7 @@ export default class Game extends Component {
 
   handleUpdateColor = (id, color) => {
     this.gameModel.updateColor(id, color);
+    localStorage.setItem(this.userColorKey, color);
   };
 
   updateSeenChatMessage = (message) => {
@@ -289,7 +301,7 @@ export default class Game extends Component {
 
     const {mobile} = this.state;
     const {id} = this.user;
-    const color = this.game.users[id]?.color || rand_color();
+    const color = this.userColor;
     const ownPowerups = _.get(this.state.powerups, this.state.team);
     const opponentPowerups = _.get(this.state.powerups, 1 - this.state.team);
     return (
@@ -326,7 +338,7 @@ export default class Game extends Component {
     }
 
     const {id} = this.user;
-    const color = this.game.users[id]?.color || rand_color();
+    const color = this.userColor;
     const {mobile} = this.state;
     return (
       <Chat
