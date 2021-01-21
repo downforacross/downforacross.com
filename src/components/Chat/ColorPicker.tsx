@@ -1,14 +1,22 @@
 import React, {useState} from 'react';
 import {CirclePicker} from 'react-color';
+import {makeStyles} from '@material-ui/core';
 interface ColorPickerProps {
   color: string;
   onUpdateColor: (color: string) => void;
 }
+const useStyles = makeStyles<any, ColorPickerProps>({
+  clickableDot: {
+    color: (props) => props.color,
+    cursor: 'pointer',
+  },
+});
 const ColorPicker: React.FC<ColorPickerProps> = (props) => {
+  const classes = useStyles(props);
   const [isActive, setActive] = useState(false);
   return (
     <>
-      <span className="dot" onClick={() => setActive(!isActive)} style={{color: props.color}}>
+      <span onClick={() => setActive(!isActive)} className={classes.clickableDot}>
         {' '}
         {'\u25CF '}
       </span>
