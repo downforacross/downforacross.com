@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {useToggle} from 'react-use';
 import {CirclePicker} from 'react-color';
 import {makeStyles} from '@material-ui/core';
 interface ColorPickerProps {
@@ -13,10 +14,10 @@ const useStyles = makeStyles<any, ColorPickerProps>({
 });
 const ColorPicker: React.FC<ColorPickerProps> = (props) => {
   const classes = useStyles(props);
-  const [isActive, setActive] = useState(false);
+  const [isActive, toggleIsActive] = useToggle(false);
   return (
     <>
-      <span onClick={() => setActive(!isActive)} className={classes.clickableDot}>
+      <span onClick={toggleIsActive} className={classes.clickableDot}>
         {' '}
         {'\u25CF '}
       </span>
@@ -31,7 +32,7 @@ const ColorPicker: React.FC<ColorPickerProps> = (props) => {
               if (colorHSL !== props.color) {
                 props.onUpdateColor(colorHSL);
               }
-              setActive(false);
+              toggleIsActive(false);
             }}
           ></CirclePicker>
           <br />
