@@ -10,7 +10,7 @@ import MobileKeyboard from '../Player/MobileKeyboard';
 import Flex from 'react-flexview';
 import {Link} from 'react-router-dom';
 import {MdClose} from 'react-icons/md';
-import ColorPicker from './ColorPicker';
+import ColorPicker from './ColorPicker.tsx';
 
 const isEmojis = (str) => {
   const res = str.match(/[A-Za-z,.0-9!-]/g);
