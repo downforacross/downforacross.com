@@ -13,7 +13,7 @@ import GameComponent from '../components/Game';
 import MobilePanel from '../components/common/MobilePanel';
 import Chat from '../components/Chat';
 import Powerups from '../components/common/Powerups';
-import {isMobile} from '../lib/jsUtils';
+import {isMobile, rand_color} from '../lib/jsUtils';
 
 import * as powerupLib from '../lib/powerups';
 
@@ -208,6 +208,17 @@ export default class Game extends Component {
     return lastMessage > this.state.lastReadChat;
   }
 
+  get userColorKey() {
+    return `user_color`;
+  }
+
+  get userColor() {
+    let color =
+      this.game.users[this.props.id]?.color || localStorage.getItem(this.userColorKey) || rand_color();
+    localStorage.setItem(this.userColorKey, color);
+    return color;
+  }
+
   handleToggleChat = () => {
     const toggledMode = this.state.mode === 'game' ? 'chat' : 'game';
     this.setState({mode: toggledMode});
@@ -219,6 +230,11 @@ export default class Game extends Component {
 
   handleUpdateDisplayName = (id, displayName) => {
     this.gameModel.updateDisplayName(id, displayName);
+  };
+
+  handleUpdateColor = (id, color) => {
+    this.gameModel.updateColor(id, color);
+    localStorage.setItem(this.userColorKey, color);
   };
 
   updateSeenChatMessage = (message) => {
@@ -284,7 +300,8 @@ export default class Game extends Component {
     }
 
     const {mobile} = this.state;
-    const {id, color} = this.user;
+    const {id} = this.user;
+    const color = this.userColor;
     const ownPowerups = _.get(this.state.powerups, this.state.team);
     const opponentPowerups = _.get(this.state.powerups, 1 - this.state.team);
     return (
@@ -320,7 +337,8 @@ export default class Game extends Component {
       return;
     }
 
-    const {id, color} = this.user;
+    const {id} = this.user;
+    const color = this.userColor;
     const {mobile} = this.state;
     return (
       <Chat
@@ -334,6 +352,7 @@ export default class Game extends Component {
         myColor={color}
         onChat={this.handleChat}
         onUpdateDisplayName={this.handleUpdateDisplayName}
+        onUpdateColor={this.handleUpdateColor}
         onUnfocus={this.handleUnfocusChat}
         onToggleChat={this.handleToggleChat}
         mobile={mobile}
