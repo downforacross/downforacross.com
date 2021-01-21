@@ -209,7 +209,7 @@ export default class Game extends Component {
   }
 
   get userColorKey() {
-    return `user_color_${window.location.href}`;
+    return `user_color`;
   }
 
   get userColor() {
