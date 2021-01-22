@@ -13,7 +13,7 @@ export interface EntryProps {
   pid: string;
   status: string;
   stats: {
-    numSolves: number;
+    numSolves?: number;
     solves?: Array<any>;
   };
 }
@@ -55,7 +55,7 @@ export default class Entry extends Component<EntryProps> {
   render() {
     const {title, author, pid, status, stats} = this.props;
     const numSolvesOld = _.size(stats?.solves || []);
-    const numSolves = numSolvesOld + stats.numSolves;
+    const numSolves = numSolvesOld + (stats?.numSolves || 0);
     const displayName = _.compact([author.trim(), this.size]).join(' | ');
     return (
       <Link to={`/beta/play/${pid}`} style={{textDecoration: 'none', color: 'initial'}}>

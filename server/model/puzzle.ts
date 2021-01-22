@@ -3,6 +3,7 @@ import Joi from 'joi';
 import uuid from 'uuid';
 import {pool} from './pool';
 import {PuzzleJson} from '@shared/types';
+import {ListPuzzleRequestFilters} from '../../src/shared/types';
 
 // ================ Read and Write methods used to interface with postgres ========== //
 
@@ -22,7 +23,7 @@ export async function getPuzzle(pid: string): Promise<PuzzleJson> {
 }
 
 export async function listPuzzles(
-  filter: {},
+  filter: ListPuzzleRequestFilters,
   limit: number,
   offset: number
 ): Promise<
@@ -37,11 +38,18 @@ export async function listPuzzles(
       SELECT pid, uploaded_at, content
       FROM puzzles
       WHERE is_public = true
+      AND (content->'info'->>'type') = ANY($1)
+      AND ((content -> 'info' ->> 'title') || (content->'info'->>'author')) ILIKE ALL($2)
       ORDER BY pid DESC 
-      LIMIT $1
-      OFFSET $2
+      LIMIT $3
+      OFFSET $4
     `,
-    [limit, offset]
+    [
+      mapSizeFilterForDB(filter.sizeFilter),
+      filter.nameOrTitleFilter.split(/\s/).map((s) => '%' + s + '%'),
+      limit,
+      offset,
+    ]
   );
   const puzzles = rows.map(
     (row: {pid: string; uploaded_at: string; is_public: boolean; content: PuzzleJson}) => {
@@ -55,6 +63,17 @@ export async function listPuzzles(
   console.log('returning', puzzles);
   return puzzles;
 }
+
+const mapSizeFilterForDB = (sizeFilter: ListPuzzleRequestFilters['sizeFilter']): string[] => {
+  let ret = [];
+  if (sizeFilter.Mini) {
+    ret.push('Mini Puzzle');
+  }
+  if (sizeFilter.Standard) {
+    ret.push('Daily Puzzle');
+  }
+  return ret;
+};
 
 const string = () => Joi.string().allow(''); // https://github.com/sideway/joi/blob/master/API.md#string
 

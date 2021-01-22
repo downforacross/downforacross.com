@@ -38,6 +38,20 @@ export interface AddPuzzleResponse {
   pid: string;
 }
 
+export interface ListPuzzleRequest {
+  filter: ListPuzzleRequestFilters;
+  page: number;
+  pageSize: number;
+}
+
+export interface ListPuzzleRequestFilters {
+  sizeFilter: {
+    Mini: boolean;
+    Standard: boolean;
+  };
+  nameOrTitleFilter: string;
+}
+
 export interface ListPuzzleResponse {
   puzzles: {
     pid: string;

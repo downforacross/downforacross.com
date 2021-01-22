@@ -134,7 +134,11 @@ export default class PuzzleList extends PureComponent {
 
   render() {
     if (localStorage.newPuzzleListEnabled) {
-      return <NewPuzzleList />;
+      const filter = {
+        nameOrTitleFilter: this.props.search,
+        sizeFilter: this.props.sizeFilter,
+      };
+      return <NewPuzzleList filter={filter} statusFilter={this.props.statusFilter} />;
     }
 
     const lastUpdateTime = this.lastUpdateTime;

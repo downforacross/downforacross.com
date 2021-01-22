@@ -1,11 +1,19 @@
 import {PuzzleJson, PuzzleStatsJson} from '../../shared/types';
 import _ from 'lodash';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useMount} from 'react-use';
 import {fetchPuzzleList} from '../../api/puzzle_list';
 import './css/puzzleList.css';
 import Entry, {EntryProps} from './Entry';
-interface NewPuzzleListProps {}
+import {ListPuzzleRequestFilters} from '../../shared/types';
+interface NewPuzzleListProps {
+  filter: ListPuzzleRequestFilters;
+  statusFilter: {
+    Complete: boolean;
+    'In progress': boolean;
+    New: boolean;
+  };
+}
 
 const NewPuzzleList: React.FC<NewPuzzleListProps> = (props) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -20,21 +28,45 @@ const NewPuzzleList: React.FC<NewPuzzleListProps> = (props) => {
       stats: PuzzleStatsJson;
     }[]
   >([]);
-  const fetchMore = async () => {
+  const fullyScrolled = (): boolean => {
+    if (!containerRef.current) return false;
+    const {scrollTop, scrollHeight, clientHeight} = containerRef.current;
+    const buffer = 600; // 600 pixels of buffer, i guess?
+    return scrollTop + clientHeight + buffer > scrollHeight;
+  };
+
+  const fetchMore = async (
+    currentPuzzles: {
+      pid: string;
+      content: PuzzleJson;
+      stats: PuzzleStatsJson;
+    }[],
+    currentPage: number
+  ) => {
     if (loading) return;
     setLoading(true);
-    const nextPage = await fetchPuzzleList({page, pageSize});
-    setPuzzles([...puzzles, ...nextPage.puzzles]);
-    setPage(page + 1);
+    const nextPage = await fetchPuzzleList({page: currentPage, pageSize, filter: props.filter});
+    setPuzzles([...currentPuzzles, ...nextPage.puzzles]);
+    setPage(currentPage + 1);
     setLoading(false);
     setFullyLoaded(_.size(nextPage.puzzles) < pageSize);
   };
+  useEffect(() => {
+    // it is debatable if we want to blank out the current puzzles here or not,
+    // for now we only change the puzzles when the reload happens.
+    fetchMore([], 0);
+  }, [JSON.stringify(props.filter)]);
 
-  useMount(fetchMore);
-  const handleTouchEnd = () => {};
-  const handleScroll = () => {
+  const handleScroll = async () => {
     if (fullyLoaded) return;
-    // TODO fetch more if last puzzles are visible
+    if (fullyScrolled()) {
+      await fetchMore(puzzles, page);
+    }
+  };
+  const handleTouchEnd = async () => {
+    console.log('touchend');
+    if (containerRef.current) return;
+    await handleScroll();
   };
 
   const puzzleData: {
@@ -52,6 +84,7 @@ const NewPuzzleList: React.FC<NewPuzzleListProps> = (props) => {
     },
   }));
   console.log('Render new puzzle list', puzzles);
+  // TODO we need to filter the puzzles by the status filter as well
   return (
     <div
       ref={containerRef}
