@@ -2,6 +2,7 @@ import firebase from 'firebase/app';
 import 'firebase/database';
 import 'firebase/auth';
 
+console.log('react app env', process.env.REACT_APP_ENV);
 let offline = true;
 offline = false;
 const CONFIGS = {
