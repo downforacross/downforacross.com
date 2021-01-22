@@ -56,14 +56,16 @@ export async function listPuzzles(
   return puzzles;
 }
 
+const string = () => Joi.string().allow(''); // https://github.com/sideway/joi/blob/master/API.md#string
+
 const puzzleValidator = Joi.object({
-  grid: Joi.array().items(Joi.array().items(Joi.string())),
+  grid: Joi.array().items(Joi.array().items(string())),
   info: Joi.object({
-    type: Joi.string().optional(),
-    title: Joi.string(),
-    author: Joi.string(),
-    copyright: Joi.string().optional(),
-    description: Joi.string().optional(),
+    type: string().optional(),
+    title: string(),
+    author: string(),
+    copyright: string().optional(),
+    description: string().optional(),
   }),
   circles: Joi.array().optional(),
   shades: Joi.array().optional(),
