@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import _ from 'lodash';
-import Entry from './Entry';
+import Entry from './Entry.tsx';
 import './css/puzzleList.css';
 import NewPuzzleList from './NewPuzzleList';
 

@@ -4,22 +4,8 @@ import React, {useRef, useState} from 'react';
 import {useMount} from 'react-use';
 import {fetchPuzzleList} from '../../api/puzzle_list';
 import './css/puzzleList.css';
-import Entry from './Entry';
+import Entry, {EntryProps} from './Entry';
 interface NewPuzzleListProps {}
-
-// TODO move to Entry.tsx
-interface EntryProps {
-  info: {
-    type: string;
-  };
-  title: string;
-  author: string;
-  pid: string;
-  status: string;
-  stats: {
-    numSolves: number;
-  };
-}
 
 const NewPuzzleList: React.FC<NewPuzzleListProps> = (props) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -45,7 +31,6 @@ const NewPuzzleList: React.FC<NewPuzzleListProps> = (props) => {
   };
 
   useMount(fetchMore);
-  const handlePlay = () => {};
   const handleTouchEnd = () => {};
   const handleScroll = () => {
     if (fullyLoaded) return;
@@ -81,7 +66,7 @@ const NewPuzzleList: React.FC<NewPuzzleListProps> = (props) => {
     >
       {puzzleData.map(({entryProps}, i) => (
         <div className="entry--container" key={i}>
-          <Entry {...entryProps} onPlay={handlePlay} />
+          <Entry {...entryProps} />
         </div>
       ))}
     </div>

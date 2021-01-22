@@ -4,15 +4,29 @@ import Flex from 'react-flexview';
 import {MdRadioButtonUnchecked, MdCheckCircle} from 'react-icons/md';
 import {Link} from 'react-router-dom';
 
-export default class Entry extends Component {
-  constructor() {
-    super();
+export interface EntryProps {
+  info: {
+    type: string;
+  };
+  title: string;
+  author: string;
+  pid: string;
+  status: string;
+  stats: {
+    numSolves: number;
+    solves?: Array<any>;
+  };
+}
+
+export default class Entry extends Component<EntryProps> {
+  constructor(props: EntryProps) {
+    super(props);
     this.state = {
       expanded: false,
     };
   }
 
-  handleClick = (e) => {
+  handleClick = (_e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     /*
     this.setState({
       expanded: !this.state.expanded,
@@ -21,15 +35,14 @@ export default class Entry extends Component {
     */
   };
 
-  handleMouseLeave = (e) => {
+  handleMouseLeave = (_e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     this.setState({
       expanded: false,
     });
   };
 
   get size() {
-    const {info = {}} = this.props;
-    const {type} = info;
+    const {type} = this.props.info;
     if (type === 'Daily Puzzle') {
       return 'Standard';
     } else if (type === 'Mini Puzzle') {
@@ -40,9 +53,9 @@ export default class Entry extends Component {
   }
 
   render() {
-    const {title, author, pid, status, stats = {}} = this.props;
-    const numSolvesOld = _.size(stats.solves);
-    const numSolves = numSolvesOld + (stats.numSolves || 0);
+    const {title, author, pid, status, stats} = this.props;
+    const numSolvesOld = _.size(stats?.solves || []);
+    const numSolves = numSolvesOld + stats.numSolves;
     const displayName = _.compact([author.trim(), this.size]).join(' | ');
     return (
       <Link to={`/beta/play/${pid}`} style={{textDecoration: 'none', color: 'initial'}}>
