@@ -33,23 +33,33 @@ export async function listPuzzles(
   }[]
 > {
   const startTime = Date.now();
+  const parametersForTitleAuthorFilter = filter.nameOrTitleFilter.split(/\s/).map((s) => '%' + s + '%');
+  const parameterOffset = 4;
+  // see https://github.com/brianc/node-postgres/wiki/FAQ#11-how-do-i-build-a-where-foo-in--query-to-find-rows-matching-an-array-of-values
+  // for why this is okay.
+  // we create the query this way as POSTGRES optimizer does not use the index for an ILIKE ALL cause, but will for multiple ands
+  // note this is not vulnerable to SQL injection because this string is just dynamically constructing params of the form $#
+  // which we fully control.
+  const parameterizedTileAuthorFilter = parametersForTitleAuthorFilter
+    .map(function (_s, idx) {
+      return (
+        "AND ((content -> 'info' ->> 'title') || ' ' || (content->'info'->>'author')) ILIKE $" +
+        (idx + parameterOffset)
+      );
+    })
+    .join('\n');
   const {rows} = await pool.query(
     `
       SELECT pid, uploaded_at, content
       FROM puzzles
       WHERE is_public = true
       AND (content->'info'->>'type') = ANY($1)
-      AND ((content -> 'info' ->> 'title') || (content->'info'->>'author')) ILIKE ALL($2)
+      ${parameterizedTileAuthorFilter}
       ORDER BY pid DESC 
-      LIMIT $3
-      OFFSET $4
+      LIMIT $2
+      OFFSET $3
     `,
-    [
-      mapSizeFilterForDB(filter.sizeFilter),
-      filter.nameOrTitleFilter.split(/\s/).map((s) => '%' + s + '%'),
-      limit,
-      offset,
-    ]
+    [mapSizeFilterForDB(filter.sizeFilter), limit, offset, ...parametersForTitleAuthorFilter]
   );
   const puzzles = rows.map(
     (row: {pid: string; uploaded_at: string; is_public: boolean; content: PuzzleJson}) => {
