@@ -11,7 +11,7 @@ export interface EntryProps {
   title: string;
   author: string;
   pid: string;
-  status: string;
+  status: 'started' | 'solved' | undefined;
   stats: {
     numSolves?: number;
     solves?: Array<any>;

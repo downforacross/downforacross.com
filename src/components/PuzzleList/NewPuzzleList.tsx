@@ -6,6 +6,9 @@ import {fetchPuzzleList} from '../../api/puzzle_list';
 import './css/puzzleList.css';
 import Entry, {EntryProps} from './Entry';
 import {ListPuzzleRequestFilters} from '../../shared/types';
+interface PuzzleStatuses {
+  [pid: string]: 'solved' | 'started';
+}
 interface NewPuzzleListProps {
   filter: ListPuzzleRequestFilters;
   statusFilter: {
@@ -13,6 +16,7 @@ interface NewPuzzleListProps {
     'In progress': boolean;
     New: boolean;
   };
+  puzzleStatuses: PuzzleStatuses;
 }
 
 const NewPuzzleList: React.FC<NewPuzzleListProps> = (props) => {
@@ -71,18 +75,27 @@ const NewPuzzleList: React.FC<NewPuzzleListProps> = (props) => {
 
   const puzzleData: {
     entryProps: EntryProps;
-  }[] = puzzles.map((puzzle) => ({
-    entryProps: {
-      info: {
-        type: puzzle.content.info.type!, // XXX not the best form
+  }[] = puzzles
+    .map((puzzle) => ({
+      entryProps: {
+        info: {
+          type: puzzle.content.info.type!, // XXX not the best form
+        },
+        title: puzzle.content.info.title,
+        author: puzzle.content.info.author,
+        pid: puzzle.pid,
+        stats: puzzle.stats,
+        status: props.puzzleStatuses[puzzle.pid],
       },
-      title: puzzle.content.info.title,
-      author: puzzle.content.info.author,
-      pid: puzzle.pid,
-      stats: puzzle.stats,
-      status: 'unstarted',
-    },
-  }));
+    }))
+    .filter((data) => {
+      const mappedStatus = {
+        undefined: 'New' as const,
+        solved: 'Complete' as const,
+        started: 'In progress' as const,
+      }[data.entryProps.status];
+      return props.statusFilter[mappedStatus];
+    });
   console.log('Render new puzzle list', puzzles);
   // TODO we need to filter the puzzles by the status filter as well
   return (

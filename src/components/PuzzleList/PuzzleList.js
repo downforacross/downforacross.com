@@ -138,7 +138,13 @@ export default class PuzzleList extends PureComponent {
         nameOrTitleFilter: this.props.search,
         sizeFilter: this.props.sizeFilter,
       };
-      return <NewPuzzleList filter={filter} statusFilter={this.props.statusFilter} />;
+      return (
+        <NewPuzzleList
+          filter={filter}
+          statusFilter={this.props.statusFilter}
+          puzzleStatuses={this.puzzleStatuses}
+        />
+      );
     }
 
     const lastUpdateTime = this.lastUpdateTime;
