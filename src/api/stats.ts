@@ -34,7 +34,6 @@ export interface AllStats {
 
 export async function fetchStats() {
   const resp = await fetch(`${SERVER_URL}/api/stats`);
-  const json = await resp.json();
-  const allStats: AllStats = json;
+  const allStats: AllStats = await resp.json();
   return allStats;
 }

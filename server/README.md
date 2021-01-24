@@ -15,9 +15,11 @@
 - Prod: TBD, probably downforacross.com/ws??, probably a separate process
 - Dev: localhost:3020 (using [CRA proxy](https://create-react-app.dev/docs/proxying-api-requests-in-development/))
 - Responsibilities
+
   - MVP: Handle pub/sub for game events
-  
+
 ## client config
+
 - Production build has `SERVER_URL = "https://api.foracross.com"`
   - This is `yarn build`, used by vercel for both production and preview deployments
 - Development build (e.g. `yarn start`) has `SERVER_URL = "https://api-staging.foracross.com"`.
@@ -26,6 +28,7 @@
   - This is `yarn devfrontend`
 
 ### Database
+
 All game events are stored in postgres
 Postgres schemas:
 
@@ -62,7 +65,13 @@ psql -c 'create database dfac'
 
 (`createdb` if this fails)
 
-2. Create the game_events table
+2. Create the tables
+
+```
+./create_fresh_dbs.sh
+```
+
+Or if you want to do it manually, run the sql in sql/ like
 
 ```
 psql dfac < create_game_events.sql
@@ -81,7 +90,7 @@ This will run a backend server on `localhost:3021`
 
 This will run a frontend server on localhost:3020, that talks to your server on `localhost:3021`.
 
-Note that you can also run 
+Note that you can also run
 
 #### Test manually
 
