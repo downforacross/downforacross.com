@@ -134,6 +134,6 @@ export async function recordSolve(pid: string, gid: string, timeToSolve: number)
     `
       INSERT INTO puzzle_solves (pid, gid, solved_time, time_taken_to_solve)
       VALUES ($1, $2, to_timestamp($3), $4)`,
-    [pid, gid, solved_time, timeToSolve]
+    [pid, gid, solved_time / 1000.0, timeToSolve]
   );
 }

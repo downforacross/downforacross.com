@@ -16,6 +16,7 @@ import Powerups from '../components/common/Powerups';
 import {isMobile, rand_color} from '../lib/jsUtils';
 
 import * as powerupLib from '../lib/powerups';
+import {recordSolve} from '../api/puzzle.ts';
 
 export default class Game extends Component {
   constructor(props) {
@@ -275,11 +276,13 @@ export default class Game extends Component {
     }
     if (this.game.solved) {
       if (this.gameModel.puzzleModel) {
-        await this.gameModel.puzzleModel.logSolve(this.state.gid, {
+        this.gameModel.puzzleModel.logSolve(this.state.gid, {
           solved: true,
           totalTime: this.game.clock.totalTime,
         });
       }
+      // double log to postgres
+      await recordSolve(this.pid, this.state.gid, this.game.clock.totalTime);
       this.user.markSolved(this.state.gid);
       if (this.battleModel) {
         this.battleModel.setSolved(this.state.team);
