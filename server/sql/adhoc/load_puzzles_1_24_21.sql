@@ -9,7 +9,9 @@
 -- ***invocation***
 -- cat load_puzzles_1_24_21.sql data/puzzles.csv | psql
 
-COPY PUBLIC.PUZZLES(uid, pid, is_public, uploaded_at, content)
+DROP TABLE IF EXISTS PUBLIC.PUZZLE_DUMP;
+CREATE TABLE PUBLIC.PUZZLE_DUMP AS SELECT * FROM PUBLIC.PUZZLES LIMIT 0; 
+COPY PUBLIC.PUZZLE_DUMP(uid, pid, is_public, uploaded_at, content)
 FROM STDIN
 DELIMITER ','
 CSV HEADER;
