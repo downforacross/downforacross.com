@@ -30,7 +30,7 @@ export const UserPingRoomEvent = (): RoomEvent<RoomEventType.USER_PING> => ({
   },
 });
 
-export const isUserPingEvent = (event: RoomEvent): event is RoomEvent<RoomEventType.USER_PING> => {
+export const isUserPingRoomEvent = (event: RoomEvent): event is RoomEvent<RoomEventType.USER_PING> => {
   return event.type === RoomEventType.USER_PING;
 };
 

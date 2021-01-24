@@ -1,6 +1,6 @@
 import {
   isSetGameEvent,
-  isUserPingEvent,
+  isUserPingRoomEvent,
   RoomEvent,
   RoomEventParams,
   RoomEventType,
@@ -54,7 +54,7 @@ export const initialRoomState: RoomState = {
 };
 export const roomReducer = (room: RoomState, event: RoomEvent, options = {}): RoomState => {
   try {
-    if (isUserPingEvent(event)) {
+    if (isUserPingRoomEvent(event)) {
       return userPingReducer(room, event.params, event.timestamp);
     } else if (isSetGameEvent(event)) {
       return setGameReducer(room, event.params, event.timestamp);
