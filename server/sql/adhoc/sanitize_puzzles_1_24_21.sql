@@ -1,4 +1,4 @@
--- invocation: copy/paste this into psql:
+-- invocation: psql < sanitize_puzzles_1_24_21.sql
 UPDATE PUBLIC.PUZZLES
 SET content = regexp_replace(content::text, '\\u0000', '', 'g')::json;
 
