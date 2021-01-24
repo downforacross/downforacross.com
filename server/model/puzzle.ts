@@ -127,3 +127,13 @@ export async function addPuzzle(puzzle: PuzzleJson, isPublic = false, pid?: stri
   );
   return pid;
 }
+
+export async function recordSolve(pid: string, gid: string, timeToSolve: number) {
+  const solved_time = Date.now();
+  await pool.query(
+    `
+      INSERT INTO puzzle_solves (pid, gid, solved_time, time_taken_to_solve)
+      VALUES ($1, $2, to_timestamp($3), $4)`,
+    [pid, gid, solved_time, timeToSolve]
+  );
+}

@@ -2,6 +2,7 @@ import EventEmitter from 'events';
 import _ from 'lodash';
 import {db, getTime} from './firebase';
 import {makeGrid} from '../lib/gameUtils';
+import {recordSolve} from '../../server/model/puzzle';
 
 // a wrapper class that models Puzzle
 
@@ -23,17 +24,19 @@ export default class Puzzle extends EventEmitter {
     this.ref.off('value');
   }
 
-  logSolve(gid, stats) {
+  async logSolve(gid, stats) {
     const statsPath = `/stats/${this.pid}`;
     const statsRef = db.ref(statsPath);
     const puzzlelistPath = `/puzzlelist/${this.pid}`;
     const puzzlelistRef = db.ref(puzzlelistPath);
-    statsRef.child('solves').child(gid).set(stats);
+    await statsRef.child('solves').child(gid).set(stats);
     statsRef.once('value').then((snapshot) => {
       const stats = snapshot.val();
       const numSolves = _.keys(stats.solves).length;
       puzzlelistRef.child('stats/numSolves').set(numSolves);
     });
+    // double write to postgres
+    await recordSolve(this.pid, gid, stats.totalTime);
   }
 
   toGame() {

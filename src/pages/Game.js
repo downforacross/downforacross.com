@@ -261,13 +261,13 @@ export default class Game extends Component {
     }
   );
 
-  handleChange = _.debounce(({isEdit = false} = {}) => {
+  handleChange = _.debounce(async ({isEdit = false} = {}) => {
     if (!this.gameModel || !this.historyWrapper.ready) {
       return;
     }
 
     if (isEdit) {
-      this.user.joinGame(this.state.gid, {
+      await this.user.joinGame(this.state.gid, {
         pid: this.game.pid,
         solved: false,
         v2: true,
@@ -275,7 +275,7 @@ export default class Game extends Component {
     }
     if (this.game.solved) {
       if (this.gameModel.puzzleModel) {
-        this.gameModel.puzzleModel.logSolve(this.state.gid, {
+        await this.gameModel.puzzleModel.logSolve(this.state.gid, {
           solved: true,
           totalTime: this.game.clock.totalTime,
         });
