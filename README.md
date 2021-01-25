@@ -30,7 +30,9 @@ If you notice a bug or have a feature request, feel free to open an issue.
 ### Contributing
 
 Down for a Cross is open to contributions from developers of any level or experience.
-See https://github.com/downforacross/downforacross.com/blob/master/Contributing.md to get started!
+See the `Getting Started` section for instructions on setting up.
+
+Join the [discord](https://discord.gg/KjPHFw8) for discussion.
 
 ### Tips
 
