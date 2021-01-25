@@ -12,6 +12,7 @@ IF NOT EXISTS puzzles
   pid text PRIMARY KEY,
   is_public boolean,
   uploaded_at timestamp without time zone,
+  number_solves numeric DEFAULT 0 CHECK (number_solves >= 0),
 
   -- static properties of the puzzle
   content jsonb

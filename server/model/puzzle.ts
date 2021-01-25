@@ -130,10 +130,29 @@ export async function addPuzzle(puzzle: PuzzleJson, isPublic = false, pid?: stri
 
 export async function recordSolve(pid: string, gid: string, timeToSolve: number) {
   const solved_time = Date.now();
-  await pool.query(
-    `
+  const client = await pool.connect();
+  // we use a transaction here as it lets us only update if we are able to insert a solve (in case we double log a solve).
+  try {
+    await client.query('BEGIN');
+    await client.query(
+      `
       INSERT INTO puzzle_solves (pid, gid, solved_time, time_taken_to_solve)
-      VALUES ($1, $2, to_timestamp($3), $4)`,
-    [pid, gid, solved_time / 1000.0, timeToSolve]
-  );
+      VALUES ($1, $2, to_timestamp($3), $4)
+    `,
+      [pid, gid, solved_time / 1000.0, timeToSolve]
+    );
+    await client.query(
+      `
+      UPDATE puzzles SET number_solves = number_solves + 1
+      WHERE pid = $1
+    `,
+      [pid]
+    );
+    await client.query('COMMIT');
+  } catch (e) {
+    await client.query('ROLLBACK');
+    throw e;
+  } finally {
+    client.release();
+  }
 }
