@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {useToggle} from 'react-use';
 import {CirclePicker} from 'react-color';
 import {makeStyles} from '@material-ui/core';

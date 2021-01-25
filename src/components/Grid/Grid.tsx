@@ -8,6 +8,7 @@ import {hashGridRow} from './hashGridRow';
 import Cell from './Cell';
 import {
   GridData,
+  GridDataWithColor,
   CellCoords,
   CellIndex,
   Cursor,
@@ -21,7 +22,7 @@ import {
 interface GridProps {
   // Grid data
   solution: string[][];
-  grid: GridData;
+  grid: GridDataWithColor;
   opponentGrid: GridData;
 
   // Cursor state
@@ -155,7 +156,6 @@ export default class Grid extends React.PureComponent<GridProps> {
   render() {
     const {size, cellStyle} = this.props;
     const sizeClass = this.getSizeClass(size);
-    const key = `${size}-`;
 
     const data = this.props.grid.map((row, r) =>
       row.map((cell, c) => ({

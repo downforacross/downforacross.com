@@ -1,5 +1,3 @@
-import _ from 'lodash';
-import qs from 'querystringify';
 const REMOTE_SERVER =
   process.env.NODE_ENV === 'development' ? 'api-staging.foracross.com' : 'api.foracross.com';
 const REMOTE_SERVER_URL = `${window.location.protocol}//${REMOTE_SERVER}`;

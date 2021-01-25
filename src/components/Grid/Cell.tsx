@@ -33,6 +33,7 @@ interface Props {
   pickupType: keyof typeof powerups;
 
   // Styles
+  attributionColor: string;
   cellStyle: CellStyles;
   myColor: string;
 
@@ -159,7 +160,7 @@ export default class Cell extends React.Component<Props> {
   }
 
   getStyle() {
-    const {cellStyle, selected, highlighted, frozen} = this.props;
+    const {attributionColor, cellStyle, selected, highlighted, frozen} = this.props;
     if (selected) {
       return cellStyle.selected;
     }
@@ -169,7 +170,7 @@ export default class Cell extends React.Component<Props> {
       }
       return cellStyle.highlighted;
     }
-    return {};
+    return {backgroundColor: attributionColor};
   }
 
   handleClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
