@@ -12,6 +12,8 @@ CREATE TABLE
     constraint only_one_solve_per_puzzle_and_game UNIQUE(pid,gid)
 );
 
+-- GRANT ALL ON TABLE public.puzzle_solves TO dfac_staging;
+-- GRANT ALL ON TABLE public.puzzle_solves TO dfac_production;
 ALTER TABLE public.puzzle_solves
     OWNER to dfacadmin;
 
