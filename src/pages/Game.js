@@ -282,7 +282,7 @@ export default class Game extends Component {
         });
       }
       // double log to postgres
-      await recordSolve(this.pid, this.state.gid, this.game.clock.totalTime);
+      await recordSolve(this.game.pid, this.state.gid, this.game.clock.totalTime);
       this.user.markSolved(this.state.gid);
       if (this.battleModel) {
         this.battleModel.setSolved(this.state.team);
