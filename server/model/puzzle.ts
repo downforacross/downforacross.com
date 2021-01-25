@@ -62,16 +62,18 @@ export async function listPuzzles(
     `,
     [mapSizeFilterForDB(filter.sizeFilter), limit, offset, ...parametersForTitleAuthorFilter]
   );
+  console.log(rows[0]);
   const puzzles = rows.map(
     (row: {
       pid: string;
       uploaded_at: string;
       is_public: boolean;
       content: PuzzleJson;
-      times_solved: number;
+      times_solved: string; // i don't know why it's a string but it is
     }) => {
       return {
         ...row,
+        times_solved: Number(row.times_solved),
       };
     }
   );
