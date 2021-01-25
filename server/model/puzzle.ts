@@ -159,12 +159,13 @@ export async function recordSolve(pid: string, gid: string, timeToSolve: number)
 }
 export async function _recordSolve(pid: string, gid: string, timeToSolve: number) {
   const solved_time = Date.now();
-  const client = await pool.connect();
 
   // Clients may log a solve multiple times; skip logging after the first one goes through
   if (await isGidAlreadySolved(gid)) {
     return;
   }
+  const client = await pool.connect();
+
   // The frontend clients are designed in a way that concurrent double logs are fairly common
   // we use a transaction here as it lets us only update if we are able to insert a solve (in case we double log a solve).
 
