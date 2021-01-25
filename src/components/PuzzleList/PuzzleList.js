@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import _ from 'lodash';
-import Entry from './Entry';
+import Entry from './Entry.tsx';
 import './css/puzzleList.css';
 import NewPuzzleList from './NewPuzzleList';
 
@@ -134,7 +134,17 @@ export default class PuzzleList extends PureComponent {
 
   render() {
     if (localStorage.newPuzzleListEnabled) {
-      return <NewPuzzleList />;
+      const filter = {
+        nameOrTitleFilter: this.props.search,
+        sizeFilter: this.props.sizeFilter,
+      };
+      return (
+        <NewPuzzleList
+          filter={filter}
+          statusFilter={this.props.statusFilter}
+          puzzleStatuses={this.puzzleStatuses}
+        />
+      );
     }
 
     const lastUpdateTime = this.lastUpdateTime;

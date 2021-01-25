@@ -10,7 +10,7 @@ IF NOT EXISTS puzzles
   uploaded_at timestamp without time zone,
 
   -- static properties of the puzzle
-  content json
+  content jsonb
 );
 
 ALTER TABLE public.puzzles

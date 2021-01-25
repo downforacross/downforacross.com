@@ -1,24 +1,22 @@
 import {PuzzleJson, PuzzleStatsJson} from '../../shared/types';
 import _ from 'lodash';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useMount} from 'react-use';
 import {fetchPuzzleList} from '../../api/puzzle_list';
 import './css/puzzleList.css';
-import Entry from './Entry';
-interface NewPuzzleListProps {}
-
-// TODO move to Entry.tsx
-interface EntryProps {
-  info: {
-    type: string;
+import Entry, {EntryProps} from './Entry';
+import {ListPuzzleRequestFilters} from '../../shared/types';
+interface PuzzleStatuses {
+  [pid: string]: 'solved' | 'started';
+}
+interface NewPuzzleListProps {
+  filter: ListPuzzleRequestFilters;
+  statusFilter: {
+    Complete: boolean;
+    'In progress': boolean;
+    New: boolean;
   };
-  title: string;
-  author: string;
-  pid: string;
-  status: string;
-  stats: {
-    numSolves: number;
-  };
+  puzzleStatuses: PuzzleStatuses;
 }
 
 const NewPuzzleList: React.FC<NewPuzzleListProps> = (props) => {
@@ -34,38 +32,70 @@ const NewPuzzleList: React.FC<NewPuzzleListProps> = (props) => {
       stats: PuzzleStatsJson;
     }[]
   >([]);
-  const fetchMore = async () => {
+  const fullyScrolled = (): boolean => {
+    if (!containerRef.current) return false;
+    const {scrollTop, scrollHeight, clientHeight} = containerRef.current;
+    const buffer = 600; // 600 pixels of buffer, i guess?
+    return scrollTop + clientHeight + buffer > scrollHeight;
+  };
+
+  const fetchMore = async (
+    currentPuzzles: {
+      pid: string;
+      content: PuzzleJson;
+      stats: PuzzleStatsJson;
+    }[],
+    currentPage: number
+  ) => {
     if (loading) return;
     setLoading(true);
-    const nextPage = await fetchPuzzleList({page, pageSize});
-    setPuzzles([...puzzles, ...nextPage.puzzles]);
-    setPage(page + 1);
+    const nextPage = await fetchPuzzleList({page: currentPage, pageSize, filter: props.filter});
+    setPuzzles([...currentPuzzles, ...nextPage.puzzles]);
+    setPage(currentPage + 1);
     setLoading(false);
     setFullyLoaded(_.size(nextPage.puzzles) < pageSize);
   };
+  useEffect(() => {
+    // it is debatable if we want to blank out the current puzzles here or not,
+    // for now we only change the puzzles when the reload happens.
+    fetchMore([], 0);
+  }, [JSON.stringify(props.filter)]);
 
-  useMount(fetchMore);
-  const handlePlay = () => {};
-  const handleTouchEnd = () => {};
-  const handleScroll = () => {
+  const handleScroll = async () => {
     if (fullyLoaded) return;
-    // TODO fetch more if last puzzles are visible
+    if (fullyScrolled()) {
+      await fetchMore(puzzles, page);
+    }
+  };
+  const handleTouchEnd = async () => {
+    console.log('touchend');
+    if (containerRef.current) return;
+    await handleScroll();
   };
 
   const puzzleData: {
     entryProps: EntryProps;
-  }[] = puzzles.map((puzzle) => ({
-    entryProps: {
-      info: {
-        type: puzzle.content.info.type!, // XXX not the best form
+  }[] = puzzles
+    .map((puzzle) => ({
+      entryProps: {
+        info: {
+          type: puzzle.content.info.type!, // XXX not the best form
+        },
+        title: puzzle.content.info.title,
+        author: puzzle.content.info.author,
+        pid: puzzle.pid,
+        stats: puzzle.stats,
+        status: props.puzzleStatuses[puzzle.pid],
       },
-      title: puzzle.content.info.title,
-      author: puzzle.content.info.author,
-      pid: puzzle.pid,
-      stats: puzzle.stats,
-      status: 'unstarted',
-    },
-  }));
+    }))
+    .filter((data) => {
+      const mappedStatus = {
+        undefined: 'New' as const,
+        solved: 'Complete' as const,
+        started: 'In progress' as const,
+      }[data.entryProps.status];
+      return props.statusFilter[mappedStatus];
+    });
   console.log('Render new puzzle list', puzzles);
   return (
     <div
@@ -81,7 +111,7 @@ const NewPuzzleList: React.FC<NewPuzzleListProps> = (props) => {
     >
       {puzzleData.map(({entryProps}, i) => (
         <div className="entry--container" key={i}>
-          <Entry {...entryProps} onPlay={handlePlay} />
+          <Entry {...entryProps} />
         </div>
       ))}
     </div>
