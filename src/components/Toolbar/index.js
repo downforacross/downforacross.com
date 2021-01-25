@@ -103,15 +103,19 @@ export default class Toolbar extends Component {
     );
   }
 
-  renderKeybindMenu() {
-    const {vimMode, vimInsert} = this.props;
+  renderModeMenu() {
+    const {colorAttributionMode, onToggleColorAttributionMode, vimMode, vimInsert} = this.props;
     return (
       <ActionMenu
-        label={vimMode ? `Vim${vimInsert ? ' (Insert)' : ''}` : 'Normal'}
+        label={
+          (vimMode ? `Vim${vimInsert ? ' (Insert)' : ''}` : 'Normal') +
+          (colorAttributionMode ? ' (Color)' : '')
+        }
         onBlur={this.handleBlur}
         actions={{
           Normal: this.keybind.bind(this, 'normal'),
           Vim: this.keybind.bind(this, 'vim'),
+          'Color Attribution': onToggleColorAttributionMode,
         }}
       />
     );
@@ -290,7 +294,7 @@ export default class Toolbar extends Component {
         {solved ? null : this.renderCheckMenu()}
         {solved ? null : this.renderRevealMenu()}
         <div className="toolbar--menu reset">{this.renderResetMenu()}</div>
-        {this.renderKeybindMenu()}
+        {this.renderModeMenu()}
         {this.renderPencil()}
         {this.renderAutocheck()}
         {this.renderInfo()}

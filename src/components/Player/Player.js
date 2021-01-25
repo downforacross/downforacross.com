@@ -13,6 +13,7 @@ import GridControls from './GridControls';
 import MobileGridControls from './MobileGridControls';
 import ConnectionStats from './ConnectionStats';
 
+import {lightenHsl} from '../../lib/colors';
 import * as gameUtils from '../../lib/gameUtils';
 
 const CURSOR_TIMEOUT = 60000;
@@ -263,7 +264,6 @@ export default class Player extends Component {
     );
   };
 
-  /* Render */
   render() {
     const {
       mobile,
@@ -287,6 +287,7 @@ export default class Player extends Component {
       pickups,
       clueBarStyle = {},
       gridStyle = {},
+      colorAttributionMode,
     } = this.props;
     const size = this.size;
     const {cellStyle = {}} = gridStyle;
@@ -310,9 +311,16 @@ export default class Player extends Component {
     const {direction} = this.state;
     const selected = this.selected;
 
+    const gridWithColors = grid.map((row) =>
+      row.map((cell) => ({
+        ...cell,
+        attributionColor: cell.value && colorAttributionMode ? lightenHsl(users[cell.user_id]?.color) : '',
+      }))
+    );
+
     const gridProps = {
       size,
-      grid,
+      grid: gridWithColors,
       circles,
       selected,
       references: this.getReferences(),

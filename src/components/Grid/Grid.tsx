@@ -8,6 +8,7 @@ import {hashGridRow} from './hashGridRow';
 import Cell from './Cell';
 import {
   GridData,
+  GridDataWithColor,
   CellCoords,
   CellIndex,
   Cursor,
@@ -21,7 +22,7 @@ import {
 interface GridProps {
   // Grid data
   solution: string[][];
-  grid: GridData;
+  grid: GridDataWithColor;
   opponentGrid: GridData;
 
   // Cursor state
