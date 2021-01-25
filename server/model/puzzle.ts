@@ -135,11 +135,35 @@ export async function addPuzzle(puzzle: PuzzleJson, isPublic = false, pid?: stri
   return pid;
 }
 
+async function isGidAlreadySolved(gid: string) {
+  // Note: This gate makes use of the assumption "one pid per gid";
+  // The unique index on (pid, gid) is more strict than this
+  const {
+    rows: [{count}],
+  } = await pool.query(
+    `
+    SELECT COUNT(*)
+    FROM puzzle_solves
+    WHERE gid=$1
+  `,
+    [gid]
+  );
+  return count > 0;
+}
+
 export async function recordSolve(pid: string, gid: string, timeToSolve: number) {
   const solved_time = Date.now();
   const client = await pool.connect();
+
+  // Clients may log a solve multiple times; skip logging after the first one goes through
+  if (await isGidAlreadySolved(gid)) {
+    return;
+  }
   // we use a transaction here as it lets us only update if we are able to insert a solve (in case we double log a solve).
+
   try {
+    // NOTE: This transaction is expected to fail if multiple clients log the same solve concurrently
+    // This kind of failure is safe & results in the correct db state due to the rollback mechanism
     await client.query('BEGIN');
     await client.query(
       `
