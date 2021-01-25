@@ -29,6 +29,44 @@ module.exports = {
     },
   },
   rules: {
-    'import/extensions': 'off', // disabled as none of the current code follows this pattern.
+    // disabled as we likely do not want it
+    'no-return-await': 'off',
+    // disabled as none of the current code follows this pattern.
+    'import/extensions': 'off',
+    'react/jsx-filename-extension': 'off',
+    'react/button-has-type': 'off',
+    'react/sort-comp': 'off',
+
+    // Used too much in existing code to fix, but new code can follow it
+    'react/destructuring-assignment': 'warn',
+    'class-methods-use-this': 'warn',
+    'jsx-a11y/click-events-have-key-events': 'warn',
+    'jsx-a11y/no-static-element-interactions': 'warn',
+    'jsx-a11y/label-has-associated-control': 'warn',
+    'jsx-a11y/no-noninteractive-element-interactions': 'warn',
+    'jsx-a11y/mouse-events-have-key-events': 'warn',
+    '@typescript-eslint/no-shadow': 'warn',
+    'import/prefer-default-export': 'warn',
+    'consistent-return': 'warn',
+    'no-param-reassign': ['warn', {props: false}],
+    'react/jsx-no-bind': 'warn',
+    'no-nested-ternary': 'warn',
+    'jsx-a11y/no-noninteractive-tabindex': 'warn',
+    'jsx-a11y/tabindex-no-positive': 'warn',
+    'react/jsx-props-no-spreading': 'warn',
+    'react/no-array-index-key': 'warn',
+    'no-restricted-syntax': 'warn',
+
+    // Configs for rules to match the codebase
+    'react/prop-types': ['error', {skipUndeclared: true}],
+    'no-underscore-dangle': ['warn', {allowAfterThis: true}],
+    '@typescript-eslint/naming-convention': [
+      'error',
+      {selector: 'default', format: null, trailingUnderscore: 'allow'},
+    ],
+    'no-plusplus': ['error', {allowForLoopAfterthoughts: true}],
+    'prefer-destructuring': ['error', {array: false}],
+    '@typescript-eslint/no-unused-expressions': ['error', {allowShortCircuit: true}],
+    'prefer-const': ['error', {destructuring: 'all'}],
   },
 };
