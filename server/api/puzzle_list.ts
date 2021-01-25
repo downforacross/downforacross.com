@@ -2,7 +2,6 @@ import {ListPuzzleResponse} from '@shared/types';
 import express from 'express';
 import _ from 'lodash';
 import {listPuzzles} from '../model/puzzle';
-import {getPuzzleStats} from '../model/stats';
 import {ListPuzzleRequestFilters} from '../../src/shared/types';
 
 const router = express.Router();
