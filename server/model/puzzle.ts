@@ -30,6 +30,7 @@ export async function listPuzzles(
   {
     pid: string;
     content: PuzzleJson;
+    times_solved: number;
   }[]
 > {
   const startTime = Date.now();
@@ -50,7 +51,7 @@ export async function listPuzzles(
     .join('\n');
   const {rows} = await pool.query(
     `
-      SELECT pid, uploaded_at, content
+      SELECT pid, uploaded_at, content, times_solved
       FROM puzzles
       WHERE is_public = true
       AND (content->'info'->>'type') = ANY($1)
@@ -62,7 +63,13 @@ export async function listPuzzles(
     [mapSizeFilterForDB(filter.sizeFilter), limit, offset, ...parametersForTitleAuthorFilter]
   );
   const puzzles = rows.map(
-    (row: {pid: string; uploaded_at: string; is_public: boolean; content: PuzzleJson}) => {
+    (row: {
+      pid: string;
+      uploaded_at: string;
+      is_public: boolean;
+      content: PuzzleJson;
+      times_solved: number;
+    }) => {
       return {
         ...row,
       };
@@ -143,7 +150,7 @@ export async function recordSolve(pid: string, gid: string, timeToSolve: number)
     );
     await client.query(
       `
-      UPDATE puzzles SET number_solves = number_solves + 1
+      UPDATE puzzles SET times_solved = times_solved + 1
       WHERE pid = $1
     `,
       [pid]

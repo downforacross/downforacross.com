@@ -23,11 +23,10 @@ router.get<{}, ListPuzzleResponse>('/', async (req, res, next) => {
     next(_.assign(new Error('page and pageSize should be integers'), {statusCode: 400}));
   }
   const rawPuzzleList = await listPuzzles(filters, pageSize, page * pageSize);
-  const puzzleStats = await getPuzzleStats(rawPuzzleList.map((p) => p.pid));
-  const puzzles = _.zipWith(rawPuzzleList, puzzleStats, (puzzle, stats) => ({
+  const puzzles = rawPuzzleList.map((puzzle) => ({
     pid: puzzle.pid,
     content: puzzle.content,
-    stats,
+    stats: {numSolves: puzzle.times_solved},
   }));
   res.json({
     puzzles,
