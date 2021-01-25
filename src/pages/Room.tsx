@@ -1,4 +1,5 @@
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
+import {useUpdateEffect} from 'react-use';
 import _ from 'lodash';
 import {Helmet} from 'react-helmet';
 import {RouteComponentProps} from 'react-router';
@@ -92,7 +93,7 @@ const useTimer = (interval = 1000): number => {
     return () => {
       clearInterval(itvl);
     };
-  }, []);
+  }, [interval]);
   return time;
 };
 
@@ -114,13 +115,13 @@ const Room: React.FC<RouteComponentProps<{rid: string}>> = (props) => {
       emitAsync(socket, 'room_event', {rid, event});
     }
   }
-  useEffect(() => {
+  useUpdateEffect(() => {
     setEvents([]);
     const {syncPromise, unsubscribe} = subscribeToRoomEvents(socket, rid, setEvents);
     syncPromise.then(sendUserPing);
     return unsubscribe;
   }, [rid, socket]);
-  useEffect(() => {
+  useUpdateEffect(() => {
     const renewActivity = _.throttle(sendUserPing, 1000 * 10);
     window.addEventListener('mousemove', renewActivity);
     window.addEventListener('keydown', renewActivity);
@@ -143,7 +144,7 @@ const Room: React.FC<RouteComponentProps<{rid: string}>> = (props) => {
     <div className={classes.container}>
       <Helmet title={`Room ${rid}`} />
       <div className={classes.content}>
-        {currentGame && <iframe src={`/game/${currentGame.gid}`} />}
+        {currentGame && <iframe title="game" src={`/game/${currentGame.gid}`} />}
         {!currentGame && (
           <div className={classes.noGameMessage}>
             <div>No game selected!</div>

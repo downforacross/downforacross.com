@@ -18,7 +18,6 @@ const ConnectionStats: React.FC<{}> = () => {
   }, []);
 
   if (connectionStatus) {
-    console.log(connectionStatus);
     return (
       <div>
         <div>

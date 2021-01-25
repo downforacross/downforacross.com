@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
+import {useUpdateEffect} from 'react-use';
 import {Helmet} from 'react-helmet';
 import {UserPingRoomEvent} from '../../shared/roomEvents';
 import {useSocket} from '../../sockets/useSocket';
@@ -71,7 +72,7 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
 
   // these lines could be `const events = useGameEvents()`
   const [events, setEvents] = useState<GameEvent[]>([]);
-  useEffect(() => {
+  useUpdateEffect(() => {
     setEvents([]);
     const {syncPromise, unsubscribe} = subscribeToGameEvents(socket, gid, setEvents);
     syncPromise.then(sendUserPing);
