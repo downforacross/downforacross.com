@@ -4,9 +4,9 @@ import {recordSolve} from '../model/puzzle';
 
 const router = express.Router();
 
-router.post<{}, RecordSolveResponse, RecordSolveRequest>('/', async (req, res) => {
+router.post<{pid: string}, RecordSolveResponse, RecordSolveRequest>('/:pid', async (req, res) => {
   const recordSolveRequest = req.body;
-  await recordSolve(recordSolveRequest.pid, recordSolveRequest.gid, recordSolveRequest.time_to_solve);
+  await recordSolve(req.params.pid, recordSolveRequest.gid, recordSolveRequest.time_to_solve);
   res.json({});
 });
 

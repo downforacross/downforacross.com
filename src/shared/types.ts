@@ -68,7 +68,6 @@ export interface CreateGameRequest {
 }
 
 export interface RecordSolveRequest {
-  pid: string;
   gid: string;
   time_to_solve: number;
 }

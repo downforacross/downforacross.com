@@ -27,9 +27,8 @@ export async function recordSolve(
   gid: string,
   time_to_solve: number
 ): Promise<RecordSolveResponse> {
-  const url = `${SERVER_URL}/api/record_solve`;
+  const url = `${SERVER_URL}/api/record_solve/${pid}`;
   const data: RecordSolveRequest = {
-    pid,
     gid,
     time_to_solve,
   };
