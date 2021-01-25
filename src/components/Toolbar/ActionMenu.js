@@ -1,5 +1,6 @@
 import './css/ActionMenu.css';
 import React, {Component} from 'react';
+import {findDOMNode} from 'react-dom';
 
 /*
  * Summary of ActionMenu component
@@ -24,6 +25,8 @@ import React, {Component} from 'react';
  * */
 
 export default class ActionMenu extends Component {
+  containerRef = React.createRef();
+
   constructor() {
     super();
     this.state = {
@@ -31,8 +34,22 @@ export default class ActionMenu extends Component {
     };
   }
 
+  handlePointerDown = (e) => {
+    const refNode = findDOMNode(this.containerRef.current);
+    if (refNode?.contains(e.target)) {
+      return;
+    }
+    this.setState({active: false});
+  };
+
   onClick() {
-    this.setState({active: !this.state.active});
+    this.setState({active: !this.state.active}, () => {
+      if (this.state.active) {
+        window.addEventListener('pointerdown', this.handlePointerDown);
+      } else {
+        window.removeEventListener('pointerdown', this.handlePointerDown);
+      }
+    });
   }
 
   onBlur() {
@@ -42,7 +59,11 @@ export default class ActionMenu extends Component {
 
   render() {
     return (
-      <div className={`${this.state.active ? 'active ' : ''}action-menu`} onBlur={this.onBlur.bind(this)}>
+      <div
+        ref={this.containerRef}
+        className={`${this.state.active ? 'active ' : ''}action-menu`}
+        onBlur={this.onBlur.bind(this)}
+      >
         <button
           tabIndex={-1}
           className="action-menu--button"
