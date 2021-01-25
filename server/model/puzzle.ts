@@ -155,9 +155,6 @@ async function isGidAlreadySolved(gid: string) {
 }
 
 export async function recordSolve(pid: string, gid: string, timeToSolve: number) {
-  return; // STUB to resolve bug causing server to crash: https://github.com/downforacross/downforacross.com/issues/158
-}
-export async function _recordSolve(pid: string, gid: string, timeToSolve: number) {
   const solved_time = Date.now();
 
   // Clients may log a solve multiple times; skip logging after the first one goes through
