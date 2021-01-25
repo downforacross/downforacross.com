@@ -69,7 +69,9 @@ export async function listPuzzles(
       uploaded_at: string;
       is_public: boolean;
       content: PuzzleJson;
-      times_solved: string; // i don't know why it's a string but it is
+      times_solved: string;
+      // NOTE: numeric returns as string in pg-promise
+      // See https://stackoverflow.com/questions/39168501/pg-promise-returns-integers-as-strings
     }) => {
       return {
         ...row,
