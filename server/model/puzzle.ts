@@ -162,11 +162,10 @@ export async function recordSolve(pid: string, gid: string, timeToSolve: number)
   if (await isGidAlreadySolved(gid)) {
     return;
   }
+  // The frontend clients are designed in a way that concurrent double logs are fairly common
   // we use a transaction here as it lets us only update if we are able to insert a solve (in case we double log a solve).
 
   try {
-    // NOTE: This transaction is expected to fail if multiple clients log the same solve concurrently
-    // This kind of failure is safe & results in the correct db state due to the rollback mechanism
     await client.query('BEGIN');
     await client.query(
       `
