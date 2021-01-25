@@ -5,7 +5,6 @@ import {
   RoomEventParams,
   RoomEventType,
 } from '../../shared/roomEvents';
-import _ from 'lodash';
 
 interface RoomState {
   users: {

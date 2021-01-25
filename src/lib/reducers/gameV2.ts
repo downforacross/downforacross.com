@@ -5,7 +5,6 @@ import {
   isInitializeGameEvent,
   isUserPingGameEvent,
 } from '../../shared/gameEvents';
-import _ from 'lodash';
 import {CluesJson, InfoJson} from '../../shared/types';
 import {GridData} from '../../components/Grid/types';
 

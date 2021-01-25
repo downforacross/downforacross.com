@@ -21,6 +21,7 @@ export default class Game extends Component {
       screenWidth: 0,
       vimMode: false,
       vimInsert: false,
+      colorAttributionMode: false,
     };
   }
 
@@ -268,6 +269,7 @@ export default class Game extends Component {
         vimInsert={this.state.vimInsert}
         onVimInsert={this.handleVimInsert}
         onVimNormal={this.handleVimNormal}
+        colorAttributionMode={this.state.colorAttributionMode}
         mobile={mobile}
         pickups={this.props.pickups}
         optimisticCounter={optimisticCounter}
@@ -303,6 +305,10 @@ export default class Game extends Component {
         onTogglePencil={this.handleTogglePencil}
         onToggleAutocheck={this.handleToggleAutocheck}
         onToggleChat={this.handleToggleChat}
+        colorAttributionMode={this.state.colorAttributionMode}
+        onToggleColorAttributionMode={() => {
+          this.setState({colorAttributionMode: !this.state.colorAttributionMode});
+        }}
         onRefocus={this.handleRefocus}
         unreads={this.props.unreads}
       />

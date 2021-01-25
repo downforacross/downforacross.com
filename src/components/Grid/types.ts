@@ -32,6 +32,7 @@ export interface CellData {
   pencil?: boolean;
 }
 export type GridData = CellData[][];
+export type GridDataWithColor = (CellData & {attributionColor: string})[][];
 
 export interface CellCoords {
   r: number;
