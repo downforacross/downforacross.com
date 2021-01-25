@@ -16,6 +16,7 @@ import Powerups from '../components/common/Powerups';
 import {isMobile, rand_color} from '../lib/jsUtils';
 
 import * as powerupLib from '../lib/powerups';
+import {recordSolve} from '../api/puzzle.ts';
 
 export default class Game extends Component {
   constructor(props) {
@@ -261,13 +262,13 @@ export default class Game extends Component {
     }
   );
 
-  handleChange = _.debounce(({isEdit = false} = {}) => {
+  handleChange = _.debounce(async ({isEdit = false} = {}) => {
     if (!this.gameModel || !this.historyWrapper.ready) {
       return;
     }
 
     if (isEdit) {
-      this.user.joinGame(this.state.gid, {
+      await this.user.joinGame(this.state.gid, {
         pid: this.game.pid,
         solved: false,
         v2: true,
@@ -280,6 +281,8 @@ export default class Game extends Component {
           totalTime: this.game.clock.totalTime,
         });
       }
+      // double log to postgres
+      await recordSolve(this.game.pid, this.state.gid, this.game.clock.totalTime);
       this.user.markSolved(this.state.gid);
       if (this.battleModel) {
         this.battleModel.setSolved(this.state.team);

@@ -2,7 +2,6 @@ import {ListPuzzleResponse} from '@shared/types';
 import express from 'express';
 import _ from 'lodash';
 import {listPuzzles} from '../model/puzzle';
-import {getPuzzleStats} from '../model/stats';
 import {ListPuzzleRequestFilters} from '../../src/shared/types';
 
 const router = express.Router();
@@ -23,11 +22,10 @@ router.get<{}, ListPuzzleResponse>('/', async (req, res, next) => {
     next(_.assign(new Error('page and pageSize should be integers'), {statusCode: 400}));
   }
   const rawPuzzleList = await listPuzzles(filters, pageSize, page * pageSize);
-  const puzzleStats = await getPuzzleStats(rawPuzzleList.map((p) => p.pid));
-  const puzzles = _.zipWith(rawPuzzleList, puzzleStats, (puzzle, stats) => ({
+  const puzzles = rawPuzzleList.map((puzzle) => ({
     pid: puzzle.pid,
     content: puzzle.content,
-    stats,
+    stats: {numSolves: puzzle.times_solved},
   }));
   res.json({
     puzzles,

@@ -30,6 +30,7 @@ export async function listPuzzles(
   {
     pid: string;
     content: PuzzleJson;
+    times_solved: number;
   }[]
 > {
   const startTime = Date.now();
@@ -50,7 +51,7 @@ export async function listPuzzles(
     .join('\n');
   const {rows} = await pool.query(
     `
-      SELECT pid, uploaded_at, content
+      SELECT pid, uploaded_at, content, times_solved
       FROM puzzles
       WHERE is_public = true
       AND (content->'info'->>'type') = ANY($1)
@@ -62,9 +63,18 @@ export async function listPuzzles(
     [mapSizeFilterForDB(filter.sizeFilter), limit, offset, ...parametersForTitleAuthorFilter]
   );
   const puzzles = rows.map(
-    (row: {pid: string; uploaded_at: string; is_public: boolean; content: PuzzleJson}) => {
+    (row: {
+      pid: string;
+      uploaded_at: string;
+      is_public: boolean;
+      content: PuzzleJson;
+      times_solved: string;
+      // NOTE: numeric returns as string in pg-promise
+      // See https://stackoverflow.com/questions/39168501/pg-promise-returns-integers-as-strings
+    }) => {
       return {
         ...row,
+        times_solved: Number(row.times_solved),
       };
     }
   );
@@ -126,4 +136,56 @@ export async function addPuzzle(puzzle: PuzzleJson, isPublic = false, pid?: stri
     [pid, uploaded_at / 1000, isPublic, puzzle]
   );
   return pid;
+}
+
+async function isGidAlreadySolved(gid: string) {
+  // Note: This gate makes use of the assumption "one pid per gid";
+  // The unique index on (pid, gid) is more strict than this
+  const {
+    rows: [{count}],
+  } = await pool.query(
+    `
+    SELECT COUNT(*)
+    FROM puzzle_solves
+    WHERE gid=$1
+  `,
+    [gid]
+  );
+  return count > 0;
+}
+
+export async function recordSolve(pid: string, gid: string, timeToSolve: number) {
+  const solved_time = Date.now();
+  const client = await pool.connect();
+
+  // Clients may log a solve multiple times; skip logging after the first one goes through
+  if (await isGidAlreadySolved(gid)) {
+    return;
+  }
+  // The frontend clients are designed in a way that concurrent double logs are fairly common
+  // we use a transaction here as it lets us only update if we are able to insert a solve (in case we double log a solve).
+
+  try {
+    await client.query('BEGIN');
+    await client.query(
+      `
+      INSERT INTO puzzle_solves (pid, gid, solved_time, time_taken_to_solve)
+      VALUES ($1, $2, to_timestamp($3), $4)
+    `,
+      [pid, gid, solved_time / 1000.0, timeToSolve]
+    );
+    await client.query(
+      `
+      UPDATE puzzles SET times_solved = times_solved + 1
+      WHERE pid = $1
+    `,
+      [pid]
+    );
+    await client.query('COMMIT');
+  } catch (e) {
+    await client.query('ROLLBACK');
+    throw e;
+  } finally {
+    client.release();
+  }
 }
