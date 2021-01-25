@@ -62,7 +62,6 @@ export async function listPuzzles(
     `,
     [mapSizeFilterForDB(filter.sizeFilter), limit, offset, ...parametersForTitleAuthorFilter]
   );
-  console.log(rows[0]);
   const puzzles = rows.map(
     (row: {
       pid: string;
