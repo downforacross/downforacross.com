@@ -164,6 +164,7 @@ const reducers = {
             value,
             bad: false,
             pencil,
+            user_id: value ? params.id : '',
           },
         }),
       });
