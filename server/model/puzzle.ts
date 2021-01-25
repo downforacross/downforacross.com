@@ -185,7 +185,6 @@ export async function recordSolve(pid: string, gid: string, timeToSolve: number)
     await client.query('COMMIT');
   } catch (e) {
     await client.query('ROLLBACK');
-    throw e;
   } finally {
     client.release();
   }
