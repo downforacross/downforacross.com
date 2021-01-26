@@ -2,8 +2,8 @@ import 'react-flexview/lib/flexView.css';
 
 import React, {Component} from 'react';
 import Flex from 'react-flexview';
-import Confetti from './Confetti.js';
 import _ from 'lodash';
+import Confetti from './Confetti.js';
 
 import * as powerups from '../../lib/powerups';
 import Player from '../Player';
@@ -73,13 +73,14 @@ export default class Game extends Component {
   scope(s) {
     if (s === 'square') {
       return this.player.getSelectedSquares();
-    } else if (s === 'word') {
-      return this.player.getSelectedAndHighlightedSquares();
-    } else if (s === 'puzzle') {
-      return this.player.getAllSquares();
-    } else {
-      return [];
     }
+    if (s === 'word') {
+      return this.player.getSelectedAndHighlightedSquares();
+    }
+    if (s === 'puzzle') {
+      return this.player.getAllSquares();
+    }
+    return [];
   }
 
   handleUpdateGrid = (r, c, value) => {
@@ -160,15 +161,15 @@ export default class Game extends Component {
   };
 
   handleTogglePencil = () => {
-    this.setState({
-      pencilMode: !this.state.pencilMode,
-    });
+    this.setState((prevState) => ({
+      pencilMode: !prevState.pencilMode,
+    }));
   };
 
   handleToggleAutocheck = () => {
-    this.setState({
-      autocheckMode: !this.state.autocheckMode,
-    });
+    this.setState((prevState) => ({
+      autocheckMode: !prevState.autocheckMode,
+    }));
   };
 
   handleToggleChat = () => {
@@ -234,10 +235,10 @@ export default class Game extends Component {
         },
       },
     };
-    let cols = grid[0].length;
-    let rows = grid.length;
+    const cols = grid[0].length;
+    const rows = grid.length;
     const width = Math.min((35 * 15 * cols) / rows, screenWidth);
-    let size = width / cols;
+    const size = width / cols;
     return (
       <Player
         ref={(c) => {
@@ -286,7 +287,7 @@ export default class Game extends Component {
     const {lastUpdated: startTime, totalTime: pausedTime, paused: isPaused} = clock;
     return (
       <Toolbar
-        v2={true}
+        v2
         mobile={mobile}
         startTime={startTime}
         pausedTime={pausedTime}
@@ -307,7 +308,7 @@ export default class Game extends Component {
         onToggleChat={this.handleToggleChat}
         colorAttributionMode={this.state.colorAttributionMode}
         onToggleColorAttributionMode={() => {
-          this.setState({colorAttributionMode: !this.state.colorAttributionMode});
+          this.setState((prevState) => ({colorAttributionMode: !prevState.colorAttributionMode}));
         }}
         onRefocus={this.handleRefocus}
         unreads={this.props.unreads}

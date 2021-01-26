@@ -1,9 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/database';
-import 'firebase/auth';
 
-let offline = true;
-offline = false;
+const offline = false;
 const CONFIGS = {
   production: {
     apiKey: 'AIzaSyCe4BWm9kbjXFwlZcmq4x8DvLD3TDoinhA',

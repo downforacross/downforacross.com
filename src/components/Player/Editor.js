@@ -1,3 +1,4 @@
+/* eslint react/no-string-refs: "warn" */
 import './css/editor.css';
 import Flex from 'react-flexview';
 import React, {Component} from 'react';
@@ -11,12 +12,12 @@ import * as gameUtils from '../../lib/gameUtils';
 
 window.requestIdleCallback =
   window.requestIdleCallback ||
-  function(cb) {
-    var start = Date.now();
-    return setTimeout(function() {
+  function (cb) {
+    const start = Date.now();
+    return setTimeout(() => {
       cb({
         didTimeout: false,
-        timeRemaining: function() {
+        timeRemaining() {
           return Math.max(0, 50 - (Date.now() - start));
         },
       });
@@ -25,7 +26,7 @@ window.requestIdleCallback =
 
 window.cancelIdleCallback =
   window.cancelIdleCallback ||
-  function(id) {
+  function (id) {
     clearTimeout(id);
   };
 
@@ -49,7 +50,7 @@ window.cancelIdleCallback =
  *
  * Potential parents (so far):
  * - Compose
- **/
+ * */
 
 export default class Editor extends Component {
   constructor() {
@@ -78,7 +79,7 @@ export default class Editor extends Component {
 
   handleSetDirection = (direction) => {
     this.setState({
-      direction: direction,
+      direction,
     });
   };
 
@@ -90,9 +91,9 @@ export default class Editor extends Component {
   };
 
   handleChangeDirection = () => {
-    this.setState({
-      direction: gameUtils.getOppositeDirection(this.state.direction),
-    });
+    this.setState((prevState) => ({
+      direction: gameUtils.getOppositeDirection(prevState.direction),
+    }));
   };
 
   handleSelectClue = (direction, number) => {
@@ -137,9 +138,9 @@ export default class Editor extends Component {
   };
 
   handleToggleFreeze = () => {
-    this.setState({
-      frozen: !this.state.frozen,
-    });
+    this.setState((prevState) => ({
+      frozen: !prevState.frozen,
+    }));
   };
 
   /* Helper functions used when rendering */
@@ -252,7 +253,7 @@ export default class Editor extends Component {
           </div>
         </div>
 
-        <div className={'editor--main--left--grid blurable'}>
+        <div className="editor--main--left--grid blurable">
           <Grid
             ref="grid"
             size={this.props.size}
@@ -273,13 +274,13 @@ export default class Editor extends Component {
         </Flex>
         <Flex>
           <Flex className="editor--button" hAlignContent="center" onClick={this.handleAutofill}>
-            {'Autofill Grid'}
+            Autofill Grid
           </Flex>
           <Flex className="editor--button" hAlignContent="center" onClick={this.handleClearPencil}>
-            {'Clear Pencil'}
+            Clear Pencil
           </Flex>
           <Flex className="editor--button" hAlignContent="center" onClick={this.handlePublish}>
-            {'Publish'}
+            Publish
           </Flex>
         </Flex>
         <Flex>
@@ -313,13 +314,13 @@ export default class Editor extends Component {
           <Flex
             shrink={0}
             key={i}
-            className={
-              (this.isClueSelected(dir, i)
+            className={`${
+              this.isClueSelected(dir, i)
                 ? 'selected '
                 : this.isClueHalfSelected(dir, i)
-                  ? 'half-selected '
-                  : ' ') + 'editor--main--clues--list--scroll--clue'
-            }
+                ? 'half-selected '
+                : ' '
+            }editor--main--clues--list--scroll--clue`}
             ref={
               this.isClueSelected(dir, i) || this.isClueHalfSelected(dir, i)
                 ? this.scrollToClue.bind(this, dir, i)
@@ -354,7 +355,7 @@ export default class Editor extends Component {
           canSetDirection={this.canSetDirection}
           onSetDirection={this.handleSetDirection}
           onSetSelected={this.handleSetSelected}
-          onPressEnter={() => this.setState({editingClue: true}, this.focusClue.bind(this))}
+          onPressEnter={() => this.setState({}, this.focusClue.bind(this))}
           onPressEscape={() => this.props.onUnfocus()}
           onPressPeriod={this.handlePressPeriod}
           updateGrid={this.handleUpdateGrid}
@@ -365,23 +366,25 @@ export default class Editor extends Component {
             {this.renderLeft()}
             <Flex className="editor--right" column>
               <Flex className="editor--main--clues" grow={1}>
-                {// Clues component
-                ['across', 'down'].map((dir, i) => (
-                  <Flex key={i} className="editor--main--clues--list">
-                    <Flex className="editor--main--clues--list--title">{dir.toUpperCase()}</Flex>
-                    <Flex column grow={1}>
-                      <Flex
-                        column
-                        grow={1}
-                        basis={1}
-                        className={'editor--main--clues--list--scroll ' + dir}
-                        ref={'clues--list--' + dir}
-                      >
-                        {this.renderClueList(dir)}
+                {
+                  // Clues component
+                  ['across', 'down'].map((dir, i) => (
+                    <Flex key={i} className="editor--main--clues--list">
+                      <Flex className="editor--main--clues--list--title">{dir.toUpperCase()}</Flex>
+                      <Flex column grow={1}>
+                        <Flex
+                          column
+                          grow={1}
+                          basis={1}
+                          className={`editor--main--clues--list--scroll ${dir}`}
+                          ref={`clues--list--${dir}`}
+                        >
+                          {this.renderClueList(dir)}
+                        </Flex>
                       </Flex>
                     </Flex>
-                  </Flex>
-                ))}
+                  ))
+                }
               </Flex>
               <Flex className="editor--right--hints">
                 <Hints grid={this.props.grid} num={this.selectedClueNumber} direction={direction} />

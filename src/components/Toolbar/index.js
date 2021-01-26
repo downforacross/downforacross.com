@@ -2,15 +2,15 @@ import './css/index.css';
 import React, {Component} from 'react';
 import {MdChatBubble} from 'react-icons/md';
 
-import Clock from './Clock';
-import ActionMenu from './ActionMenu';
-import Popup from './Popup';
 import Flex from 'react-flexview';
 import {Link} from 'react-router-dom';
 import swal from 'sweetalert';
+import Clock from './Clock';
+import ActionMenu from './ActionMenu';
+import Popup from './Popup';
 
 export default class Toolbar extends Component {
-  handleBlur = (e) => {
+  handleBlur = () => {
     this.props.onRefocus();
   };
 
@@ -129,10 +129,10 @@ export default class Toolbar extends Component {
     const {pencilMode} = this.props;
     return (
       <div
-        className={'toolbar--pencil' + (pencilMode ? ' on' : '')}
+        className={`toolbar--pencil${pencilMode ? ' on' : ''}`}
         onClick={this.handlePencilClick}
         onMouseDown={this.handleMouseDown}
-        title={'Shortcut: .'}
+        title="Shortcut: ."
       >
         <i className="fa fa-pencil" />
       </div>
@@ -143,10 +143,10 @@ export default class Toolbar extends Component {
     const {autocheckMode} = this.props;
     return (
       <div
-        className={'toolbar--autocheck' + (autocheckMode ? ' on' : '')}
+        className={`toolbar--autocheck${autocheckMode ? ' on' : ''}`}
         onClick={this.handleAutocheckClick}
         onMouseDown={this.handleMouseDown}
-        title={'Autocheck'}
+        title="Autocheck"
       >
         <i className="fa fa-check-square" />
       </div>
@@ -155,7 +155,7 @@ export default class Toolbar extends Component {
 
   renderInfo() {
     return (
-      <div className={'toolbar--info'}>
+      <div className="toolbar--info">
         <Popup icon="fa-info-circle" onBlur={this.handleBlur}>
           <h3>How to Enter Answers</h3>
           <ul>
@@ -165,7 +165,11 @@ export default class Toolbar extends Component {
             </li>
             <li>Click the clues to move the cursor directly to the cell for that answer</li>
             <li>
-              Hold down the <code>Shift</code> key to enter multiple characters for rebus answers
+              Hold down the 
+              {' '}
+              <code>Shift</code>
+              {' '}
+              key to enter multiple characters for rebus answers
             </li>
           </ul>
           <h4>Keyboard Shortcuts</h4>
@@ -183,7 +187,9 @@ export default class Toolbar extends Component {
               </tr>
               <tr>
                 <td>
-                  <code>.</code> (period)
+                  <code>.</code>
+                  {' '}
+                  (period)
                 </td>
                 <td>Toggle pencil mode on/off</td>
               </tr>
@@ -199,19 +205,28 @@ export default class Toolbar extends Component {
               </tr>
               <tr>
                 <td>
-                  <code>[</code> and <code>]</code>
+                  <code>[</code>
+                  {' '}
+                  and
+                  <code>]</code>
                 </td>
                 <td>Move cursor perpendicular to current orientation without changing orientation</td>
               </tr>
               <tr>
                 <td>
-                  <code>Tab</code> and <code>Shift+Tab</code>
+                  <code>Tab</code>
+                  {' '}
+                  and
+                  <code>Shift+Tab</code>
                 </td>
                 <td>Move cursor to first unfilled square of next or previous unfilled clue</td>
               </tr>
               <tr>
                 <td>
-                  <code>Delete</code> or <code>Backspace</code>
+                  <code>Delete</code>
+                  {' '}
+                  or
+                  <code>Backspace</code>
                 </td>
                 <td>Clear current cell</td>
               </tr>
@@ -260,7 +275,8 @@ export default class Toolbar extends Component {
       return (
         <Flex className="toolbar--mobile" vAlignContent="center">
           <Flex className="toolbar--mobile--top" grow={1} vAlignContent="center">
-            <Link to={'/'}>DFAC</Link>{' '}
+            <Link to="/">DFAC</Link>
+            {' '}
             <Clock
               v2={this.props.v2}
               startTime={startTime}

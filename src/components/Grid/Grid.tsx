@@ -173,7 +173,7 @@ export default class Grid extends React.PureComponent<GridProps> {
         myColor: this.props.myColor,
         frozen: this.props.frozen,
         pickupType: this.getPickup(r, c),
-        cellStyle: cellStyle,
+        cellStyle,
       }))
     );
     return (

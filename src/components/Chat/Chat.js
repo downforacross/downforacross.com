@@ -1,15 +1,15 @@
 import './css/index.css';
 import React, {Component} from 'react';
+import _ from 'lodash';
+import Flex from 'react-flexview';
+import {Link} from 'react-router-dom';
+import {MdClose} from 'react-icons/md';
 import Emoji from '../common/Emoji';
 import * as emojiLib from '../../lib/emoji';
 import nameGenerator from '../../lib/nameGenerator';
 import ChatBar from './ChatBar';
 import EditableSpan from '../common/EditableSpan';
-import _ from 'lodash';
 import MobileKeyboard from '../Player/MobileKeyboard';
-import Flex from 'react-flexview';
-import {Link} from 'react-router-dom';
-import {MdClose} from 'react-icons/md';
 import ColorPicker from './ColorPicker.tsx';
 
 const isEmojis = (str) => {
@@ -113,7 +113,9 @@ export default class Chat extends Component {
     if (!this.props.mobile) return;
     return (
       <Flex className="toolbar--mobile" vAlignContent="center">
-        <Link to={'/'}>Down for a Cross</Link> {this.renderGameButton()}
+        <Link to="/">Down for a Cross</Link> 
+        {' '}
+        {this.renderGameButton()}
       </Flex>
     );
   }
@@ -134,7 +136,12 @@ export default class Chat extends Component {
           </div>
         )}
 
-        {bid && <div className="chat--header--subtitle">Battle {bid}</div>}
+        {bid && (
+          <div className="chat--header--subtitle">
+            Battle
+            {bid}
+          </div>
+        )}
       </div>
     );
   }
@@ -143,7 +150,7 @@ export default class Chat extends Component {
     return this.props.hideChatBar ? null : (
       <div className="chat--username">
         {'You are '}
-        <ColorPicker color={this.props.myColor} onUpdateColor={this.handleUpdateColor}></ColorPicker>
+        <ColorPicker color={this.props.myColor} onUpdateColor={this.handleUpdateColor} />
         <EditableSpan
           ref={this.usernameInput}
           className="chat--username--input"
@@ -165,7 +172,8 @@ export default class Chat extends Component {
     return (
       <span key={id} style={style}>
         <span className="dot">{'\u25CF'}</span>
-        {displayName}{' '}
+        {displayName}
+        {' '}
       </span>
     );
   }
@@ -223,14 +231,14 @@ export default class Chat extends Component {
         if (pattern.match(/^\d+-?\s?(a(cross)?|d(own)?)$/i)) {
           tokens.push({
             type: 'clueref',
-            data: '@' + pattern,
+            data: `@${pattern}`,
           });
           return;
         }
       }
 
       if (tokens.length && tokens[tokens.length - 1].type === 'text') {
-        tokens[tokens.length - 1].data += ' ' + word;
+        tokens[tokens.length - 1].data += ` ${word}`;
       } else {
         tokens.push({
           type: 'text',
@@ -241,7 +249,7 @@ export default class Chat extends Component {
 
     const bigEmoji = tokens.length <= 3 && _.every(tokens, (token) => token.type === 'emoji');
     return (
-      <span className={'chat--message--text'}>
+      <span className="chat--message--text">
         {tokens.map((token, i) => (
           <React.Fragment key={i}>
             {token.type === 'emoji' ? (
@@ -265,9 +273,9 @@ export default class Chat extends Component {
     const users = this.props.users;
 
     return (
-      <div className={'chat--message' + (big ? ' big' : '')}>
+      <div className={`chat--message${big ? ' big' : ''}`}>
         {this.renderMessageSender(users[id].displayName, color)}
-        {':'}
+        :
         {this.renderMessageText(message.text)}
       </div>
     );

@@ -1,12 +1,11 @@
 import './css/compose.css';
 
-import actions from '../actions';
-import redirect from '../lib/redirect';
-
 import {Helmet} from 'react-helmet';
 import _ from 'lodash';
 import React, {Component} from 'react';
 import Flex from 'react-flexview';
+import redirect from '../lib/redirect';
+import actions from '../actions';
 
 import Nav from '../components/common/Nav';
 import {getUser, CompositionModel} from '../store';
@@ -52,7 +51,12 @@ export default class Compose extends Component {
   linkToComposition(cid, {title, author}) {
     return (
       <span>
-        <a href={`/composition/${cid}/`}>{cid}</a>: {title} by {author}
+        <a href={`/composition/${cid}/`}>{cid}</a>
+        :
+        {title}
+        {' '}
+        by
+        {author}
       </span>
     );
   }
@@ -66,7 +70,9 @@ export default class Compose extends Component {
           <title>Down for Across: Compose</title>
         </Helmet>
         <Flex shrink={0} hAlignContent="center">
-          Limit: {limit}
+          Limit: 
+          {' '}
+          {limit}
           &nbsp;
           <button
             onClick={() => {

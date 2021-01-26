@@ -3,10 +3,11 @@ import './css/mobileGridControls.css';
 import React from 'react';
 import Flex from 'react-flexview';
 import {MdKeyboardArrowLeft, MdKeyboardArrowRight} from 'react-icons/md';
-import Clue from './ClueText';
-import GridControls from './GridControls';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import classnames from 'classnames';
 import _ from 'lodash';
+import Clue from './ClueText';
+import GridControls from './GridControls';
 import GridObject from '../../lib/wrappers/GridWrapper';
 import * as gameUtils from '../../lib/gameUtils';
 
@@ -168,7 +169,7 @@ export default class MobileGridControls extends GridControls {
     this.handleTouchMove(e);
   };
 
-  handleRightArrowTouchEnd = (e) => {
+  handleRightArrowTouchEnd = () => {
     if (this.props.direction === 'across') {
       this.handleAction('right');
     } else {
@@ -177,7 +178,7 @@ export default class MobileGridControls extends GridControls {
     this.keepFocus();
   };
 
-  handleLeftArrowTouchEnd = (e) => {
+  handleLeftArrowTouchEnd = () => {
     if (this.props.direction === 'across') {
       this.handleAction('left');
     } else {
@@ -251,33 +252,29 @@ export default class MobileGridControls extends GridControls {
   get mainClue() {
     if (this.previousGesture) {
       return this.state.previousClue;
-    } else {
-      return {clueNumber: this.getSelectedClueNumber(), direction: this.props.direction};
     }
+    return {clueNumber: this.getSelectedClueNumber(), direction: this.props.direction};
   }
 
   get previewClue() {
     const clueNumber = this.getSelectedClueNumber();
     if (this.previousGesture) {
       return {clueNumber, direction: this.props.direction};
-    } else {
-      const {x} = this.clueBarGesture;
-      if (x) {
-        return this.grid.getNextClue(clueNumber, this.props.direction, this.props.clues, x > 0);
-      } else {
-        const oppositeDirection = gameUtils.getOppositeDirection(this.props.direction);
-        if (this.canSetDirection(oppositeDirection)) {
-          const oppositeClueNumber = this.grid.getParent(
-            this.props.selected.r,
-            this.props.selected.c,
-            oppositeDirection
-          );
-          return {direction: oppositeDirection, clueNumber: oppositeClueNumber};
-        } else {
-          return undefined; // cannot preview this clue
-        }
-      }
     }
+    const {x} = this.clueBarGesture;
+    if (x) {
+      return this.grid.getNextClue(clueNumber, this.props.direction, this.props.clues, x > 0);
+    }
+    const oppositeDirection = gameUtils.getOppositeDirection(this.props.direction);
+    if (this.canSetDirection(oppositeDirection)) {
+      const oppositeClueNumber = this.grid.getParent(
+        this.props.selected.r,
+        this.props.selected.c,
+        oppositeDirection
+      );
+      return {direction: oppositeDirection, clueNumber: oppositeClueNumber};
+    }
+    return undefined; // cannot preview this clue
   }
 
   get clueBarGesture() {
@@ -473,6 +470,7 @@ export default class MobileGridControls extends GridControls {
 
   render() {
     return (
+      // eslint-disable-next-line react/no-string-refs
       <div ref="gridControls" className="mobile-grid-controls">
         {this.renderClueBar()}
         {this.renderGridContent()}

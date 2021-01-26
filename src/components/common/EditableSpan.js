@@ -1,7 +1,7 @@
 import './css/editableSpan.css';
 import React, {PureComponent} from 'react';
-import Caret from '../../lib/caret';
 import _ from 'lodash';
+import Caret from '../../lib/caret';
 
 export default class EditableSpan extends PureComponent {
   constructor() {
@@ -34,6 +34,7 @@ export default class EditableSpan extends PureComponent {
         this.caret.startPosition = snapshot.start;
       }
       if (snapshot.focused) this.focus();
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({caret: this.text.length});
     }
   }
@@ -92,7 +93,8 @@ export default class EditableSpan extends PureComponent {
     if (key === '{enter}') {
       this.props.onPressEnter && this.props.onPressEnter();
       return;
-    } else if (key === '{del}') {
+    }
+    if (key === '{del}') {
       this.text = this.text.substring(0, caret - 1) + this.text.substring(caret);
       newCaret = caret - 1;
     } else {
@@ -114,7 +116,7 @@ export default class EditableSpan extends PureComponent {
     }
   };
 
-  handleKeyUp = _.debounce((e) => {
+  handleKeyUp = _.debounce(() => {
     this.props.onChange(this.text);
   }, 500);
 
@@ -133,7 +135,7 @@ export default class EditableSpan extends PureComponent {
       >
         <div
           style={style}
-          className={'editable-span ' + (this.props.className || '')}
+          className={`editable-span ${this.props.className || ''}`}
           ref={this.span}
           contentEditable={this.props.mobile ? undefined : true}
           onFocus={this.handleFocus}

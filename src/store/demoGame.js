@@ -4,10 +4,6 @@ import {SERVER_TIME} from './firebase';
 // a wrapper class that models Game
 
 export default class DemoGame extends Game {
-  constructor(path) {
-    super();
-  }
-
   attach() {
     super.attach();
     const s = {

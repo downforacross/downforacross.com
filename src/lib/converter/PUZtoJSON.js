@@ -1,3 +1,4 @@
+/* eslint no-plusplus: "off", no-bitwise: "off" */
 function getExtension(bytes, code) {
   // struct byte format is 4S H H
   let i = 0;

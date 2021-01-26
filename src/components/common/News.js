@@ -7,11 +7,19 @@ const NEWS_ITEMS = [
     date: '09/01/2018',
     message: (
       <span>
-        Interested in testing out new features? Check out DFAC <a href="/beta">beta</a>! Any{' '}
+        Interested in testing out new features? Check out DFAC 
+        {' '}
+        <a href="/beta">beta</a>
+        ! Any
+        {' '}
         <a href="https://docs.google.com/forms/d/e/1FAIpQLSdVg3TyUfQkR9WggQw1YFbMeVATczq8gkwf1yXCKCn4LLKN_Q/viewform">
           feedback
-        </a>{' '}
-        helps <Emoji emoji="prickly_pear_enthusiastic" />{' '}
+        </a>
+        {' '}
+        helps 
+        {' '}
+        <Emoji emoji="prickly_pear_enthusiastic" />
+        {' '}
       </span>
     ),
     hidden: false,
@@ -25,8 +33,12 @@ const NEWS_ITEMS = [
     date: '11/27/2017',
     message: (
       <span>
-        Check out our new companion Chrome Extension, <span style={{fontWeight: 600}}>Download a Cross</span>!
-        Available on the{' '}
+        Check out our new companion Chrome Extension, 
+        {' '}
+        <span style={{fontWeight: 600}}>Download a Cross</span>
+        !
+        Available on the
+        {' '}
         <a
           target="_blank"
           rel="noopener noreferrer"

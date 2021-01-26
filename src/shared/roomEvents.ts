@@ -30,9 +30,8 @@ export const UserPingRoomEvent = (): RoomEvent<RoomEventType.USER_PING> => ({
   },
 });
 
-export const isUserPingRoomEvent = (event: RoomEvent): event is RoomEvent<RoomEventType.USER_PING> => {
-  return event.type === RoomEventType.USER_PING;
-};
+export const isUserPingRoomEvent = (event: RoomEvent): event is RoomEvent<RoomEventType.USER_PING> =>
+  event.type === RoomEventType.USER_PING;
 
 export const SetGameRoomEvent = (gid: string): RoomEvent<RoomEventType.SET_GAME> => ({
   timestamp: Date.now(),
@@ -43,6 +42,5 @@ export const SetGameRoomEvent = (gid: string): RoomEvent<RoomEventType.SET_GAME>
   },
 });
 
-export const isSetGameEvent = (event: RoomEvent): event is RoomEvent<RoomEventType.SET_GAME> => {
-  return event.type === RoomEventType.SET_GAME;
-};
+export const isSetGameEvent = (event: RoomEvent): event is RoomEvent<RoomEventType.SET_GAME> =>
+  event.type === RoomEventType.SET_GAME;

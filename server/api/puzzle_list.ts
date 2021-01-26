@@ -8,15 +8,15 @@ const router = express.Router();
 
 router.get<{}, ListPuzzleResponse>('/', async (req, res, next) => {
   console.log('got req', req.query);
-  const page = Number.parseInt(req.query.page as string);
-  const pageSize = Number.parseInt(req.query.pageSize as string);
+  const page = Number.parseInt(req.query.page as string, 10);
+  const pageSize = Number.parseInt(req.query.pageSize as string, 10);
   const rawFilters = req.query.filter as any;
   const filters: ListPuzzleRequestFilters = {
     sizeFilter: {
-      Mini: rawFilters['sizeFilter']['Mini'] === 'true',
-      Standard: rawFilters['sizeFilter']['Standard'] === 'true',
+      Mini: rawFilters.sizeFilter.Mini === 'true',
+      Standard: rawFilters.sizeFilter.Standard === 'true',
     },
-    nameOrTitleFilter: rawFilters['nameOrTitleFilter'] as string,
+    nameOrTitleFilter: rawFilters.nameOrTitleFilter as string,
   };
   if (!(Number.isFinite(page) && Number.isFinite(pageSize))) {
     next(_.assign(new Error('page and pageSize should be integers'), {statusCode: 400}));

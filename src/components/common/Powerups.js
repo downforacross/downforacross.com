@@ -46,7 +46,9 @@ export default class Powerups extends React.Component {
           <Flex column>
             <Emoji emoji={icon} big className="powerups--eemoji" />
             <div className="powerups--info" style={{opacity: inuse ? 1 : 0}}>
-              {timeMins}:{timeSecs}
+              {timeMins}
+              :
+              {timeSecs}
             </div>
           </Flex>
           {count > 1 && <div className="powerups--count">{count}</div>}

@@ -2,10 +2,10 @@ import 'react-flexview/lib/flexView.css';
 import './css/composition.css';
 
 import React, {Component} from 'react';
-import Nav from '../components/common/Nav';
 import _ from 'lodash';
 import {Helmet} from 'react-helmet';
 import Flex from 'react-flexview';
+import Nav from '../components/common/Nav';
 
 import actions from '../actions';
 import Editor from '../components/Player/Editor';
@@ -26,9 +26,8 @@ import * as xwordFiller from '../components/Compose/lib/xword-filler';
 
 export default class Composition extends Component {
   constructor(props) {
-    super();
+    super(props);
     this.state = {
-      gid: undefined,
       mobile: isMobile(),
     };
   }
@@ -162,9 +161,7 @@ export default class Composition extends Component {
   };
 
   handleExportClick = () => {
-    const byteArray = format()
-      .fromComposition(this.composition)
-      .toPuz();
+    const byteArray = format().fromComposition(this.composition).toPuz();
     downloadBlob(byteArray, 'download.puz');
   };
 

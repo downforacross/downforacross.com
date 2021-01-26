@@ -1,9 +1,9 @@
 import _ from 'lodash';
 import Joi from 'joi';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import uuid from 'uuid';
+import {PuzzleJson, ListPuzzleRequestFilters} from '@shared/types';
 import {pool} from './pool';
-import {PuzzleJson} from '@shared/types';
-import {ListPuzzleRequestFilters} from '../../src/shared/types';
 
 // ================ Read and Write methods used to interface with postgres ========== //
 
@@ -22,6 +22,17 @@ export async function getPuzzle(pid: string): Promise<PuzzleJson> {
   return _.first(rows)!;
 }
 
+const mapSizeFilterForDB = (sizeFilter: ListPuzzleRequestFilters['sizeFilter']): string[] => {
+  const ret = [];
+  if (sizeFilter.Mini) {
+    ret.push('Mini Puzzle');
+  }
+  if (sizeFilter.Standard) {
+    ret.push('Daily Puzzle');
+  }
+  return ret;
+};
+
 export async function listPuzzles(
   filter: ListPuzzleRequestFilters,
   limit: number,
@@ -34,7 +45,7 @@ export async function listPuzzles(
   }[]
 > {
   const startTime = Date.now();
-  const parametersForTitleAuthorFilter = filter.nameOrTitleFilter.split(/\s/).map((s) => '%' + s + '%');
+  const parametersForTitleAuthorFilter = filter.nameOrTitleFilter.split(/\s/).map((s) => `%${s}%`);
   const parameterOffset = 4;
   // see https://github.com/brianc/node-postgres/wiki/FAQ#11-how-do-i-build-a-where-foo-in--query-to-find-rows-matching-an-array-of-values
   // for why this is okay.
@@ -42,12 +53,12 @@ export async function listPuzzles(
   // note this is not vulnerable to SQL injection because this string is just dynamically constructing params of the form $#
   // which we fully control.
   const parameterizedTileAuthorFilter = parametersForTitleAuthorFilter
-    .map(function (_s, idx) {
-      return (
-        "AND ((content -> 'info' ->> 'title') || ' ' || (content->'info'->>'author')) ILIKE $" +
-        (idx + parameterOffset)
-      );
-    })
+    .map(
+      (_s, idx) =>
+        `AND ((content -> 'info' ->> 'title') || ' ' || (content->'info'->>'author')) ILIKE $${
+          idx + parameterOffset
+        }`
+    )
     .join('\n');
   const {rows} = await pool.query(
     `
@@ -71,29 +82,16 @@ export async function listPuzzles(
       times_solved: string;
       // NOTE: numeric returns as string in pg-promise
       // See https://stackoverflow.com/questions/39168501/pg-promise-returns-integers-as-strings
-    }) => {
-      return {
-        ...row,
-        times_solved: Number(row.times_solved),
-      };
-    }
+    }) => ({
+      ...row,
+      times_solved: Number(row.times_solved),
+    })
   );
   const ms = Date.now() - startTime;
   console.log(`listPuzzles (${JSON.stringify(filter)}, ${limit}, ${offset}) took ${ms}ms`);
   console.log('returning', puzzles);
   return puzzles;
 }
-
-const mapSizeFilterForDB = (sizeFilter: ListPuzzleRequestFilters['sizeFilter']): string[] => {
-  let ret = [];
-  if (sizeFilter.Mini) {
-    ret.push('Mini Puzzle');
-  }
-  if (sizeFilter.Standard) {
-    ret.push('Daily Puzzle');
-  }
-  return ret;
-};
 
 const string = () => Joi.string().allow(''); // https://github.com/sideway/joi/blob/master/API.md#string
 

@@ -33,7 +33,7 @@ const takeBestCandidates = (candidates, scoredWordlist, K = BEAM_SEARCH_PARAMS.K
     ['score'],
     ['desc']
   );
-  return sortedCandidates.map(({candidate, score}) => candidate).slice(0, K);
+  return sortedCandidates.map(({candidate}) => candidate).slice(0, K);
 };
 
 export default (initialState, scoredWordlist) => {

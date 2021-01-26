@@ -2,7 +2,7 @@ import {MAX_CLOCK_INCREMENT} from '../timing';
 import {MAIN_BLUE_3} from '../colors';
 
 function getScopeGrid(grid, scope) {
-  const scopeGrid = grid.map((row) => row.map((cell) => false));
+  const scopeGrid = grid.map((row) => row.map(() => false));
   scope.forEach(({r, c}) => {
     scopeGrid[r][c] = true;
   });

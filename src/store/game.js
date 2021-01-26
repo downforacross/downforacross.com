@@ -1,6 +1,7 @@
 import EventEmitter from 'events';
 import io from 'socket.io-client';
 import Promise from 'bluebird';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import uuid from 'uuid';
 import _ from 'lodash';
 import {getSocket} from '../sockets/getSocket';
@@ -8,6 +9,7 @@ import {emitAsync} from '../sockets/emitAsync';
 import {db, SERVER_TIME} from './firebase';
 import Puzzle from './puzzle';
 import * as colors from '../lib/colors';
+
 Promise.promisifyAll(io);
 
 // ============ Serialize / Deserialize Helpers ========== //
@@ -16,14 +18,14 @@ Promise.promisifyAll(io);
 const castNullsToUndefined = (obj) => {
   if (_.isNil(obj)) {
     return undefined;
-  } else if (typeof obj === 'object') {
+  }
+  if (typeof obj === 'object') {
     return Object.assign(
       obj.constructor(),
       _.fromPairs(_.keys(obj).map((key) => [key, castNullsToUndefined(obj[key])]))
     );
-  } else {
-    return obj;
   }
+  return obj;
 };
 
 // a wrapper class that models Game
@@ -150,9 +152,7 @@ export default class Game extends EventEmitter {
       if (!archiveInfo) {
         return;
       }
-      const {url, unarchivedAt} = archiveInfo;
-      if (unarchivedAt) {
-      }
+      const {url} = archiveInfo;
       if (url) {
         const events = await (await fetch(url)).json();
         this.ref.child('archivedEvents/unarchivedAt').set(SERVER_TIME);

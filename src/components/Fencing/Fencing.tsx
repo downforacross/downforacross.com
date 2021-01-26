@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {useUpdateEffect} from 'react-use';
 import {Helmet} from 'react-helmet';
+import {makeStyles} from '@material-ui/core';
 import {UserPingRoomEvent} from '../../shared/roomEvents';
 import {useSocket} from '../../sockets/useSocket';
 import {emitAsync} from '../../sockets/emitAsync';
-import {makeStyles} from '@material-ui/core';
 import Player from '../Player';
 import {gameReducer, GameState, initialGameState} from '../../lib/reducers/gameV2';
 import {GameEvent} from '../../shared/gameEvents';
@@ -48,12 +48,11 @@ const useStyles = makeStyles({
  * Computes the current game state, given a list of events.
  * @param events list of events
  */
-const useGameState = (events: GameEvent[]): GameState => {
+const useGameState = (events: GameEvent[]): GameState =>
   // TODO use memoization
   // (a data structure!!! that uses sqrt n bucketing to avoid re-evaluating the "sum" of a list from scratch every time it is appended to)
   // "a time traveling data structure" aka persistent array reduction
-  return events.reduce<GameState>(gameReducer, initialGameState);
-};
+  events.reduce<GameState>(gameReducer, initialGameState);
 /**
  * This component is parallel to Game -- will render a <Player/>
  * Will implement custom competitive crossword logic (see PR #145)

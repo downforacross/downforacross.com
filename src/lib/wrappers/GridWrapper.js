@@ -1,4 +1,6 @@
+/* eslint no-continue: "off", no-underscore-dangle: "off" */
 import _ from 'lodash';
+// eslint-disable-next-line import/no-cycle
 import * as gameUtils from '../gameUtils';
 
 function safe_while(condition, step, cap = 500) {
@@ -107,8 +109,8 @@ export default class GridWrapper {
   }
 
   getNextEmptyCell(r, c, direction, options = {}) {
-    const _r = r,
-      _c = c;
+    const _r = r;
+    const _c = c;
     let {noWraparound = false, skipFirst = false} = options;
 
     while (this.isWriteable(r, c)) {
@@ -145,7 +147,7 @@ export default class GridWrapper {
         noWraparound: true,
       });
       if (!result || (result.r === _r && result.c === _c)) return undefined;
-      else return result;
+      return result;
     }
     return undefined;
   }
@@ -230,7 +232,7 @@ export default class GridWrapper {
     }
   }
 
-  fixSelect({r, c}, grid) {
+  fixSelect({r, c}) {
     // Find the next valid white square in line order
     while (!this.isWhite(r, c)) {
       if (c + 1 < this.grid[r].length) {
@@ -307,13 +309,13 @@ export default class GridWrapper {
         across: this.isStartOfClue(r, c, 'across')
           ? cell.number
           : this.isSqueezedSquare(r, c, 'across')
-            ? 0
-            : this.grid[r][c - 1].parents.across,
+          ? 0
+          : this.grid[r][c - 1].parents.across,
         down: this.isStartOfClue(r, c, 'down')
           ? cell.number
           : this.isSqueezedSquare(r, c, 'down')
-            ? 0
-            : this.grid[r - 1][c].parents.down,
+          ? 0
+          : this.grid[r - 1][c].parents.down,
       };
     }
   }

@@ -2,6 +2,7 @@ import './css/nav.css';
 
 import {Link} from 'react-router-dom';
 import React, {useContext} from 'react';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import classnames from 'classnames';
 import GlobalContext from '../../lib/GlobalContext';
 import {getUser} from '../../store/user';
@@ -42,7 +43,7 @@ function LogIn({user, style}) {
   );
 }
 
-export default function Nav({hidden, v2, canLogin, secret, mobile, textStyle, linkStyle, divRef}) {
+export default function Nav({hidden, v2, canLogin, mobile, linkStyle, divRef}) {
   const {toggleMolesterMoons} = useContext(GlobalContext);
   if (hidden) return null; // no nav for mobile
   const user = getUser();

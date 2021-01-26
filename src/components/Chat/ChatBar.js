@@ -19,7 +19,7 @@ export default class ChatBar extends React.Component {
     const {message} = this.state;
     if (message.length > 0) {
       this.props.onSendMessage(message);
-      this.setState({message: '', enters: this.state.enters + 1});
+      this.setState((prevState) => ({message: '', enters: prevState.enters + 1}));
     } else {
       this.props.onUnfocus();
     }

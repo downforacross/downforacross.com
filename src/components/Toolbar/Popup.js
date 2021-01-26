@@ -21,7 +21,7 @@ export default class Popup extends Component {
   }
 
   onClick() {
-    this.setState({active: !this.state.active});
+    this.setState((prevState) => ({active: !prevState.active}));
   }
 
   onBlur() {

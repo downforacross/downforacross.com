@@ -2,13 +2,14 @@ import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'rea
 import {useUpdateEffect} from 'react-use';
 import _ from 'lodash';
 import {Helmet} from 'react-helmet';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import {RouteComponentProps} from 'react-router';
 
+import {makeStyles} from '@material-ui/core';
 import {RoomEvent, SetGameRoomEvent, UserPingRoomEvent} from '../shared/roomEvents';
 import {useSocket} from '../sockets/useSocket';
 import {initialRoomState, roomReducer} from '../lib/reducers/room';
 import {emitAsync} from '../sockets/emitAsync';
-import {makeStyles} from '@material-ui/core';
 
 const ACTIVE_SECONDS_TIMEOUT = 60;
 
@@ -154,15 +155,25 @@ const Room: React.FC<RouteComponentProps<{rid: string}>> = (props) => {
       </div>
       <div className={classes.footer}>
         <div>
-          In this room:{' '}
+          In this room:
+          {' '}
           {
             _.filter(roomState.users, (user) => user.lastPing > currentTime - ACTIVE_SECONDS_TIMEOUT * 1000)
               .length
-          }{' '}
-          <span className={classes.totalUsersParen}>({roomState.users.length} total)</span>
+          }
+          {' '}
+          <span className={classes.totalUsersParen}>
+            (
+            {roomState.users.length}
+            {' '}
+            total)
+          </span>
         </div>
         <div>
-          <button onClick={handleAddGame}>Game: {currentGame?.gid ?? 'N/A'}</button>
+          <button onClick={handleAddGame}>
+            Game:
+            {currentGame?.gid ?? 'N/A'}
+          </button>
         </div>
       </div>
     </div>
