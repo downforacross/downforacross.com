@@ -20,6 +20,7 @@ If you notice a bug or have a feature request, feel free to open an issue.
 3. Use node v12
    `nvm install`
    `nvm use`
+   `nvm alias default 12` (optional)
 
 4. Install Dependencies
    `yarn`
