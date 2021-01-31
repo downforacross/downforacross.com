@@ -129,9 +129,9 @@ export async function addPuzzle(puzzle: PuzzleJson, isPublic = false, pid?: stri
   const uploaded_at = Date.now();
   await pool.query(
     `
-      INSERT INTO puzzles (pid, uploaded_at, is_public, content)
-      VALUES ($1, to_timestamp($2), $3, $4)`,
-    [pid, uploaded_at / 1000, isPublic, puzzle]
+      INSERT INTO puzzles (pid, uploaded_at, is_public, content, pid_numeric)
+      VALUES ($1, to_timestamp($2), $3, $4, $5)`,
+    [pid, uploaded_at / 1000, isPublic, puzzle, pid]
   );
   return pid;
 }
