@@ -67,7 +67,7 @@ export async function listPuzzles(
       WHERE is_public = true
       AND (content->'info'->>'type') = ANY($1)
       ${parameterizedTileAuthorFilter}
-      ORDER BY pid DESC 
+      ORDER BY pid_numeric DESC 
       LIMIT $2
       OFFSET $3
     `,
