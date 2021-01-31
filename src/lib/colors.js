@@ -1,4 +1,5 @@
 import _ from 'lodash';
+
 export const MAIN_BLUE_3 = 0xdcefff;
 export const GREENISH = 0x1fff3d;
 export const PINKISH = 0xf0dbff;
@@ -28,5 +29,5 @@ export const lightenHsl = (string) => {
   if (!_.startsWith(string, 'hsl(')) {
     return '';
   }
-  return 'hsla' + string.substring(3, string.length - 1) + ',40%)';
+  return `hsla${string.substring(3, string.length - 1)},40%)`;
 };

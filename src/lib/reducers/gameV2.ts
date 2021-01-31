@@ -52,8 +52,11 @@ interface GameReducerFn<T extends GameEventType = GameEventType> {
   (game: GameState, params: GameEventParams[T], timestamp: number): GameState;
 }
 
-const userPingReducer: GameReducerFn<GameEventType.USER_PING> = (gameState, params, timestamp) => {
-  return gameState;
+const userPingReducer: GameReducerFn<GameEventType.USER_PING> = (gameState) => gameState;
+
+export const initialGameState: GameState = {
+  loaded: false,
+  game: null,
 };
 
 const initializeGameReducer: GameReducerFn<GameEventType.INITIALIZE_GAME> = (gameState, params) => ({
@@ -65,12 +68,7 @@ const initializeGameReducer: GameReducerFn<GameEventType.INITIALIZE_GAME> = (gam
   },
 });
 
-export const initialGameState: GameState = {
-  loaded: false,
-  game: null,
-};
-
-export const gameReducer = (game: GameState, event: GameEvent, options = {}): GameState => {
+export const gameReducer = (game: GameState, event: GameEvent): GameState => {
   try {
     if (!game.loaded && !isInitializeGameEvent(event)) {
       console.error('Error handling event, game not yet loaded', event);
@@ -79,13 +77,13 @@ export const gameReducer = (game: GameState, event: GameEvent, options = {}): Ga
 
     if (isUserPingGameEvent(event)) {
       return userPingReducer(game, event.params, event.timestamp);
-    } else if (isInitializeGameEvent(event)) {
-      return initializeGameReducer(game, event.params, event.timestamp);
-    } else {
-      // @ts-ignore
-      console.error('event', event.type, 'not found');
-      return game;
     }
+    if (isInitializeGameEvent(event)) {
+      return initializeGameReducer(game, event.params, event.timestamp);
+    }
+    // @ts-ignore
+    console.error('event', event.type, 'not found');
+    return game;
   } catch (e) {
     console.error('Error handling event', event);
     return game;

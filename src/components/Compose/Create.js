@@ -9,7 +9,13 @@ export default class Create extends Component {
         r: 5,
         c: 5,
       },
-      pattern: [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]],
+      pattern: [
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+      ],
     };
     this.paintColor = undefined;
     this.painted = {};
@@ -39,9 +45,11 @@ export default class Create extends Component {
   }
 
   flipPattern(r, c) {
-    const pattern = JSON.parse(JSON.stringify(this.state.pattern));
-    pattern[r][c] = 1 - pattern[r][c];
-    this.setState({pattern});
+    this.setState((prevState) => {
+      const pattern = JSON.parse(JSON.stringify(prevState.pattern));
+      pattern[r][c] = 1 - pattern[r][c];
+      return {pattern};
+    });
   }
 
   paint(r, c, val) {
@@ -85,8 +93,7 @@ export default class Create extends Component {
             <input
               value={this.state.dims.r}
               onChange={(e) =>
-                this.updateDims(Number(e.target.value) || this.state.dims.r, this.state.dims.c)
-              }
+                this.updateDims(Number(e.target.value) || this.state.dims.r, this.state.dims.c)}
             />
             <button onClick={this.updateDimsDelta.bind(this, +1, 0)}> + </button>
           </div>
@@ -96,8 +103,7 @@ export default class Create extends Component {
             <input
               value={this.state.dims.c}
               onChange={(e) =>
-                this.updateDims(this.state.dims.r, Number(e.target.value) || this.state.dims.c)
-              }
+                this.updateDims(this.state.dims.r, Number(e.target.value) || this.state.dims.c)}
             />
             <button onClick={this.updateDimsDelta.bind(this, 0, +1)}> + </button>
           </div>

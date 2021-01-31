@@ -1,4 +1,5 @@
 import React from 'react';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import {RouteComponentProps} from 'react-router';
 
 import {Fencing} from '../components/Fencing/Fencing';

@@ -34,7 +34,7 @@ const userPingReducer: RoomReducerFn<RoomEventType.USER_PING> = (room, params, t
   };
 };
 
-const setGameReducer: RoomReducerFn<RoomEventType.SET_GAME> = (room, params, timestamp) => {
+const setGameReducer: RoomReducerFn<RoomEventType.SET_GAME> = (room, params) => {
   const nGames = [
     {
       gid: params.gid,
@@ -51,16 +51,16 @@ export const initialRoomState: RoomState = {
   users: [],
   games: [],
 };
-export const roomReducer = (room: RoomState, event: RoomEvent, options = {}): RoomState => {
+export const roomReducer = (room: RoomState, event: RoomEvent): RoomState => {
   try {
     if (isUserPingRoomEvent(event)) {
       return userPingReducer(room, event.params, event.timestamp);
-    } else if (isSetGameEvent(event)) {
-      return setGameReducer(room, event.params, event.timestamp);
-    } else {
-      console.error('event', event.type, 'not found');
-      return room;
     }
+    if (isSetGameEvent(event)) {
+      return setGameReducer(room, event.params, event.timestamp);
+    }
+    console.error('event', event.type, 'not found');
+    return room;
   } catch (e) {
     console.error('Error handling event', event);
     return room;

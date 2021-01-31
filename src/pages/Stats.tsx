@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
-import {fetchStats, AllStats} from '../api/stats';
 import _ from 'lodash';
+import {fetchStats, AllStats} from '../api/stats';
 
 const useStyles = makeStyles({
   page: {
@@ -40,20 +40,34 @@ const Stats: React.FC<{}> = () => {
       {allStats.liveStats && (
         <div className={classes.liveContainer}>
           <div className={classes.header}>Live Stats</div>
-          <div>Server last restarted {allStats.liveStats.serverStartDate}</div>
           <div>
-            {allStats.liveStats.connectionsCount}{' '}
-            {allStats.liveStats.connectionsCount === 1 ? 'user' : 'users'} online
+            Server last restarted
+            {allStats.liveStats.serverStartDate}
           </div>
           <div>
-            {allStats.liveStats.gamesCount} {allStats.liveStats.gamesCount === 1 ? 'game' : 'games'} being
+            {allStats.liveStats.connectionsCount}
+            {' '}
+            {allStats.liveStats.connectionsCount === 1 ? 'user' : 'users'}
+            {' '}
+            online
+          </div>
+          <div>
+            {allStats.liveStats.gamesCount} 
+            {' '}
+            {allStats.liveStats.gamesCount === 1 ? 'game' : 'games'}
+            {' '}
+            being
             played
           </div>
         </div>
       )}
       {_.map(allStats.timeWindowStats, ({name, stats}) => (
         <div key={name} className={classes.timeWindowContainer}>
-          <div className={classes.header}>{_.capitalize(name)} Stats</div>
+          <div className={classes.header}>
+            {_.capitalize(name)}
+            {' '}
+            Stats
+          </div>
           <table className={classes.table}>
             <tbody>
               <tr>
@@ -76,7 +90,10 @@ const Stats: React.FC<{}> = () => {
               </tr>
               <tr>
                 <td>Current Interval</td>
-                <td>{(stats.percentComplete * 100).toFixed(2)}%</td>
+                <td>
+                  {(stats.percentComplete * 100).toFixed(2)}
+                  %
+                </td>
                 <td>{stats.counts.activeGames}</td>
                 <td>{stats.counts.gameEvents}</td>
                 <td>{stats.counts.connections}</td>

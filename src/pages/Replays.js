@@ -16,7 +16,10 @@ import {db} from '../actions';
 const TimeFormatter = ({millis}) =>
   millis ? (
     <span>
-      {Math.floor(millis / 60000)}m{Math.floor(millis / 1000) % 60}s
+      {Math.floor(millis / 60000)}
+      m
+      {Math.floor(millis / 1000) % 60}
+      s
     </span>
   ) : null;
 
@@ -185,10 +188,16 @@ export default class Replays extends Component {
               <a href={`/replays/${pid}`}>{pid}</a>
             </td>
           )}
-          {this.pid ? null : <td>{title})</td>}
+          {this.pid ? null : (
+            <td>
+              {title}
+              )
+            </td>
+)}
           <td>
             <a href={`/replay/${gid}`}>
-              Game #{gid}
+              Game #
+              {gid}
               {v2 ? '(beta)' : ''}
             </a>
           </td>
@@ -207,7 +216,10 @@ export default class Replays extends Component {
     const list2Items = players.map(({id, solved, time}) => (
       <tr>
         <td>
-          <a href={`/replay/solo/${id}/${this.pid}`}>Play by player #{id}</a>
+          <a href={`/replay/solo/${id}/${this.pid}`}>
+            Play by player #
+            {id}
+          </a>
         </td>
         <td>Not implemented</td>
         <td>

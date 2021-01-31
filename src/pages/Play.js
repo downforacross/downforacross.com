@@ -127,7 +127,7 @@ export default class Play extends Component {
         Your Games
         <table>
           <tbody>
-            {_.map(this.games, ({gid, time, solved}, i) => (
+            {_.map(this.games, ({gid, time}) => (
               <tr key={gid}>
                 <td>
                   <Timestamp time={time} />

@@ -1,5 +1,5 @@
-import {SOCKET_HOST} from '../api/constants';
 import io from 'socket.io-client';
+import {SOCKET_HOST} from '../api/constants';
 
 let websocketPromise: Promise<SocketIOClient.Socket>;
 export const getSocket = () => {

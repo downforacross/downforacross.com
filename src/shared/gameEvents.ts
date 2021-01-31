@@ -20,13 +20,9 @@ export interface GameEvent<T extends GameEventType = GameEventType> {
   uid: string;
 }
 
-export const isUserPingGameEvent = (event: GameEvent): event is GameEvent<GameEventType.USER_PING> => {
-  return event.type === GameEventType.USER_PING;
-};
+export const isUserPingGameEvent = (event: GameEvent): event is GameEvent<GameEventType.USER_PING> =>
+  event.type === GameEventType.USER_PING;
 
-export const isInitializeGameEvent = (
-  event: GameEvent
-): event is GameEvent<GameEventType.INITIALIZE_GAME> => {
+export const isInitializeGameEvent = (event: GameEvent): event is GameEvent<GameEventType.INITIALIZE_GAME> =>
   // returns a "type guard"
-  return event.type === GameEventType.INITIALIZE_GAME;
-};
+  event.type === GameEventType.INITIALIZE_GAME;

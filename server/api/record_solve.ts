@@ -1,5 +1,4 @@
 import express from 'express';
-import {nextTick} from 'process';
 import {RecordSolveRequest, RecordSolveResponse} from '../../src/shared/types';
 import {recordSolve} from '../model/puzzle';
 

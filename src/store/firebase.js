@@ -1,9 +1,10 @@
 import firebase from 'firebase/app';
+// eslint-disable-next-line import/no-duplicates
 import 'firebase/database';
+// eslint-disable-next-line import/no-duplicates
 import 'firebase/auth';
 
-let offline = true;
-offline = false;
+const offline = false;
 const CONFIGS = {
   production: {
     apiKey: 'AIzaSyCe4BWm9kbjXFwlZcmq4x8DvLD3TDoinhA',

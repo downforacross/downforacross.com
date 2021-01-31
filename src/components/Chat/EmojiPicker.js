@@ -1,8 +1,9 @@
+/* eslint react/no-unescaped-entities: "warn" */
 import React from 'react';
 
-import Emoji from '../common/Emoji';
 import Flex from 'react-flexview';
 import _ from 'lodash';
+import Emoji from '../common/Emoji';
 
 const Kbd = ({children}) => <kbd>{children}</kbd>;
 
@@ -55,13 +56,13 @@ export default class EmojiPicker extends React.Component {
   scrollEmojiIntoView(emoji) {
     // HACK: hardcoding container's padding here
     const padding = 5;
-    const span = this.emojiRefs[emoji].current,
-      top = span.offsetTop,
-      bottom = top + span.offsetHeight;
-    const container = this.listContainer.current,
-      containerHeight = container.getBoundingClientRect().height - 2 * padding,
-      scrollTop = container.scrollTop,
-      scrollBottom = container.scrollTop + containerHeight;
+    const span = this.emojiRefs[emoji].current;
+    const top = span.offsetTop;
+    const bottom = top + span.offsetHeight;
+    const container = this.listContainer.current;
+    const containerHeight = container.getBoundingClientRect().height - 2 * padding;
+    const scrollTop = container.scrollTop;
+    const scrollBottom = container.scrollTop + containerHeight;
 
     if (scrollTop > top) {
       container.scrollTop = top - padding;
@@ -116,37 +117,37 @@ export default class EmojiPicker extends React.Component {
       const {cx, cy} = this.getDomPosition(selectedEmoji);
       // beware, this code is a bit hacky :)
       const bestMatch = _.orderBy(
-        matches.filter((emoji) => emoji !== selectedEmoji).map((emoji) => {
-          const p = this.getDomPosition(emoji);
-          let dx = p.cx - cx;
-          let dy = p.cy - cy;
-          let pagex = 0;
-          let pagey = 0;
-          if (sx) {
-            dy = Math.abs(dy);
-            dx *= sx;
-            if (dx <= 0) pagex = 1;
-          } else if (sy) {
-            dy *= sy;
-            if (dy <= 0) pagey = 1;
-            // check if it's contained within
-            if (p.left <= cx && cx <= p.right) {
-              dx = 0;
-            } else {
-              if (dx < 0) {
+        matches
+          .filter((emoji) => emoji !== selectedEmoji)
+          .map((emoji) => {
+            const p = this.getDomPosition(emoji);
+            let dx = p.cx - cx;
+            let dy = p.cy - cy;
+            let pagex = 0;
+            let pagey = 0;
+            if (sx) {
+              dy = Math.abs(dy);
+              dx *= sx;
+              if (dx <= 0) pagex = 1;
+            } else if (sy) {
+              dy *= sy;
+              if (dy <= 0) pagey = 1;
+              // check if it's contained within
+              if (p.left <= cx && cx <= p.right) {
+                dx = 0;
+              } else if (dx < 0) {
                 // hack: prefer left when moving up/down
                 dx = -dx * 0.5;
               }
             }
-          }
-          return {
-            emoji,
-            pagey,
-            dy,
-            pagex,
-            dx,
-          };
-        }),
+            return {
+              emoji,
+              pagey,
+              dy,
+              pagex,
+              dx,
+            };
+          }),
         ['pagey', 'dy', 'pagex', 'dx']
       )[0];
       this.selectEmoji(bestMatch.emoji);
@@ -188,17 +189,30 @@ export default class EmojiPicker extends React.Component {
     return (
       <Flex style={headerStyle}>
         <span>
-          <span style={patternStyle}>"{`:${pattern}`}"</span>
+          <span style={patternStyle}>
+            "
+            {`:${pattern}`}
+            "
+          </span>
         </span>
         <span>
           <span style={hintStyle}>
-            <Kbd>tab</Kbd> or <Kbd>↑↓</Kbd> to navigate
+            <Kbd>tab</Kbd>
+            {' '}
+            or
+            <Kbd>↑↓</Kbd>
+            {' '}
+            to navigate
           </span>
           <span style={hintStyle}>
-            <Kbd>↩</Kbd> to select
+            <Kbd>↩</Kbd>
+            {' '}
+            to select
           </span>
           <span style={hintStyle}>
-            <Kbd>esc</Kbd> to dismiss
+            <Kbd>esc</Kbd>
+            {' '}
+            to dismiss
           </span>
         </span>
       </Flex>
@@ -251,7 +265,7 @@ export default class EmojiPicker extends React.Component {
     const {matches} = this.props;
     return (
       <div style={containerStyle} ref={this.listContainer}>
-        {matches.map((emoji, i) => this.renderEmoji(emoji))}
+        {matches.map((emoji) => this.renderEmoji(emoji))}
       </div>
     );
   }

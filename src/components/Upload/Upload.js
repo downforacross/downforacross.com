@@ -1,8 +1,8 @@
 import './css/index.css';
 
+import React, {Component} from 'react';
 import actions from '../../actions';
 import FileUploader from './FileUploader';
-import React, {Component} from 'react';
 import {createNewPuzzle} from '../../api/puzzle';
 
 export default class Upload extends Component {
@@ -75,10 +75,11 @@ export default class Upload extends Component {
               type="checkbox"
               checked={this.state.unlistedCheckboxChecked}
               onChange={this.handleChangeUnlistedCheckbox}
-            />{' '}
+            />
+            {' '}
             Unlisted
           </label>
-          <button className={'upload--button ' + (v2 ? 'v2' : '')} onClick={this.create}>
+          <button className={`upload--button ${v2 ? 'v2' : ''}`} onClick={this.create}>
             {`Add puzzle to the ${type} repository`}
             {this.state.unlistedCheckboxChecked ? ' (unlisted)' : ''}
           </button>
@@ -96,10 +97,12 @@ export default class Upload extends Component {
 
     return (
       <p style={{marginTop: 10, marginBottom: 10}}>
-        Successfully created an unlisted puzzle. You may now visit the link{' '}
+        Successfully created an unlisted puzzle. You may now visit the link
+        {' '}
         <a href={url} style={{wordBreak: 'break-all'}}>
           {url}
-        </a>{' '}
+        </a>
+        {' '}
         to play the new puzzle.
       </p>
     );

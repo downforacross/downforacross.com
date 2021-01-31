@@ -5,6 +5,7 @@ import {GameJson} from '../../lib/reducers/gameV2';
 import {CluesJson} from '../../shared/types';
 import {CellCoords, CellIndex, Cursor, GridData, Ping} from '../Grid/types';
 import {PlayerActions} from './usePlayerActions';
+
 interface PlayerProps {
   beta: boolean;
   size: number;

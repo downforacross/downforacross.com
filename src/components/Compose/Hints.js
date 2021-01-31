@@ -13,7 +13,7 @@ export default class Hints extends Component {
     this.scores = {};
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate() {
     if (!this.hidden) {
       this.startComputing();
     }
@@ -43,6 +43,7 @@ export default class Hints extends Component {
       // call cbk if there's more work to be done
       let cnt = 0;
       for (const word of this.state.list) {
+        // eslint-disable-next-line no-continue
         if (word in this.scores) continue;
         this.scores[word] = evaluate(this.props.grid, this.props.direction, this.props.num, word);
         cnt += 1;
@@ -103,9 +104,9 @@ export default class Hints extends Component {
         <div
           className="hints--pattern"
           onClick={() => {
-            this.setState({
-              hidden: !this.state.hidden,
-            });
+            this.setState((prevState) => ({
+              hidden: !prevState.hidden,
+            }));
           }}
         >
           <span style={{float: 'left'}}>

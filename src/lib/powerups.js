@@ -46,6 +46,7 @@ const secondsSince = (t) => moment.duration(moment(Date.now()).diff(moment(t))).
 
 export const timeLeft = (powerup) => {
   const {type, used} = powerup;
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   let {duration} = powerups[type];
   duration = Number(duration);
   if (!used) {
@@ -67,6 +68,7 @@ export const apply = (ownGame, opponentGame, ownPowerups, opponentPowerups) => {
 
   const applyOneDirection = (ownGame, opponentGame, currentPowerups) => {
     const inUsePowerups = _.filter(currentPowerups, inUse);
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     return _.reduce(inUsePowerups, (g, p) => powerups[p.type].action(g), {ownGame, opponentGame});
   };
 
@@ -85,6 +87,7 @@ export const apply = (ownGame, opponentGame, ownPowerups, opponentPowerups) => {
 };
 
 export const applyOneTimeEffects = (p, args) => {
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   const fn = powerups[p.type].oneTimeAction;
   fn && fn(args);
 };

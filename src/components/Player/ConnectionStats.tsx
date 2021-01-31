@@ -21,14 +21,17 @@ const ConnectionStats: React.FC<{}> = () => {
     return (
       <div>
         <div>
-          Ping: {connectionStatus?.latency}ms ({Math.floor((Date.now() - connectionStatus?.timestamp) / 1000)}
+          Ping: 
+          {' '}
+          {connectionStatus?.latency}
+          ms (
+          {Math.floor((Date.now() - connectionStatus?.timestamp) / 1000)}
           s ago)
         </div>
       </div>
     );
-  } else {
-    return <div>Not connected</div>;
   }
+  return <div>Not connected</div>;
 };
 
 export default ConnectionStats;

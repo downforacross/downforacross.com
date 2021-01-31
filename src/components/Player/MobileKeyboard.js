@@ -85,12 +85,12 @@ export default class MobileKeyboard extends React.PureComponent {
         layout: 'default',
       });
     } else if (button === '{shift}') {
-      this.setState({
+      this.setState((prevState) => ({
         layout: {
           uppercase: 'lowercase',
           lowercase: 'uppercase',
-        }[this.state.layout],
-      });
+        }[prevState.layout],
+      }));
     } else if (button === '{space}') {
       onKeyDown(' ');
     } else {
@@ -127,7 +127,7 @@ export default class MobileKeyboard extends React.PureComponent {
             '{emoji}': ' ',
             '{enter}': '⏎',
           }}
-          useTouchEvents={true}
+          useTouchEvents
           layoutName={this.state.layout}
         />
       </Flex>

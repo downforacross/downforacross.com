@@ -1,7 +1,6 @@
 // ============= Server Values ===========
 
 import {RoomEvent} from '@shared/roomEvents';
-import _ from 'lodash';
 import socketIo from 'socket.io';
 import {addGameEvent, GameEvent, getGameEvents} from './model/game';
 import {addRoomEvent, getRoomEvents} from './model/room';
@@ -17,6 +16,7 @@ function assignTimestamp(event: SocketEvent) {
       return Date.now();
     }
     const result = event.constructor();
+    // eslint-disable-next-line guard-for-in
     for (const key in event) {
       result[key] = assignTimestamp(event[key]);
     }
@@ -29,6 +29,7 @@ function assignTimestamp(event: SocketEvent) {
 
 class SocketManager {
   io: socketIo.Server;
+
   constructor(io: socketIo.Server) {
     this.io = io;
   }
@@ -38,6 +39,7 @@ class SocketManager {
     await addGameEvent(gid, gameEvent);
     this.io.to(`game-${gid}`).emit('game_event', gameEvent);
   }
+
   async addRoomEvent(rid: string, event: SocketEvent) {
     const roomEvent: RoomEvent = assignTimestamp(event);
     await addRoomEvent(rid, roomEvent);

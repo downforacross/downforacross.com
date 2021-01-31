@@ -5,14 +5,15 @@ import React, {Component} from 'react';
 import _ from 'lodash';
 import {Helmet} from 'react-helmet';
 import Flex from 'react-flexview';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import classnames from 'classnames';
 import {BattleModel} from '../store';
 import redirect from '../lib/redirect';
 import {isMobile} from '../lib/jsUtils';
-import classnames from 'classnames';
 
 export default class Battle extends Component {
   constructor(props) {
-    super();
+    super(props);
     this.state = {
       bid: undefined,
       team: undefined,
@@ -38,6 +39,7 @@ export default class Battle extends Component {
       !this.state.redirecting
     ) {
       const self = this.state.games[this.state.team];
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({redirecting: true}, () => redirect(`/beta/game/${self}`));
     }
   }
@@ -102,14 +104,14 @@ export default class Battle extends Component {
             hAlignContent="center"
             onClick={() => !disabled && this.handleTeamSelect(0)}
           >
-            {'Team 1'}
+            Team 1
           </Flex>
           <Flex
             className={buttonClass}
             hAlignContent="center"
             onClick={() => !disabled && this.handleTeamSelect(1)}
           >
-            {'Team 2'}
+            Team 2
           </Flex>
         </Flex>
         <Flex className="battle--name">
@@ -124,23 +126,24 @@ export default class Battle extends Component {
     );
   }
 
-  renderPlayer = (player, idx) => {
-    return (
-      <Flex className="battle--player" key={idx}>
-        {' '}
-        {player.name}{' '}
-      </Flex>
-    );
-  };
+  renderPlayer = (player, idx) => (
+    <Flex className="battle--player" key={idx}>
+      {' '}
+      {player.name}
+      {' '}
+    </Flex>
+  );
 
-  renderTeam = (team, idx) => {
-    return (
-      <Flex className="battle--team" key={idx}>
-        <Flex className="battle--team-name"> Team {Number(idx) + 1} </Flex>
-        {_.map(team, this.renderPlayer)}
+  renderTeam = (team, idx) => (
+    <Flex className="battle--team" key={idx}>
+      <Flex className="battle--team-name">
+        {' '}
+        Team
+        {Number(idx) + 1}
       </Flex>
-    );
-  };
+      {_.map(team, this.renderPlayer)}
+    </Flex>
+  );
 
   renderTeams() {
     const numTeams = Math.max(_.max(_.map(this.state.players, 'team')), 2);
@@ -155,7 +158,7 @@ export default class Battle extends Component {
         <Flex className="battle--teams">(This starts the game for all players)</Flex>
         <Flex className="battle--buttons">
           <Flex className="battle--button" hAlignContent="center" onClick={() => this.battleModel.start()}>
-            {'Start'}
+            Start
           </Flex>
         </Flex>
         {this.renderTeams()}

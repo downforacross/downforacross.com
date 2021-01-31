@@ -1,6 +1,7 @@
 import {gameWords} from './lib/names';
 import {makeGrid} from './lib/gameUtils';
 import firebase, {getTime} from './store/firebase';
+// eslint-disable-next-line import/no-cycle
 import {GameModel, PuzzleModel} from './store';
 
 // for interfacing with firebase
@@ -112,7 +113,7 @@ const actions = {
       published: false,
     };
     const cid = db.ref('composition').push().key;
-    db.ref(`composition/${cid}`).set(composition, (error) => {
+    db.ref(`composition/${cid}`).set(composition, () => {
       cbk(cid);
     });
   },

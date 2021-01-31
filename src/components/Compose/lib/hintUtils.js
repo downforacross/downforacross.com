@@ -1,3 +1,4 @@
+/* eslint no-plusplus : "warn", no-continue: "off", no-bitwise: "warn" */
 const nyt_words_long = window.nyt_words_long || [];
 
 const reverseIndex = {};
@@ -104,8 +105,8 @@ function findMatches(pattern, cbk) {
 function getPatterns(grid) {
   const across = [];
   const down = [];
-  grid.forEach((row, r) => {
-    row.forEach((cell, c) => {
+  grid.forEach((row) => {
+    row.forEach((cell) => {
       const ch = !cell.value || cell.value === '' ? '.' : cell.value;
       if (!cell.black) {
         if (cell.parents.across) {

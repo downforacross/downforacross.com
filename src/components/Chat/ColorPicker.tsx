@@ -2,6 +2,7 @@ import React from 'react';
 import {useToggle} from 'react-use';
 import {CirclePicker} from 'react-color';
 import {makeStyles} from '@material-ui/core';
+
 interface ColorPickerProps {
   color: string;
   onUpdateColor: (color: string) => void;
@@ -26,7 +27,7 @@ const ColorPicker: React.FC<ColorPickerProps> = (props) => {
           <CirclePicker
             color={props.color}
             onChangeComplete={(color) => {
-              let colorHSL = `hsl(${Math.floor(color.hsl.h)},${Math.floor(color.hsl.s * 100)}%,${Math.floor(
+              const colorHSL = `hsl(${Math.floor(color.hsl.h)},${Math.floor(color.hsl.s * 100)}%,${Math.floor(
                 color.hsl.l * 100
               )}%)`;
               if (colorHSL !== props.color) {
@@ -34,7 +35,7 @@ const ColorPicker: React.FC<ColorPickerProps> = (props) => {
               }
               toggleIsActive(false);
             }}
-          ></CirclePicker>
+          />
           <br />
         </>
       ) : null}

@@ -19,14 +19,7 @@ export interface EntryProps {
 }
 
 export default class Entry extends Component<EntryProps> {
-  constructor(props: EntryProps) {
-    super(props);
-    this.state = {
-      expanded: false,
-    };
-  }
-
-  handleClick = (_e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  handleClick = () => {
     /*
     this.setState({
       expanded: !this.state.expanded,
@@ -35,21 +28,17 @@ export default class Entry extends Component<EntryProps> {
     */
   };
 
-  handleMouseLeave = (_e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    this.setState({
-      expanded: false,
-    });
-  };
+  handleMouseLeave = () => {};
 
   get size() {
     const {type} = this.props.info;
     if (type === 'Daily Puzzle') {
       return 'Standard';
-    } else if (type === 'Mini Puzzle') {
-      return 'Mini';
-    } else {
-      return 'Puzzle'; // shouldn't get here???
     }
+    if (type === 'Mini Puzzle') {
+      return 'Mini';
+    }
+    return 'Puzzle'; // shouldn't get here???
   }
 
   render() {
@@ -83,7 +72,11 @@ export default class Entry extends Component<EntryProps> {
           </Flex>
           <Flex className="entry--details">
             <p>
-              Solved {numSolves} {numSolves === 1 ? 'time' : 'times'}
+              Solved 
+              {' '}
+              {numSolves} 
+              {' '}
+              {numSolves === 1 ? 'time' : 'times'}
             </p>
           </Flex>
         </Flex>

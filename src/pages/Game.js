@@ -1,11 +1,11 @@
 import 'react-flexview/lib/flexView.css';
 
 import React, {Component} from 'react';
-import Nav from '../components/common/Nav';
 import _ from 'lodash';
 import querystring from 'querystring';
 import {Helmet} from 'react-helmet';
 import Flex from 'react-flexview';
+import Nav from '../components/common/Nav';
 
 import {GameModel, getUser, BattleModel} from '../store';
 import HistoryWrapper from '../lib/wrappers/HistoryWrapper';
@@ -20,7 +20,7 @@ import {recordSolve} from '../api/puzzle.ts';
 
 export default class Game extends Component {
   constructor(props) {
-    super();
+    super(props);
     window.gameComponent = this;
     this.state = {
       gid: undefined,
@@ -123,7 +123,7 @@ export default class Game extends Component {
       this.handleUpdate();
     });
 
-    this.gameModel.on('archived', (event) => {
+    this.gameModel.on('archived', () => {
       this.setState({
         archived: true,
       });
@@ -214,15 +214,14 @@ export default class Game extends Component {
   }
 
   get userColor() {
-    let color =
+    const color =
       this.game.users[this.props.id]?.color || localStorage.getItem(this.userColorKey) || rand_color();
     localStorage.setItem(this.userColorKey, color);
     return color;
   }
 
   handleToggleChat = () => {
-    const toggledMode = this.state.mode === 'game' ? 'chat' : 'game';
-    this.setState({mode: toggledMode});
+    this.setState((prevState) => ({mode: prevState.mode === 'game' ? 'chat' : 'game'}));
   };
 
   handleChat = (username, id, message) => {
@@ -379,15 +378,15 @@ export default class Game extends Component {
     const powerups = _.get(this.state.powerups, this.state.team);
 
     const mobileContent = (
-      <React.Fragment>
+      <>
         <MobilePanel />
         {this.showingGame && this.renderGame()}
         {this.showingChat && this.renderChat()}
-      </React.Fragment>
+      </>
     );
 
     const desktopContent = (
-      <React.Fragment>
+      <>
         <Nav v2 />
         <Flex grow={1} style={{overflow: 'auto'}}>
           <Flex column shrink={0}>
@@ -396,7 +395,7 @@ export default class Game extends Component {
           <Flex grow={1}>{this.showingChat && this.renderChat()}</Flex>
         </Flex>
         {powerups && <Powerups powerups={powerups} handleUsePowerup={this.handleUsePowerup} />}
-      </React.Fragment>
+      </>
     );
 
     return this.state.mobile ? mobileContent : desktopContent;

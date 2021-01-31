@@ -18,6 +18,7 @@ const gridToTextGrid = (grid) => grid.map((row) => row.map((cell) => (cell.black
 const f = () => ({
   fromPuz: (blob) => {
     const {grid, clues, circles} = Puz.decode(blob);
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     return intermediate({
       info: {},
       grid,
@@ -53,6 +54,7 @@ const f = () => ({
     });
     const clues = new GridObject(grid).alignClues(unalignedClues);
 
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     return intermediate({
       info,
       grid,
@@ -90,14 +92,13 @@ const intermediate = ({info, grid, clues, extras}) => {
     extras,
   });
   return {
-    toPuz: () => {
-      return Puz.encode({
+    toPuz: () =>
+      Puz.encode({
         meta: infoToMeta(info),
         grid: gridToTextGrid(grid),
         clues,
         circles: extras.circles,
-      });
-    },
+      }),
 
     toComposition: () => ({
       // TODO

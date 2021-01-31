@@ -5,12 +5,13 @@ import {Helmet} from 'react-helmet';
 import Flex from 'react-flexview';
 import {MdSearch, MdCheckBoxOutlineBlank, MdCheckBox} from 'react-icons/md';
 import _ from 'lodash';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import classnames from 'classnames';
 import Nav from '../components/common/Nav';
 import Upload from '../components/Upload';
 import {getUser, PuzzlelistModel} from '../store';
 import PuzzleList from '../components/PuzzleList';
 import {isMobile, colorAverage} from '../lib/jsUtils';
-import classnames from 'classnames';
 
 const BLUE = '#6aa9f4';
 const WHITE = '#FFFFFF';
@@ -186,11 +187,11 @@ export default class Welcome extends Component {
     this.updateSearch(search);
   };
 
-  handleSearchFocus = (e) => {
+  handleSearchFocus = () => {
     this.setState({searchFocused: true});
   };
 
-  handleSearchBlur = (e) => {
+  handleSearchBlur = () => {
     this.setState({searchFocused: false});
   };
 

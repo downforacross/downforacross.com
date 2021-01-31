@@ -1,14 +1,8 @@
 import React from 'react';
 import Flex from 'react-flexview';
 
+// eslint-disable-next-line react/prefer-stateless-function
 export default class MobileNav extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      expanded: false,
-    };
-  }
-
   render() {
     const style = {
       position: 'absolute',

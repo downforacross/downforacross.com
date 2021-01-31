@@ -35,6 +35,7 @@ export default class ActionMenu extends Component {
   }
 
   handlePointerDown = (e) => {
+    // eslint-disable-next-line react/no-find-dom-node
     const refNode = findDOMNode(this.containerRef.current);
     if (refNode?.contains(e.target)) {
       return;
@@ -43,13 +44,16 @@ export default class ActionMenu extends Component {
   };
 
   onClick() {
-    this.setState({active: !this.state.active}, () => {
-      if (this.state.active) {
-        window.addEventListener('pointerdown', this.handlePointerDown);
-      } else {
-        window.removeEventListener('pointerdown', this.handlePointerDown);
+    this.setState(
+      (prevState) => ({active: !prevState.active}),
+      () => {
+        if (this.state.active) {
+          window.addEventListener('pointerdown', this.handlePointerDown);
+        } else {
+          window.removeEventListener('pointerdown', this.handlePointerDown);
+        }
       }
-    });
+    );
   }
 
   onBlur() {
@@ -92,7 +96,11 @@ export default class ActionMenu extends Component {
                 this.setState({active: false});
               }}
             >
-              <span> {key} </span>
+              <span> 
+                {' '}
+                {key}
+                {' '}
+              </span>
             </div>
           ))}
         </div>

@@ -27,7 +27,11 @@ class BucketedWordlist {
   }
 
   storeWordInBucket(word, indices) {
-    const key = this.getKey(word.length, indices, _.map(indices, (idx) => word[idx]));
+    const key = this.getKey(
+      word.length,
+      indices,
+      _.map(indices, (idx) => word[idx])
+    );
     if (!this.buckets[key]) {
       this.buckets[key] = [];
     }
@@ -108,7 +112,7 @@ export const getTopMatches = (pattern, scoredWordlist, C) => {
   return bucketedWordlist.getMatches(pattern, C);
 };
 
-export const scoreMatches = (pattern, scoredWordlist) => {};
+export const scoreMatches = () => {};
 
 export const countMatches = (pattern, scoredWordlist) => {
   const bucketedWordlist = getBucketedWordlist(scoredWordlist);

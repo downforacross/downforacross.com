@@ -26,7 +26,7 @@ export default class PuzzleList extends PureComponent {
     return scrollTop + clientHeight + buffer > scrollHeight;
   }
 
-  handleScroll = (e) => {
+  handleScroll = () => {
     if (this.container.current) {
       const scrollTop = this.container.current.scrollTop;
       this.props.onScroll && this.props.onScroll(scrollTop);
@@ -42,7 +42,7 @@ export default class PuzzleList extends PureComponent {
     }
   };
 
-  handleTouchEnd = (e) => {
+  handleTouchEnd = () => {
     console.log('touchend');
     if (this.container.current) return;
     const scrollTop = this.container.scrollTop;
@@ -98,9 +98,8 @@ export default class PuzzleList extends PureComponent {
       .filter(this.accept);
     if (!this.fullyScrolled) {
       return list.slice(0, 100);
-    } else {
-      return list;
     }
+    return list;
   }
 
   get puzzleStatuses() {
@@ -119,12 +118,12 @@ export default class PuzzleList extends PureComponent {
         _.keys(userHistory.solo).forEach((uid) => {
           const soloGames = userHistory.solo[uid];
           _.keys(soloGames).forEach((pid) => {
-            let {solved} = soloGames[pid];
+            const {solved} = soloGames[pid];
             setStatus(pid, solved);
           });
         });
       } else {
-        let {pid, solved} = userHistory[gid];
+        const {pid, solved} = userHistory[gid];
         setStatus(pid, solved);
       }
     });

@@ -1,3 +1,5 @@
+/* eslint react/no-string-refs: "warn" */
+// eslint-disable-next-line max-classes-per-file
 import './css/replay.css';
 import React, {Component} from 'react';
 import Flex from 'react-flexview';
@@ -38,35 +40,35 @@ const TimelineBar = ({type}) => {
 };
 
 // a pure arrow function component, so bars aren't re-computed every time
-const TimelineBars = pure(({history, begin, units}) => {
-  return (
-    <div>
-      {history.map(({timestamp, type}, i) => (
-        <div
-          key={i}
-          style={{
-            left: (timestamp - begin) * units,
-            position: 'absolute',
-            width: 2,
-            height: 40,
-          }}
-        >
-          <TimelineBar type={type} />
-        </div>
-      ))}
-    </div>
-  );
-});
+const TimelineBars = pure(({history, begin, units}) => (
+  <div>
+    {history.map(({timestamp, type}, i) => (
+      <div
+        key={i}
+        style={{
+          left: (timestamp - begin) * units,
+          position: 'absolute',
+          width: 2,
+          height: 40,
+        }}
+      >
+        <TimelineBar type={type} />
+      </div>
+    ))}
+  </div>
+));
 
 class Timeline extends React.PureComponent {
   get begin() {
     const {history} = this.props;
     return history[0].timestamp;
   }
+
   get end() {
     const {history} = this.props;
     return history[history.length - 1].timestamp;
   }
+
   get units() {
     const length = this.end - this.begin;
     const maxWidth = 10000;
@@ -129,7 +131,7 @@ class Timeline extends React.PureComponent {
     }
   };
 
-  handleMouseUp = (e) => {
+  handleMouseUp = () => {
     this.down = false;
   };
 
@@ -398,17 +400,17 @@ export default class Replay extends Component {
     const {clock} = this.game;
 
     function pad2(num) {
-      let s = '' + 100 + num;
+      let s = `${100}${num}`;
       s = s.substr(s.length - 2);
       return s;
     }
     const millis = clock.totalTime;
     let secs = Math.floor(millis / 1000);
     let mins = Math.floor(secs / 60);
-    secs = secs % 60;
-    let hours = Math.floor(mins / 60);
-    mins = mins % 60;
-    const str = (hours ? hours + ':' : '') + pad2(mins) + ':' + pad2(secs);
+    secs %= 60;
+    const hours = Math.floor(mins / 60);
+    mins %= 60;
+    const str = `${(hours ? `${hours}:` : '') + pad2(mins)}:${pad2(secs)}`;
 
     return (
       <div
@@ -431,10 +433,10 @@ export default class Replay extends Component {
 
     const {grid, circles, shades, cursors, clues, solved} = this.game;
     const screenWidth = this.screenWidth;
-    let cols = grid[0].length;
-    let rows = grid.length;
+    const cols = grid[0].length;
+    const rows = grid.length;
     const width = Math.min((35 * 15 * cols) / rows, screenWidth);
-    let size = width / cols;
+    const size = width / cols;
     return (
       <Player
         ref="game"
@@ -464,13 +466,7 @@ export default class Replay extends Component {
 
     return (
       <div className="replay--chat">
-        <Chat
-          ref="chat"
-          info={this.game.info}
-          data={this.game.chat}
-          colors={this.game.colors}
-          hideChatBar={true}
-        />
+        <Chat ref="chat" info={this.game.info} data={this.game.chat} colors={this.game.colors} hideChatBar />
       </div>
     );
   }
@@ -497,7 +493,7 @@ export default class Replay extends Component {
         <div className="scrub--container">
           <div
             ref="scrubLeft"
-            className={'scrub ' + (left ? 'active' : '')}
+            className={`scrub ${left ? 'active' : ''}`}
             onMouseDown={this.handleMouseDownLeft}
             onMouseUp={this.handleMouseUpLeft}
             onMouseLeave={this.handleMouseUpLeft}
@@ -511,7 +507,7 @@ export default class Replay extends Component {
         <div className="scrub--container">
           <div
             ref="scrubRight"
-            className={'scrub ' + (right ? 'active' : '')}
+            className={`scrub ${right ? 'active' : ''}`}
             onMouseDown={this.handleMouseDownRight}
             onMouseUp={this.handleMouseUpRight}
             onMouseLeave={this.handleMouseUpRight}
@@ -567,10 +563,10 @@ export default class Replay extends Component {
           {this.renderPlayer()}
           {this.renderChat()}
         </Flex>
-        {/*Controls:
+        {/* Controls:
       Playback scrubber
       Playback speed toggle
-      Skip inactivity checkbox*/}
+      Skip inactivity checkbox */}
       </Flex>
     );
   }

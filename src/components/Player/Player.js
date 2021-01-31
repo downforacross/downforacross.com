@@ -1,3 +1,4 @@
+/* eslint react/no-string-refs: "warn" */
 import './css/index.css';
 
 import React, {Component} from 'react';
@@ -36,7 +37,7 @@ const PING_TIMEOUT = 10000;
  *   - attributes: { getClueList(), selected, halfSelected }
  *   - callbacks: { selectClue }
  *
- **/
+ * */
 
 export default class Player extends Component {
   constructor(props) {
@@ -47,7 +48,6 @@ export default class Player extends Component {
         c: 0,
       },
       direction: 'across',
-      mobile: false,
     };
 
     // for deferring scroll-to-clue actions
@@ -125,7 +125,7 @@ export default class Player extends Component {
   setDirection(direction) {
     if (this.isValidDirection(direction, this.selected)) {
       this.setState({
-        direction: direction,
+        direction,
       });
     }
   }
@@ -136,7 +136,7 @@ export default class Player extends Component {
       if (selected.r !== this.selected.r || selected.c !== this.selected.c) {
         this.setState(
           {
-            selected: selected,
+            selected,
           },
           () => {
             this.props.updateCursor({
@@ -149,7 +149,8 @@ export default class Player extends Component {
     } else if (this.isValidDirection(gameUtils.getOppositeDirection(this.state.direction), selected)) {
       this.setState(
         {
-          selected: selected,
+          selected,
+          // eslint-disable-next-line react/no-access-state-in-setstate
           direction: gameUtils.getOppositeDirection(this.state.direction),
         },
         () => {
@@ -246,7 +247,7 @@ export default class Player extends Component {
   scrollToClue(dir, num, el) {
     if (el && this.prvNum[dir] !== num) {
       this.prvNum[dir] = num;
-      lazy('scrollToClue' + dir, () => {
+      lazy(`scrollToClue${dir}`, () => {
         const parent = el.offsetParent;
         if (parent) {
           parent.scrollTop = el.offsetTop - parent.offsetHeight * 0.4;
@@ -356,7 +357,7 @@ export default class Player extends Component {
             enableDebug={window.location.search.indexOf('debug') !== -1}
           >
             <div className="player--mobile" ref={this.mobileContainer}>
-              <div className={'player--mobile--grid' + (frozen ? ' frozen' : '')}>
+              <div className={`player--mobile--grid${frozen ? ' frozen' : ''}`}>
                 <Grid ref="grid" {...gridProps} />
               </div>
             </div>
@@ -396,7 +397,7 @@ export default class Player extends Component {
                 </div>
               </div>
 
-              <div className={'player--main--left--grid' + (frozen ? ' frozen' : '') + ' blurable'}>
+              <div className={`player--main--left--grid${frozen ? ' frozen' : ''} blurable`}>
                 <Grid ref="grid" {...gridProps} />
               </div>
             </div>
@@ -422,7 +423,13 @@ export default class Player extends Component {
             }}
           >
             <div>
-              {this.props.optimisticCounter ? <>{this.props.optimisticCounter} ahead</> : <>Synced</>}
+              {this.props.optimisticCounter ? (
+                <>
+                  {this.props.optimisticCounter}
+                  {' '}
+                  ahead
+                </>
+) : <>Synced</>}
             </div>
             <div>
               <ConnectionStats />

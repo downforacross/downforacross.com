@@ -1,11 +1,10 @@
-import {PuzzleJson, PuzzleStatsJson} from '../../shared/types';
 import _ from 'lodash';
 import React, {useEffect, useRef, useState} from 'react';
-import {useMount} from 'react-use';
+import {PuzzleJson, PuzzleStatsJson, ListPuzzleRequestFilters} from '../../shared/types';
 import {fetchPuzzleList} from '../../api/puzzle_list';
 import './css/puzzleList.css';
 import Entry, {EntryProps} from './Entry';
-import {ListPuzzleRequestFilters} from '../../shared/types';
+
 interface PuzzleStatuses {
   [pid: string]: 'solved' | 'started';
 }
