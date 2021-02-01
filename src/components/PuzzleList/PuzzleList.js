@@ -132,7 +132,7 @@ export default class PuzzleList extends PureComponent {
   }
 
   render() {
-    if (localStorage.newPuzzleListEnabled) {
+    if (process.env.REACT_APP_NEW_PUZZLE_LIST_ENABLED || localStorage.newPuzzleListEnabled) {
       const filter = {
         nameOrTitleFilter: this.props.search,
         sizeFilter: this.props.sizeFilter,
