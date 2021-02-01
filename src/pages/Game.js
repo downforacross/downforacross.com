@@ -274,6 +274,8 @@ export default class Game extends Component {
       });
     }
     if (this.game.solved) {
+      if (this.lastRecordedSolve === this.state.gid) return;
+      this.lastRecordedSolve = this.state.gid;
       if (this.gameModel.puzzleModel) {
         this.gameModel.puzzleModel.logSolve(this.state.gid, {
           solved: true,
