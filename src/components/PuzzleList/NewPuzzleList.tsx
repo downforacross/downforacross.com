@@ -38,22 +38,28 @@ const NewPuzzleList: React.FC<NewPuzzleListProps> = (props) => {
     return scrollTop + clientHeight + buffer > scrollHeight;
   };
 
-  const fetchMore = async (
-    currentPuzzles: {
-      pid: string;
-      content: PuzzleJson;
-      stats: PuzzleStatsJson;
-    }[],
-    currentPage: number
-  ) => {
-    if (loading) return;
-    setLoading(true);
-    const nextPage = await fetchPuzzleList({page: currentPage, pageSize, filter: props.filter});
-    setPuzzles([...currentPuzzles, ...nextPage.puzzles]);
-    setPage(currentPage + 1);
-    setLoading(false);
-    setFullyLoaded(_.size(nextPage.puzzles) < pageSize);
-  };
+  const fetchMore = React.useCallback(
+    _.debounce(
+      async (
+        currentPuzzles: {
+          pid: string;
+          content: PuzzleJson;
+          stats: PuzzleStatsJson;
+        }[],
+        currentPage: number
+      ) => {
+        if (loading) return;
+        setLoading(true);
+        const nextPage = await fetchPuzzleList({page: currentPage, pageSize, filter: props.filter});
+        setPuzzles([...currentPuzzles, ...nextPage.puzzles]);
+        setPage(currentPage + 1);
+        setLoading(false);
+        setFullyLoaded(_.size(nextPage.puzzles) < pageSize);
+      },
+      500
+    ),
+    [loading]
+  );
   useEffect(() => {
     // it is debatable if we want to blank out the current puzzles here or not,
     // for now we only change the puzzles when the reload happens.
