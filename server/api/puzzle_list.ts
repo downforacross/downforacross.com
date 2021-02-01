@@ -7,7 +7,6 @@ import {ListPuzzleRequestFilters} from '../../src/shared/types';
 const router = express.Router();
 
 router.get<{}, ListPuzzleResponse>('/', async (req, res, next) => {
-  console.log('got req', req.query);
   const page = Number.parseInt(req.query.page as string, 10);
   const pageSize = Number.parseInt(req.query.pageSize as string, 10);
   const rawFilters = req.query.filter as any;

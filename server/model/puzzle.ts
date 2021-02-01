@@ -89,7 +89,6 @@ export async function listPuzzles(
   );
   const ms = Date.now() - startTime;
   console.log(`listPuzzles (${JSON.stringify(filter)}, ${limit}, ${offset}) took ${ms}ms`);
-  console.log('returning', puzzles);
   return puzzles;
 }
 
