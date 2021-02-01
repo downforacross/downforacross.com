@@ -39,7 +39,7 @@ const NewPuzzleList: React.FC<NewPuzzleListProps> = (props) => {
   };
 
   const fetchMore = React.useCallback(
-    _.debounce(
+    _.throttle(
       async (
         currentPuzzles: {
           pid: string;
@@ -56,7 +56,8 @@ const NewPuzzleList: React.FC<NewPuzzleListProps> = (props) => {
         setLoading(false);
         setFullyLoaded(_.size(nextPage.puzzles) < pageSize);
       },
-      500
+      500,
+      {trailing: true}
     ),
     [loading]
   );
