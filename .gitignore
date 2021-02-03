@@ -31,3 +31,5 @@ backfills/*.json
 .envrc
 .env.production
 .env.staging
+
+.vercel
