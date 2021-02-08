@@ -3,10 +3,10 @@ import {
   GameEventParams,
   GameEventType,
   isInitializeGameEvent,
-  isUserPingGameEvent,
-} from '../../shared/gameEvents';
-import {CluesJson, InfoJson} from '../../shared/types';
-import {GridData} from '../../components/Grid/types';
+  isUserServerPingGameEvent,
+} from '../types';
+import {CluesJson, InfoJson} from '../../types';
+import {GridData} from '../../../components/Grid/types';
 
 /*
 from ./game.js -- which we are seeking to replace by gameV2.ts
@@ -75,7 +75,7 @@ export const gameReducer = (game: GameState, event: GameEvent): GameState => {
       return game;
     }
 
-    if (isUserPingGameEvent(event)) {
+    if (isUserServerPingGameEvent(event)) {
       return userPingReducer(game, event.params, event.timestamp);
     }
     if (isInitializeGameEvent(event)) {

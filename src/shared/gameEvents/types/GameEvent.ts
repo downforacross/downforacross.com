@@ -27,10 +27,3 @@ export interface GameEvent<T extends GameEventType = GameEventType> {
   params: GameEventParams[T];
   uid: string;
 }
-
-export const isUserPingGameEvent = (event: GameEvent): event is GameEvent<GameEventType.userPing> =>
-  event.type === GameEventType.userPing;
-
-export const isInitializeGameEvent = (event: GameEvent): event is GameEvent<GameEventType.initializeGame> =>
-  // returns a "type guard"
-  event.type === GameEventType.initializeGame;
