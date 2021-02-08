@@ -1,10 +1,21 @@
+import {GameJson} from '../../types';
 import {EventDef} from '../types/EventDef';
 
-interface CreateJson {}
+export interface CreateEvent {
+  pid: string;
+  game: GameJson;
+}
 
-const create: EventDef<CreateJson> = {
+const create: EventDef<CreateEvent> = {
   reducer(state, event) {
-    return state;
+    return {
+      loaded: true,
+      game: {
+        ...state.game,
+        pid: event.pid,
+        ...event.game,
+      },
+    };
   },
 };
 
