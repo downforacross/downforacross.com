@@ -7,13 +7,14 @@ export interface CreateEvent {
 }
 
 const create: EventDef<CreateEvent> = {
-  reducer(state, event) {
+  reducer(state, params) {
     return {
+      ...state,
       loaded: true,
       game: {
         ...state.game,
-        pid: event.pid,
-        ...event.game,
+        pid: params.pid,
+        ...params.game,
       },
     };
   },

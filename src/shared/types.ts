@@ -28,6 +28,7 @@ export interface GameJson {
   solution: string[][];
   clues: CluesJson;
 }
+export interface UserJson {}
 /**
  * PuzzleJson: the json format of puzzles stored in the db (both firebase & postgres)
  * Fields are a bit messy & don't correspond perfectly with puzjs formats... see logic in FileUploader.js
