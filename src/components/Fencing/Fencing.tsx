@@ -6,10 +6,11 @@ import {UserPingRoomEvent} from '../../shared/roomEvents';
 import {useSocket} from '../../sockets/useSocket';
 import {emitAsync} from '../../sockets/emitAsync';
 import Player from '../Player';
-import {gameReducer, GameState, initialGameState} from '../../shared/gameEvents/reducers/gameReducer';
-import {GameEvent} from '../../shared/gameEvents/types';
+import gameReducer, {initialState} from '../../shared/gameEvents/gameReducer';
 import {transformGameToPlayerProps} from './transformGameToPlayerProps';
 import {usePlayerActions} from './usePlayerActions';
+import {GameEvent} from '../../shared/gameEvents/types/GameEvent';
+import {GameState} from '../../shared/gameEvents/types/GameState';
 
 function subscribeToGameEvents(
   socket: SocketIOClient.Socket | undefined,
@@ -52,7 +53,7 @@ const useGameState = (events: GameEvent[]): GameState =>
   // TODO use memoization
   // (a data structure!!! that uses sqrt n bucketing to avoid re-evaluating the "sum" of a list from scratch every time it is appended to)
   // "a time traveling data structure" aka persistent array reduction
-  events.reduce<GameState>(gameReducer, initialGameState);
+  events.reduce<GameState>(gameReducer, initialState);
 /**
  * This component is parallel to Game -- will render a <Player/>
  * Will implement custom competitive crossword logic (see PR #145)

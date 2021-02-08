@@ -1,4 +1,5 @@
 import {Brand} from 'utility-types';
+import {CellData} from '../../shared/types';
 
 export interface CellStyle {
   backgroundColor: string;
@@ -21,17 +22,6 @@ export interface Cursor {
 export interface Ping extends Cursor {
   age: number;
 }
-
-export interface CellData {
-  value?: string;
-  black?: boolean;
-  number?: number;
-  revealed?: boolean;
-  bad?: boolean;
-  good?: boolean;
-  pencil?: boolean;
-}
-export type GridData = CellData[][];
 export type GridDataWithColor = (CellData & {attributionColor: string})[][];
 
 export interface CellCoords {

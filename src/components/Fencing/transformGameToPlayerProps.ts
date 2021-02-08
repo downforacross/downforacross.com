@@ -1,9 +1,8 @@
 /**
  * Perhaps this whole file could live elsewhere, e.g. Player/transformGameToPlayerProps?
  * */
-import {GameJson} from '../../shared/gameEvents/reducers/gameReducer';
-import {CluesJson} from '../../shared/types';
-import {CellCoords, CellIndex, Cursor, GridData, Ping} from '../Grid/types';
+import {CluesJson, GameJson, GridData} from '../../shared/types';
+import {CellCoords, CellIndex, Cursor, Ping} from '../Grid/types';
 import {PlayerActions} from './usePlayerActions';
 
 interface PlayerProps {

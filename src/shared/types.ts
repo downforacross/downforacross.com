@@ -10,6 +10,24 @@ export interface CluesJson {
   across: string[];
   down: string[];
 }
+
+export interface CellData {
+  value?: string;
+  black?: boolean;
+  number?: number;
+  revealed?: boolean;
+  bad?: boolean;
+  good?: boolean;
+  pencil?: boolean;
+}
+export type GridData = CellData[][];
+
+export interface GameJson {
+  info: InfoJson;
+  grid: GridData;
+  solution: string[][];
+  clues: CluesJson;
+}
 /**
  * PuzzleJson: the json format of puzzles stored in the db (both firebase & postgres)
  * Fields are a bit messy & don't correspond perfectly with puzjs formats... see logic in FileUploader.js

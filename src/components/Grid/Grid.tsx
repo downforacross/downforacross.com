@@ -7,7 +7,6 @@ import RerenderBoundary from '../RerenderBoundary';
 import {hashGridRow} from './hashGridRow';
 import Cell from './Cell';
 import {
-  GridData,
   GridDataWithColor,
   CellCoords,
   CellIndex,
@@ -18,6 +17,7 @@ import {
   CellStyles,
   Ping,
 } from './types';
+import {GridData} from '../../shared/types';
 
 interface GridProps {
   // Grid data
