@@ -59,7 +59,7 @@ const useGameState = (events: GameEvent[]): GameState =>
  * @param props
  */
 export const Fencing: React.FC<{gid: string}> = (props) => {
-  const gid = props.gid;
+  const {gid} = props;
   const socket = useSocket();
 
   async function sendUserPing() {

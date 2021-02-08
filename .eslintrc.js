@@ -36,6 +36,7 @@ module.exports = {
     'react/jsx-filename-extension': 'off',
     'react/button-has-type': 'off',
     'react/sort-comp': 'off',
+    'import/prefer-default-export': 'off',
 
     // Used too much in existing code to fix, but new code can follow it
     'react/destructuring-assignment': 'warn',
@@ -46,7 +47,6 @@ module.exports = {
     'jsx-a11y/no-noninteractive-element-interactions': 'warn',
     'jsx-a11y/mouse-events-have-key-events': 'warn',
     '@typescript-eslint/no-shadow': 'warn',
-    'import/prefer-default-export': 'warn',
     'consistent-return': 'warn',
     'no-param-reassign': ['warn', {props: false}],
     'react/jsx-no-bind': 'warn',
