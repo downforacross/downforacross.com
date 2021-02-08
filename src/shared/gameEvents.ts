@@ -1,13 +1,21 @@
 export enum GameEventType {
-  USER_PING = 'USER_PING',
-  INITIALIZE_GAME = 'create',
+  userServerPing = 'userServerPing',
+  initializeGame = 'create',
+  updateCursor = 'updateCursor',
+  addPing = 'addPing',
+  updateDisplayName = 'updateDisplayName',
+  updateColor = 'updateColor',
+  updateCell = 'updateCell',
+  check = 'check',
+  reveal = 'reveal',
+  reset = 'reset',
 }
 
 export interface GameEventParams {
-  [GameEventType.USER_PING]: {
+  [GameEventType.userServerPing]: {
     uid: string;
   };
-  [GameEventType.INITIALIZE_GAME]: {
+  [GameEventType.initializeGame]: {
     pid: string;
     game: any;
   };
@@ -20,9 +28,9 @@ export interface GameEvent<T extends GameEventType = GameEventType> {
   uid: string;
 }
 
-export const isUserPingGameEvent = (event: GameEvent): event is GameEvent<GameEventType.USER_PING> =>
-  event.type === GameEventType.USER_PING;
+export const isUserPingGameEvent = (event: GameEvent): event is GameEvent<GameEventType.userPing> =>
+  event.type === GameEventType.userPing;
 
-export const isInitializeGameEvent = (event: GameEvent): event is GameEvent<GameEventType.INITIALIZE_GAME> =>
+export const isInitializeGameEvent = (event: GameEvent): event is GameEvent<GameEventType.initializeGame> =>
   // returns a "type guard"
-  event.type === GameEventType.INITIALIZE_GAME;
+  event.type === GameEventType.initializeGame;
