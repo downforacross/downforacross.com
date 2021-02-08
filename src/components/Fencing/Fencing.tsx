@@ -2,15 +2,16 @@ import React, {useState} from 'react';
 import {useUpdateEffect} from 'react-use';
 import {Helmet} from 'react-helmet';
 import {makeStyles} from '@material-ui/core';
-import {UserPingRoomEvent} from '../../shared/roomEvents';
 import {useSocket} from '../../sockets/useSocket';
 import {emitAsync} from '../../sockets/emitAsync';
 import Player from '../Player';
-import gameReducer, {initialState} from '../../shared/gameEvents/gameReducer';
+import gameReducer from '../../shared/gameEvents/gameReducer';
+import {initialState} from '../../shared/gameEvents/initialState';
 import {transformGameToPlayerProps} from './transformGameToPlayerProps';
 import {usePlayerActions} from './usePlayerActions';
 import {GameEvent} from '../../shared/gameEvents/types/GameEvent';
 import {GameState} from '../../shared/gameEvents/types/GameState';
+import {getUser} from '../../store/user';
 
 function subscribeToGameEvents(
   socket: SocketIOClient.Socket | undefined,
@@ -49,11 +50,12 @@ const useStyles = makeStyles({
  * Computes the current game state, given a list of events.
  * @param events list of events
  */
-const useGameState = (events: GameEvent[]): GameState =>
+const useGameState = (events: GameEvent[]): GameState => (
   // TODO use memoization
   // (a data structure!!! that uses sqrt n bucketing to avoid re-evaluating the "sum" of a list from scratch every time it is appended to)
   // "a time traveling data structure" aka persistent array reduction
-  events.reduce<GameState>(gameReducer, initialState);
+  console.log('reducing', events), events.reduce<GameState>(gameReducer, initialState)
+);
 /**
  * This component is parallel to Game -- will render a <Player/>
  * Will implement custom competitive crossword logic (see PR #145)
@@ -63,10 +65,11 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
   const {gid} = props;
   const socket = useSocket();
 
-  async function sendUserPing() {
+  async function sendEvent(event: GameEvent) {
     if (socket) {
-      const event = UserPingRoomEvent();
       emitAsync(socket, 'game_event', {gid, event});
+    } else {
+      console.warn('Cannot send event; not connected to server');
     }
   }
 
@@ -75,7 +78,15 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
   useUpdateEffect(() => {
     setEvents([]);
     const {syncPromise, unsubscribe} = subscribeToGameEvents(socket, gid, setEvents);
-    syncPromise.then(sendUserPing);
+    syncPromise.then(() =>
+      sendEvent({
+        type: 'updateDisplayName',
+        params: {
+          id: getUser().id,
+          displayName: 'Hello!',
+        },
+      })
+    );
     return unsubscribe;
   }, [gid, socket]);
 
