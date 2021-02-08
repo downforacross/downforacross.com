@@ -1,4 +1,4 @@
-import {GameEvent, GameEventType} from './GameEvent';
+import {GameEventType} from './GameEvent';
+import {makeGameEventTypeGuard} from './makeGameEventTypeGuard';
 
-export const isInitializeGameEvent = (event: GameEvent): event is GameEvent<GameEventType.initializeGame> =>
-  event.type === GameEventType.initializeGame;
+export const isInitializeGameEvent = makeGameEventTypeGuard(GameEventType.initializeGame);

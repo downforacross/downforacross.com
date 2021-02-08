@@ -52,14 +52,14 @@ interface GameReducerFn<T extends GameEventType = GameEventType> {
   (game: GameState, params: GameEventParams[T], timestamp: number): GameState;
 }
 
-const userPingReducer: GameReducerFn<GameEventType.USER_PING> = (gameState) => gameState;
+const userPingReducer: GameReducerFn<GameEventType.userServerPing> = (gameState) => gameState;
 
 export const initialGameState: GameState = {
   loaded: false,
   game: null,
 };
 
-const initializeGameReducer: GameReducerFn<GameEventType.INITIALIZE_GAME> = (gameState, params) => ({
+const initializeGameReducer: GameReducerFn<GameEventType.initializeGame> = (gameState, params) => ({
   loaded: true,
   game: {
     ...initialGameState.game,

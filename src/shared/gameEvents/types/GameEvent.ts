@@ -2,13 +2,13 @@ export enum GameEventType {
   userServerPing = 'userServerPing',
   initializeGame = 'create',
   updateCursor = 'updateCursor',
-  addPing = 'addPing',
-  updateDisplayName = 'updateDisplayName',
-  updateColor = 'updateColor',
-  updateCell = 'updateCell',
-  check = 'check',
-  reveal = 'reveal',
-  reset = 'reset',
+  // addPing = 'addPing',
+  // updateDisplayName = 'updateDisplayName',
+  // updateColor = 'updateColor',
+  // updateCell = 'updateCell',
+  // check = 'check',
+  // reveal = 'reveal',
+  // reset = 'reset',
 }
 
 export interface GameEventParams {
@@ -18,6 +18,13 @@ export interface GameEventParams {
   [GameEventType.initializeGame]: {
     pid: string;
     game: any;
+  };
+  [GameEventType.updateCursor]: {
+    cell: {r: number; c: number};
+    value: string;
+    color: string;
+    pencil: boolean;
+    id: string;
   };
 }
 

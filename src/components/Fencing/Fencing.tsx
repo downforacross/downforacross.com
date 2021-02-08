@@ -7,7 +7,7 @@ import {useSocket} from '../../sockets/useSocket';
 import {emitAsync} from '../../sockets/emitAsync';
 import Player from '../Player';
 import {gameReducer, GameState, initialGameState} from '../../shared/gameEvents/reducers/gameReducer';
-import {GameEvent} from '../../shared/gameEvents';
+import {GameEvent} from '../../shared/gameEvents/types';
 import {transformGameToPlayerProps} from './transformGameToPlayerProps';
 import {usePlayerActions} from './usePlayerActions';
 

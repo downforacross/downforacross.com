@@ -1,5 +1,6 @@
 import {getUser} from '../../../store/user';
 import {GameEvent, GameEventType} from './GameEvent';
+import {makeGameEventTypeGuard} from './makeGameEventTypeGuard';
 
 export const UserServerPingGameEvent = (): GameEvent<GameEventType.userServerPing> => ({
   timestamp: Date.now(),
@@ -10,5 +11,4 @@ export const UserServerPingGameEvent = (): GameEvent<GameEventType.userServerPin
   },
 });
 
-export const isUserServerPingGameEvent = (event: GameEvent): event is GameEvent<GameEventType.userPing> =>
-  event.type === GameEventType.userServerPing;
+export const isUserServerPingGameEvent = makeGameEventTypeGuard(GameEventType.userServerPing);
