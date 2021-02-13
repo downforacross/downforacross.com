@@ -59,7 +59,7 @@ const NewPuzzleList: React.FC<NewPuzzleListProps> = (props) => {
       500,
       {trailing: true}
     ),
-    [loading]
+    [loading, JSON.stringify(props.filter)]
   );
   useEffect(() => {
     // it is debatable if we want to blank out the current puzzles here or not,
