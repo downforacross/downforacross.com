@@ -102,7 +102,6 @@ const NewPuzzleList: React.FC<NewPuzzleListProps> = (props) => {
       }[data.entryProps.status];
       return props.statusFilter[mappedStatus];
     });
-  console.log('Render new puzzle list', puzzles);
   return (
     <div
       ref={containerRef}
