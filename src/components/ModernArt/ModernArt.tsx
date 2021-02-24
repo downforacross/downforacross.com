@@ -76,12 +76,24 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
     setEvents([]);
     const {syncPromise, unsubscribe} = subscribeToGameEvents(socket, gid, setEvents);
     console.log('subscribing', syncPromise);
+    const names = [
+      'manuel',
+      'melim',
+      'sigrid',
+      'ramon',
+      'rafael',
+      'daniel',
+      'carvaliho',
+      'thaler',
+      'martins',
+      'silveira',
+    ];
     syncPromise.then(() =>
       sendEvent({
         type: 'update_name',
         params: {
           id: getUser().id,
-          name: 'manuel',
+          name: names[Math.random() * names.length],
         },
       })
     );
