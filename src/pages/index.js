@@ -10,5 +10,20 @@ import Composition from './Composition';
 import Stats from './Stats';
 import Room from './Room';
 import Fencing from './Fencing';
+import ModernArt from './ModernArt';
 
-export {Welcome, Compose, Account, Replays, Game, Play, Replay, Composition, Battle, Stats, Room, Fencing};
+export {
+  Welcome,
+  Compose,
+  Account,
+  Replays,
+  Game,
+  Play,
+  Replay,
+  Composition,
+  Battle,
+  Stats,
+  Room,
+  Fencing,
+  ModernArt,
+};
