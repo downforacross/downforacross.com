@@ -1,5 +1,4 @@
 /* eslint @typescript-eslint/no-unused-vars : "warn" */
-import {CellCoords} from '../Grid/types';
 import {ModernArtEvent} from './events/types';
 
 export interface PlayerActions {

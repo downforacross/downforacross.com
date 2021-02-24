@@ -8,6 +8,7 @@ export interface ModernArtState {
   users: {
     [id: string]: {
       name: string;
+      icon: string;
     };
   };
 }

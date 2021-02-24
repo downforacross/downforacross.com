@@ -14,6 +14,7 @@ export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): 
         ...state.users,
         [event.params.id]: {
           name: [event.params.name],
+          icon: [event.params.icon],
         },
       },
     };

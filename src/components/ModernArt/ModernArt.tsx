@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import React, {useState} from 'react';
 import {useUpdateEffect} from 'react-use';
 import {Helmet} from 'react-helmet';
@@ -36,13 +37,6 @@ function subscribeToGameEvents(
 
   return {syncPromise, unsubscribe};
 }
-const useStyles = makeStyles({
-  container: {
-    display: 'flex',
-    height: '100%',
-    flexDirection: 'column',
-  },
-});
 
 /**
  * This component is parallel to Game -- will render a <Player/>
@@ -75,6 +69,7 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
   useUpdateEffect(() => {
     setEvents([]);
     const {syncPromise, unsubscribe} = subscribeToGameEvents(socket, gid, setEvents);
+    const icons = ['🤨', '🧐', '🥺'];
     console.log('subscribing', syncPromise);
     const names = [
       'manuel',
@@ -94,6 +89,7 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
         params: {
           id: getUser().id,
           name: names[Math.floor(Math.random() * names.length)],
+          icon: icons[Math.floor(Math.random() * icons.length)],
         },
       })
     );
@@ -114,17 +110,49 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
       <Helmet title={`Modern Art ${gid}`} />
       <h1>Welcome to modern art</h1>
       {!gameState.started && (
-        <div>
+        <div className={classes.startButton}>
           Click Start!
           <button onClick={actions.startGame}>Start!</button>
         </div>
       )}
-      {gameState.started && <div>Game has Started</div>}
-      {users.length}
-      users here
-      {users.map((user, i) => (
-        <div key={i}>{user.name}</div>
-      ))}
+      {gameState.started && <div className={classes.message}>Game has Started</div>}
+      <div className={classes.usersList}>
+        {users.length}
+        users here
+        {users.map((user, i) => (
+          <div key={i}>
+            {user.icon}
+            {user.name}
+          </div>
+        ))}
+      </div>
+      <div className={classes.currentPlayer}>Your Hand</div>
     </div>
   );
 };
+
+const useStyles = makeStyles({
+  container: {
+    display: 'flex',
+    height: '100%',
+    flexDirection: 'column',
+  },
+  startButton: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  message: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  usersList: {
+    display: 'flex',
+    flexDirection: 'column',
+    '& div': {
+      padding: 12,
+    },
+  },
+  currentPlayer: {
+    display: 'flex',
+  },
+});
