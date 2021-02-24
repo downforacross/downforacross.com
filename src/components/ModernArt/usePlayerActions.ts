@@ -5,6 +5,7 @@ export interface PlayerActions {
   startGame(): void;
   step(): void;
   startAuction(userId: string, idx: number): void;
+  submitBid(userId: string, bidAmount: number): void;
 }
 
 // translate <Player/> callbacks to game events emitted
@@ -29,6 +30,15 @@ export const usePlayerActions = (dispatch: (event: ModernArtEvent) => Promise<vo
       params: {
         userId,
         idx,
+      },
+    });
+  },
+  submitBid(userId, bidAmount) {
+    dispatch({
+      type: 'submit_bid',
+      params: {
+        userId,
+        bidAmount,
       },
     });
   },

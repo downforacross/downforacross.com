@@ -113,6 +113,7 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
   };
 
   const submitBid = () => {
+    // sendEvent
     window.alert('current bid is ' + currentBid);
   };
 
@@ -129,7 +130,6 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
       <div className={classes.nextButton}>
         <button onClick={actions.step}>Next!</button>
       </div>
-
       {gameState.started && <div className={classes.message}>Game has Started</div>}
       <div className={classes.usersList}>
         {users.length}
@@ -165,6 +165,21 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
       ))}
       {gameState.currentAuction.auctionType == AuctionType.HIDDEN && (
         <div>
+          <h1>
+            Player {gameState.currentAuction.auctioneer} is holding a {gameState.currentAuction.auctionType}{' '}
+            auction for a painting {gameState.currentAuction.painting.painter}
+          </h1>
+          <input type="number" onChange={handleInputChange} value={currentBid} />
+          <button onClick={submitBid}> Submit Bid </button>
+        </div>
+      )}
+      {gameState.currentAuction.auctionType == AuctionType.OPEN && (
+        <div>
+          <h1>
+            Player {gameState.currentAuction.auctioneer} is holding a {gameState.currentAuction.auctionType}{' '}
+            auction for a painting {gameState.currentAuction.painting.painter}
+          </h1>
+          <h1>Highest Bid is currently 2 by user dog </h1>
           <input type="number" onChange={handleInputChange} value={currentBid} />
           <button onClick={submitBid}> Submit Bid </button>
         </div>

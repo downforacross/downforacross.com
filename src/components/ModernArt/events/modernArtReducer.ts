@@ -1,7 +1,7 @@
 import _ from 'lodash';
 // @ts-ignore
 import pseudoRandom from 'pseudo-random';
-import {ModernArtState, ModernArtEvent} from './types';
+import {ModernArtState, ModernArtEvent, AuctionType} from './types';
 
 export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): ModernArtState => {
   if (event.type === 'start_game') {
@@ -9,6 +9,18 @@ export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): 
       ...state,
       started: true,
     };
+  }
+  if (event.type === 'submit_bid') {
+    if (event.params.bidValue > state.currentAuction.highestBid!) {
+      return {
+        ...state,
+        currentAuction: {
+          ...state.currentAuction,
+          highestBidder: event.params.userId,
+          highestBid: event.params.bidValue,
+        },
+      };
+    }
   }
   if (event.type === 'update_name') {
     return {

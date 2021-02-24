@@ -1,5 +1,5 @@
 export interface ModernArtEvent {
-  type: 'start_game' | 'update_name' | 'step' | 'start_auction';
+  type: 'start_game' | 'update_name' | 'step' | 'start_auction' | 'submit_bid';
   params: any;
 }
 
@@ -9,11 +9,11 @@ interface Card {
 }
 
 export enum AuctionType {
-  // OPEN = 'OPEN',
+  OPEN = 'OPEN',
   HIDDEN = 'HIDDEN',
-  // ONE_OFFER = 'ONE_OFFER',
-  // FIXED = 'FIXED',
-  // DOUBLE = 'DOUBLE',
+  ONE_OFFER = 'ONE_OFFER',
+  FIXED = 'FIXED',
+  DOUBLE = 'DOUBLE',
 }
 
 export interface Painting {
@@ -24,10 +24,11 @@ export interface Auction {
   auctionType: AuctionType;
   auctioneer: string;
   painting: Painting;
-  // secondPainting?: Painting;
-  // fixedPrice?: number;
-  highestBid?: number | null;
-  highestBidder?: string | null;
+  secondPainting?: Painting; // DOUBLE
+  fixedPrice?: number; // FIXED
+  highestBid?: number | null; // ONE_OFFER, HIDDEN, OPEN
+  highestBidder?: string | null; // ONE_OFFER, HIDDEN, OPEN
+  latestBidder?: number | null; // ONE_OFFER, FIXED
 }
 export interface ModernArtState {
   started: boolean;
@@ -52,7 +53,7 @@ export const initialState: ModernArtState = {
   roundIndex: 0,
   roundStarted: false,
   currentAuction: {
-    auctionType: AuctionType.HIDDEN,
+    auctionType: AuctionType.OPEN,
     auctioneer: 'cat',
     painting: {
       painter: 'sigrid',
