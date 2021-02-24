@@ -167,8 +167,8 @@ const useStyles = makeStyles({
     alignItems: 'center',
     width: 100,
     height: 200,
-    backgroundColor: 'gray',
-    color: 'white',
+    backgroundColor: '#CCC',
+    color: '#333',
     fontSize: 24,
     marginLeft: 24,
     '&:hover button': {
