@@ -115,7 +115,8 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
       <h1>Welcome to modern art</h1>
       {!gameState.started && <div>Click Start!</div>}
       {gameState.started && <div>Game as Started</div>}
-      {users.length} users here
+      {users.length}
+      users here
       {users.map((user, i) => (
         <div key={i}>{user.name}</div>
       ))}
