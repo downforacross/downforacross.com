@@ -8,6 +8,27 @@ interface Card {
   auctionType: string;
 }
 
+export enum AuctionType {
+  // OPEN = 'OPEN',
+  HIDDEN = 'HIDDEN',
+  // ONE_OFFER = 'ONE_OFFER',
+  // FIXED = 'FIXED',
+  // DOUBLE = 'DOUBLE',
+}
+
+export interface Painting {
+  painter: string;
+  id: number;
+}
+export interface Auction {
+  auctionType: AuctionType;
+  auctioneer: string;
+  painting: Painting;
+  // secondPainting?: Painting;
+  // fixedPrice?: number;
+  highestBid?: number | null;
+  highestBidder?: string | null;
+}
 export interface ModernArtState {
   started: boolean;
   deck: Card[];
@@ -20,6 +41,7 @@ export interface ModernArtState {
   };
   roundIndex: number;
   roundStarted: boolean;
+  currentAuction: Auction;
 }
 
 export const initialState: ModernArtState = {
@@ -28,4 +50,14 @@ export const initialState: ModernArtState = {
   deck: [],
   roundIndex: 0,
   roundStarted: false,
+  currentAuction: {
+    auctionType: AuctionType.HIDDEN,
+    auctioneer: 'cat',
+    painting: {
+      painter: 'sigrid',
+      id: 1,
+    },
+    highestBid: null,
+    highestBidder: null,
+  },
 };
