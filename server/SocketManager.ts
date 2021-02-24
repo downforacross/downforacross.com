@@ -35,9 +35,6 @@ class SocketManager {
   }
 
   async addGameEvent(gid: string, event: SocketEvent) {
-    if (!event.timestamp) {
-      event.timestamp = Date.now();
-    }
     const gameEvent: GameEvent = assignTimestamp(event);
     await addGameEvent(gid, gameEvent);
     this.io.to(`game-${gid}`).emit('game_event', gameEvent);

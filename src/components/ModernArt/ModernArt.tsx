@@ -56,7 +56,15 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
   async function sendEvent(event: ModernArtEvent) {
     console.log('send event', event);
     if (socket) {
-      emitAsync(socket, 'game_event', {gid, event});
+      emitAsync(socket, 'game_event', {
+        gid,
+        event: {
+          ...event,
+          timestamp: {
+            '.sv': 'timestamp',
+          },
+        },
+      });
     } else {
       console.warn('Cannot send event; not connected to server');
     }
