@@ -1,5 +1,5 @@
 export interface ModernArtEvent {
-  type: 'start_game' | 'update_name' | 'step';
+  type: 'start_game' | 'update_name' | 'step' | 'start_auction';
   params: any;
 }
 

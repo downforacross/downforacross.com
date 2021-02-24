@@ -4,6 +4,7 @@ import {ModernArtEvent} from './events/types';
 export interface PlayerActions {
   startGame(): void;
   step(): void;
+  startAuction(userId: string, idx: number): void;
 }
 
 // translate <Player/> callbacks to game events emitted
@@ -20,6 +21,15 @@ export const usePlayerActions = (dispatch: (event: ModernArtEvent) => Promise<vo
     dispatch({
       type: 'step',
       params: {},
+    });
+  },
+  startAuction(userId, idx) {
+    dispatch({
+      type: 'start_auction',
+      params: {
+        userId,
+        idx,
+      },
     });
   },
 });

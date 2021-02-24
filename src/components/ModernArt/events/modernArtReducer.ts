@@ -72,5 +72,18 @@ export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): 
       };
     }
   }
+
+  if (event.type === 'start_auction') {
+    return {
+      ...state,
+      users: {
+        ...state.users,
+        [event.params.id]: {
+          ...state.users[event.params.id],
+        },
+      },
+    };
+    // pass
+  }
   return state;
 };

@@ -128,11 +128,17 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
             {user.icon}
             {user.name}
             <div className={classes.cards}>
-              {user.cards.map((card) => (
+              {user.cards.map((card, i) => (
                 <div className={classes.card}>
                   <div className={classes.cardHeader} style={{backgroundColor: card.color}} />
                   {card.auctionType}
-                  <button>Play this card</button>
+                  <button
+                    onClick={() => {
+                      actions.startAuction(user.id, i);
+                    }}
+                  >
+                    Play this card
+                  </button>
                 </div>
               ))}
             </div>
