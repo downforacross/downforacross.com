@@ -34,6 +34,7 @@ export interface ModernArtState {
   deck: Card[];
   users: {
     [id: string]: {
+      id: string;
       name: string;
       icon: string;
       cards: Card[];
