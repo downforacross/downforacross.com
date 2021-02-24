@@ -11,13 +11,13 @@ export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): 
     };
   }
   if (event.type === 'submit_bid') {
-    if (event.params.bidValue > state.currentAuction.highestBid!) {
+    if (event.params.bidAmount > state.currentAuction.highestBid!) {
       return {
         ...state,
         currentAuction: {
           ...state.currentAuction,
           highestBidder: event.params.userId,
-          highestBid: event.params.bidValue,
+          highestBid: event.params.bidAmount,
         },
       };
     }

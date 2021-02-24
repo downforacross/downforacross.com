@@ -113,7 +113,7 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
   };
 
   const submitBid = () => {
-    // sendEvent
+    actions.submitBid(getUser().id, currentBid);
     window.alert('current bid is ' + currentBid);
   };
 
