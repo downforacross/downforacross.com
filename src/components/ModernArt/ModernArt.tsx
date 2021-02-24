@@ -93,7 +93,7 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
         type: 'update_name',
         params: {
           id: getUser().id,
-          name: names[Math.random() * names.length],
+          name: names[Math.floor(Math.random() * names.length)],
         },
       })
     );
@@ -116,8 +116,8 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
       {!gameState.started && <div>Click Start!</div>}
       {gameState.started && <div>Game as Started</div>}
       {users.length} users here
-      {users.map((user) => (
-        <div>{user.name}</div>
+      {users.map((user, i) => (
+        <div key={i}>{user.name}</div>
       ))}
     </div>
   );
