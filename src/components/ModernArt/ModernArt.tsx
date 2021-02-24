@@ -106,15 +106,20 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
   console.log('Events', events);
   console.log('Game State:', gameState);
 
-  const playerStateHook = usePlayerActions(socket);
+  const actions = usePlayerActions(sendEvent);
   const users = _.values(gameState.users);
 
   return (
     <div className={classes.container}>
       <Helmet title={`Modern Art ${gid}`} />
       <h1>Welcome to modern art</h1>
-      {!gameState.started && <div>Click Start!</div>}
-      {gameState.started && <div>Game as Started</div>}
+      {!gameState.started && (
+        <div>
+          Click Start!
+          <button onClick={actions.startGame}>Start!</button>
+        </div>
+      )}
+      {gameState.started && <div>Game has Started</div>}
       {users.length}
       users here
       {users.map((user, i) => (
