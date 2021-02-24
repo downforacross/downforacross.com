@@ -33,6 +33,7 @@
     "morgan": "^1.10.0",
     "nodemon": "^2.0.3",
     "pg": "^8.3.3",
+    "pseudo-random": "^0.6.0",
     "puzjs": "^1.0.2",
     "querystringify": "^2.2.0",
     "react": "^16.12",

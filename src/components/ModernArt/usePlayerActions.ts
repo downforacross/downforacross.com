@@ -3,6 +3,7 @@ import {ModernArtEvent} from './events/types';
 
 export interface PlayerActions {
   startGame(): void;
+  step(): void;
 }
 
 // translate <Player/> callbacks to game events emitted
@@ -14,5 +15,11 @@ export const usePlayerActions = (dispatch: (event: ModernArtEvent) => Promise<vo
       params: {},
     });
     // TODO
+  },
+  step() {
+    dispatch({
+      type: 'step',
+      params: {},
+    });
   },
 });

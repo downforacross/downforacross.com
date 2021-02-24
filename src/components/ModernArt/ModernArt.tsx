@@ -3,13 +3,13 @@ import React, {useState} from 'react';
 import {useUpdateEffect} from 'react-use';
 import {Helmet} from 'react-helmet';
 import {makeStyles} from '@material-ui/core';
+import _ from 'lodash';
 import {useSocket} from '../../sockets/useSocket';
 import {emitAsync} from '../../sockets/emitAsync';
 import {usePlayerActions} from './usePlayerActions';
 import {getUser} from '../../store/user';
 import {useGameState} from './useGameState';
 import {ModernArtEvent} from './events/types';
-import _ from 'lodash';
 
 function subscribeToGameEvents(
   socket: SocketIOClient.Socket | undefined,
@@ -115,6 +115,10 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
           <button onClick={actions.startGame}>Start!</button>
         </div>
       )}
+      <div className={classes.nextButton}>
+        <button onClick={actions.step}>Next!</button>
+      </div>
+
       {gameState.started && <div className={classes.message}>Game has Started</div>}
       <div className={classes.usersList}>
         {users.length}
@@ -123,10 +127,18 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
           <div key={i}>
             {user.icon}
             {user.name}
+            <div className={classes.cards}>
+              {user.cards.map((card) => (
+                <div className={classes.card}>
+                  <div className={classes.cardHeader} style={{backgroundColor: card.color}} />
+                  {card.auctionType}
+                  <button>Play this card</button>
+                </div>
+              ))}
+            </div>
           </div>
         ))}
       </div>
-      <div className={classes.currentPlayer}>Your Hand</div>
     </div>
   );
 };
@@ -141,10 +153,36 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'column',
   },
+  nextButton: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
   message: {
     display: 'flex',
     flexDirection: 'column',
   },
+  card: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: 100,
+    height: 200,
+    backgroundColor: 'gray',
+    color: 'white',
+    fontSize: 24,
+    marginLeft: 24,
+    '&:hover button': {
+      display: 'block',
+    },
+    '& button': {
+      display: 'none',
+    },
+  },
+  cardHeader: {
+    height: 50,
+    alignSelf: 'stretch',
+  },
+
   usersList: {
     display: 'flex',
     flexDirection: 'column',
@@ -152,7 +190,7 @@ const useStyles = makeStyles({
       padding: 12,
     },
   },
-  currentPlayer: {
+  cards: {
     display: 'flex',
   },
 });

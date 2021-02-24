@@ -11678,6 +11678,11 @@ prr@~1.0.1:
   resolved "https://registry.yarnpkg.com/prr/-/prr-1.0.1.tgz#d3fc114ba06995a45ec6893f484ceb1d78f5f476"
   integrity sha1-0/wRS6BplaRexok/SEzrHXj19HY=
 
+pseudo-random@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/pseudo-random/-/pseudo-random-0.6.0.tgz#73d000c2068dd2c613cc0fc23d0bd1a785d57036"
+  integrity sha1-c9AAwgaN0sYTzA/CPQvRp4XVcDY=
+
 psl@^1.1.28:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/psl/-/psl-1.8.0.tgz#9326f8bcfb013adcc005fdff056acce020e51c24"
