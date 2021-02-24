@@ -9,7 +9,7 @@ import {emitAsync} from '../../sockets/emitAsync';
 import {usePlayerActions} from './usePlayerActions';
 import {getUser} from '../../store/user';
 import {useGameState} from './useGameState';
-import {ModernArtEvent} from './events/types';
+import {AuctionType, ModernArtEvent} from './events/types';
 
 function subscribeToGameEvents(
   socket: SocketIOClient.Socket | undefined,
@@ -105,6 +105,17 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
   const actions = usePlayerActions(sendEvent);
   const users = _.values(gameState.users);
 
+  const [currentBid, setCurrentBid] = useState(0);
+
+  const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    const number = Number(e.currentTarget.value);
+    setCurrentBid(number);
+  };
+
+  const submitBid = () => {
+    window.alert('current bid is ' + currentBid);
+  };
+
   return (
     <div className={classes.container}>
       <Helmet title={`Modern Art ${gid}`} />
@@ -145,6 +156,19 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
           </div>
         ))}
       </div>
+      {!gameState.started && <div>Click Start!</div>}
+      {gameState.started && <div>Game as Started</div>}
+      {users.length}
+      users here
+      {users.map((user, i) => (
+        <div key={i}>{user.name}</div>
+      ))}
+      {gameState.currentAuction.auctionType == AuctionType.HIDDEN && (
+        <div>
+          <input type="number" onChange={handleInputChange} value={currentBid} />
+          <button onClick={submitBid}> Submit Bid </button>
+        </div>
+      )}
     </div>
   );
 };
