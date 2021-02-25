@@ -113,7 +113,7 @@ export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): 
           auctionType,
         }))
       );
-      let deck = [...ALL_CARDS];
+      let deck = [...ALL_CARDS, ...ALL_CARDS, ...ALL_CARDS, ...ALL_CARDS];
       // for (let i = 0; i < deck.length; i += 1) {
       //   const j = Math.floor(prng.random() * (i + 1));
       //   console.log(i, j);
