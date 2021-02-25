@@ -9,7 +9,7 @@ import {emitAsync} from '../../sockets/emitAsync';
 import {usePlayerActions} from './usePlayerActions';
 import {getUser} from '../../store/user';
 import {useGameState} from './useGameState';
-import {AuctionType, ModernArtEvent} from './events/types';
+import {AuctionStatus, AuctionType, ModernArtEvent} from './events/types';
 
 function subscribeToGameEvents(
   socket: SocketIOClient.Socket | undefined,
@@ -117,6 +117,11 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
     window.alert('current bid is ' + currentBid);
   };
 
+  const finishAuction = () => {
+    actions.finishAuction();
+    window.alert('auction is finished!');
+  };
+
   return (
     <div className={classes.container}>
       <Helmet title={`Modern Art ${gid}`} />
@@ -179,11 +184,28 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
             Player {gameState.currentAuction.auctioneer} is holding a {gameState.currentAuction.auctionType}{' '}
             auction for a painting {gameState.currentAuction.painting.painter}
           </h1>
-          <h1>Highest Bid is currently 2 by user dog </h1>
+          <h1>
+            Highest Bid is currently {gameState.currentAuction.highestBid} by user{' '}
+            {gameState.currentAuction.highestBidder}{' '}
+          </h1>
           <input type="number" onChange={handleInputChange} value={currentBid} />
           <button onClick={submitBid}> Submit Bid </button>
         </div>
       )}
+      {gameState.currentAuction.status == AuctionStatus.CLOSED && (
+        <div>
+          <h1>
+            Player {gameState.currentAuction.highestBidder} won painting{' '}
+            {gameState.currentAuction.painting.painter}
+            for {gameState.currentAuction.highestBid}
+          </h1>
+        </div>
+      )}
+      {
+        <div>
+          <button onClick={finishAuction}> Finish Auction </button>
+        </div>
+      }
     </div>
   );
 };

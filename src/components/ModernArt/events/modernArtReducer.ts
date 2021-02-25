@@ -1,13 +1,27 @@
 import _ from 'lodash';
 // @ts-ignore
 import pseudoRandom from 'pseudo-random';
-import {ModernArtState, ModernArtEvent, AuctionType} from './types';
+import {useRafState} from 'react-use';
+import {ModernArtState, ModernArtEvent, AuctionType, AuctionStatus} from './types';
 
 export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): ModernArtState => {
   if (event.type === 'start_game') {
     return {
       ...state,
       started: true,
+      users: _.mapValues(state.users, (user) => ({
+        ...user,
+        money: 100,
+      })),
+      rounds: {
+        '0': {
+          auctions: [],
+          users: _.mapValues(state.users, (user) => ({
+            id: user.id,
+            acquiredArt: [],
+          })),
+        },
+      },
     };
   }
   if (event.type === 'submit_bid') {
@@ -21,6 +35,45 @@ export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): 
         },
       };
     }
+  }
+  if (event.type === 'finish_auction') {
+    // give winner the painting, store in new rounds field
+    const auctioneer = state.currentAuction.auctioneer;
+    const winner = state.currentAuction.highestBidder || 'error';
+    const payment = state.currentAuction.highestBid || state.currentAuction.fixedPrice || -1;
+    const closedAuction = {
+      ...state.currentAuction,
+      status: AuctionStatus.CLOSED,
+      winner: winner,
+      payment: payment,
+    };
+
+    // need to handle case where winner = auctioneer
+    return {
+      ...state,
+      users: {
+        ...state.users,
+        [winner]: {
+          ...state.users[winner],
+          money: state.users[winner].money - payment,
+        },
+        [auctioneer]: {
+          ...state.users[auctioneer],
+          money: state.users[auctioneer].money - payment,
+        },
+      },
+      rounds: {
+        ...state.rounds,
+        [state.roundIndex]: {
+          auctions: state.rounds[state.roundIndex].auctions.concat(closedAuction),
+          users: {
+            ...state.rounds[state.roundIndex].users,
+            [winner]: state.rounds[state.roundIndex].users[winner].acquiredArt.concat(closedAuction.painting),
+          },
+        },
+      },
+      currentAuction: closedAuction,
+    };
   }
   if (event.type === 'update_name') {
     return {
