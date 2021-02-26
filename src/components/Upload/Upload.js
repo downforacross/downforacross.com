@@ -4,6 +4,7 @@ import React, {Component} from 'react';
 import actions from '../../actions';
 import FileUploader from './FileUploader';
 import {createNewPuzzle} from '../../api/puzzle';
+import swal from 'sweetalert';
 
 export default class Upload extends Component {
   constructor() {
@@ -43,7 +44,15 @@ export default class Upload extends Component {
     });
   };
 
-  fail = () => {};
+  fail = () => {
+    swal({
+      title: `Malformed .puz file`,
+      text: `The uploaded .puz file is not a valid puzzle.`,
+      icon: 'warning',
+      buttons: 'OK',
+      dangerMode: true,
+    });
+  };
 
   renderSuccessMessage() {
     const {info} = this.state.puzzle || {};
