@@ -25,6 +25,7 @@ export type GridData = CellData[][];
 export interface GameJson {
   info: InfoJson;
   grid: GridData;
+  teamGrids: Record<string, GridData>;
   solution: string[][];
   clues: CluesJson;
 }
@@ -91,3 +92,5 @@ export interface RecordSolveRequest {
 }
 
 export interface RecordSolveResponse {}
+
+export type CellCoords = {r: number; c: number};

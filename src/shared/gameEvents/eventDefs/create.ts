@@ -1,5 +1,7 @@
+import _ from 'lodash';
 import {GameJson} from '../../types';
 import {EventDef} from '../types/EventDef';
+import {TEAM_IDS} from '../constants';
 
 export interface CreateEvent {
   pid: string;
@@ -15,6 +17,7 @@ const create: EventDef<CreateEvent> = {
         ...state.game,
         pid: params.pid,
         ...params.game,
+        teamGrids: _.fromPairs(TEAM_IDS.map((teamId) => [teamId, params.game.grid])),
       },
     };
   },

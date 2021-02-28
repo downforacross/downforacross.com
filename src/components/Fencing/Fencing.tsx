@@ -14,8 +14,8 @@ import {GameEvent} from '../../shared/gameEvents/types/GameEvent';
 import {GameState} from '../../shared/gameEvents/types/GameState';
 import {getUser} from '../../store/user';
 import {FencingScoreboard} from './FencingScoreboard';
+import {TEAM_IDS} from '../../shared/gameEvents/constants';
 
-const TEAM_IDS = [0, 1];
 function subscribeToGameEvents(
   socket: SocketIOClient.Socket | undefined,
   gid: string,
@@ -103,9 +103,11 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
   }, [gid, socket]);
   const gameState = useGameState(events);
 
+  const id = getUser().id;
+  const teamId = gameState.users[id]?.teamId;
+
   useUpdateEffect(() => {
     if (isInitialized) {
-      const id = getUser().id;
       if (!gameState.users[id]?.displayName) {
         sendEvent({
           type: 'updateDisplayName',
@@ -115,8 +117,8 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
           },
         });
       }
-      if (!gameState.users[id]?.teamId) {
-        const teamId = _.minBy(
+      if (!teamId) {
+        const nTeamId = _.minBy(
           TEAM_IDS,
           (t) => _.filter(_.values(gameState.users), (user) => user.teamId === t).length
         )!;
@@ -124,7 +126,7 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
           type: 'updateTeamId',
           params: {
             id,
-            teamId,
+            teamId: nTeamId,
           },
         });
       }
@@ -136,7 +138,7 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
   console.log('Events', events);
   console.log('Game State:', gameState);
 
-  const playerStateHook = usePlayerActions(socket);
+  const playerStateHook = usePlayerActions(sendEvent, id);
 
   return (
     <div className={classes.container}>
@@ -144,7 +146,9 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
       <div className={classes.scoreboardContainer}>
         <FencingScoreboard gameState={gameState} />
       </div>
-      {gameState.loaded && <Player {...transformGameToPlayerProps(gameState.game!, playerStateHook)} />}
+      {gameState.loaded && (
+        <Player {...transformGameToPlayerProps(gameState.game!, playerStateHook, teamId)} />
+      )}
       {!gameState.loaded && <div>Loading your game...</div>}
     </div>
   );
