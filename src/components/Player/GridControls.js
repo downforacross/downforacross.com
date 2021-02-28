@@ -132,6 +132,12 @@ export default class GridControls extends Component {
       ']': 'forward',
     };
 
+    if (shiftKey) {
+      const isAcross = this.props.direction === 'across'
+      actionKeys[isAcross ? 'ArrowUp' : 'ArrowLeft'] = 'backward'
+      actionKeys[isAcross ? 'ArrowDown' : 'ArrowRight'] = 'forward'
+    }
+
     const {onPressEnter, onPressPeriod, onPressEscape} = this.props;
     if (key in actionKeys) {
       this.handleAction(actionKeys[key], shiftKey);
