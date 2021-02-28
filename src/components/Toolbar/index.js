@@ -208,7 +208,14 @@ export default class Toolbar extends Component {
                   <code>[</code>
                   {' '}
                   and
+                  {' '}
                   <code>]</code>
+                  {' '}
+                  OR
+                  {' '} 
+                  <code>Shift</code>
+                  {' '}
+                  with arrow keys
                 </td>
                 <td>Move cursor perpendicular to current orientation without changing orientation</td>
               </tr>

@@ -15,6 +15,8 @@
 .nav--left {
   font-size: 17px;
   font-weight: bold;
+  display: flex;
+  align-items: center;
 }
 
 .nav.mobile .nav--left {
@@ -23,10 +25,11 @@
 
 .nav--right {
   margin-right: 10px;
-  align-self: flex-end;
   color: white;
   text-decoration: none;
   font-size: 13px;
+  display: flex;
+  align-items: center;
 }
 
 .nav.mobile .nav--right {
@@ -35,13 +38,18 @@
 
 .nav--login {
   cursor: pointer;
+  margin-left: 20px;
 }
 
 .nav--left a {
   color: white;
   text-decoration: none;
-  vertical-align: middle;
   font-size: 17px;
+}
+
+.nav--info {
+  cursor: pointer;
+  margin-left: 20px;
 }
 
 .nav--v2 {
@@ -57,4 +65,15 @@
 .secret:hover {
   opacity: 1;
   transition: all ease-in 2s;
+}
+
+.swal-text.swal-text--no-margin {
+  margin: 0 !important;
+}
+
+.info--hr {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 }

@@ -6,6 +6,7 @@ import {MdFileUpload} from 'react-icons/md';
 
 import {hasShape} from '../../lib/jsUtils';
 import PUZtoJSON from '../../lib/converter/PUZtoJSON';
+import swal from 'sweetalert';
 
 export default class FileUploader extends Component {
   validPuzzle(puzzle) {
@@ -56,11 +57,21 @@ export default class FileUploader extends Component {
     const reader = new FileReader();
     const {success, fail} = this.props;
     reader.addEventListener('loadend', () => {
-      const puzzle = this.convertPUZ(reader.result);
-      if (this.validPuzzle(puzzle)) {
-        success(puzzle);
-      } else {
-        fail();
+      try {
+        const puzzle = this.convertPUZ(reader.result);
+        if (this.validPuzzle(puzzle)) {
+          success(puzzle);
+        } else {
+          fail();
+        }
+      } catch (e) {
+        swal({
+          title: `Invalid .puz file`,
+          text: `The uploaded file is not a valid .puz file.`,
+          icon: 'warning',
+          buttons: 'OK',
+          dangerMode: true,
+        });
       }
       window.URL.revokeObjectURL(acceptedFiles[0].preview);
     });
