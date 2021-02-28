@@ -33,11 +33,8 @@ interface PlayerProps {
   optimisticCounter: any;
 }
 
-export const transformGameToPlayerProps = (
-  game: GameJson,
-  playerStateActions: PlayerActions
-): PlayerProps => ({
-  ...playerStateActions,
+export const transformGameToPlayerProps = (game: GameJson, playerActions: PlayerActions): PlayerProps => ({
+  ...playerActions,
   beta: true,
   size: 35,
   grid: game.grid,

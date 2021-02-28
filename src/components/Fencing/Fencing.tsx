@@ -50,16 +50,15 @@ const useStyles = makeStyles({
  * Computes the current game state, given a list of events.
  * @param events list of events
  */
-const useGameState = (events: GameEvent[]): GameState => (
+const useGameState = (events: GameEvent[]): GameState =>
   // TODO use memoization
   // (a data structure!!! that uses sqrt n bucketing to avoid re-evaluating the "sum" of a list from scratch every time it is appended to)
   // "a time traveling data structure" aka persistent array reduction
-  console.log('reducing', events), events.reduce<GameState>(gameReducer, initialState)
-);
+  events.reduce<GameState>(gameReducer, initialState);
+
 /**
  * This component is parallel to Game -- will render a <Player/>
  * Will implement custom competitive crossword logic (see PR #145)
- * @param props
  */
 export const Fencing: React.FC<{gid: string}> = (props) => {
   const {gid} = props;
