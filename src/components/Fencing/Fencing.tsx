@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useUpdateEffect} from 'react-use';
 import {Helmet} from 'react-helmet';
 import {makeStyles} from '@material-ui/core';
@@ -65,6 +65,10 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
   const socket = useSocket();
 
   async function sendEvent(event: GameEvent) {
+    (event as any).timestamp = {
+      '.sv': 'timestamp',
+    };
+    console.log('sending event', socket, event);
     if (socket) {
       emitAsync(socket, 'game_event', {gid, event});
     } else {
@@ -74,20 +78,26 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
 
   // these lines could be `const events = useGameEvents()`
   const [events, setEvents] = useState<GameEvent[]>([]);
+  const [isInitialized, setIsInitialized] = useState(false);
   useUpdateEffect(() => {
     setEvents([]);
     const {syncPromise, unsubscribe} = subscribeToGameEvents(socket, gid, setEvents);
-    syncPromise.then(() =>
+    syncPromise.then(() => {
+      setIsInitialized(true);
+    });
+    return unsubscribe;
+  }, [gid, socket]);
+  useUpdateEffect(() => {
+    if (isInitialized) {
       sendEvent({
         type: 'updateDisplayName',
         params: {
           id: getUser().id,
           displayName: 'Hello!',
         },
-      })
-    );
-    return unsubscribe;
-  }, [gid, socket]);
+      });
+    }
+  }, [isInitialized]);
 
   const classes = useStyles();
   const gameState = useGameState(events);
