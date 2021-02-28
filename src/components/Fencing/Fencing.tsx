@@ -87,20 +87,24 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
     });
     return unsubscribe;
   }, [gid, socket]);
+  const gameState = useGameState(events);
+
   useUpdateEffect(() => {
     if (isInitialized) {
-      sendEvent({
-        type: 'updateDisplayName',
-        params: {
-          id: getUser().id,
-          displayName: 'Hello!',
-        },
-      });
+      const id = getUser().id;
+      if (!(id in gameState.users)) {
+        sendEvent({
+          type: 'updateDisplayName',
+          params: {
+            id,
+            displayName: 'Hello!',
+          },
+        });
+      }
     }
   }, [isInitialized]);
 
   const classes = useStyles();
-  const gameState = useGameState(events);
 
   console.log('Events', events);
   console.log('Game State:', gameState);
