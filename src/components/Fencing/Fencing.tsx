@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {useUpdateEffect} from 'react-use';
 import {Helmet} from 'react-helmet';
 import {makeStyles} from '@material-ui/core';
@@ -12,6 +12,7 @@ import {usePlayerActions} from './usePlayerActions';
 import {GameEvent} from '../../shared/gameEvents/types/GameEvent';
 import {GameState} from '../../shared/gameEvents/types/GameState';
 import {getUser} from '../../store/user';
+import {FencingScoreboard} from './FencingScoreboard';
 
 function subscribeToGameEvents(
   socket: SocketIOClient.Socket | undefined,
@@ -43,7 +44,18 @@ const useStyles = makeStyles({
   container: {
     display: 'flex',
     height: '100%',
+    padding: 24,
     flexDirection: 'column',
+  },
+  scoreboardContainer: {
+    display: 'flex',
+    justifyContent: 'space-around',
+    paddingBottom: 12,
+    marginBottom: 32,
+    '& *': {
+      borderCollapse: 'collapse',
+    },
+    borderBottom: '1px solid black', // TODO find a designer
   },
 });
 /**
@@ -114,7 +126,9 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
   return (
     <div className={classes.container}>
       <Helmet title={`Fencing ${gid}`} />
-      <h1>Welcome to fencing</h1>
+      <div className={classes.scoreboardContainer}>
+        <FencingScoreboard gameState={gameState} />
+      </div>
       {gameState.loaded && <Player {...transformGameToPlayerProps(gameState.game!, playerStateHook)} />}
       {!gameState.loaded && <div>Loading your game...</div>}
     </div>

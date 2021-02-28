@@ -8,6 +8,7 @@ export interface GameState {
       | {
           displayName: string;
           teamId?: string;
+          score?: number;
         }
       | undefined;
   };
