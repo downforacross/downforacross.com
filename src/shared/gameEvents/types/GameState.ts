@@ -4,12 +4,10 @@ export interface GameState {
   loaded: boolean;
   game: null | GameJson;
   users: {
-    [id: string]:
-      | {
-          displayName: string;
-          teamId?: string;
-          score?: number;
-        }
-      | undefined;
+    [id: string]: {
+      displayName: string;
+      teamId?: number;
+      score?: number;
+    };
   };
 }

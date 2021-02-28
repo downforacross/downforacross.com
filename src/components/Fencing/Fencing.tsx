@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, {useState} from 'react';
 import {useUpdateEffect} from 'react-use';
 import {Helmet} from 'react-helmet';
@@ -14,6 +15,7 @@ import {GameState} from '../../shared/gameEvents/types/GameState';
 import {getUser} from '../../store/user';
 import {FencingScoreboard} from './FencingScoreboard';
 
+const TEAM_IDS = [0, 1];
 function subscribeToGameEvents(
   socket: SocketIOClient.Socket | undefined,
   gid: string,
@@ -104,12 +106,25 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
   useUpdateEffect(() => {
     if (isInitialized) {
       const id = getUser().id;
-      if (!(id in gameState.users)) {
+      if (!gameState.users[id]?.displayName) {
         sendEvent({
           type: 'updateDisplayName',
           params: {
             id,
             displayName: 'Hello!',
+          },
+        });
+      }
+      if (!gameState.users[id]?.teamId) {
+        const teamId = _.minBy(
+          TEAM_IDS,
+          (t) => _.filter(_.values(gameState.users), (user) => user.teamId === t).length
+        )!;
+        sendEvent({
+          type: 'updateTeamId',
+          params: {
+            id,
+            teamId,
           },
         });
       }
