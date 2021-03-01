@@ -18,21 +18,12 @@ import {FencingScoreboard} from './FencingScoreboard';
 import {TEAM_IDS} from '../../shared/gameEvents/constants';
 import {FencingToolbar} from './FencingToolbar';
 import nameGenerator from '../../lib/nameGenerator';
-
-function insertEvent(events: GameEvent[], event: GameEvent) {
-  let idx = events.length;
-  while (idx - 1 >= 0 && event.timestamp! < events[idx - 1]!.timestamp!) {
-    idx -= 1;
-  }
-  events.splice(idx, 0, event);
-  return events;
-}
+import {useGameEvents, GameEventsHook} from './useGameEvents';
 
 function subscribeToGameEvents(
   socket: SocketIOClient.Socket | undefined,
   gid: string,
-  events: React.MutableRefObject<GameEvent[]>,
-  setEventsVersion: React.Dispatch<React.SetStateAction<number>>
+  eventsHook: GameEventsHook
 ) {
   let connected = false;
   async function joinAndSync() {
@@ -40,12 +31,10 @@ function subscribeToGameEvents(
     await emitAsync(socket, 'join_game', gid);
     socket.on('game_event', (event: any) => {
       if (!connected) return;
-      insertEvent(events.current, event); // NOTE THIS MUTATES events but that's for perf reasons
-      setEventsVersion(events.current.length);
+      eventsHook.addEvent(event);
     });
     const allEvents: GameEvent[] = (await emitAsync(socket, 'sync_all_game_events', gid)) as any;
-    events.current = allEvents;
-    setEventsVersion(events.current.length);
+    eventsHook.setEvents(allEvents);
 
     connected = true;
   }
@@ -77,16 +66,6 @@ const useStyles = makeStyles({
   },
 });
 /**
- * Computes the current game state, given a list of events.
- * @param events list of events
- */
-const useGameState = (events: GameEvent[]): GameState =>
-  // TODO use memoization
-  // (a data structure!!! that uses sqrt n bucketing to avoid re-evaluating the "sum" of a list from scratch every time it is appended to)
-  // "a time traveling data structure" aka persistent array reduction
-  events.reduce<GameState>(gameReducer, initialState);
-
-/**
  * This component is parallel to Game -- will render a <Player/>
  * Will implement custom competitive crossword logic (see PR #145)
  */
@@ -106,20 +85,17 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
     }
   }
 
-  // these lines could be `const events = useGameEvents()`
-  const events = useRef<GameEvent[]>([]);
-  const [eventsVersion, setEventsVersion] = useState<number>(events.current.length);
+  const eventsHook = useGameEvents();
   const [isInitialized, setIsInitialized] = useState(false);
   useUpdateEffect(() => {
-    events.current = [];
-    const {syncPromise, unsubscribe} = subscribeToGameEvents(socket, gid, events, setEventsVersion);
+    eventsHook.setEvents([]);
+    const {syncPromise, unsubscribe} = subscribeToGameEvents(socket, gid, eventsHook);
     syncPromise.then(() => {
       setIsInitialized(true);
     });
-    setEventsVersion(events.current.length);
     return unsubscribe;
   }, [gid, socket]);
-  const gameState = useGameState(events.current);
+  const gameState = eventsHook.gameState;
 
   const id = getUser().id;
   const teamId = gameState.users[id]?.teamId;
@@ -153,7 +129,6 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
   }, [isInitialized]);
 
   const classes = useStyles();
-  console.log('Events', events.current, eventsVersion);
   console.log('Game State:', gameState);
 
   const toolbarActions = useToolbarActions(sendEvent, gameState, id);

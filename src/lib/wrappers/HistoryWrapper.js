@@ -78,6 +78,7 @@ export default class HistoryWrapper {
 
   // the current snapshot
   getSnapshot() {
+    console.log('get snapshot', this.history.length);
     return this.getSnapshotAtIndex(this.history.length - 1, {optimistic: true});
   }
 
