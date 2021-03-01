@@ -56,7 +56,7 @@ module.exports = {
     'jsx-a11y/tabindex-no-positive': 'warn',
     'react/jsx-props-no-spreading': 'warn',
     'react/no-array-index-key': 'warn',
-    'no-restricted-syntax': 'warn',
+    'no-restricted-syntax': 'off',
 
     // Configs for rules to match the codebase
     'react/prop-types': ['error', {skipUndeclared: true}],
