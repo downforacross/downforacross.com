@@ -79,6 +79,17 @@ const updateCell: EventDef<UpdateCellEvent> = {
         ...state,
         game: {
           ...state.game!,
+          teamClueVisibility: {
+            ...state.game.teamClueVisibility,
+            [teamId]: {
+              across: _.assign(state.game.teamClueVisibility![teamId].across, {
+                [teamGrid[r][c].parents!.across]: true,
+              }),
+              down: _.assign(state.game.teamClueVisibility![teamId].down, {
+                [teamGrid[r][c].parents!.down]: true,
+              }),
+            },
+          },
           teamGrids: _.fromPairs(
             _.toPairs(state.game!.teamGrids).map(([tId, tGrid]) => [tId, updateCellCorrect(tGrid)])
           ),
