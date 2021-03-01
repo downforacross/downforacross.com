@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {useUpdateEffect} from 'react-use';
 import {Helmet} from 'react-helmet';
 import {makeStyles} from '@material-ui/core';
@@ -19,10 +19,20 @@ import {TEAM_IDS} from '../../shared/gameEvents/constants';
 import {FencingToolbar} from './FencingToolbar';
 import nameGenerator from '../../lib/nameGenerator';
 
+function insertEvent(events: GameEvent[], event: GameEvent) {
+  let idx = events.length;
+  while (idx - 1 >= 0 && event.timestamp! < events[idx - 1]!.timestamp!) {
+    idx -= 1;
+  }
+  events.splice(idx, 0, event);
+  return events;
+}
+
 function subscribeToGameEvents(
   socket: SocketIOClient.Socket | undefined,
   gid: string,
-  setEvents: React.Dispatch<React.SetStateAction<GameEvent[]>>
+  events: React.MutableRefObject<GameEvent[]>,
+  setEventsVersion: React.Dispatch<React.SetStateAction<number>>
 ) {
   let connected = false;
   async function joinAndSync() {
@@ -30,10 +40,13 @@ function subscribeToGameEvents(
     await emitAsync(socket, 'join_game', gid);
     socket.on('game_event', (event: any) => {
       if (!connected) return;
-      setEvents((events) => [...events, event]);
+      insertEvent(events.current, event); // NOTE THIS MUTATES events but that's for perf reasons
+      setEventsVersion(events.current.length);
     });
     const allEvents: GameEvent[] = (await emitAsync(socket, 'sync_all_game_events', gid)) as any;
-    setEvents(allEvents);
+    events.current = allEvents;
+    setEventsVersion(events.current.length);
+
     connected = true;
   }
   function unsubscribe() {
@@ -94,17 +107,19 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
   }
 
   // these lines could be `const events = useGameEvents()`
-  const [events, setEvents] = useState<GameEvent[]>([]);
+  const events = useRef<GameEvent[]>([]);
+  const [eventsVersion, setEventsVersion] = useState<number>(events.current.length);
   const [isInitialized, setIsInitialized] = useState(false);
   useUpdateEffect(() => {
-    setEvents([]);
-    const {syncPromise, unsubscribe} = subscribeToGameEvents(socket, gid, setEvents);
+    events.current = [];
+    const {syncPromise, unsubscribe} = subscribeToGameEvents(socket, gid, events, setEventsVersion);
     syncPromise.then(() => {
       setIsInitialized(true);
     });
+    setEventsVersion(events.current.length);
     return unsubscribe;
   }, [gid, socket]);
-  const gameState = useGameState(events);
+  const gameState = useGameState(events.current);
 
   const id = getUser().id;
   const teamId = gameState.users[id]?.teamId;
@@ -138,7 +153,7 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
   }, [isInitialized]);
 
   const classes = useStyles();
-  console.log('Events', events);
+  console.log('Events', events.current, eventsVersion);
   console.log('Game State:', gameState);
 
   const toolbarActions = useToolbarActions(sendEvent, gameState, id);
