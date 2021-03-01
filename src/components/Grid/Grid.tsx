@@ -161,6 +161,7 @@ export default class Grid extends React.PureComponent<GridProps> {
         ...cell,
         r,
         c,
+        solvedByIconSize: Math.round(size / 10),
         selected: this.isSelected(r, c),
         referenced: this.isReferenced(r, c),
         circled: this.isCircled(r, c),

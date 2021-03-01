@@ -27,7 +27,7 @@ const reveal: EventDef<RevealEvent> = {
     if (!teamId) {
       return state; // illegal update if no user exists with id
     }
-    if (scope.length !== 1) {
+    if (scope.length !== 1 || !scope[0]) {
       return state; // illegal update if trying to check more than 1 cell
     }
     const teamGrid = state.game?.teamGrids?.[teamId];

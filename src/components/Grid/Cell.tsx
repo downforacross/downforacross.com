@@ -19,10 +19,12 @@ interface Props {
   pencil?: boolean;
   black?: boolean;
   hidden?: boolean;
+  solvedBy?: {id: string; teamId: number};
 
   // Player interactions
   cursors: Cursor[];
   pings: Ping[];
+  solvedByIconSize: number;
 
   // Cell states
   selected: boolean;
@@ -161,6 +163,20 @@ export default class Cell extends React.Component<Props> {
     return null;
   }
 
+  renderSolvedBy() {
+    if (!this.props.solvedBy) return null;
+    const divStyle: React.CSSProperties = {
+      width: this.props.solvedByIconSize! * 2,
+      height: this.props.solvedByIconSize! * 2,
+      borderRadius: this.props.solvedByIconSize!,
+      backgroundColor: this.props.solvedBy?.teamId === 1 ? 'cyan' : 'purple',
+      // transform: 'translateX(-0.5px)',
+      position: 'absolute',
+      right: 1,
+    };
+    return <div style={divStyle} />;
+  }
+
   getStyle() {
     const {attributionColor, cellStyle, selected, highlighted, frozen} = this.props;
     if (selected) {
@@ -268,6 +284,7 @@ export default class Cell extends React.Component<Props> {
           {this.renderCircle()}
           {this.renderShade()}
           {this.renderPickup()}
+          {this.renderSolvedBy()}
           <div
             className="cell--value"
             style={{
