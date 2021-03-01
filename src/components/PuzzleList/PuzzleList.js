@@ -132,45 +132,16 @@ export default class PuzzleList extends PureComponent {
   }
 
   render() {
-    if (process.env.REACT_APP_NEW_PUZZLE_LIST_ENABLED || localStorage.newPuzzleListEnabled) {
-      const filter = {
-        nameOrTitleFilter: this.props.search,
-        sizeFilter: this.props.sizeFilter,
-      };
-      return (
-        <NewPuzzleList
-          filter={filter}
-          statusFilter={this.props.statusFilter}
-          puzzleStatuses={this.puzzleStatuses}
-        />
-      );
-    }
-
-    const lastUpdateTime = this.lastUpdateTime;
+    const filter = {
+      nameOrTitleFilter: this.props.search,
+      sizeFilter: this.props.sizeFilter,
+    };
     return (
-      <div
-        ref={this.container}
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          overflowY: 'auto',
-        }}
-        className="puzzlelist"
-        onScroll={this.handleScroll}
-        onTouchEnd={this.handleTouchEnd}
-      >
-        {this.puzzles.map((entry, i) => (
-          <div className="entry--container" key={i}>
-            <Entry
-              {...entry}
-              status={this.puzzleStatuses[entry.pid]}
-              lastUpdateTime={lastUpdateTime}
-              user={this.user}
-              onPlay={this.handlePlay}
-            />
-          </div>
-        ))}
-      </div>
+      <NewPuzzleList
+        filter={filter}
+        statusFilter={this.props.statusFilter}
+        puzzleStatuses={this.puzzleStatuses}
+      />
     );
   }
 }
