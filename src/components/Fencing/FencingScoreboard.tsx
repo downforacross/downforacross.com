@@ -2,6 +2,7 @@ import {makeStyles} from '@material-ui/core';
 import _ from 'lodash';
 import React from 'react';
 import {GameState} from '../../shared/gameEvents/types/GameState';
+import './css/fencingScoreboard.css';
 
 const useStyles = makeStyles({
   fencingScoreboardContainer: {
@@ -10,7 +11,11 @@ const useStyles = makeStyles({
     alignItems: 'center',
   },
 });
-export const FencingScoreboard: React.FC<{gameState: GameState; switchTeams(): void}> = (props) => {
+export const FencingScoreboard: React.FC<{
+  gameState: GameState;
+  currentUserId: string;
+  switchTeams(): void;
+}> = (props) => {
   const classes = useStyles();
   // const allCells = _.flatten(props.gameState.game?.grid);
   return (
@@ -31,8 +36,11 @@ export const FencingScoreboard: React.FC<{gameState: GameState; switchTeams(): v
             <th>Score</th>
             <th>Guesses</th>
           </tr>
-          {_.map(_.values(props.gameState.users), (user, i) => (
-            <tr key={i}>
+          {_.map(props.gameState.users, (user, userId) => (
+            <tr
+              key={userId}
+              className={userId === props.currentUserId ? 'fencing-scoreboard--current-user' : ''}
+            >
               <td>{user.displayName}</td>
               <td>{user.teamId}</td>
               <td>{user.score}</td>

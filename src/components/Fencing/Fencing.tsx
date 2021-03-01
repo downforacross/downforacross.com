@@ -140,6 +140,7 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
       <div className={classes.scoreboardContainer}>
         <FencingScoreboard
           gameState={gameState}
+          currentUserId={id}
           switchTeams={() => {
             sendEvent({
               type: 'updateTeamId',
