@@ -1,8 +1,7 @@
 import EventEmitter from 'events';
 import io from 'socket.io-client';
 import Promise from 'bluebird';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import _ from 'lodash';
 import {getSocket} from '../sockets/getSocket';
 import {emitAsync} from '../sockets/emitAsync';

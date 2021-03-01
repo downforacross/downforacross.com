@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import Joi from 'joi';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import {PuzzleJson, ListPuzzleRequestFilters} from '@shared/types';
 import {pool} from './pool';
 
