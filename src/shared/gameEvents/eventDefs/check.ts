@@ -96,6 +96,7 @@ const updateCell: EventDef<UpdateCellEvent> = {
           grid: updateCellCorrect(state.game.grid),
         },
         users: {
+          ...state.users,
           [id]: {
             ...state.users[id],
             score: (state.users[id].score || 0) + 1,
