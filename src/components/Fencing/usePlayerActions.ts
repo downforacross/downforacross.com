@@ -21,7 +21,9 @@ export const usePlayerActions = (dispatch: DispatchFn, id: string): PlayerAction
   },
   updateGrid(r: number, c: number, value: string) {
     dispatch({type: 'updateCell', params: {cell: {r, c}, value, id}});
-    dispatch({type: 'check', params: {scope: [{r, c}], id}}); // TODO settimeout for auto-check-on-cooldown
+    setTimeout(() => {
+      dispatch({type: 'check', params: {scope: [{r, c}], id}}); // TODO settimeout for auto-check-on-cooldown
+    }, 10);
   },
   addPing() {},
 });
