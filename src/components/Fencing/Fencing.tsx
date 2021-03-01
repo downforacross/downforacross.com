@@ -151,7 +151,9 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
       {gameState.loaded && (
         <div>
           <FencingToolbar toolbarActions={toolbarActions} />
-          <Player {...transformGameToPlayerProps(gameState.game!, playerActions, teamId)} />
+          <Player
+            {...transformGameToPlayerProps(gameState.game!, _.values(gameState.users), playerActions, teamId)}
+          />
         </div>
       )}
       {!gameState.loaded && <div>Loading your game...</div>}

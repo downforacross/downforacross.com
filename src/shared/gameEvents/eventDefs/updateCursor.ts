@@ -4,10 +4,11 @@ import {EventDef} from '../types/EventDef';
 export interface UpdateCursorEvent {
   id: string;
   cell: CellCoords;
+  timestamp?: number;
 }
 
 const updateCursor: EventDef<UpdateCursorEvent> = {
-  reducer(state, {id, cell}) {
+  reducer(state, {id, cell, timestamp}) {
     if (!state.users[id]) {
       return state; // illegal update if no user exists with id
     }
@@ -17,7 +18,11 @@ const updateCursor: EventDef<UpdateCursorEvent> = {
         ...state.users,
         [id]: {
           ...state.users[id]!,
-          cursor: cell,
+          cursor: {
+            ...cell,
+            id,
+            timestamp: timestamp!,
+          },
         },
       },
     };

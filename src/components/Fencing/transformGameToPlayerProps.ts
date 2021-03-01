@@ -1,7 +1,7 @@
 /**
  * Perhaps this whole file could live elsewhere, e.g. Player/transformGameToPlayerProps?
  * */
-import {CluesJson, GameJson, GridData} from '../../shared/types';
+import {CluesJson, GameJson, GridData, UserJson} from '../../shared/types';
 import {CellCoords, CellIndex, Cursor, Ping} from '../Grid/types';
 import {PlayerActions} from './usePlayerActions';
 
@@ -35,6 +35,7 @@ interface PlayerProps {
 
 export const transformGameToPlayerProps = (
   game: GameJson,
+  users: UserJson[],
   playerActions: PlayerActions,
   teamId: number
 ): PlayerProps => ({
@@ -47,9 +48,9 @@ export const transformGameToPlayerProps = (
   shades: [],
   clues: game.clues,
   id: 'null',
-  cursors: [], // TODO filter for your teammates' cursors
+  cursors: users.filter((user) => user.teamId === teamId).map((user) => user.cursor),
   pings: [],
-  users: null,
+  users,
   frozen: null,
   myColor: null,
   addPing: null,
