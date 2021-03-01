@@ -10,11 +10,18 @@ const useStyles = makeStyles({
     alignItems: 'center',
   },
 });
-export const FencingScoreboard: React.FC<{gameState: GameState}> = (props) => {
+export const FencingScoreboard: React.FC<{gameState: GameState; switchTeams(): void}> = (props) => {
   const classes = useStyles();
   return (
     <div className={classes.fencingScoreboardContainer}>
       <h2>Fencing</h2>
+      <button
+        onClick={() => {
+          window.confirm('Switch teams? You will see their grid') && props.switchTeams();
+        }}
+      >
+        Switch Teams
+      </button>
       <table>
         <tbody>
           <tr>

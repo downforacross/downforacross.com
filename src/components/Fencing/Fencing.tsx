@@ -1,19 +1,16 @@
 import _ from 'lodash';
 import * as uuid from 'uuid';
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {useUpdateEffect} from 'react-use';
 import {Helmet} from 'react-helmet';
 import {makeStyles} from '@material-ui/core';
 import {useSocket} from '../../sockets/useSocket';
 import {emitAsync} from '../../sockets/emitAsync';
 import Player from '../Player';
-import gameReducer from '../../shared/gameEvents/gameReducer';
-import {initialState} from '../../shared/gameEvents/initialState';
 import {transformGameToPlayerProps} from './transformGameToPlayerProps';
 import {usePlayerActions} from './usePlayerActions';
 import {useToolbarActions} from './useToolbarActions';
 import {GameEvent} from '../../shared/gameEvents/types/GameEvent';
-import {GameState} from '../../shared/gameEvents/types/GameState';
 import {getUser} from '../../store/user';
 import {FencingScoreboard} from './FencingScoreboard';
 import {TEAM_IDS} from '../../shared/gameEvents/constants';
@@ -141,7 +138,18 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
     <div className={classes.container}>
       <Helmet title={`Fencing ${gid}`} />
       <div className={classes.scoreboardContainer}>
-        <FencingScoreboard gameState={gameState} />
+        <FencingScoreboard
+          gameState={gameState}
+          switchTeams={() => {
+            sendEvent({
+              type: 'updateTeamId',
+              params: {
+                id,
+                teamId: 3 - teamId!,
+              },
+            });
+          }}
+        />
       </div>
       {gameState.loaded && (
         <div>
