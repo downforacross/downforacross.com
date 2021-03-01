@@ -18,16 +18,18 @@ export const FencingScoreboard: React.FC<{
 }> = (props) => {
   const classes = useStyles();
   // const allCells = _.flatten(props.gameState.game?.grid);
+  const switchTeamsButton = (
+    <button
+      onClick={() => {
+        window.confirm('Switch teams? You will see their grid') && props.switchTeams();
+      }}
+    >
+      Switch
+    </button>
+  );
   return (
     <div className={classes.fencingScoreboardContainer}>
       <h2>Fencing</h2>
-      <button
-        onClick={() => {
-          window.confirm('Switch teams? You will see their grid') && props.switchTeams();
-        }}
-      >
-        Switch Teams
-      </button>
       <table>
         <tbody>
           <tr>
@@ -42,7 +44,11 @@ export const FencingScoreboard: React.FC<{
               className={userId === props.currentUserId ? 'fencing-scoreboard--current-user' : ''}
             >
               <td>{user.displayName}</td>
-              <td>{user.teamId}</td>
+              <td>
+                {user.teamId}
+                {` `}
+                {userId === props.currentUserId ? switchTeamsButton : null}
+              </td>
               <td>{user.score}</td>
               <td>{user.misses}</td>
             </tr>
