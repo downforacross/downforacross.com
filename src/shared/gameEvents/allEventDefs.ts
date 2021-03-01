@@ -4,6 +4,7 @@ import updateTeamId from './eventDefs/updateTeamId';
 import updateCursor from './eventDefs/updateCursor';
 import updateCell from './eventDefs/updateCell';
 import check from './eventDefs/check';
+import reveal from './eventDefs/reveal';
 
 export default {
   create,
@@ -12,4 +13,5 @@ export default {
   updateCursor,
   updateCell,
   check,
+  reveal,
 };

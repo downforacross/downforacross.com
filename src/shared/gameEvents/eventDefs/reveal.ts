@@ -2,7 +2,7 @@ import _ from 'lodash';
 import {CellCoords, GridData} from '../../types';
 import {EventDef} from '../types/EventDef';
 
-export interface CheckEvent {
+export interface RevealEvent {
   scope: CellCoords[];
   id: string;
 }
@@ -21,7 +21,7 @@ export interface CheckEvent {
  *   - update the timeout? (skip this step in MVP)
  *   - update teamGrids[teamId][r][c].bad = true
  */
-const check: EventDef<CheckEvent> = {
+const reveal: EventDef<RevealEvent> = {
   reducer(state, {scope, id}) {
     const teamId = state.users[id]?.teamId;
     if (!teamId) {
@@ -39,8 +39,7 @@ const check: EventDef<CheckEvent> = {
     }
     const [{r, c}] = scope;
     if (
-      teamGrid[r][c].good || // if cell is already correct, no need to update
-      !teamGrid[r][c].value // if cell is not filled out, cannot check
+      teamGrid[r][c].good // if cell is already correct, no need to update
     ) {
       return state;
     }
@@ -60,61 +59,35 @@ const check: EventDef<CheckEvent> = {
       return newGrid;
     };
 
-    const updateCellIncorrect = (grid: GridData): GridData => {
-      const newGrid = _.assign([], grid, {
-        [r]: _.assign([], grid[r], {
-          [c]: {
-            ...grid[r][c],
-            bad: true,
-            good: false,
-          },
-        }),
-      });
-      return newGrid;
-    };
-
-    const isCorrect = state.game.solution[r][c] === teamGrid[r][c].value;
-    if (isCorrect) {
-      return {
-        ...state,
-        game: {
-          ...state.game!,
-          teamClueVisibility: {
-            ...state.game.teamClueVisibility,
-            [teamId]: {
-              across: _.assign(state.game.teamClueVisibility![teamId].across, {
-                [teamGrid[r][c].parents!.across]: true,
-              }),
-              down: _.assign(state.game.teamClueVisibility![teamId].down, {
-                [teamGrid[r][c].parents!.down]: true,
-              }),
-            },
-          },
-          teamGrids: _.fromPairs(
-            _.toPairs(state.game!.teamGrids).map(([tId, tGrid]) => [tId, updateCellCorrect(tGrid)])
-          ),
-          grid: updateCellCorrect(state.game.grid),
-        },
-        users: {
-          ...state.users,
-          [id]: {
-            ...state.users[id],
-            score: (state.users[id].score || 0) + 1,
-          },
-        },
-      };
-    }
     return {
       ...state,
       game: {
         ...state.game!,
-        teamGrids: {
-          ...state.game?.teamGrids,
-          [teamId]: updateCellIncorrect(teamGrid),
+        teamClueVisibility: {
+          ...state.game.teamClueVisibility,
+          [teamId]: {
+            across: _.assign(state.game.teamClueVisibility![teamId].across, {
+              [teamGrid[r][c].parents!.across]: true,
+            }),
+            down: _.assign(state.game.teamClueVisibility![teamId].down, {
+              [teamGrid[r][c].parents!.down]: true,
+            }),
+          },
+        },
+        teamGrids: _.fromPairs(
+          _.toPairs(state.game!.teamGrids).map(([tId, tGrid]) => [tId, updateCellCorrect(tGrid)])
+        ),
+        grid: updateCellCorrect(state.game.grid),
+      },
+      users: {
+        ...state.users,
+        [id]: {
+          ...state.users[id],
+          score: (state.users[id].score || 0) + 1,
         },
       },
     };
   },
 };
 
-export default check;
+export default reveal;

@@ -3,7 +3,7 @@ import {GameEvent} from '../../shared/gameEvents/types/GameEvent';
 import {GameState} from '../../shared/gameEvents/types/GameState';
 
 export interface ToolbarActions {
-  checkCell(): void;
+  revealCell(): void;
 }
 
 export interface DispatchFn {
@@ -17,9 +17,9 @@ export const useToolbarActions = (
   gameState: GameState,
   id: string
 ): ToolbarActions => ({
-  checkCell() {
+  revealCell() {
     dispatch({
-      type: 'check',
+      type: 'reveal',
       params: {
         scope: [gameState.users[id].cursor!],
         id,
