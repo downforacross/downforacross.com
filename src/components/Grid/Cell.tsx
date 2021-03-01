@@ -18,6 +18,7 @@ interface Props {
   good?: boolean;
   pencil?: boolean;
   black?: boolean;
+  hidden?: boolean;
 
   // Player interactions
   cursors: Cursor[];
@@ -189,6 +190,7 @@ export default class Cell extends React.Component<Props> {
   render() {
     const {
       black,
+      hidden,
       selected,
       highlighted,
       shaded,
@@ -202,11 +204,13 @@ export default class Cell extends React.Component<Props> {
       number,
       referenced,
     } = this.props;
-    if (black) {
+    if (black || hidden) {
       return (
         <div
-          className={clsx('cell', 'black', {
+          className={clsx('cell', {
             selected,
+            black,
+            hidden,
           })}
           style={selected ? {borderColor: myColor} : undefined}
           onClick={this.handleClick}

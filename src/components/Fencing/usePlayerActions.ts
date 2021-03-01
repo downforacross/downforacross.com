@@ -5,6 +5,7 @@ import {CellCoords} from '../Grid/types';
 export interface PlayerActions {
   updateCursor(nCursor: CellCoords): void;
   updateGrid(r: number, c: number, value: string): void;
+  addPing(): void; // TODO
 }
 
 export interface DispatchFn {
@@ -22,4 +23,5 @@ export const usePlayerActions = (dispatch: DispatchFn, id: string): PlayerAction
     dispatch({type: 'updateCell', params: {cell: {r, c}, value, id}});
     dispatch({type: 'check', params: {scope: [{r, c}], id}}); // TODO settimeout for auto-check-on-cooldown
   },
+  addPing() {},
 });

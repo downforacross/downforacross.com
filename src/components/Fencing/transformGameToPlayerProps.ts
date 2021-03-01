@@ -41,6 +41,15 @@ function applyClueVisibility(vis: {across: boolean[]; down: boolean[]}, clues: C
   };
 }
 
+function applyClueVisibilityToGrid(vis: {across: boolean[]; down: boolean[]}, grid: GridData) {
+  return grid.map((row) =>
+    row.map((cell) => ({
+      ...cell,
+      hidden: !!cell.parents && !vis.across[cell.parents!.across] && !vis.down[cell.parents!.down],
+    }))
+  );
+}
+
 export const transformGameToPlayerProps = (
   game: GameJson,
   users: UserJson[],
@@ -53,7 +62,9 @@ export const transformGameToPlayerProps = (
     ...playerActions,
     beta: true,
     size: 35,
-    grid: teamId ? game.teamGrids![teamId] : game.grid,
+    grid: teamId
+      ? applyClueVisibilityToGrid(game.teamClueVisibility![teamId], game.teamGrids![teamId])
+      : game.grid,
     solution: game.solution,
     circles: [],
     shades: [],
