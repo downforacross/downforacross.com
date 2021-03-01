@@ -31,6 +31,7 @@ module.exports = {
   rules: {
     // disabled as we likely do not want it
     'no-return-await': 'off',
+    '@typescript-eslint/no-use-before-define': 'off',
     // disabled as none of the current code follows this pattern.
     'import/extensions': 'off',
     'react/jsx-filename-extension': 'off',
