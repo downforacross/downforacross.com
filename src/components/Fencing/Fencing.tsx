@@ -152,7 +152,14 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
         <div>
           <FencingToolbar toolbarActions={toolbarActions} />
           <Player
-            {...transformGameToPlayerProps(gameState.game!, _.values(gameState.users), playerActions, teamId)}
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            {...transformGameToPlayerProps(
+              gameState.game!,
+              _.values(gameState.users),
+              playerActions,
+              id,
+              teamId
+            )}
           />
         </div>
       )}

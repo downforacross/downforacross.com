@@ -37,7 +37,8 @@ export const transformGameToPlayerProps = (
   game: GameJson,
   users: UserJson[],
   playerActions: PlayerActions,
-  teamId: number
+  id: string,
+  teamId: number | undefined
 ): PlayerProps => ({
   ...playerActions,
   beta: true,
@@ -47,7 +48,7 @@ export const transformGameToPlayerProps = (
   circles: [],
   shades: [],
   clues: game.clues,
-  id: 'null',
+  id,
   cursors: users.filter((user) => user.teamId === teamId).map((user) => user.cursor),
   pings: [],
   users,
