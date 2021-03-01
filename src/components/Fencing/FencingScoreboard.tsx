@@ -22,8 +22,8 @@ export const FencingScoreboard: React.FC<{gameState: GameState}> = (props) => {
             <th>Team</th>
             <th>Score</th>
           </tr>
-          {_.map(_.values(props.gameState.users), (user) => (
-            <tr>
+          {_.map(_.values(props.gameState.users), (user, i) => (
+            <tr key={i}>
               <td>{user.displayName}</td>
               <td>{user.teamId}</td>
               <td>{user.score}</td>
