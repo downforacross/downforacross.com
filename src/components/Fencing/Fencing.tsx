@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import * as uuid from 'uuid';
 import React, {useRef, useState} from 'react';
 import {useUpdateEffect} from 'react-use';
 import {Helmet} from 'react-helmet';
@@ -73,11 +74,14 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
   const {gid} = props;
   const socket = useSocket();
 
+  const eventsHook = useGameEvents();
   async function sendEvent(event: GameEvent) {
     (event as any).timestamp = {
       '.sv': 'timestamp',
     };
+    (event as any).id = uuid.v4();
     console.log('sending event', socket, event);
+    eventsHook.addOptimisticEvent(event);
     if (socket) {
       emitAsync(socket, 'game_event', {gid, event});
     } else {
@@ -85,7 +89,6 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
     }
   }
 
-  const eventsHook = useGameEvents();
   const [isInitialized, setIsInitialized] = useState(false);
   useUpdateEffect(() => {
     eventsHook.setEvents([]);

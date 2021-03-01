@@ -8,6 +8,7 @@ export interface GameEventsHook {
   gameState: GameState;
   setEvents(gameEvents: GameEvent[]): void;
   addEvent(gameEvent: GameEvent): void;
+  addOptimisticEvent(gameEvent: GameEvent): void;
 }
 
 const makeHistoryWrappper = (events: GameEvent[]): HistoryWrapper => {
@@ -30,10 +31,12 @@ export const useGameEvents = (): GameEventsHook => {
       setVersion((version) => version + 1);
     },
     addEvent(event) {
-      console.log('add event', event);
       historyWrapperRef.current.addEvent(event);
       setVersion((version) => version + 1);
-      console.log('done add event');
+    },
+    addOptimisticEvent(event) {
+      historyWrapperRef.current.addOptimisticEvent(event);
+      setVersion((version) => version + 1);
     },
   };
 };
