@@ -169,7 +169,7 @@ export default class Cell extends React.Component<Props> {
       width: this.props.solvedByIconSize! * 2,
       height: this.props.solvedByIconSize! * 2,
       borderRadius: this.props.solvedByIconSize!,
-      backgroundColor: this.props.solvedBy?.teamId === 1 ? 'cyan' : 'purple',
+      backgroundColor: this.props.solvedBy?.teamId === 1 ? '#FA8072' : 'purple',
       // transform: 'translateX(-0.5px)',
       position: 'absolute',
       right: 1,
