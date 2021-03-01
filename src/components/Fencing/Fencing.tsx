@@ -17,6 +17,7 @@ import {getUser} from '../../store/user';
 import {FencingScoreboard} from './FencingScoreboard';
 import {TEAM_IDS} from '../../shared/gameEvents/constants';
 import {FencingToolbar} from './FencingToolbar';
+import nameGenerator from '../../lib/nameGenerator';
 
 function subscribeToGameEvents(
   socket: SocketIOClient.Socket | undefined,
@@ -110,12 +111,13 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
 
   useUpdateEffect(() => {
     if (isInitialized) {
+      console.log('initializing for the first time', id, teamId);
       if (!gameState.users[id]?.displayName) {
         sendEvent({
           type: 'updateDisplayName',
           params: {
             id,
-            displayName: 'Hello!',
+            displayName: nameGenerator(),
           },
         });
       }
