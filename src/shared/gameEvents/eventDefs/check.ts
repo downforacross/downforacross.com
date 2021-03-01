@@ -1,6 +1,5 @@
-import {stat} from 'fs';
 import _ from 'lodash';
-import {CellCoords} from '../../types';
+import {CellCoords, GridData} from '../../types';
 import {EventDef} from '../types/EventDef';
 
 export interface UpdateCellEvent {
@@ -31,62 +30,78 @@ const updateCell: EventDef<UpdateCellEvent> = {
     if (scope.length !== 1) {
       return state; // illegal update if trying to check more than 1 cell
     }
-    const grid = state.game?.teamGrids[teamId];
-    const solution = state.game?.solution;
+    const teamGrid = state.game?.teamGrids[teamId];
     if (
-      !grid || // illegal update if grid is somehow undefined
-      !solution // illegal update if solution is somehow undefined
+      !state.game ||
+      !teamGrid // illegal update if teamGrid is somehow undefined
     ) {
       return state;
     }
     const [{r, c}] = scope;
     if (
-      grid[r][c].good || // if cell is already correct, no need to update
-      !grid[r][c].value // if cell is not filled out, cannot check
+      teamGrid[r][c].good || // if cell is already correct, no need to update
+      !teamGrid[r][c].value // if cell is not filled out, cannot check
     ) {
       return state;
     }
 
-    if (solution[r][c] === grid[r][c].value) {
+    const updateCellCorrect = (grid: GridData): GridData => {
       const newGrid = _.assign([], grid, {
         [r]: _.assign([], grid[r], {
           [c]: {
             ...grid[r][c],
+            value: state.game!.solution[r][c],
             bad: false,
             good: true,
+            solvedBy: {id, teamId},
           },
         }),
       });
-      return {
-        ...state,
-        game: {
-          ...state.game!,
-          teamGrids: {
-            ...state.game?.teamGrids,
-            [teamId]: newGrid,
-          },
-        },
-      };
-    } else {
+      return newGrid;
+    };
+
+    const updateCellIncorrect = (grid: GridData): GridData => {
       const newGrid = _.assign([], grid, {
         [r]: _.assign([], grid[r], {
           [c]: {
             ...grid[r][c],
             bad: true,
+            good: false,
           },
         }),
       });
+      return newGrid;
+    };
+
+    const isCorrect = state.game.solution[r][c] === teamGrid[r][c].value;
+    if (isCorrect) {
       return {
         ...state,
         game: {
           ...state.game!,
-          teamGrids: {
-            ...state.game?.teamGrids,
-            [teamId]: newGrid,
+          teamGrids: _.fromPairs(
+            _.toPairs(state.game!.teamGrids).map(([tId, tGrid]) => [tId, updateCellCorrect(tGrid)])
+          ),
+          grid: updateCellCorrect(state.game.grid),
+        },
+        users: {
+          [id]: {
+            ...state.users[id],
+            score: (state.users[id].score || 0) + 1,
           },
         },
       };
     }
+    return {
+      ...state,
+      game: {
+        ...state.game!,
+        teamGrids: {
+          ...state.game?.teamGrids,
+          [teamId]: updateCellIncorrect(teamGrid),
+        },
+      },
+    };
   },
 };
 

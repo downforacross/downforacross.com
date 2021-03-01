@@ -19,6 +19,10 @@ export interface CellData {
   bad?: boolean;
   good?: boolean;
   pencil?: boolean;
+  solvedBy?: {
+    id: string;
+    teamId: number;
+  };
 }
 export type GridData = CellData[][];
 
