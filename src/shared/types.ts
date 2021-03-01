@@ -51,6 +51,7 @@ export interface UserJson {
   displayName: string;
   teamId?: number;
   score?: number;
+  misses?: number;
 }
 
 export interface Cursor {

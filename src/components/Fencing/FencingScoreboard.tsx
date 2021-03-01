@@ -29,12 +29,14 @@ export const FencingScoreboard: React.FC<{gameState: GameState; switchTeams(): v
             <th>Player</th>
             <th>Team</th>
             <th>Score</th>
+            <th>Guesses</th>
           </tr>
           {_.map(_.values(props.gameState.users), (user, i) => (
             <tr key={i}>
               <td>{user.displayName}</td>
               <td>{user.teamId}</td>
               <td>{user.score}</td>
+              <td>{user.misses}</td>
             </tr>
           ))}
           {/* <tr>

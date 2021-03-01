@@ -113,6 +113,13 @@ const check: EventDef<CheckEvent> = {
           [teamId]: updateCellIncorrect(teamGrid),
         },
       },
+      users: {
+        ...state.users,
+        [id]: {
+          ...state.users[id],
+          misses: (state.users[id].misses || 0) + 1,
+        },
+      },
     };
   },
 };
