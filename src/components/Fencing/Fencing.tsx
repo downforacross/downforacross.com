@@ -10,11 +10,13 @@ import gameReducer from '../../shared/gameEvents/gameReducer';
 import {initialState} from '../../shared/gameEvents/initialState';
 import {transformGameToPlayerProps} from './transformGameToPlayerProps';
 import {usePlayerActions} from './usePlayerActions';
+import {useToolbarActions} from './useToolbarActions';
 import {GameEvent} from '../../shared/gameEvents/types/GameEvent';
 import {GameState} from '../../shared/gameEvents/types/GameState';
 import {getUser} from '../../store/user';
 import {FencingScoreboard} from './FencingScoreboard';
 import {TEAM_IDS} from '../../shared/gameEvents/constants';
+import {FencingToolbar} from './FencingToolbar';
 
 function subscribeToGameEvents(
   socket: SocketIOClient.Socket | undefined,
@@ -134,11 +136,11 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
   }, [isInitialized]);
 
   const classes = useStyles();
-
   console.log('Events', events);
   console.log('Game State:', gameState);
 
-  const playerStateHook = usePlayerActions(sendEvent, id);
+  const toolbarActions = useToolbarActions(sendEvent, gameState, id);
+  const playerActions = usePlayerActions(sendEvent, id);
 
   return (
     <div className={classes.container}>
@@ -147,7 +149,10 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
         <FencingScoreboard gameState={gameState} />
       </div>
       {gameState.loaded && (
-        <Player {...transformGameToPlayerProps(gameState.game!, playerStateHook, teamId)} />
+        <div>
+          <FencingToolbar toolbarActions={toolbarActions} />
+          <Player {...transformGameToPlayerProps(gameState.game!, playerActions, teamId)} />
+        </div>
       )}
       {!gameState.loaded && <div>Loading your game...</div>}
     </div>

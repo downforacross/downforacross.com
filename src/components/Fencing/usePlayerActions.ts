@@ -7,7 +7,8 @@ export interface PlayerActions {
   updateGrid(r: number, c: number, value: string): void;
 }
 
-interface DispatchFn {
+export interface DispatchFn {
+  // TODO move to useEventDispatchFn
   (gameEvent: GameEvent): Promise<void>;
 }
 // translate <Player/> callbacks to game events emitted
