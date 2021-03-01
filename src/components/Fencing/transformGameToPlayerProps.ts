@@ -47,7 +47,7 @@ export const transformGameToPlayerProps = (
   shades: [],
   clues: game.clues,
   id: 'null',
-  cursors: [],
+  cursors: [], // TODO filter for your teammates' cursors
   pings: [],
   users: null,
   frozen: null,

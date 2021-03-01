@@ -15,12 +15,10 @@ export interface DispatchFn {
 // TODO: copy paste logic from src/components/Game.js
 export const usePlayerActions = (dispatch: DispatchFn, id: string): PlayerActions => ({
   updateCursor(nCursor: CellCoords) {
-    // dispatch()
-    // TODO!!
-    // socket?.emit(''); // TODO optimistic events
+    dispatch({type: 'updateCursor', params: {cell: nCursor, id}});
   },
   updateGrid(r: number, c: number, value: string) {
     dispatch({type: 'updateCell', params: {cell: {r, c}, value, id}});
-    // TODO
+    dispatch({type: 'check', params: {scope: [{r, c}], id}});
   },
 });

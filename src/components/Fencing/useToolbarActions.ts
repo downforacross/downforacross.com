@@ -18,11 +18,10 @@ export const useToolbarActions = (
   id: string
 ): ToolbarActions => ({
   checkCell() {
-    const {r, c} = {r: 0, c: 0};
     dispatch({
       type: 'check',
       params: {
-        scope: [{r, c}],
+        scope: [gameState.users[id].cursor!],
         id,
       },
     });
