@@ -111,6 +111,7 @@ export default class EditableSpan extends PureComponent {
     }
     e.stopPropagation();
     if (e.key === 'Enter' || e.key === 'Escape') {
+      this.props.onChange(this.text);
       e.preventDefault();
       this.props.onUnfocus && this.props.onUnfocus();
     }
