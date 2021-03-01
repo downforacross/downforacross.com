@@ -10,14 +10,13 @@ import {
   GridDataWithColor,
   CellCoords,
   CellIndex,
-  Cursor,
   ClueCoords,
   BattlePickup,
   toCellIndex,
   CellStyles,
   Ping,
 } from './types';
-import {GridData} from '../../shared/types';
+import {Cursor, GridData} from '../../shared/types';
 
 interface GridProps {
   // Grid data

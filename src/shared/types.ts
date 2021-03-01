@@ -19,9 +19,14 @@ export interface CellData {
   bad?: boolean;
   good?: boolean;
   pencil?: boolean;
+  isHidden?: boolean; // used for fencing mode; if true, then player cannot access the cell at all
   solvedBy?: {
     id: string;
     teamId: number;
+  };
+  parents?: {
+    across: number;
+    down: number;
   };
 }
 export type GridData = CellData[][];
@@ -29,7 +34,14 @@ export type GridData = CellData[][];
 export interface GameJson {
   info: InfoJson;
   grid: GridData;
-  teamGrids: Record<string, GridData>;
+  teamGrids?: Record<number, GridData>;
+  teamClueVisibility?: Record<
+    number,
+    {
+      across: boolean[]; // true --> visible, false --> hidden
+      down: boolean[];
+    }
+  >;
   solution: string[][];
   clues: CluesJson;
 }

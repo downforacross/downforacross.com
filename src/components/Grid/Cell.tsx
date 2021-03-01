@@ -3,8 +3,9 @@ import * as _ from 'lodash';
 import clsx from 'clsx';
 import Emoji from '../common/Emoji';
 import powerups from '../../lib/powerups';
-import {Cursor, Ping, CellStyles} from './types';
+import {Ping, CellStyles} from './types';
 import './css/cell.css';
+import {Cursor} from '../../shared/types';
 
 interface Props {
   r: number;

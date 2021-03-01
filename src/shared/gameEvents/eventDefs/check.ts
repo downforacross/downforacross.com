@@ -30,7 +30,7 @@ const updateCell: EventDef<UpdateCellEvent> = {
     if (scope.length !== 1) {
       return state; // illegal update if trying to check more than 1 cell
     }
-    const teamGrid = state.game?.teamGrids[teamId];
+    const teamGrid = state.game?.teamGrids?.[teamId];
     if (
       !state.game ||
       !teamGrid // illegal update if teamGrid is somehow undefined

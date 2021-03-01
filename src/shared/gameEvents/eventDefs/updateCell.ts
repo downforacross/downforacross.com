@@ -27,7 +27,7 @@ const updateCell: EventDef<UpdateCellEvent> = {
     }
     const {r, c} = cell;
 
-    const grid = state.game?.teamGrids[teamId];
+    const grid = state.game?.teamGrids?.[teamId];
     if (!grid) {
       return state; // illegal update if grid is somehow undefined
     }

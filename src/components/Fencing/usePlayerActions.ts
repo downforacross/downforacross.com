@@ -11,6 +11,7 @@ export interface DispatchFn {
   // TODO move to useEventDispatchFn
   (gameEvent: GameEvent): Promise<void>;
 }
+
 // translate <Player/> callbacks to game events emitted
 // TODO: copy paste logic from src/components/Game.js
 export const usePlayerActions = (dispatch: DispatchFn, id: string): PlayerActions => ({
