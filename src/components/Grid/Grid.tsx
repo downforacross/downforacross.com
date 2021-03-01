@@ -7,17 +7,16 @@ import RerenderBoundary from '../RerenderBoundary';
 import {hashGridRow} from './hashGridRow';
 import Cell from './Cell';
 import {
-  GridData,
   GridDataWithColor,
   CellCoords,
   CellIndex,
-  Cursor,
   ClueCoords,
   BattlePickup,
   toCellIndex,
   CellStyles,
   Ping,
 } from './types';
+import {Cursor, GridData} from '../../shared/types';
 
 interface GridProps {
   // Grid data
@@ -162,6 +161,7 @@ export default class Grid extends React.PureComponent<GridProps> {
         ...cell,
         r,
         c,
+        solvedByIconSize: Math.round(size / 10),
         selected: this.isSelected(r, c),
         referenced: this.isReferenced(r, c),
         circled: this.isCircled(r, c),

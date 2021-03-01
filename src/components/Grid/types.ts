@@ -1,4 +1,5 @@
 import {Brand} from 'utility-types';
+import {CellData, Cursor} from '../../shared/types';
 
 export interface CellStyle {
   backgroundColor: string;
@@ -9,29 +10,9 @@ export interface CellStyles extends React.CSSProperties {
   frozen: CellStyle;
 }
 
-export interface Cursor {
-  id: string;
-  r: number; // Row in puzzle
-  c: number; // Column in puzzle
-  timestamp: number;
-  color: string;
-  active: boolean;
-}
-
 export interface Ping extends Cursor {
   age: number;
 }
-
-export interface CellData {
-  value?: string;
-  black?: boolean;
-  number?: number;
-  revealed?: boolean;
-  bad?: boolean;
-  good?: boolean;
-  pencil?: boolean;
-}
-export type GridData = CellData[][];
 export type GridDataWithColor = (CellData & {attributionColor: string})[][];
 
 export interface CellCoords {

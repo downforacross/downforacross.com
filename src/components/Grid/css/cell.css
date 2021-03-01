@@ -34,6 +34,12 @@
   color: var(--main-black);
 }
 
+.cell.hidden {
+  pointer-events: none;
+  background-color: var(--main-gray-2);
+  color: var(--main-gray-2);
+}
+
 .cell.black.selected {
   background-color: var(--main-black);
   color: var(--main-black);
