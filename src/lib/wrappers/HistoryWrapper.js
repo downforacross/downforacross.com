@@ -113,6 +113,10 @@ export default class HistoryWrapper {
   }
 
   addOptimisticEvent(event) {
+    event = {
+      ...event,
+      timestamp: (_.last(this.history)?.timestamp ?? 0) + this.optimisticEvents.length + 1000,
+    };
     setTimeout(() => {
       if (this.optimisticEvents.includes(event)) {
         console.log('Detected websocket drop, reconnecting...');
