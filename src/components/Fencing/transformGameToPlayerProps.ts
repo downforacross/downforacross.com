@@ -70,7 +70,7 @@ export const transformGameToPlayerProps = (
     shades: [],
     clues,
     id,
-    cursors: _.compact(users.filter((user) => user.teamId === teamId).map((user) => user.cursor)),
+    cursors: _.compact(users.map((user) => user.cursor)),
     pings: [],
     users,
     frozen: null,

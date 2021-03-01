@@ -12,6 +12,7 @@ const useStyles = makeStyles({
 });
 export const FencingScoreboard: React.FC<{gameState: GameState; switchTeams(): void}> = (props) => {
   const classes = useStyles();
+  // const allCells = _.flatten(props.gameState.game?.grid);
   return (
     <div className={classes.fencingScoreboardContainer}>
       <h2>Fencing</h2>
@@ -36,6 +37,11 @@ export const FencingScoreboard: React.FC<{gameState: GameState; switchTeams(): v
               <td>{user.score}</td>
             </tr>
           ))}
+          {/* <tr>
+            <td>Team {1}</td>
+            <td>1</td>
+            <td>{allCells.filter((cell) => cell).length}</td>
+          </tr> */}
         </tbody>
       </table>
     </div>
