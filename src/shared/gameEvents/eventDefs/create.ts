@@ -38,7 +38,7 @@ const getInitialClueVisibility = (
   const grid = game.grid;
   const n = game.grid.length;
   const m = game.grid[0].length;
-  const origin = teamId === 1 ? {r: 0, c: 0} : {r: n - 1, c: m - 1};
+  const origin = teamId === 1 ? {r: n - 1, c: 0} : {r: 0, c: m - 1};
   const allWhiteCells = _.flatMap(_.range(n).map((r) => _.range(m).map((c) => ({r, c})))).filter(
     ({r, c}) => !grid[r][c].black
   );
