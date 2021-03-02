@@ -22,6 +22,7 @@
     "body-parser": "^1.19.0",
     "clsx": "^1.1.0",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "express": "^4.17.1",
     "firebase": "^7.8.1",
     "firebase-admin": "^8.9.2",
@@ -87,7 +88,7 @@
     "ts-node": "^9.1.1"
   },
   "scripts": {
-    "start": "PORT=3020 react-scripts start",
+    "start": "cross-env PORT=3020 react-scripts start",
     "devfrontend": "REACT_APP_USE_LOCAL_SERVER=1 PORT=3020 react-scripts start",
     "devfrontendprod": "REACT_APP_ENV=production REACT_APP_USE_LOCAL_SERVER=1 PORT=3020 react-scripts start",
     "devbackend": "PORT=3021 nodemon --watch server -e \"ts\" --exec \"npx ts-node -P server/tsconfig.json server/server.ts\"",
