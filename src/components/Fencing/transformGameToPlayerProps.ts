@@ -16,6 +16,7 @@ interface PlayerProps {
   pings?: Ping[];
   cursors: Cursor[];
   clues: CluesJson;
+  currentCursor?: Cursor;
   id: string;
   updateCursor(nCursor: CellCoords): void;
   users: any;
@@ -58,6 +59,7 @@ export const transformGameToPlayerProps = (
   teamId: number | undefined
 ): PlayerProps => {
   const clues = teamId ? applyClueVisibility(game.teamClueVisibility![teamId], game.clues) : game.clues;
+  const cursors = _.compact(users.map((user) => user.cursor));
   return {
     ...playerActions,
     beta: true,
@@ -70,7 +72,8 @@ export const transformGameToPlayerProps = (
     shades: [],
     clues,
     id,
-    cursors: _.compact(users.map((user) => user.cursor)),
+    cursors,
+    currentCursor: cursors.find((cursor) => cursor.id === id),
     pings: [],
     users,
     frozen: null,
