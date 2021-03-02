@@ -17,6 +17,7 @@ import {TEAM_IDS} from '../../shared/gameEvents/constants';
 import {FencingToolbar} from './FencingToolbar';
 import nameGenerator from '../../lib/nameGenerator';
 import {useGameEvents, GameEventsHook} from './useGameEvents';
+import {getStartingCursorPosition} from '../../shared/gameEvents/eventDefs/create';
 
 function subscribeToGameEvents(
   socket: SocketIOClient.Socket | undefined,
@@ -103,6 +104,9 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
   useUpdateEffect(() => {
     if (isInitialized) {
       console.log('initializing for the first time', id, teamId);
+      if (!gameState) {
+        return; // shouldn't happen
+      }
       if (!gameState.users[id]?.displayName) {
         sendEvent({
           type: 'updateDisplayName',
@@ -122,6 +126,13 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
           params: {
             id,
             teamId: nTeamId,
+          },
+        });
+        sendEvent({
+          type: 'updateCursor',
+          params: {
+            id,
+            cell: getStartingCursorPosition(gameState.game!, nTeamId),
           },
         });
       }
