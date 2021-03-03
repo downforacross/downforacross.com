@@ -121,6 +121,7 @@ export default class HistoryWrapper {
       if (this.optimisticEvents.includes(event)) {
         console.log('Detected websocket drop, reconnecting...');
         this.optimisticEvents = [];
+        alert('disconnected, please refresh');
         window.socket.close();
         window.socket.open();
       }
