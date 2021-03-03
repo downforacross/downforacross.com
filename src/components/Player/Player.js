@@ -83,18 +83,15 @@ export default class Player extends Component {
     this.updateSize();
   }
 
-  componentDidUpdate() {
-    if (this.props.currentCursor) {
+  componentDidUpdate(prevProps) {
+    if (this.props.currentCursor && this.props.currentCursor !== prevProps.currentCursor) {
       // eslint-disable-next-line react/no-did-update-set-state
-      if (this.state.selected.r === 0 && this.state.selected.c === 0) {
-        // eslint-disable-next-line react/no-did-update-set-state
-        this.setState({
-          selected: {
-            r: this.props.currentCursor.r,
-            c: this.props.currentCursor.c,
-          },
-        });
-      }
+      this.setState({
+        selected: {
+          r: this.props.currentCursor.r,
+          c: this.props.currentCursor.c,
+        },
+      });
     }
   }
 
