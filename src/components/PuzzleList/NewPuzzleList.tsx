@@ -16,6 +16,7 @@ interface NewPuzzleListProps {
     New: boolean;
   };
   puzzleStatuses: PuzzleStatuses;
+  uploadedPuzzles: number;
 }
 
 const NewPuzzleList: React.FC<NewPuzzleListProps> = (props) => {
@@ -65,7 +66,7 @@ const NewPuzzleList: React.FC<NewPuzzleListProps> = (props) => {
     // it is debatable if we want to blank out the current puzzles here or not,
     // for now we only change the puzzles when the reload happens.
     fetchMore([], 0);
-  }, [JSON.stringify(props.filter)]);
+  }, [JSON.stringify(props.filter), props.uploadedPuzzles]);
 
   const handleScroll = async () => {
     if (fullyLoaded) return;
