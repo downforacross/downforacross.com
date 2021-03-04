@@ -140,6 +140,7 @@ export default class PuzzleList extends PureComponent {
         filter={filter}
         statusFilter={this.props.statusFilter}
         puzzleStatuses={this.puzzleStatuses}
+        uploadedPuzzles={this.props.uploadedPuzzles}
       />
     );
   }

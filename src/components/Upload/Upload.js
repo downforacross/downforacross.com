@@ -1,10 +1,10 @@
 import './css/index.css';
 
 import React, {Component} from 'react';
+import swal from '@sweetalert/with-react';
 import actions from '../../actions';
 import FileUploader from './FileUploader';
 import {createNewPuzzle} from '../../api/puzzle';
-import swal from 'sweetalert';
 
 export default class Upload extends Component {
   constructor() {
@@ -22,6 +22,7 @@ export default class Upload extends Component {
       recentUnlistedPid: null,
       unlistedCheckboxChecked: false,
     });
+    this.renderSuccessModal(puzzle);
   };
 
   create = async () => {
@@ -31,16 +32,17 @@ export default class Upload extends Component {
       private: !isPublic,
     };
     // store in both firebase & pg
-    actions.createPuzzle(puzzle, (pid) => {
+    await actions.createPuzzle(puzzle, (pid) => {
       this.setState({puzzle: null});
-      this.props.onCreate && this.props.onCreate();
       this.setState({
         recentUnlistedPid: isPublic ? undefined : pid,
       });
 
       createNewPuzzle(puzzle, pid, {
         isPublic,
-      });
+      })
+        .then(this.renderUploadSuccessModal)
+        .catch(this.renderUploadFailModal);
     });
   };
 
@@ -54,68 +56,90 @@ export default class Upload extends Component {
     });
   };
 
-  renderSuccessMessage() {
-    const {info} = this.state.puzzle || {};
-    const {title} = info || {};
-    if (title) {
-      return (
-        <div className="upload--success">
-          <span className="upload--success--title">{title}</span>
+  renderSuccessModal(puzzle) {
+    const puzzleTitle = puzzle.info?.title || 'Untitled';
+    swal({
+      title: 'Confirm Upload',
+      icon: 'info',
+      buttons: [
+        'Cancel',
+        {
+          text: 'Upload',
+          closeModal: false,
+        },
+      ],
+      content: (
+        <div className="swal-text swal-text--no-margin swal-text--text-align-center">
+          <p>
+            You are about to upload the puzzle &quot;
+            {puzzleTitle}
+            &quot; to the Daily Puzzle repository. Continue?
+          </p>
+          <div id="unlistedRow">
+            <label>
+              <input type="checkbox" onChange={this.handleChangeUnlistedCheckbox} /> Upload as unlisted
+            </label>
+          </div>
         </div>
-      );
-    }
+      ),
+    }).then(this.handleUpload);
   }
+
+  handleUpload = (uploadConfirmed) => {
+    if (uploadConfirmed) {
+      return this.create();
+    }
+    return null;
+  };
+
+  renderUploadSuccessModal = () => {
+    swal.close();
+    if (!this.state.recentUnlistedPid) {
+      this.props.onCreate && this.props.onCreate();
+      swal({
+        title: 'Upload Success!',
+        icon: 'success',
+        text: 'You may now view your puzzle on the home page.',
+      });
+    } else {
+      const url = `/beta/play/${this.state.recentUnlistedPid}`;
+      swal({
+        title: 'Upload Success!',
+        icon: 'success',
+        content: (
+          <div className="swal-text swal-text--no-margin swal-text--text-align-center">
+            <p style={{marginTop: 10, marginBottom: 10}}>
+              Successfully created an unlisted puzzle. You may now visit the link{' '}
+              <a href={url} style={{wordBreak: 'break-all'}}>
+                {url}
+              </a>{' '}
+              to play the new puzzle.
+            </p>
+          </div>
+        ),
+      });
+    }
+  };
+
+  renderUploadFailModal = (err) => {
+    swal.close();
+    swal({
+      title: 'Upload Failed!',
+      icon: 'error',
+      content: (
+        <div className="swal-text swal-text--no-margin swal-text--text-align-center">
+          <div>Upload failed. Error message:</div>
+          <i>{err?.message ? err.message : 'Unknown error'}</i>
+        </div>
+      ),
+    });
+  };
 
   handleChangeUnlistedCheckbox = (e) => {
     this.setState({
       unlistedCheckboxChecked: e.target.checked,
     });
   };
-
-  renderButton() {
-    const {v2} = this.props;
-    const {info} = this.state.puzzle || {};
-    const {type} = info || {};
-    if (type) {
-      return (
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={this.state.unlistedCheckboxChecked}
-              onChange={this.handleChangeUnlistedCheckbox}
-            />
-            {' '}
-            Unlisted
-          </label>
-          <button className={`upload--button ${v2 ? 'v2' : ''}`} onClick={this.create}>
-            {`Add puzzle to the ${type} repository`}
-            {this.state.unlistedCheckboxChecked ? ' (unlisted)' : ''}
-          </button>
-        </div>
-      );
-    }
-  }
-
-  renderRecentlyCreatedPuzzleMessage() {
-    if (!this.state.recentUnlistedPid) {
-      return;
-    }
-
-    const url = `/beta/play/${this.state.recentUnlistedPid}`;
-
-    return (
-      <p style={{marginTop: 10, marginBottom: 10}}>
-        Successfully created an unlisted puzzle. You may now visit the link
-        {' '}
-        <a href={url} style={{wordBreak: 'break-all'}}>
-          {url}
-        </a>
-        {' '}
-        to play the new puzzle.
-      </p>
-    );
-  }
 
   render() {
     const {v2} = this.props;
@@ -124,9 +148,6 @@ export default class Upload extends Component {
         <div className="upload--main">
           <div className="upload--main--upload">
             <FileUploader success={this.success} fail={this.fail} v2={v2} />
-            {this.renderSuccessMessage()}
-            {this.renderButton()}
-            {this.renderRecentlyCreatedPuzzleMessage()}
           </div>
         </div>
       </div>

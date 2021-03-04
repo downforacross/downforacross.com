@@ -67,10 +67,6 @@
   transition: all ease-in 2s;
 }
 
-.swal-text.swal-text--no-margin {
-  margin: 0 !important;
-}
-
 .info--hr {
   margin-top: 1rem;
   margin-bottom: 1rem;
