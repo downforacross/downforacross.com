@@ -32,7 +32,7 @@ export default class Upload extends Component {
       private: !isPublic,
     };
     // store in both firebase & pg
-    await actions.createPuzzle(puzzle, (pid) => {
+    actions.createPuzzle(puzzle, (pid) => {
       this.setState({puzzle: null});
       this.setState({
         recentUnlistedPid: isPublic ? undefined : pid,

@@ -37,7 +37,7 @@ const actions = {
     setPuzzle(pid, puzzle);
   },
   // puzzle: { title, type, grid, clues }
-  createPuzzle: async (puzzle, cbk) => {
+  createPuzzle: (puzzle, cbk) => {
     db.ref('counters').transaction(
       (counters) => {
         const pid = ((counters && counters.pid) || 0) + 1;
