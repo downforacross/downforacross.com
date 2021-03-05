@@ -16,6 +16,7 @@ export const FencingScoreboard: React.FC<{
   gameState: GameState;
   currentUserId: string;
   switchTeams(): void;
+  spectate(): void;
   changeName(newName: string): void;
 }> = (props) => {
   const classes = useStyles();
@@ -23,10 +24,19 @@ export const FencingScoreboard: React.FC<{
   const switchTeamsButton = (
     <button
       onClick={() => {
-        window.confirm('Switch teams? You will see their grid') && props.switchTeams();
+        props.switchTeams();
       }}
     >
       Switch
+    </button>
+  );
+  const spectateButton = (
+    <button
+      onClick={() => {
+        props.spectate();
+      }}
+    >
+      Spectate
     </button>
   );
   const changeNameButton = (

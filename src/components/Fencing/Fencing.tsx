@@ -166,7 +166,16 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
               type: 'updateTeamId',
               params: {
                 id,
-                teamId: 3 - teamId!,
+                teamId: teamId ? 3 - teamId : 1,
+              },
+            });
+          }}
+          spectate={() => {
+            sendEvent({
+              type: 'updateTeamId',
+              params: {
+                id,
+                teamId: teamId ? 0 : 1,
               },
             });
           }}
