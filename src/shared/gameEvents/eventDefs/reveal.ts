@@ -52,6 +52,7 @@ const reveal: EventDef<RevealEvent> = {
             value: state.game!.solution[r][c],
             bad: false,
             good: true,
+            revealed: true,
             solvedBy: {id, teamId},
           },
         }),
