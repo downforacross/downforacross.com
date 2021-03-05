@@ -152,6 +152,15 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
         <FencingScoreboard
           gameState={gameState}
           currentUserId={id}
+          changeName={(newName) => {
+            sendEvent({
+              type: 'updateDisplayName',
+              params: {
+                id,
+                displayName: newName,
+              },
+            });
+          }}
           switchTeams={() => {
             sendEvent({
               type: 'updateTeamId',

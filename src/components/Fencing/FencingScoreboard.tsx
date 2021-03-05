@@ -1,6 +1,7 @@
 import {makeStyles} from '@material-ui/core';
 import _ from 'lodash';
 import React from 'react';
+import nameGenerator from '../../lib/nameGenerator';
 import {GameState} from '../../shared/gameEvents/types/GameState';
 import './css/fencingScoreboard.css';
 
@@ -15,6 +16,7 @@ export const FencingScoreboard: React.FC<{
   gameState: GameState;
   currentUserId: string;
   switchTeams(): void;
+  changeName(newName: string): void;
 }> = (props) => {
   const classes = useStyles();
   // const allCells = _.flatten(props.gameState.game?.grid);
@@ -25,6 +27,18 @@ export const FencingScoreboard: React.FC<{
       }}
     >
       Switch
+    </button>
+  );
+  const changeNameButton = (
+    <button
+      onClick={() => {
+        props.changeName(
+          window.prompt('Your Name', props.gameState.users[props.currentUserId].displayName) ||
+            nameGenerator()
+        );
+      }}
+    >
+      Edit
     </button>
   );
   return (
@@ -43,7 +57,11 @@ export const FencingScoreboard: React.FC<{
               key={userId}
               className={userId === props.currentUserId ? 'fencing-scoreboard--current-user' : ''}
             >
-              <td>{user.displayName}</td>
+              <td>
+                {user.displayName}
+                {` `}
+                {userId === props.currentUserId ? changeNameButton : null}
+              </td>
               <td>
                 {user.teamId}
                 {` `}

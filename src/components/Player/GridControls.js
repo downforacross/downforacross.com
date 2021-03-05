@@ -26,6 +26,15 @@ export default class GridControls extends Component {
   }
 
   selectNextClue(backwards, parallel = false) {
+    console.log(
+      'select next clue',
+      this.grid,
+      this.getSelectedClueNumber(),
+      this.props.direction,
+      this.props.clues,
+      backwards,
+      parallel
+    );
     const {direction, clueNumber} = this.grid.getNextClue(
       this.getSelectedClueNumber(),
       this.props.direction,
@@ -33,6 +42,8 @@ export default class GridControls extends Component {
       backwards,
       parallel
     );
+    console.log(direction, clueNumber);
+
     this.selectClue(direction, clueNumber);
   }
 
@@ -133,9 +144,9 @@ export default class GridControls extends Component {
     };
 
     if (shiftKey) {
-      const isAcross = this.props.direction === 'across'
-      actionKeys[isAcross ? 'ArrowUp' : 'ArrowLeft'] = 'backward'
-      actionKeys[isAcross ? 'ArrowDown' : 'ArrowRight'] = 'forward'
+      const isAcross = this.props.direction === 'across';
+      actionKeys[isAcross ? 'ArrowUp' : 'ArrowLeft'] = 'backward';
+      actionKeys[isAcross ? 'ArrowDown' : 'ArrowRight'] = 'forward';
     }
 
     const {onPressEnter, onPressPeriod, onPressEscape} = this.props;
