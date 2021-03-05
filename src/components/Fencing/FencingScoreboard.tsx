@@ -76,6 +76,8 @@ export const FencingScoreboard: React.FC<{
                 {user.teamId}
                 {` `}
                 {userId === props.currentUserId ? switchTeamsButton : null}
+                {` `}
+                {userId === props.currentUserId ? spectateButton : null}
               </td>
               <td>{user.score}</td>
               <td>{user.misses}</td>
