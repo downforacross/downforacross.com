@@ -4,7 +4,15 @@ import pseudoRandom from 'pseudo-random';
 import {useRafState} from 'react-use';
 import {ModernArtState, ModernArtEvent, AuctionType, AuctionStatus} from './types';
 
-export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): ModernArtState => {
+/**
+ * A helper function.
+ *
+ * Returns undefined for invalid events
+ */
+export const _modernArtReducer = (
+  state: ModernArtState,
+  event: ModernArtEvent
+): ModernArtState | undefined => {
   if (event.type === 'start_game') {
     return {
       ...state,
@@ -37,9 +45,11 @@ export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): 
     }
   }
   if (event.type === 'finish_auction') {
+    if (!state.currentAuction) return;
     // give winner the painting, store in new rounds field
     const auctioneer = state.currentAuction.auctioneer;
-    const winner = state.currentAuction.highestBidder || 'error';
+    const winner = state.currentAuction.highestBidder;
+    if (!auctioneer || !winner) return;
     const payment = state.currentAuction.highestBid || state.currentAuction.fixedPrice || -1;
     const closedAuction = {
       ...state.currentAuction,
@@ -65,10 +75,13 @@ export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): 
       rounds: {
         ...state.rounds,
         [state.roundIndex]: {
-          auctions: state.rounds[state.roundIndex].auctions.concat(closedAuction),
+          auctions: [...(state.rounds[state.roundIndex]?.auctions ?? []), closedAuction],
           users: {
-            ...state.rounds[state.roundIndex].users,
-            [winner]: state.rounds[state.roundIndex].users[winner].acquiredArt.concat(closedAuction.painting),
+            ...state.rounds[state.roundIndex]?.users,
+            [winner]: [
+              ...(state.rounds[state.roundIndex]?.users[winner]?.acquiredArt ?? []),
+              closedAuction.painting,
+            ],
           },
         },
       },
@@ -152,4 +165,8 @@ export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): 
     // pass
   }
   return state;
+};
+
+export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): ModernArtState => {
+  return _modernArtReducer(state, event) || state;
 };

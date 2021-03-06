@@ -9,7 +9,8 @@ import {emitAsync} from '../../sockets/emitAsync';
 import {usePlayerActions} from './usePlayerActions';
 import {getUser} from '../../store/user';
 import {useGameState} from './useGameState';
-import {AuctionStatus, AuctionType, ModernArtEvent} from './events/types';
+import {ModernArtEvent} from './events/types';
+import {GameStateDisplayer} from './GameStateDisplayer/GameStateDisplayer';
 
 function subscribeToGameEvents(
   socket: SocketIOClient.Socket | undefined,
@@ -98,112 +99,15 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
 
   const classes = useStyles();
   const gameState = useGameState(events);
-
   console.log('Events', events);
   console.log('Game State:', gameState);
-
   const actions = usePlayerActions(sendEvent);
-  const users = _.values(gameState.users);
-
-  const [currentBid, setCurrentBid] = useState(0);
-
-  const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    const number = Number(e.currentTarget.value);
-    setCurrentBid(number);
-  };
-
-  const submitBid = () => {
-    actions.submitBid(getUser().id, currentBid);
-    window.alert('current bid is ' + currentBid);
-  };
-
-  const finishAuction = () => {
-    actions.finishAuction();
-    window.alert('auction is finished!');
-  };
 
   return (
     <div className={classes.container}>
       <Helmet title={`Modern Art ${gid}`} />
       <h1>Welcome to modern art</h1>
-      {!gameState.started && (
-        <div className={classes.startButton}>
-          Click Start!
-          <button onClick={actions.startGame}>Start!</button>
-        </div>
-      )}
-      <div className={classes.nextButton}>
-        <button onClick={actions.step}>Next!</button>
-      </div>
-      {gameState.started && <div className={classes.message}>Game has Started</div>}
-      <div className={classes.usersList}>
-        {users.length}
-        users here
-        {users.map((user, i) => (
-          <div key={i}>
-            {user.icon}
-            {user.name}
-            <div className={classes.cards}>
-              {user.cards.map((card, i) => (
-                <div className={classes.card}>
-                  <div className={classes.cardHeader} style={{backgroundColor: card.color}} />
-                  {card.auctionType}
-                  <button
-                    onClick={() => {
-                      actions.startAuction(user.id, i);
-                    }}
-                  >
-                    Play this card
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-      {!gameState.started && <div>Click Start!</div>}
-      {gameState.started && <div>Game as Started</div>}
-      {users.length}
-      users here
-      {users.map((user, i) => (
-        <div key={i}>{user.name}</div>
-      ))}
-      {gameState.currentAuction && (
-        <div>
-          <h1>
-            Player {gameState.users[gameState.currentAuction.auctioneer]?.name} is holding a{' '}
-            {gameState.currentAuction.auctionType} auction for a {gameState.currentAuction.painting.painter}{' '}
-            painting
-          </h1>
-          {gameState.currentAuction.auctionType == AuctionType.OPEN && (
-            <h3>
-              Highest Bid is currently {gameState.currentAuction.highestBid} by user{' '}
-              {gameState.currentAuction.highestBidder}{' '}
-            </h3>
-          )}
-
-          {gameState.currentAuction.status === AuctionStatus.PENDING && (
-            <div>
-              <input type="text" onChange={handleInputChange} value={currentBid || ''} />
-              <button onClick={submitBid}> Submit Bid </button>
-            </div>
-          )}
-          {gameState.currentAuction.status == AuctionStatus.CLOSED && (
-            <div>
-              <h1>
-                Player {gameState.currentAuction.highestBidder} won painting{' '}
-                {gameState.currentAuction.painting.painter}
-                for {gameState.currentAuction.highestBid}
-              </h1>
-            </div>
-          )}
-        </div>
-      )}
-      {
-        <div>
-          <button onClick={finishAuction}> Finish Auction </button>
-        </div>
-      }
+      <GameStateDisplayer gameState={gameState} playerActions={actions} userId={getUser().id} />
     </div>
   );
 };
