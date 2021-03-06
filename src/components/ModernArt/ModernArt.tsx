@@ -101,13 +101,14 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
   const gameState = useGameState(events);
   console.log('Events', events);
   console.log('Game State:', gameState);
-  const actions = usePlayerActions(sendEvent);
 
+  const userId = getUser().id;
+  const actions = usePlayerActions(sendEvent, userId);
   return (
     <div className={classes.container}>
       <Helmet title={`Modern Art ${gid}`} />
       <h1>Welcome to modern art</h1>
-      <GameStateDisplayer gameState={gameState} playerActions={actions} userId={getUser().id} />
+      <GameStateDisplayer gameState={gameState} playerActions={actions} userId={userId} />
     </div>
   );
 };

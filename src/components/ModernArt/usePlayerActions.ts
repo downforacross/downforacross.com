@@ -4,14 +4,17 @@ import {ModernArtEvent} from './events/types';
 export interface PlayerActions {
   startGame(): void;
   step(): void;
-  startAuction(userId: string, idx: number): void;
-  submitBid(userId: string, bidAmount: number): void;
+  startAuction(idx: number): void;
+  submitBid(bidAmount: number): void;
   finishAuction(): void;
 }
 
 // translate <Player/> callbacks to game events emitted
 // TODO: copy paste logic from src/components/Game.js
-export const usePlayerActions = (dispatch: (event: ModernArtEvent) => Promise<void>): PlayerActions => ({
+export const usePlayerActions = (
+  dispatch: (event: ModernArtEvent) => Promise<void>,
+  userId: string
+): PlayerActions => ({
   startGame() {
     dispatch({
       type: 'start_game',
@@ -25,7 +28,7 @@ export const usePlayerActions = (dispatch: (event: ModernArtEvent) => Promise<vo
       params: {},
     });
   },
-  startAuction(userId, idx) {
+  startAuction(idx) {
     dispatch({
       type: 'start_auction',
       params: {
@@ -34,7 +37,7 @@ export const usePlayerActions = (dispatch: (event: ModernArtEvent) => Promise<vo
       },
     });
   },
-  submitBid(userId, bidAmount) {
+  submitBid(bidAmount) {
     dispatch({
       type: 'submit_bid',
       params: {

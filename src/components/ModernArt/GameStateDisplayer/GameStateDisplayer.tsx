@@ -17,9 +17,8 @@ export const GameStateDisplayer: React.FC<{
   userId: string;
 }> = (props) => {
   const classes = useStyles();
-  const gameState = props.gameState;
+  const {gameState, playerActions: actions} = props;
 
-  const actions = props.playerActions;
   const users = _.values(gameState.users);
 
   const [currentBid, setCurrentBid] = useState(0);
@@ -30,13 +29,11 @@ export const GameStateDisplayer: React.FC<{
   };
 
   const submitBid = () => {
-    actions.submitBid(props.userId, currentBid);
-    window.alert('current bid is ' + currentBid);
+    actions.submitBid(currentBid);
   };
 
   const finishAuction = () => {
     actions.finishAuction();
-    window.alert('auction is finished!');
   };
 
   return (
@@ -65,7 +62,7 @@ export const GameStateDisplayer: React.FC<{
                   {card.auctionType}
                   <button
                     onClick={() => {
-                      actions.startAuction(user.id, i);
+                      actions.startAuction(i);
                     }}
                   >
                     Play this card
