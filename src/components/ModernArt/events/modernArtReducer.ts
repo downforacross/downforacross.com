@@ -144,8 +144,8 @@ export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): 
       ...state,
       users: {
         ...state.users,
-        [event.params.id]: {
-          ...state.users[event.params.id],
+        [event.params.userId]: {
+          ...state.users[event.params.userId],
         },
       },
     };
