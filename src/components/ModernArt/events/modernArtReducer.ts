@@ -168,5 +168,10 @@ export const _modernArtReducer = (
 };
 
 export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): ModernArtState => {
-  return _modernArtReducer(state, event) || state;
+  try {
+    return _modernArtReducer(state, event) || state;
+  } catch (e) {
+    console.error('failed to reduce', state, event);
+    return state;
+  }
 };
