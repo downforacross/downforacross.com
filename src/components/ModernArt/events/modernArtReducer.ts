@@ -126,13 +126,12 @@ export const modernArtReducerHelper = (
         }))
       );
       let deck = [...ALL_CARDS, ...ALL_CARDS, ...ALL_CARDS, ...ALL_CARDS];
-      // for (let i = 0; i < deck.length; i += 1) {
-      //   const j = Math.floor(prng.random() * (i + 1));
-      //   console.log(i, j);
-      //   const tmp = deck[j];
-      //   deck[j] = deck[i];
-      //   deck[i] = tmp;
-      // }
+      for (let i = 0; i < deck.length; i += 1) {
+        const j = Math.floor(prng() * (i + 1));
+        const tmp = deck[j];
+        deck[j] = deck[i];
+        deck[i] = tmp;
+      }
       const deal = () => {
         const res = deck[0];
         deck = deck.slice(1);
