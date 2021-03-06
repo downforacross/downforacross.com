@@ -1,15 +1,14 @@
 import _ from 'lodash';
 // @ts-ignore
 import pseudoRandom from 'pseudo-random';
-import {useRafState} from 'react-use';
-import {ModernArtState, ModernArtEvent, AuctionType, AuctionStatus} from './types';
+import {ModernArtState, ModernArtEvent, AuctionStatus} from './types';
 
 /**
- * A helper function.
+ * A helper function that contains meat of reducer code.
  *
  * Returns undefined for invalid events
  */
-export const _modernArtReducer = (
+export const modernArtReducerHelper = (
   state: ModernArtState,
   event: ModernArtEvent
 ): ModernArtState | undefined => {
@@ -45,17 +44,17 @@ export const _modernArtReducer = (
     }
   }
   if (event.type === 'finish_auction') {
-    if (!state.currentAuction) return;
+    if (!state.currentAuction) return undefined;
     // give winner the painting, store in new rounds field
     const auctioneer = state.currentAuction.auctioneer;
     const winner = state.currentAuction.highestBidder;
-    if (!auctioneer || !winner) return;
+    if (!auctioneer || !winner) return undefined;
     const payment = state.currentAuction.highestBid || state.currentAuction.fixedPrice || -1;
     const closedAuction = {
       ...state.currentAuction,
       status: AuctionStatus.CLOSED,
-      winner: winner,
-      payment: payment,
+      winner,
+      payment,
     };
 
     // need to handle case where winner = auctioneer
@@ -169,7 +168,7 @@ export const _modernArtReducer = (
 
 export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): ModernArtState => {
   try {
-    return _modernArtReducer(state, event) || state;
+    return modernArtReducerHelper(state, event) || state;
   } catch (e) {
     console.error('failed to reduce', state, event);
     return state;
