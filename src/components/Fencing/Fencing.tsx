@@ -3,6 +3,7 @@ import * as uuid from 'uuid';
 import React, {useState} from 'react';
 import {useUpdateEffect} from 'react-use';
 import {Helmet} from 'react-helmet';
+import Flex from 'react-flexview';
 import {makeStyles} from '@material-ui/core';
 import {useSocket} from '../../sockets/useSocket';
 import {emitAsync} from '../../sockets/emitAsync';
@@ -18,6 +19,7 @@ import {FencingToolbar} from './FencingToolbar';
 import nameGenerator from '../../lib/nameGenerator';
 import {useGameEvents, GameEventsHook} from './useGameEvents';
 import {getStartingCursorPosition} from '../../shared/gameEvents/eventDefs/create';
+import Nav from '../common/Nav';
 
 function subscribeToGameEvents(
   socket: SocketIOClient.Socket | undefined,
@@ -146,57 +148,60 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
   const playerActions = usePlayerActions(sendEvent, id);
 
   return (
-    <div className={classes.container}>
-      <Helmet title={`Fencing ${gid}`} />
-      <div className={classes.scoreboardContainer}>
-        <FencingScoreboard
-          gameState={gameState}
-          currentUserId={id}
-          changeName={(newName) => {
-            sendEvent({
-              type: 'updateDisplayName',
-              params: {
-                id,
-                displayName: newName,
-              },
-            });
-          }}
-          switchTeams={() => {
-            sendEvent({
-              type: 'updateTeamId',
-              params: {
-                id,
-                teamId: teamId ? 3 - teamId : 1,
-              },
-            });
-          }}
-          spectate={() => {
-            sendEvent({
-              type: 'updateTeamId',
-              params: {
-                id,
-                teamId: teamId ? 0 : 1,
-              },
-            });
-          }}
-        />
-      </div>
-      {gameState.loaded && (
-        <div>
-          <FencingToolbar toolbarActions={toolbarActions} />
-          <Player
-            // eslint-disable-next-line react/jsx-props-no-spreading
-            {...transformGameToPlayerProps(
-              gameState.game!,
-              _.values(gameState.users),
-              playerActions,
-              id,
-              teamId
-            )}
+    <Flex column>
+      <Nav hidden={false} v2 canLogin={false} divRef={null} linkStyle={null} mobile={null} />
+      <div className={classes.container}>
+        <Helmet title={`Fencing ${gid}`} />
+        <div className={classes.scoreboardContainer}>
+          <FencingScoreboard
+            gameState={gameState}
+            currentUserId={id}
+            changeName={(newName) => {
+              sendEvent({
+                type: 'updateDisplayName',
+                params: {
+                  id,
+                  displayName: newName,
+                },
+              });
+            }}
+            switchTeams={() => {
+              sendEvent({
+                type: 'updateTeamId',
+                params: {
+                  id,
+                  teamId: teamId ? 3 - teamId : 1,
+                },
+              });
+            }}
+            spectate={() => {
+              sendEvent({
+                type: 'updateTeamId',
+                params: {
+                  id,
+                  teamId: teamId ? 0 : 1,
+                },
+              });
+            }}
           />
         </div>
-      )}
-      {!gameState.loaded && <div>Loading your game...</div>}
-    </div>
+        {gameState.loaded && (
+          <div>
+            <FencingToolbar toolbarActions={toolbarActions} />
+            <Player
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              {...transformGameToPlayerProps(
+                gameState.game!,
+                _.values(gameState.users),
+                playerActions,
+                id,
+                teamId
+              )}
+            />
+          </div>
+        )}
+        {!gameState.loaded && <div>Loading your game...</div>}
+      </div>
+    </Flex>
   );
 };
