@@ -168,37 +168,35 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
       {users.map((user, i) => (
         <div key={i}>{user.name}</div>
       ))}
-      {gameState.currentAuction.auctionType == AuctionType.HIDDEN && (
+      {gameState.currentAuction && (
         <div>
           <h1>
-            Player {gameState.currentAuction.auctioneer} is holding a {gameState.currentAuction.auctionType}{' '}
-            auction for a painting {gameState.currentAuction.painting.painter}
+            Player {gameState.users[gameState.currentAuction.auctioneer]?.name} is holding a{' '}
+            {gameState.currentAuction.auctionType} auction for a {gameState.currentAuction.painting.painter}{' '}
+            painting
           </h1>
-          <input type="number" onChange={handleInputChange} value={currentBid} />
-          <button onClick={submitBid}> Submit Bid </button>
-        </div>
-      )}
-      {gameState.currentAuction.auctionType == AuctionType.OPEN && (
-        <div>
-          <h1>
-            Player {gameState.currentAuction.auctioneer} is holding a {gameState.currentAuction.auctionType}{' '}
-            auction for a painting {gameState.currentAuction.painting.painter}
-          </h1>
-          <h1>
-            Highest Bid is currently {gameState.currentAuction.highestBid} by user{' '}
-            {gameState.currentAuction.highestBidder}{' '}
-          </h1>
-          <input type="number" onChange={handleInputChange} value={currentBid} />
-          <button onClick={submitBid}> Submit Bid </button>
-        </div>
-      )}
-      {gameState.currentAuction.status == AuctionStatus.CLOSED && (
-        <div>
-          <h1>
-            Player {gameState.currentAuction.highestBidder} won painting{' '}
-            {gameState.currentAuction.painting.painter}
-            for {gameState.currentAuction.highestBid}
-          </h1>
+          {gameState.currentAuction.auctionType == AuctionType.OPEN && (
+            <h3>
+              Highest Bid is currently {gameState.currentAuction.highestBid} by user{' '}
+              {gameState.currentAuction.highestBidder}{' '}
+            </h3>
+          )}
+
+          {gameState.currentAuction.status === AuctionStatus.PENDING && (
+            <div>
+              <input type="text" onChange={handleInputChange} value={currentBid || ''} />
+              <button onClick={submitBid}> Submit Bid </button>
+            </div>
+          )}
+          {gameState.currentAuction.status == AuctionStatus.CLOSED && (
+            <div>
+              <h1>
+                Player {gameState.currentAuction.highestBidder} won painting{' '}
+                {gameState.currentAuction.painting.painter}
+                for {gameState.currentAuction.highestBid}
+              </h1>
+            </div>
+          )}
         </div>
       )}
       {
