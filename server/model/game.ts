@@ -3,7 +3,7 @@ import {pool} from './pool';
 
 export async function getGameEvents(gid: string) {
   const startTime = Date.now();
-  const res = await pool.query('SELECT event_payload FROM game_events WHERE gid=$1', [gid]);
+  const res = await pool.query('SELECT event_payload FROM game_events WHERE gid=$1 ORDER BY ts ASC', [gid]);
   const events = _.map(res.rows, 'event_payload');
   const ms = Date.now() - startTime;
   console.log(`getGameEvents(${gid}) took ${ms}ms`);

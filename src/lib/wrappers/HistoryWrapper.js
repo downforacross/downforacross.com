@@ -78,6 +78,7 @@ export default class HistoryWrapper {
 
   // the current snapshot
   getSnapshot() {
+    console.log('get snapshot', this.history.length);
     return this.getSnapshotAtIndex(this.history.length - 1, {optimistic: true});
   }
 
@@ -112,10 +113,15 @@ export default class HistoryWrapper {
   }
 
   addOptimisticEvent(event) {
+    event = {
+      ...event,
+      timestamp: (_.last(this.history)?.timestamp ?? 0) + this.optimisticEvents.length + 1000,
+    };
     setTimeout(() => {
       if (this.optimisticEvents.includes(event)) {
         console.log('Detected websocket drop, reconnecting...');
         this.optimisticEvents = [];
+        alert('disconnected, please refresh');
         window.socket.close();
         window.socket.open();
       }

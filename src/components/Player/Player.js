@@ -44,8 +44,8 @@ export default class Player extends Component {
     super(props);
     this.state = {
       selected: {
-        r: 0,
-        c: 0,
+        r: this.props.currentCursor?.r ?? 0,
+        c: this.props.currentCursor?.c ?? 0,
       },
       direction: 'across',
     };
@@ -81,6 +81,18 @@ export default class Player extends Component {
   componentDidMount() {
     window.addEventListener('resize', this.updateSize);
     this.updateSize();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.currentCursor && this.props.currentCursor !== prevProps.currentCursor) {
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({
+        selected: {
+          r: this.props.currentCursor.r,
+          c: this.props.currentCursor.c,
+        },
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -423,13 +435,7 @@ export default class Player extends Component {
             }}
           >
             <div>
-              {this.props.optimisticCounter ? (
-                <>
-                  {this.props.optimisticCounter}
-                  {' '}
-                  ahead
-                </>
-) : <>Synced</>}
+              {this.props.optimisticCounter ? <>{this.props.optimisticCounter} ahead</> : <>Synced</>}
             </div>
             <div>
               <ConnectionStats />

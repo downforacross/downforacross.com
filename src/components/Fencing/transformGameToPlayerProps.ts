@@ -1,8 +1,9 @@
 /**
  * Perhaps this whole file could live elsewhere, e.g. Player/transformGameToPlayerProps?
  * */
-import {CluesJson, GameJson, GridData} from '../../shared/types';
-import {CellCoords, CellIndex, Cursor, Ping} from '../Grid/types';
+import _ from 'lodash';
+import {CluesJson, GameJson, Cursor, GridData, UserJson} from '../../shared/types';
+import {CellCoords, CellIndex, Ping} from '../Grid/types';
 import {PlayerActions} from './usePlayerActions';
 
 interface PlayerProps {
@@ -15,6 +16,7 @@ interface PlayerProps {
   pings?: Ping[];
   cursors: Cursor[];
   clues: CluesJson;
+  currentCursor?: Cursor;
   id: string;
   updateCursor(nCursor: CellCoords): void;
   users: any;
@@ -33,32 +35,58 @@ interface PlayerProps {
   optimisticCounter: any;
 }
 
+function applyClueVisibility(vis: {across: boolean[]; down: boolean[]}, clues: CluesJson) {
+  return {
+    across: clues.across.map((clue, i) => (vis.across[i] ? clue : clue && '')),
+    down: clues.down.map((clue, i) => (vis.down[i] ? clue : clue && '')),
+  };
+}
+
+function applyClueVisibilityToGrid(vis: {across: boolean[]; down: boolean[]}, grid: GridData) {
+  return grid.map((row) =>
+    row.map((cell) => ({
+      ...cell,
+      hidden: !!cell.parents && !vis.across[cell.parents!.across] && !vis.down[cell.parents!.down],
+    }))
+  );
+}
+
 export const transformGameToPlayerProps = (
   game: GameJson,
-  playerStateActions: PlayerActions
-): PlayerProps => ({
-  ...playerStateActions,
-  beta: true,
-  size: 35,
-  grid: game.grid,
-  solution: game.solution,
-  circles: [],
-  shades: [],
-  clues: game.clues,
-  id: 'null',
-  cursors: [],
-  pings: [],
-  users: null,
-  frozen: null,
-  myColor: null,
-  addPing: null,
-  onPressEnter: null,
-  onPressPeriod: null,
-  vimMode: null,
-  vimInsert: null,
-  onVimInsert: null,
-  onVimNormal: null,
-  mobile: null,
-  pickups: null,
-  optimisticCounter: null,
-});
+  users: UserJson[],
+  playerActions: PlayerActions,
+  id: string,
+  teamId: number | undefined
+): PlayerProps => {
+  const clues = teamId ? applyClueVisibility(game.teamClueVisibility![teamId], game.clues) : game.clues;
+  const cursors = _.compact(users.map((user) => user.cursor));
+  return {
+    ...playerActions,
+    beta: true,
+    size: 35,
+    grid: teamId
+      ? applyClueVisibilityToGrid(game.teamClueVisibility![teamId], game.teamGrids![teamId])
+      : game.grid,
+    solution: game.solution,
+    circles: [],
+    shades: [],
+    clues,
+    id,
+    cursors,
+    currentCursor: cursors.find((cursor) => cursor.id === id),
+    pings: [],
+    users,
+    frozen: null,
+    myColor: null,
+    addPing: null,
+    onPressEnter: null,
+    onPressPeriod: null,
+    vimMode: null,
+    vimInsert: null,
+    onVimInsert: null,
+    onVimNormal: null,
+    mobile: null,
+    pickups: null,
+    optimisticCounter: null,
+  };
+};

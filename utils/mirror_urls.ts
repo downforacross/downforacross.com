@@ -2,7 +2,7 @@
 import {ArgumentParser} from 'argparse';
 import _ from 'lodash';
 import Promise from 'bluebird';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import rp from 'request-promise';
 const parser = new ArgumentParser({
   description: 'mirrors images onto an s3 bucket and writes resulting urls to a json',

@@ -4,7 +4,7 @@ import {pool} from './pool';
 
 export async function getRoomEvents(rid: string) {
   const startTime = Date.now();
-  const res = await pool.query('SELECT event_payload FROM room_events WHERE rid=$1', [rid]);
+  const res = await pool.query('SELECT event_payload FROM room_events WHERE rid=$1 ORDER BY ts ASC', [rid]);
   const events = _.map(res.rows, 'event_payload');
   const ms = Date.now() - startTime;
   console.log(`getRoomEvents(${rid}) took ${ms}ms`);
