@@ -1,6 +1,6 @@
 import _ from 'lodash';
 // @ts-ignore
-import pseudoRandom from 'pseudo-random';
+import seedrandom from 'seedrandom';
 import {ModernArtState, ModernArtEvent, AuctionStatus} from './types';
 
 /**
@@ -107,7 +107,7 @@ export const modernArtReducerHelper = (
   if (event.type === 'step') {
     // do the next automated step depending on the game state
     if (!state.roundStarted) {
-      const prng = pseudoRandom(event.params.seed ?? 1);
+      const prng = seedrandom(event.params.seed ?? 1);
       const CARDS_TO_DEAL: Record<string, number[] | undefined> = {
         // TODO
         1: [10, 10, 10],
