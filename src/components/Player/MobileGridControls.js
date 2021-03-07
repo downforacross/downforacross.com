@@ -28,9 +28,11 @@ export default class MobileGridControls extends GridControls {
     this.lastTouchMove = Date.now();
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.state.anchors.length === 0) {
-      this.fitOnScreen();
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.transform !== this.state.transform) {
+      if (this.state.anchors.length === 0) {
+        this.fitOnScreen();
+      }
     }
     if (prevProps.selected.r !== this.props.selected.r || prevProps.selected.c !== this.props.selected.c) {
       this.fitOnScreen(true);
@@ -195,20 +197,12 @@ export default class MobileGridControls extends GridControls {
   };
 
   handleRightArrowTouchEnd = () => {
-    if (this.props.direction === 'across') {
-      this.handleAction('right');
-    } else {
-      this.handleAction('down');
-    }
+    this.handleAction('forward');
     this.keepFocus();
   };
 
   handleLeftArrowTouchEnd = () => {
-    if (this.props.direction === 'across') {
-      this.handleAction('left');
-    } else {
-      this.handleAction('up');
-    }
+    this.handleAction('backward');
     this.keepFocus();
   };
 
