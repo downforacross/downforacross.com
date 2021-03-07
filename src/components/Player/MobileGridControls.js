@@ -25,6 +25,7 @@ export default class MobileGridControls extends GridControls {
     this.inputRef = React.createRef();
     this.zoomContainer = React.createRef();
     this.wasUnfocused = Date.now() - 1000;
+    this.lastPan = Date.now();
   }
 
   componentDidUpdate(prevProps) {
@@ -154,14 +155,19 @@ export default class MobileGridControls extends GridControls {
         touchPosition: {x, y},
       };
     });
+    const nTransform = this.getTransform(anchors, transform);
+    if (nTransform) {
+      this.lastPan = Date.now();
+    }
+
     this.setState({
       anchors,
-      transform: this.getTransform(anchors, transform),
+      transform: nTransform ?? this.state.transform,
     });
   };
 
   handleTouchEnd = (e) => {
-    if (e.touches.length === 0 && this.state.anchors.length === 1) {
+    if (e.touches.length === 0 && this.state.anchors.length === 1 && this.lastPan < Date.now() - 200) {
       this.props.onSetCursorLock(false);
       this.focusKeyboard();
     }
@@ -467,7 +473,7 @@ export default class MobileGridControls extends GridControls {
         touchEvents: 'none',
         position: 'absolute',
       },
-      autoComplete: 'new-password',
+      autoComplete: 'nope',
       onBlur: this.handleInputBlur,
       onFocus: this.handleInputFocus,
       onChange: this.handleInputChange,
