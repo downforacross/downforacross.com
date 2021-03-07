@@ -114,6 +114,7 @@ const useStyles = makeStyles({
     display: 'flex',
     height: '100%',
     flexDirection: 'column',
+    alignItems: 'center',
   },
   startButton: {
     display: 'flex',
