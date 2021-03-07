@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {ModernArtState, ModernArtEvent, AuctionStatus} from './types';
 // @ts-ignore
 import seedrandom from 'seedrandom';
+import state from 'sweetalert/typings/modules/state';
 
 /**
  * A helper function that contains meat of reducer code.
@@ -214,9 +215,47 @@ export const modernArtReducerHelper = (
   return state;
 };
 
+/**
+ * A helper function that contains meat of reducer code.
+ *
+ * Returns undefined for invalid events
+ */
+export const modernArtValidatorHelper = (state: ModernArtState, event: ModernArtEvent): boolean => {
+  if (event.type === 'start_game') {
+    return !state.started;
+  }
+  if (event.type === 'submit_bid') {
+    if (state.currentAuction.status === AuctionStatus.CLOSED) {
+      return false;
+    }
+    return true;
+  }
+  if (event.type === 'finish_auction') {
+    if (state.currentAuction.status === AuctionStatus.CLOSED) {
+      return false;
+    }
+    return true;
+  }
+  if (event.type === 'update_name') {
+    return true;
+  }
+  if (event.type === 'start_auction') {
+    if (state.currentAuction.status === AuctionStatus.PENDING) {
+      return false;
+    }
+    return true;
+  }
+  return true;
+};
+
 export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): ModernArtState => {
   try {
-    return modernArtReducerHelper(state, event) || state;
+    if (modernArtValidatorHelper(state, event)) {
+      return modernArtReducerHelper(state, event) || state;
+    } else {
+      console.log(`event ${event} is invalid`);
+      return state;
+    }
   } catch (e) {
     console.error('failed to reduce', state, event);
     return state;
