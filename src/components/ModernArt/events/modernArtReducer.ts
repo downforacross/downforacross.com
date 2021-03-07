@@ -72,7 +72,7 @@ export const modernArtReducerHelper = (
     // give winner the painting, store in new rounds field
     const auctioneer = state.currentAuction.auctioneer;
     // todo: handle when there is no winner (aka nobody wants to bid)
-    const winner = state.currentAuction.highestBidder;
+    const winner = state.currentAuction.highestBidder || auctioneer;
     if (!auctioneer || !winner) return undefined;
     const payment = state.currentAuction.highestBid || state.currentAuction.fixedPrice || -1;
     const closedAuction = {
@@ -92,7 +92,7 @@ export const modernArtReducerHelper = (
         },
         [auctioneer]: {
           ...state.users[auctioneer],
-          money: state.users[auctioneer].money - payment,
+          money: state.users[auctioneer].money + payment,
         },
       },
       rounds: {
