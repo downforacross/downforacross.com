@@ -211,7 +211,6 @@ export default class MobileGridControls extends GridControls {
     if (!this.props.enablePan) {
       return;
     }
-    if (anchors.length < 2) return;
 
     const getCenterAndDistance = (point1, point2) => {
       if (!point1) {
@@ -330,7 +329,7 @@ export default class MobileGridControls extends GridControls {
           e.addEventListener('touchstart', this.handleTouchStart, {passive: false});
           e.addEventListener('touchmove', this.handleTouchMove, {passive: false});
           e.addEventListener('touchend', this.handleTouchEnd, {passive: false});
-          e.addEventListener('mouseup', this.handleTouchEnd, {passive: false});
+          // e.addEventListener('mouseup', this.handleTouchEnd, {passive: false});
         }}
       >
         <div
