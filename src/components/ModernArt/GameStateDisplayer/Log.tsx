@@ -6,7 +6,7 @@ import {LogMessage} from '../events/types';
 export const Log: React.FC<{log: LogMessage[]}> = (props) => {
   const classes = useStyles();
   const logRef = useRef<HTMLPreElement>(null);
-  const [fullyScrolled, setIsFullyScrolled] = useState(false);
+  const [fullyScrolled, setIsFullyScrolled] = useState(true);
   const checkScroll = () => {
     if (!logRef.current) return;
     setIsFullyScrolled(
