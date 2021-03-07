@@ -54,7 +54,7 @@ export const GameStateDisplayer: React.FC<{
       <div>
         <table>
           <tr>
-            <td />
+            <th></th>
             {colors.map((i) => (
               <th>{i}</th>
             ))}
@@ -67,6 +67,22 @@ export const GameStateDisplayer: React.FC<{
               ))}
             </tr>
           ))}
+        </table>
+      </div>
+
+      <div>
+        <table>
+          <tr>
+            {_.values(gameState.users).map((user) => (
+              <th>{user.id}</th>
+            ))}
+          </tr>
+          <tr>
+            {_.values(gameState.users).map((user) => {
+              const arts = gameState.rounds[gameState.roundIndex].users[user.id]?.acquiredArt;
+              return arts?.map((a) => <td>{a.color}</td>);
+            })}
+          </tr>
         </table>
       </div>
       {!gameState.roundStarted && (

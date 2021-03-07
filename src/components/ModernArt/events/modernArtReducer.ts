@@ -103,9 +103,10 @@ export const modernArtReducerHelper = (
             ...state.rounds[state.roundIndex]?.users,
             [winner]: {
               ...state.rounds[state.roundIndex]?.users[winner],
-              acquiredArt: (state.rounds[state.roundIndex]?.users[winner]?.acquiredArt ?? []).concat(
-                closedAuction.painting
-              ),
+              acquiredArt: [
+                ...(state.rounds[state.roundIndex]?.users[winner]?.acquiredArt ?? []),
+                closedAuction.painting,
+              ],
             },
           },
         },
@@ -315,7 +316,7 @@ export const modernArtReducerHelper = (
         ...state.rounds,
         [state.roundIndex]: {
           ...state.rounds[state.roundIndex],
-          auctions: state.rounds[state.roundIndex].auctions.concat(auction),
+          auctions: [...state.rounds[state.roundIndex].auctions, auction],
         },
       },
       log: [
