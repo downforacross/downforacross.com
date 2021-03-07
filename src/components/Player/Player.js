@@ -353,6 +353,7 @@ export default class Player extends Component {
       return (
         <div className="player--mobile--wrapper mobile">
           <MobileGridControls
+            enablePan
             ref="mobileGridControls"
             onPressEnter={onPressEnter}
             onPressPeriod={onPressPeriod}

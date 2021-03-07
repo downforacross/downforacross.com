@@ -455,6 +455,7 @@ export default class MobileGridControls extends GridControls {
         touchEvents: 'none',
         position: 'absolute',
       },
+      autoComplete: 'off',
       onBlur: this.handleInputBlur,
       onFocus: this.handleInputFocus,
       onChange: this.handleInputChange,

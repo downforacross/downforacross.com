@@ -209,42 +209,6 @@ export default class Grid extends React.PureComponent<GridProps> {
               </tr>
             </RerenderBoundary>
           ))}
-          {/* {this.props.grid.map((row, r) => (
-            <tr key={key + r}>
-              {row.map((cell, c) => (
-                <td
-                  key={`${r}_${c}`}
-                  className="grid--cell"
-                  style={{
-                    width: size,
-                    height: size,
-                    fontSize: `${size * 0.15}px`,
-                  }}
-                >
-                  <Cell
-                    {...cell}
-                    r={r}
-                    c={c}
-                    onClick={this.handleClick}
-                    onContextMenu={this.handleRightClick}
-                    canFlipColor={!!this.props.canFlipColor?.(r, c)}
-                    onFlipColor={this.props.onFlipColor}
-                    selected={this.isSelected(r, c)}
-                    referenced={this.isReferenced(r, c)}
-                    circled={this.isCircled(r, c)}
-                    shaded={this.isShaded(r, c)}
-                    cursors={(this.props.cursors || []).filter((cursor) => cursor.r === r && cursor.c === c)}
-                    pings={(this.props.pings || []).filter((ping) => ping.r === r && ping.c === c)}
-                    highlighted={this.isHighlighted(r, c)}
-                    myColor={this.props.myColor}
-                    frozen={this.props.frozen}
-                    pickupType={this.getPickup(r, c)}
-                    cellStyle={cellStyle}
-                  />
-                </td>
-              ))}
-            </tr>
-          ))} */}
         </tbody>
       </table>
     );
