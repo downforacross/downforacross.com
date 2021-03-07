@@ -62,15 +62,16 @@ export default class Player extends Component {
     this._canSetDirection = this.canSetDirection.bind(this);
     this._setSelected = this.setSelected.bind(this);
     this._changeDirection = this.changeDirection.bind(this);
-    this._updateSize = this.updateSize.bind(this);
+    this._updateMobileSize = this.updateMobileSize.bind(this);
     this.mobileContainer = React.createRef();
     this.cursorLocked = false;
   }
 
-  updateSize = () => {
+  updateMobileSize = () => {
     const el = this.mobileContainer.current;
     if (!el) return;
-    const {width, height} = el.getBoundingClientRect();
+    const width = window.innerWidth;
+    const height = window.innerHeight - 116;
     const rows = this.props.grid.length;
     const cols = this.props.grid[0].length;
     const size = Math.floor(Math.min(width / cols, height / rows));
@@ -80,8 +81,8 @@ export default class Player extends Component {
   };
 
   componentDidMount() {
-    window.addEventListener('resize', this.updateSize);
-    this.updateSize();
+    window.addEventListener('resize', this.updateMobileSize);
+    this.updateMobileSize();
   }
 
   componentDidUpdate(prevProps) {
@@ -97,7 +98,7 @@ export default class Player extends Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.updateSize);
+    window.removeEventListener('resize', this.updateMobileSize);
   }
 
   get size() {
@@ -368,7 +369,7 @@ export default class Player extends Component {
             canSetDirection={this._canSetDirection}
             onSetSelected={this._setSelected}
             updateGrid={updateGrid}
-            onResize={this._updateSize}
+            onResize={this._updateMobileSize}
             size={size}
             grid={grid}
             clues={clues}
