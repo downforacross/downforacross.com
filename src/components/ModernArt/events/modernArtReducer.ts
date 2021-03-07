@@ -69,12 +69,12 @@ export const modernArtReducerHelper = (
   }
   if (event.type === 'finish_auction') {
     if (!state.currentAuction) return undefined;
-    // give winner the painting, store in new rounds field
     const auctioneer = state.currentAuction.auctioneer;
-    // todo: handle when there is no winner (aka nobody wants to bid)
+
+    // If no highestBidder, then painting goes to auctioneer
     const winner = state.currentAuction.highestBidder || auctioneer;
     if (!auctioneer || !winner) return undefined;
-    const payment = state.currentAuction.highestBid || state.currentAuction.fixedPrice || -1;
+    const payment = state.currentAuction.highestBid || state.currentAuction.fixedPrice || 0;
     const closedAuction = {
       ...state.currentAuction,
       status: AuctionStatus.CLOSED,
@@ -82,17 +82,21 @@ export const modernArtReducerHelper = (
       payment,
     };
 
+    if (state.users[winner].money < payment) return undefined;
+
     return {
       ...state,
       users: {
         ...state.users,
-        [winner]: {
-          ...state.users[winner],
-          money: state.users[winner].money - payment,
-        },
+        // do not switch order of [auctioneer] and [winner] keys :)
+        // If auctioneer = winner, then the payment should only be subtracted
         [auctioneer]: {
           ...state.users[auctioneer],
           money: state.users[auctioneer].money + payment,
+        },
+        [winner]: {
+          ...state.users[winner],
+          money: state.users[winner].money - payment,
         },
       },
       rounds: {
@@ -338,6 +342,9 @@ export const modernArtReducerHelper = (
  * Returns undefined for invalid events
  */
 export const modernArtValidatorHelper = (state: ModernArtState, event: ModernArtEvent): boolean => {
+  const userId = event.params.userId ?? event.params.id;
+  const user = state.users[event.params.userId];
+
   if (event.type === 'start_game') {
     return !state.started;
   }
@@ -347,12 +354,22 @@ export const modernArtValidatorHelper = (state: ModernArtState, event: ModernArt
       console.log('cannot submit_bid because auction is closed');
       return false;
     }
+    const money = state.users[userId].money;
+    if (money < event.params.bidAmount) {
+      console.log(`cannot submit_bid because user has insufficient funds ${money}`);
+      return false;
+    }
+
     return true;
   }
   if (event.type === 'finish_auction') {
     if (!state.currentAuction) return false;
     if (state.currentAuction.status === AuctionStatus.CLOSED) {
       console.log('cannot finish_auction because auction is closed');
+      return false;
+    }
+    if (state.currentAuction.auctioneer !== event.params.userId) {
+      console.log('only auctioneer can finish_auction');
       return false;
     }
     return true;
