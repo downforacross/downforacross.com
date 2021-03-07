@@ -19,16 +19,50 @@ export interface CellData {
   bad?: boolean;
   good?: boolean;
   pencil?: boolean;
+  isHidden?: boolean; // used for fencing mode; if true, then player cannot access the cell at all
+  solvedBy?: {
+    id: string;
+    teamId: number;
+  };
+  parents?: {
+    across: number;
+    down: number;
+  };
 }
 export type GridData = CellData[][];
 
 export interface GameJson {
   info: InfoJson;
   grid: GridData;
+  teamGrids?: Record<number, GridData>;
+  teamClueVisibility?: Record<
+    number,
+    {
+      across: boolean[]; // true --> visible, false --> hidden
+      down: boolean[];
+    }
+  >;
   solution: string[][];
   clues: CluesJson;
 }
-export interface UserJson {}
+
+export interface UserJson {
+  cursor?: Cursor;
+  displayName: string;
+  teamId?: number;
+  score?: number;
+  misses?: number;
+}
+
+export interface Cursor {
+  id: string;
+  r: number; // Row in puzzle
+  c: number; // Column in puzzle
+  timestamp: number;
+  color?: string;
+  active?: boolean;
+}
+
 /**
  * PuzzleJson: the json format of puzzles stored in the db (both firebase & postgres)
  * Fields are a bit messy & don't correspond perfectly with puzjs formats... see logic in FileUploader.js
@@ -92,3 +126,5 @@ export interface RecordSolveRequest {
 }
 
 export interface RecordSolveResponse {}
+
+export type CellCoords = {r: number; c: number};

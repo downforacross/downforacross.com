@@ -1,9 +1,17 @@
 import _ from 'lodash';
+import {ModernArtState, ModernArtEvent, AuctionStatus} from './types';
 // @ts-ignore
-import pseudoRandom from 'pseudo-random';
-import {ModernArtState, ModernArtEvent, AuctionType, AuctionStatus} from './types';
+import seedrandom from 'seedrandom';
 
-export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): ModernArtState => {
+/**
+ * A helper function that contains meat of reducer code.
+ *
+ * Returns undefined for invalid events
+ */
+export const modernArtReducerHelper = (
+  state: ModernArtState,
+  event: ModernArtEvent
+): ModernArtState | undefined => {
   if (event.type === 'start_game') {
     return {
       ...state,
@@ -36,16 +44,17 @@ export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): 
     }
   }
   if (event.type === 'finish_auction') {
-    // winner gets the painting, winner pays the auctineer
-    // need to special case when winner = auctioneer
+    if (!state.currentAuction) return undefined;
+    // give winner the painting, store in new rounds field
     const auctioneer = state.currentAuction.auctioneer;
-    const winner = state.currentAuction.highestBidder || 'error';
+    const winner = state.currentAuction.highestBidder;
+    if (!auctioneer || !winner) return undefined;
     const payment = state.currentAuction.highestBid || state.currentAuction.fixedPrice || -1;
     const closedAuction = {
       ...state.currentAuction,
       status: AuctionStatus.CLOSED,
-      winner: winner,
-      payment: payment,
+      winner,
+      payment,
     };
 
     return {
@@ -64,10 +73,13 @@ export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): 
       rounds: {
         ...state.rounds,
         [state.roundIndex]: {
-          auctions: state.rounds[state.roundIndex].auctions.concat(closedAuction),
+          auctions: [...(state.rounds[state.roundIndex]?.auctions ?? []), closedAuction],
           users: {
-            ...state.rounds[state.roundIndex].users,
-            [winner]: state.rounds[state.roundIndex].users[winner].acquiredArt.concat(closedAuction.painting),
+            ...state.rounds[state.roundIndex]?.users,
+            [winner]: [
+              ...(state.rounds[state.roundIndex]?.users[winner]?.acquiredArt ?? []),
+              closedAuction.painting,
+            ],
           },
         },
       },
@@ -94,7 +106,7 @@ export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): 
   if (event.type === 'step') {
     // do the next automated step depending on the game state
     if (!state.roundStarted) {
-      const prng = pseudoRandom(event.params.seed ?? 1);
+      const prng = seedrandom(event.params.seed ?? 1);
       const CARDS_TO_DEAL: Record<string, number[] | undefined> = {
         // TODO
         1: [10, 10, 10],
@@ -113,13 +125,12 @@ export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): 
         }))
       );
       let deck = [...ALL_CARDS, ...ALL_CARDS, ...ALL_CARDS, ...ALL_CARDS];
-      // for (let i = 0; i < deck.length; i += 1) {
-      //   const j = Math.floor(prng.random() * (i + 1));
-      //   console.log(i, j);
-      //   const tmp = deck[j];
-      //   deck[j] = deck[i];
-      //   deck[i] = tmp;
-      // }
+      for (let i = 0; i < deck.length; i += 1) {
+        const j = Math.floor(prng() * (i + 1));
+        const tmp = deck[j];
+        deck[j] = deck[i];
+        deck[i] = tmp;
+      }
       const deal = () => {
         const res = deck[0];
         deck = deck.slice(1);
@@ -201,4 +212,13 @@ export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): 
     // pass
   }
   return state;
+};
+
+export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): ModernArtState => {
+  try {
+    return modernArtReducerHelper(state, event) || state;
+  } catch (e) {
+    console.error('failed to reduce', state, event);
+    return state;
+  }
 };

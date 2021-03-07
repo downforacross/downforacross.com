@@ -4,7 +4,7 @@ import {MdChatBubble} from 'react-icons/md';
 
 import Flex from 'react-flexview';
 import {Link} from 'react-router-dom';
-import swal from 'sweetalert';
+import swal from '@sweetalert/with-react';
 import Clock from './Clock';
 import ActionMenu from './ActionMenu';
 import Popup from './Popup';
@@ -165,11 +165,7 @@ export default class Toolbar extends Component {
             </li>
             <li>Click the clues to move the cursor directly to the cell for that answer</li>
             <li>
-              Hold down the 
-              {' '}
-              <code>Shift</code>
-              {' '}
-              key to enter multiple characters for rebus answers
+              Hold down the <code>Shift</code> key to enter multiple characters for rebus answers
             </li>
           </ul>
           <h4>Keyboard Shortcuts</h4>
@@ -187,9 +183,7 @@ export default class Toolbar extends Component {
               </tr>
               <tr>
                 <td>
-                  <code>.</code>
-                  {' '}
-                  (period)
+                  <code>.</code> (period)
                 </td>
                 <td>Toggle pencil mode on/off</td>
               </tr>
@@ -205,27 +199,22 @@ export default class Toolbar extends Component {
               </tr>
               <tr>
                 <td>
-                  <code>[</code>
-                  {' '}
-                  and
-                  <code>]</code>
+                  <code>[</code> and
+                  <code>]</code> OR
+                  <code>Shift</code> with arrow keys
                 </td>
                 <td>Move cursor perpendicular to current orientation without changing orientation</td>
               </tr>
               <tr>
                 <td>
-                  <code>Tab</code>
-                  {' '}
-                  and
+                  <code>Tab</code> and
                   <code>Shift+Tab</code>
                 </td>
                 <td>Move cursor to first unfilled square of next or previous unfilled clue</td>
               </tr>
               <tr>
                 <td>
-                  <code>Delete</code>
-                  {' '}
-                  or
+                  <code>Delete</code> or
                   <code>Backspace</code>
                 </td>
                 <td>Clear current cell</td>
@@ -275,8 +264,7 @@ export default class Toolbar extends Component {
       return (
         <Flex className="toolbar--mobile" vAlignContent="center">
           <Flex className="toolbar--mobile--top" grow={1} vAlignContent="center">
-            <Link to="/">DFAC</Link>
-            {' '}
+            <Link to="/">DFAC</Link>{' '}
             <Clock
               v2={this.props.v2}
               startTime={startTime}

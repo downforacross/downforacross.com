@@ -31,9 +31,11 @@ module.exports = {
   rules: {
     // disabled as we likely do not want it
     'no-return-await': 'off',
+    '@typescript-eslint/no-use-before-define': 'off',
     // disabled as none of the current code follows this pattern.
     'import/extensions': 'off',
     'react/jsx-filename-extension': 'off',
+    'react/jsx-one-expression-per-line': 'off',
     'react/button-has-type': 'off',
     'react/sort-comp': 'off',
     'import/prefer-default-export': 'off',
@@ -54,8 +56,8 @@ module.exports = {
     'jsx-a11y/no-noninteractive-tabindex': 'warn',
     'jsx-a11y/tabindex-no-positive': 'warn',
     'react/jsx-props-no-spreading': 'warn',
-    'react/no-array-index-key': 'warn',
-    'no-restricted-syntax': 'warn',
+    'react/no-array-index-key': 'off',
+    'no-restricted-syntax': 'off',
 
     // Configs for rules to match the codebase
     'react/prop-types': ['error', {skipUndeclared: true}],

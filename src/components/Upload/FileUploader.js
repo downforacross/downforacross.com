@@ -3,6 +3,7 @@ import './css/fileUploader.css';
 import React, {Component} from 'react';
 import Dropzone from 'react-dropzone';
 import {MdFileUpload} from 'react-icons/md';
+import swal from '@sweetalert/with-react';
 
 import {hasShape} from '../../lib/jsUtils';
 import PUZtoJSON from '../../lib/converter/PUZtoJSON';
@@ -56,11 +57,21 @@ export default class FileUploader extends Component {
     const reader = new FileReader();
     const {success, fail} = this.props;
     reader.addEventListener('loadend', () => {
-      const puzzle = this.convertPUZ(reader.result);
-      if (this.validPuzzle(puzzle)) {
-        success(puzzle);
-      } else {
-        fail();
+      try {
+        const puzzle = this.convertPUZ(reader.result);
+        if (this.validPuzzle(puzzle)) {
+          success(puzzle);
+        } else {
+          fail();
+        }
+      } catch (e) {
+        swal({
+          title: `Invalid .puz file`,
+          text: `The uploaded file is not a valid .puz file.`,
+          icon: 'warning',
+          buttons: 'OK',
+          dangerMode: true,
+        });
       }
       window.URL.revokeObjectURL(acceptedFiles[0].preview);
     });
@@ -74,7 +85,7 @@ export default class FileUploader extends Component {
         className="file-uploader"
         onDrop={this.onDrop.bind(this)}
         activeStyle={{
-          outline: '3px solid black',
+          outline: '3px solid var(--main-blue)',
           outlineOffset: '-10px',
         }}
       >

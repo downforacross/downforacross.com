@@ -1,9 +1,11 @@
 import allEventDefs from './allEventDefs';
+import {initialState} from './initialState';
 import {GameEvent} from './types/GameEvent';
 import {GameState} from './types/GameState';
 
 export default (state: GameState, event: GameEvent): GameState => {
-  console.log(event);
+  if (!state) state = initialState;
+  if (!event) return state;
   if (!(event.type in allEventDefs)) {
     console.warn(`Game event not implemented: ${event.type}`);
   }

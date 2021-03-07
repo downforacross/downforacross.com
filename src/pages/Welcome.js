@@ -38,6 +38,7 @@ export default class Welcome extends Component {
     this.mobile = isMobile();
     this.searchInput = React.createRef();
     this.nav = React.createRef();
+    this.uploadedPuzzles = 0;
   }
 
   componentDidMount() {
@@ -145,6 +146,7 @@ export default class Welcome extends Component {
     return (
       <PuzzleList
         puzzles={puzzles}
+        uploadedPuzzles={this.uploadedPuzzles}
         userHistory={userHistory}
         sizeFilter={sizeFilter}
         statusFilter={statusFilter}
@@ -157,6 +159,7 @@ export default class Welcome extends Component {
 
   handleCreatePuzzle = () => {
     this.nextPage();
+    this.uploadedPuzzles += 1;
   };
 
   handleFilterChange = (header, name, on) => {

@@ -41,3 +41,23 @@ button {
   --main-green-1: rgba(31, 255, 61, 0.3);
   --main-green-2: rgba(31, 255, 61, 1);
 }
+
+.swal-modal {
+  will-change: unset !important;
+}
+
+.swal-text--no-margin {
+  margin: 0 !important;
+}
+
+.swal-text--text-align-center {
+  text-align: center !important;
+}
+
+#unlistedRow {
+  margin-top: 10px;
+}
+
+#unlistedRow input {
+  display: inline-block;
+}
