@@ -144,6 +144,9 @@ export default class Player extends Component {
 
   setSelected(selected) {
     if (this.cursorLocked) return;
+    if (!this.grid.isWhite(selected.r, selected.c)) {
+      return;
+    }
     if (this.isValidDirection(this.state.direction, selected)) {
       if (selected.r !== this.selected.r || selected.c !== this.selected.c) {
         this.setState(
