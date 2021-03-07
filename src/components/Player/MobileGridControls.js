@@ -195,8 +195,9 @@ export default class MobileGridControls extends GridControls {
 
   getTransform(anchors, {scale, translateX, translateY}) {
     if (!this.props.enablePan) {
-      return {scale: 1, translateX: 0, translateY: 0};
+      return;
     }
+    if (anchors.length < 2) return;
 
     const getCenterAndDistance = (point1, point2) => {
       if (!point1) {
