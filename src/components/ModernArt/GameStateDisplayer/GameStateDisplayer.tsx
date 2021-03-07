@@ -4,6 +4,7 @@ import {makeStyles} from '@material-ui/core';
 import _ from 'lodash';
 import {PlayerActions} from '../usePlayerActions';
 import {ModernArtState, AuctionType, AuctionStatus} from '../events/types';
+import {Log} from './Log';
 
 /**
  * This component is parallel to Game -- will render a <Player/>
@@ -37,6 +38,7 @@ export const GameStateDisplayer: React.FC<{
 
   return (
     <div className={classes.gameStateDisplayerContainer}>
+      <Log log={gameState.log} />
       {!gameState.started && (
         <div className={classes.startButton}>
           Click Start!

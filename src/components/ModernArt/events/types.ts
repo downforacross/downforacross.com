@@ -46,7 +46,7 @@ export interface Round {
 
 export interface LogMessage {
   text: string;
-  timestamp: number;
+  hhmm: string;
 }
 export interface ModernArtState {
   started: boolean;
@@ -103,7 +103,7 @@ export const initialState: ModernArtState = {
   currentAuction: firstAuction,
   log: [
     {
-      timestamp: 0,
+      hhmm: '--:--',
       text: 'Welcome to modern art!',
     },
   ],

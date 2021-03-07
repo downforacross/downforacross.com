@@ -2,6 +2,7 @@
 import seedrandom from 'seedrandom';
 import _ from 'lodash';
 import {ModernArtState, ModernArtEvent, AuctionStatus} from './types';
+import moment from 'moment';
 
 /**
  * A helper function that contains meat of reducer code.
@@ -13,6 +14,7 @@ export const modernArtReducerHelper = (
   event: ModernArtEvent
 ): ModernArtState | undefined => {
   const timestamp = typeof event.timestamp === 'number' ? event.timestamp : Date.now();
+  const hhmm = moment(timestamp).format('hh:mm');
   if (event.type === 'start_game') {
     return {
       ...state,
@@ -214,8 +216,8 @@ export const modernArtReducerHelper = (
       log: [
         ...state.log,
         {
-          timestamp,
-          text: ``,
+          hhmm,
+          text: `${user.name} plays ${card.auctionType} ${card.color}`,
         },
       ],
     };
