@@ -1,7 +1,7 @@
 // @ts-ignore
 import seedrandom from 'seedrandom';
 import _ from 'lodash';
-import {ModernArtState, ModernArtEvent, AuctionStatus} from './types';
+import {ModernArtState, ModernArtEvent, AuctionStatus, AuctionType} from './types';
 import moment from 'moment';
 
 /**
@@ -36,6 +36,7 @@ export const modernArtReducerHelper = (
   }
   if (event.type === 'submit_bid') {
     if (!state.currentAuction) return;
+    const user = state.users[event.params.userId];
     if (event.params.bidAmount > (state.currentAuction.highestBid ?? 0)) {
       return {
         ...state,
@@ -44,6 +45,16 @@ export const modernArtReducerHelper = (
           highestBidder: event.params.userId,
           highestBid: event.params.bidAmount,
         },
+        log: [
+          ...state.log,
+          {
+            hhmm,
+            text:
+              state.currentAuction.painting.auctionType === AuctionType.HIDDEN
+                ? `${user.name} has submitted a bid`
+                : `${user.name} has submitted a bid for ${event.params.bidAmount}`,
+          },
+        ],
       };
     }
   }
@@ -88,6 +99,13 @@ export const modernArtReducerHelper = (
           },
         },
       },
+      log: [
+        ...state.log,
+        {
+          hhmm,
+          text: `${state.users[winner].name} won the auction for ${payment} and acquired a ${closedAuction.painting.color}`,
+        },
+      ],
       currentAuction: closedAuction,
     };
   }
@@ -286,7 +304,7 @@ export const modernArtValidatorHelper = (state: ModernArtState, event: ModernArt
     return true;
   }
   if (event.type === 'start_auction') {
-    if (!state.currentAuction) return false;
+    if (!state.currentAuction) return true;
     if (state.currentAuction.status === AuctionStatus.PENDING) {
       console.log('cannot finish_auction because auction is closed');
       return false;

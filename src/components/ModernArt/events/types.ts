@@ -69,17 +69,6 @@ export interface ModernArtState {
   log: LogMessage[];
 }
 
-const firstAuction: Auction = {
-  status: AuctionStatus.PENDING,
-  auctioneer: 'cat',
-  painting: {
-    color: 'blue',
-    auctionType: AuctionType.OPEN,
-  },
-  highestBid: null,
-  highestBidder: null,
-};
-
 export const initialState: ModernArtState = {
   started: false,
   users: {
@@ -96,11 +85,10 @@ export const initialState: ModernArtState = {
   roundStarted: false,
   rounds: {
     '0': {
-      auctions: [firstAuction],
+      auctions: [],
       users: {},
     },
   },
-  currentAuction: firstAuction,
   log: [
     {
       hhmm: '--:--',
