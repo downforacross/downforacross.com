@@ -467,7 +467,7 @@ export default class MobileGridControls extends GridControls {
         touchEvents: 'none',
         position: 'absolute',
       },
-      autoComplete: 'off',
+      autoComplete: 'new-password',
       onBlur: this.handleInputBlur,
       onFocus: this.handleInputFocus,
       onChange: this.handleInputChange,
