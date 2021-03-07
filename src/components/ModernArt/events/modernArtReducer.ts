@@ -153,11 +153,20 @@ export const modernArtReducerHelper = (
     const userId = event.params.userId;
     const idx = event.params.idx;
     const card = state.users[userId].cards[idx];
+    console.log('start auction', card);
     const color = state.users[userId].cards[idx].color;
 
     // If fifth painting of this color, do not auction and end round
     const count = _.filter(state.rounds[state.roundIndex].auctions, (x) => x.painting.color === color).length;
     const user = state.users[userId];
+    const nUsers = {
+      ...state.users,
+      [userId]: {
+        ...user,
+        // remove card
+        cards: [...user.cards.slice(0, idx), ...user.cards.slice(idx + 1)],
+      },
+    };
 
     if (count === 5) {
       // todo: give priority to lowest color
@@ -166,14 +175,7 @@ export const modernArtReducerHelper = (
       const sortedColorFreq = _.sortBy(_.keys(colorFreq), (x) => -colorFreq[x].length);
       return {
         ...state,
-        // remove card
-        users: {
-          ...state.users,
-          [userId]: {
-            ...user,
-            cards: user.cards.splice(idx, 1),
-          },
-        },
+        users: nUsers,
         roundIndex: state.roundIndex + 1,
         // new round
         rounds: {
@@ -197,13 +199,7 @@ export const modernArtReducerHelper = (
     return {
       ...state,
       currentAuction: auction,
-      users: {
-        ...state.users,
-        [userId]: {
-          ...user,
-          cards: [...user.cards.slice(0, idx), ...user.cards.slice(idx + 1)],
-        },
-      },
+      users: nUsers,
       rounds: {
         ...state.rounds,
         [state.roundIndex]: {
@@ -259,7 +255,8 @@ export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): 
       return state;
     }
   } catch (e) {
-    console.error('failed to reduce', state, event);
+    console.warn('failed to reduce', state, event);
+    console.error(e);
     return state;
   }
 };
