@@ -108,17 +108,17 @@ export const modernArtReducerHelper = (
           },
         },
       },
-      log: [
+      log: _.compact([
         ...state.log,
-        {
+        user && {
           hhmm,
-          text: `${state.users[winner].name} won the auction for ${payment} and acquired a ${closedAuction.painting.color}`,
+          text: `${user.name} finished the auction`,
         },
         {
           hhmm,
           text: `${state.users[winner].name} won the auction for ${payment} and acquired a ${closedAuction.painting.color}`,
         },
-      ],
+      ]),
       currentAuction: closedAuction,
     };
   }
