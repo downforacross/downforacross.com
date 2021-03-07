@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import React, {useState} from 'react';
-import {Helmet} from 'react-helmet';
 import {makeStyles} from '@material-ui/core';
 import _ from 'lodash';
 import {PlayerActions} from '../usePlayerActions';
@@ -49,20 +48,19 @@ export const GameStateDisplayer: React.FC<{
       </div>
       {gameState.started && <div className={classes.message}>Game has Started</div>}
       <div className={classes.usersList}>
-        {users.length}
-        users here
+        {users.length} users here
         {users.map((user, i) => (
           <div key={i}>
             {user.icon}
             {user.name}
             <div className={classes.cards}>
-              {user.cards.map((card, i) => (
+              {user.cards.map((card, j) => (
                 <div className={classes.card}>
                   <div className={classes.cardHeader} style={{backgroundColor: card.color}} />
                   {card.auctionType}
                   <button
                     onClick={() => {
-                      actions.startAuction(i);
+                      actions.startAuction(j);
                     }}
                   >
                     Play this card
@@ -73,13 +71,6 @@ export const GameStateDisplayer: React.FC<{
           </div>
         ))}
       </div>
-      {!gameState.started && <div>Click Start!</div>}
-      {gameState.started && <div>Game as Started</div>}
-      {users.length}
-      users here
-      {users.map((user, i) => (
-        <div key={i}>{user.name}</div>
-      ))}
       {gameState.currentAuction && (
         <div>
           <h1>
@@ -87,7 +78,7 @@ export const GameStateDisplayer: React.FC<{
             {gameState.currentAuction.auctionType} auction for a {gameState.currentAuction.painting.painter}{' '}
             painting
           </h1>
-          {gameState.currentAuction.auctionType == AuctionType.OPEN && (
+          {gameState.currentAuction.auctionType === AuctionType.OPEN && (
             <h3>
               Highest Bid is currently {gameState.currentAuction.highestBid} by user{' '}
               {gameState.currentAuction.highestBidder}{' '}
@@ -100,7 +91,7 @@ export const GameStateDisplayer: React.FC<{
               <button onClick={submitBid}> Submit Bid </button>
             </div>
           )}
-          {gameState.currentAuction.status == AuctionStatus.CLOSED && (
+          {gameState.currentAuction.status === AuctionStatus.CLOSED && (
             <div>
               <h1>
                 Player {gameState.currentAuction.highestBidder} won painting{' '}
@@ -111,11 +102,9 @@ export const GameStateDisplayer: React.FC<{
           )}
         </div>
       )}
-      {
-        <div>
-          <button onClick={finishAuction}> Finish Auction </button>
-        </div>
-      }
+      <div>
+        <button onClick={finishAuction}> Finish Auction </button>
+      </div>
     </div>
   );
 };
