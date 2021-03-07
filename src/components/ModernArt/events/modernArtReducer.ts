@@ -101,10 +101,12 @@ export const modernArtReducerHelper = (
           auctions: [...(state.rounds[state.roundIndex]?.auctions ?? []), closedAuction],
           users: {
             ...state.rounds[state.roundIndex]?.users,
-            [winner]: [
-              ...(state.rounds[state.roundIndex]?.users[winner]?.acquiredArt ?? []),
-              closedAuction.painting,
-            ],
+            [winner]: {
+              ...state.rounds[state.roundIndex]?.users[winner],
+              acquiredArt: (state.rounds[state.roundIndex]?.users[winner]?.acquiredArt ?? []).concat(
+                closedAuction.painting
+              ),
+            },
           },
         },
       },
@@ -223,7 +225,7 @@ export const modernArtReducerHelper = (
       },
     };
 
-    if (count === 5) {
+    if (count === 2) {
       // todo: give priority to lowest color
       const auctions = state.rounds[state.roundIndex].auctions; // color: [painting]
       const colorFreq = _.groupBy(auctions, (x) => x.painting.color);
@@ -235,10 +237,14 @@ export const modernArtReducerHelper = (
 
       // score user's holdings
       const currentRound = state.rounds[state.roundIndex];
+      console.log(`currentRound: ${JSON.stringify(currentRound)}`);
       const usersRound = currentRound.users;
+      console.log(`usersRound: ${JSON.stringify(usersRound)}`);
       let userToScore: {[userId: string]: number} = {};
-      for (const userId in _.keys(usersRound)) {
+      for (const userId of _.keys(usersRound)) {
         let score = 0;
+        console.log(`userId: ${JSON.stringify(userId)}`);
+        console.log(`usersRound[userId]: ${usersRound[userId]}`);
         const userAcquiredArt = usersRound[userId].acquiredArt;
         for (const idx in userAcquiredArt) {
           const color = userAcquiredArt[idx].color;
@@ -255,9 +261,9 @@ export const modernArtReducerHelper = (
 
       const places = {
         ..._.zipObject(colors, _.times(colors.length, _.constant(0))),
-        firstColor: 30,
-        secondColor: 20,
-        thirdColor: 10,
+        [firstColor]: 30,
+        [secondColor]: 20,
+        [thirdColor]: 10,
       };
 
       return {

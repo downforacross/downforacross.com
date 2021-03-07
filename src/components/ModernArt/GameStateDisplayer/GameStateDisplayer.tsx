@@ -61,7 +61,7 @@ export const GameStateDisplayer: React.FC<{
             <tr>
               <td>Round {i + 1}</td>
               {colors.map((color) => (
-                <td>{gameState.rounds[i].places?.color}</td>
+                <td>{gameState.rounds[i].places?.[color]}</td>
               ))}
             </tr>
           ))}
