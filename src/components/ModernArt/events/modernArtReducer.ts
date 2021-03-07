@@ -226,7 +226,7 @@ export const modernArtReducerHelper = (
       },
     };
 
-    if (count === 5) {
+    if (count === 4) {
       // todo: give priority to lowest color
       const auctions = state.rounds[state.roundIndex].auctions; // color: [painting]
       const colorFreq = _.groupBy(auctions, (x) => x.painting.color);
