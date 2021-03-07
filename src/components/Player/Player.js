@@ -62,6 +62,7 @@ export default class Player extends Component {
     this._canSetDirection = this.canSetDirection.bind(this);
     this._setSelected = this.setSelected.bind(this);
     this._changeDirection = this.changeDirection.bind(this);
+    this._updateSize = this.updateSize.bind(this);
     this.mobileContainer = React.createRef();
     this.cursorLocked = false;
   }
@@ -367,6 +368,7 @@ export default class Player extends Component {
             canSetDirection={this._canSetDirection}
             onSetSelected={this._setSelected}
             updateGrid={updateGrid}
+            onResize={this._updateSize}
             size={size}
             grid={grid}
             clues={clues}
