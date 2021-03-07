@@ -135,19 +135,21 @@ export const GameStateDisplayer: React.FC<{
             <div className={classes.cards}>
               {user.cards.map((card, j) => (
                 <div className={classes.card}>
-                  <div className={classes.cardHeader} style={{backgroundColor: card.color}} />
-                  <div className={classes.cardBody}>
-                    <div>{card.auctionType}</div>
-                    {user.id === props.userId && (
-                      <button
-                        onClick={() => {
-                          actions.startAuction(j);
-                        }}
-                      >
-                        Play
-                      </button>
-                    )}
-                  </div>
+                  {user.id === props.userId && (
+                    <div>
+                      <div className={classes.cardHeader} style={{backgroundColor: card.color}} />
+                      <div className={classes.cardBody}>
+                        <div>{card.auctionType}</div>
+                        <button
+                          onClick={() => {
+                            actions.startAuction(j);
+                          }}
+                        >
+                          Play
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
