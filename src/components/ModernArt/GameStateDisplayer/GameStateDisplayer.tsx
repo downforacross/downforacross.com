@@ -59,13 +59,15 @@ export const GameStateDisplayer: React.FC<{
                   <div className={classes.cardHeader} style={{backgroundColor: card.color}} />
                   <div className={classes.cardBody}>
                     <div>{card.auctionType}</div>
-                    <button
-                      onClick={() => {
-                        actions.startAuction(j);
-                      }}
-                    >
-                      Play
-                    </button>
+                    {user.id === props.userId && (
+                      <button
+                        onClick={() => {
+                          actions.startAuction(j);
+                        }}
+                      >
+                        Play
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
