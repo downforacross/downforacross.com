@@ -54,7 +54,7 @@ export interface LogMessage {
 export interface ModernArtState {
   started: boolean;
   deck: Card[];
-  playerIdx?: number;
+  playerIdx: number;
   players: {
     [id: string]: {
       id: string;
@@ -75,6 +75,7 @@ export interface ModernArtState {
 
 export const initialState: ModernArtState = {
   started: false,
+  playerIdx: 0,
   players: {
     cat: {
       id: 'cat',

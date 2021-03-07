@@ -132,6 +132,7 @@ export const GameStateDisplayer: React.FC<{
           <div key={i}>
             {player.icon}
             {player.name}
+            {player.id === _.keys(gameState.players)[gameState.playerIdx] && <div>✨your turn✨</div>}
             <div className={classes.cards}>
               {player.cards.map((card, j) => (
                 <div className={classes.card}>

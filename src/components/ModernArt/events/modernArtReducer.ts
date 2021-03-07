@@ -87,9 +87,10 @@ export const modernArtReducerHelper = (
 
     return {
       ...state,
+      playerIdx: (state.playerIdx + 1) % _.keys(state.players).length, // todo: fix for double auction edge cases
       players: {
         ...state.players,
-        // do not switch order of [auctioneer] and [winner] keys :)
+        // warning: do not switch order of [auctioneer] and [winner] keys!
         // If auctioneer = winner, then the payment should only be subtracted
         [auctioneer]: {
           ...state.players[auctioneer],
@@ -381,8 +382,15 @@ export const modernArtValidatorHelper = (state: ModernArtState, event: ModernArt
   if (event.type === 'start_auction') {
     if (!state.currentAuction) return true;
     if (state.currentAuction.status === AuctionStatus.PENDING) {
-      console.log('cannot finish_auction because auction is closed');
+      console.log('cannot start_auction because there is a pending auction');
       return false;
+    }
+    const currentPlayer = _.keys(state.players)[state.playerIdx];
+    if (currentPlayer !== event.params.playerId) {
+      console.log(
+        `cannot start_auction because ${event.params.playerId} is not the current player ${currentPlayer}`
+      );
+      // return false; // ignore this rule in dev
     }
     return true;
   }
