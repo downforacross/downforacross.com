@@ -488,6 +488,16 @@ export default class MobileGridControls extends GridControls {
       onFocus: this.handleInputFocus,
       onChange: this.handleInputChange,
     };
+    const USE_TEXT_AREA = true;
+    if (USE_TEXT_AREA) {
+      return (
+        <>
+          <textarea name="1" {...inputProps} />
+          <textarea name="2" ref={this.inputRef} {...inputProps} onKeyUp={this.handleKeyUp} />
+          <textarea name="3" {...inputProps} />
+        </>
+      );
+    }
     return (
       <>
         <input name="1" {...inputProps} />
