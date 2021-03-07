@@ -192,6 +192,7 @@ export default class Grid extends React.PureComponent<GridProps> {
                   <td
                     key={`${cellProps.r}_${cellProps.c}`}
                     className="grid--cell"
+                    data-rc={`${cellProps.r} ${cellProps.c}`}
                     style={{
                       width: size,
                       height: size,

@@ -144,6 +144,9 @@ export default class Player extends Component {
 
   setSelected(selected) {
     if (this.cursorLocked) return;
+    if (!this.grid.isWhite(selected.r, selected.c)) {
+      return;
+    }
     if (this.isValidDirection(this.state.direction, selected)) {
       if (selected.r !== this.selected.r || selected.c !== this.selected.c) {
         this.setState(
@@ -360,6 +363,7 @@ export default class Player extends Component {
             selected={selected}
             direction={direction}
             onSetDirection={this._setDirection}
+            onChangeDirection={this._changeDirection}
             canSetDirection={this._canSetDirection}
             onSetSelected={this._setSelected}
             updateGrid={updateGrid}

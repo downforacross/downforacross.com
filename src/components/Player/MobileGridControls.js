@@ -25,11 +25,14 @@ export default class MobileGridControls extends GridControls {
     this.inputRef = React.createRef();
     this.zoomContainer = React.createRef();
     this.wasUnfocused = Date.now() - 1000;
+    this.lastTouchMove = Date.now();
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.state.anchors.length === 0) {
-      this.fitOnScreen();
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.transform !== this.state.transform) {
+      if (this.state.anchors.length === 0) {
+        this.fitOnScreen();
+      }
     }
     if (prevProps.selected.r !== this.props.selected.r || prevProps.selected.c !== this.props.selected.c) {
       this.fitOnScreen(true);
@@ -132,6 +135,7 @@ export default class MobileGridControls extends GridControls {
     if (e.touches.length === 2) {
       this.props.onSetCursorLock(true);
     }
+    this.lastTouchStart = Date.now();
     this.handleTouchMove(e);
   };
 
@@ -154,42 +158,59 @@ export default class MobileGridControls extends GridControls {
         touchPosition: {x, y},
       };
     });
+    const nTransform = this.getTransform(anchors, transform);
+    if (nTransform) {
+      this.lastTouchMove = Date.now();
+    }
+
     this.setState({
       anchors,
-      transform: this.getTransform(anchors, transform),
+      transform: nTransform ?? this.state.transform,
     });
   };
 
   handleTouchEnd = (e) => {
-    if (e.touches.length === 0 && this.state.anchors.length === 1) {
+    if (e.touches.length === 0 && this.state.anchors.length === 1 && this.lastTouchStart > Date.now() - 100) {
       this.props.onSetCursorLock(false);
+      let el = e.target; // a descendant of grid for sure
+      let rc;
+      for (let i = 0; el && i < 20; i += 1) {
+        if (el.className.includes('grid--cell')) {
+          rc = el.getAttribute('data-rc');
+          break;
+        }
+        el = el.parentElement;
+      }
+      if (rc) {
+        const [r, c] = rc.split(' ').map((x) => Number(x));
+        console.log(rc);
+        if (this.props.selected.r === r && this.props.selected.c === c) {
+          this.props.onChangeDirection();
+        } else {
+          this.props.onSetSelected({r, c});
+        }
+      }
       this.focusKeyboard();
     }
     e.preventDefault();
     this.handleTouchMove(e);
   };
 
-  handleRightArrowTouchEnd = () => {
-    if (this.props.direction === 'across') {
-      this.handleAction('right');
-    } else {
-      this.handleAction('down');
-    }
+  handleRightArrowTouchEnd = (e) => {
+    e.preventDefault();
+    this.handleAction('forward');
     this.keepFocus();
   };
 
-  handleLeftArrowTouchEnd = () => {
-    if (this.props.direction === 'across') {
-      this.handleAction('left');
-    } else {
-      this.handleAction('up');
-    }
+  handleLeftArrowTouchEnd = (e) => {
+    e.preventDefault();
+    this.handleAction('backward');
     this.keepFocus();
   };
 
   getTransform(anchors, {scale, translateX, translateY}) {
     if (!this.props.enablePan) {
-      return {scale: 1, translateX: 0, translateY: 0};
+      return;
     }
 
     const getCenterAndDistance = (point1, point2) => {
@@ -293,7 +314,7 @@ export default class MobileGridControls extends GridControls {
     const {scale, translateX, translateY} = this.state.transform;
     const style = {
       transform: `translate(${translateX}px, ${translateY}px) scale(${scale})`,
-      transition: this.state.anchors.length === 0 ? '.3s transform ease-out' : '',
+      transition: this.state.anchors.length === 0 ? '.1s transform ease-out' : '',
     };
     return (
       <div
@@ -309,6 +330,7 @@ export default class MobileGridControls extends GridControls {
           e.addEventListener('touchstart', this.handleTouchStart, {passive: false});
           e.addEventListener('touchmove', this.handleTouchMove, {passive: false});
           e.addEventListener('touchend', this.handleTouchEnd, {passive: false});
+          // e.addEventListener('mouseup', this.handleTouchEnd, {passive: false});
         }}
       >
         <div
@@ -340,11 +362,12 @@ export default class MobileGridControls extends GridControls {
     };
     return (
       <Flex className="mobile-grid-controls--clue-bar-container">
-        <MdKeyboardArrowLeft
-          className="mobile-grid-controls--intra-clue left"
-          onTouchEnd={this.handleLeftArrowTouchEnd}
-          onClick={this.keepFocus}
-        />
+        <div
+          ref={(e) => e && e.addEventListener('touchEnd', this.handleLeftArrowTouchEnd, {passive: false})}
+          style={{display: 'flex'}}
+        >
+          <MdKeyboardArrowLeft className="mobile-grid-controls--intra-clue left" onClick={this.keepFocus} />
+        </div>
         <div
           style={{
             display: 'flex',
@@ -379,11 +402,12 @@ export default class MobileGridControls extends GridControls {
             </div>
           </div>
         </div>
-        <MdKeyboardArrowRight
-          className="mobile-grid-controls--intra-clue left"
-          onClick={this.keepFocus}
-          onTouchEnd={this.handleRightArrowTouchEnd}
-        />
+        <div
+          ref={(e) => e && e.addEventListener('touchEnd', this.handleRightArrowTouchEnd, {passive: false})}
+          style={{display: 'flex'}}
+        >
+          <MdKeyboardArrowRight className="mobile-grid-controls--intra-clue left" onClick={this.keepFocus} />
+        </div>
       </Flex>
     );
   }
@@ -467,11 +491,21 @@ export default class MobileGridControls extends GridControls {
         touchEvents: 'none',
         position: 'absolute',
       },
-      autoComplete: 'new-password',
+      autoComplete: 'nope',
       onBlur: this.handleInputBlur,
       onFocus: this.handleInputFocus,
       onChange: this.handleInputChange,
     };
+    const USE_TEXT_AREA = true;
+    if (USE_TEXT_AREA) {
+      return (
+        <>
+          <textarea name="1" {...inputProps} />
+          <textarea name="2" ref={this.inputRef} {...inputProps} onKeyUp={this.handleKeyUp} />
+          <textarea name="3" {...inputProps} />
+        </>
+      );
+    }
     return (
       <>
         <input name="1" {...inputProps} />
