@@ -38,7 +38,7 @@ export interface Auction {
 
 export interface Round {
   auctions: Auction[];
-  users: {
+  players: {
     [id: string]: {
       acquiredArt: Card[];
       score?: number;
@@ -54,7 +54,8 @@ export interface LogMessage {
 export interface ModernArtState {
   started: boolean;
   deck: Card[];
-  users: {
+  playerIdx?: number;
+  players: {
     [id: string]: {
       id: string;
       name: string;
@@ -74,7 +75,7 @@ export interface ModernArtState {
 
 export const initialState: ModernArtState = {
   started: false,
-  users: {
+  players: {
     cat: {
       id: 'cat',
       name: 'catcat',
@@ -89,7 +90,7 @@ export const initialState: ModernArtState = {
   rounds: {
     '0': {
       auctions: [],
-      users: {},
+      players: {},
     },
   },
   log: [

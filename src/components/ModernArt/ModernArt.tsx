@@ -46,7 +46,7 @@ function subscribeToGameEvents(
 export const ModernArt: React.FC<{gid: string}> = (props) => {
   const {gid} = props;
   const socket = useSocket();
-  const userId = getUser().id;
+  const playerId = getUser().id;
 
   const sendEvent = useCallback(
     async (event: ModernArtEvent) => {
@@ -96,11 +96,11 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
     ];
 
     if (isInitialized) {
-      if (!gameState.users[userId]?.name) {
+      if (!gameState.players[playerId]?.name) {
         sendEvent({
           type: 'update_name',
           params: {
-            userId,
+            playerId,
             id: getUser().id,
             name: names[Math.floor(Math.random() * names.length)],
             icon: icons[Math.floor(Math.random() * icons.length)],
@@ -114,12 +114,12 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
   console.log('Events', events);
   console.log('Game State:', gameState);
 
-  const actions = usePlayerActions(sendEvent, userId);
+  const actions = usePlayerActions(sendEvent, playerId);
   return (
     <div className={classes.container}>
       <Helmet title={`Modern Art ${gid}`} />
       <h1>Welcome to modern art</h1>
-      <GameStateDisplayer gameState={gameState} playerActions={actions} userId={userId} />
+      <GameStateDisplayer gameState={gameState} playerActions={actions} playerId={playerId} />
     </div>
   );
 };

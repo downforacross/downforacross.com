@@ -15,12 +15,12 @@ import Confetti from '../../Game/Confetti';
 export const GameStateDisplayer: React.FC<{
   gameState: ModernArtState;
   playerActions: PlayerActions;
-  userId: string;
+  playerId: string;
 }> = (props) => {
   const classes = useStyles();
   const {gameState, playerActions: actions} = props;
 
-  const users = _.values(gameState.users);
+  const players = _.values(gameState.players);
 
   const [currentBid, setCurrentBid] = useState(0);
 
@@ -75,11 +75,11 @@ export const GameStateDisplayer: React.FC<{
 
       <div>
         <table>
-          {_.values(gameState.users).map((user) => {
-            const arts = gameState.rounds[gameState.roundIndex].users[user.id]?.acquiredArt;
+          {_.values(gameState.players).map((player) => {
+            const arts = gameState.rounds[gameState.roundIndex].players[player.id]?.acquiredArt;
             return (
               <tr>
-                <th>{user.name}</th>
+                <th>{player.name}</th>
                 {arts?.map((a) => (
                   <td>{a.color}</td>
                 ))}
@@ -94,13 +94,13 @@ export const GameStateDisplayer: React.FC<{
       {gameState.currentAuction && (
         <div className={classes.auctionStatus}>
           <h1>
-            Player {gameState.users[gameState.currentAuction.auctioneer]?.name} is holding a{' '}
+            Player {gameState.players[gameState.currentAuction.auctioneer]?.name} is holding a{' '}
             {gameState.currentAuction.painting.auctionType} auction for a{' '}
             {gameState.currentAuction.painting.color} painting
           </h1>
           {gameState.currentAuction.painting.auctionType === AuctionType.OPEN && (
             <h3>
-              Highest Bid is currently {gameState.currentAuction.highestBid} by user{' '}
+              Highest Bid is currently {gameState.currentAuction.highestBid} by player{' '}
               {gameState.currentAuction.highestBidder}{' '}
             </h3>
           )}
@@ -123,19 +123,19 @@ export const GameStateDisplayer: React.FC<{
         </div>
       )}
 
-      {/* Users */}
+      {/* Players */}
 
       {gameState.started && <div className={classes.message}>Game has Started</div>}
-      <div className={classes.usersList}>
-        <h3>{users.length} players</h3>
-        {users.map((user, i) => (
+      <div className={classes.playersList}>
+        <h3>{players.length} players</h3>
+        {players.map((player, i) => (
           <div key={i}>
-            {user.icon}
-            {user.name}
+            {player.icon}
+            {player.name}
             <div className={classes.cards}>
-              {user.cards.map((card, j) => (
+              {player.cards.map((card, j) => (
                 <div className={classes.card}>
-                  {user.id === props.userId && (
+                  {player.id === props.playerId && (
                     <div>
                       <div className={classes.cardHeader} style={{backgroundColor: card.color}} />
                       <div className={classes.cardBody}>
@@ -206,7 +206,7 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     alignItems: 'center',
   },
-  usersList: {
+  playersList: {
     display: 'flex',
     flexDirection: 'column',
     '& > div': {

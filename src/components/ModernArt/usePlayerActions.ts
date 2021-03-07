@@ -13,13 +13,13 @@ export interface PlayerActions {
 // TODO: copy paste logic from src/components/Game.js
 export const usePlayerActions = (
   dispatch: (event: ModernArtEvent) => Promise<void>,
-  userId: string
+  playerId: string
 ): PlayerActions => ({
   startGame() {
     dispatch({
       type: 'start_game',
       params: {
-        userId,
+        playerId,
       },
     });
     // TODO
@@ -28,7 +28,7 @@ export const usePlayerActions = (
     dispatch({
       type: 'step',
       params: {
-        userId,
+        playerId,
       },
     });
   },
@@ -36,7 +36,7 @@ export const usePlayerActions = (
     dispatch({
       type: 'start_auction',
       params: {
-        userId,
+        playerId,
         idx,
       },
     });
@@ -45,7 +45,7 @@ export const usePlayerActions = (
     dispatch({
       type: 'submit_bid',
       params: {
-        userId,
+        playerId,
         bidAmount,
       },
     });
@@ -54,7 +54,7 @@ export const usePlayerActions = (
     dispatch({
       type: 'finish_auction',
       params: {
-        userId,
+        playerId,
       },
     });
   },
