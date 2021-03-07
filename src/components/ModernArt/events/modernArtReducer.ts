@@ -1,8 +1,8 @@
 // @ts-ignore
 import seedrandom from 'seedrandom';
+import moment from 'moment';
 import _ from 'lodash';
 import {ModernArtState, ModernArtEvent, AuctionStatus, colors, AuctionType} from './types';
-import moment from 'moment';
 
 /**
  * A helper function that contains meat of reducer code.
@@ -240,12 +240,13 @@ export const modernArtReducerHelper = (
       console.log(`currentRound: ${JSON.stringify(currentRound)}`);
       const usersRound = currentRound.users;
       console.log(`usersRound: ${JSON.stringify(usersRound)}`);
-      let userToScore: {[userId: string]: number} = {};
+      const userToScore: {[userId: string]: number} = {};
       for (const userId of _.keys(usersRound)) {
         let score = 0;
         console.log(`userId: ${JSON.stringify(userId)}`);
         console.log(`usersRound[userId]: ${usersRound[userId]}`);
         const userAcquiredArt = usersRound[userId].acquiredArt;
+        // eslint-disable-next-line guard-for-in
         for (const idx in userAcquiredArt) {
           const color = userAcquiredArt[idx].color;
           if (color === firstColor) {
