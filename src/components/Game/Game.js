@@ -3,7 +3,7 @@ import 'react-flexview/lib/flexView.css';
 import React, {Component} from 'react';
 import Flex from 'react-flexview';
 import _ from 'lodash';
-import Confetti from './Confetti.js';
+import Confetti from './Confetti';
 
 import * as powerups from '../../lib/powerups';
 import Player from '../Player';
