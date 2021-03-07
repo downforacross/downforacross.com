@@ -60,7 +60,7 @@ export interface ModernArtState {
   rounds: {
     [id: string]: Round;
   };
-  currentAuction: Auction;
+  currentAuction?: Auction;
 }
 
 const firstAuction: Auction = {

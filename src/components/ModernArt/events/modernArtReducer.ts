@@ -32,6 +32,7 @@ export const modernArtReducerHelper = (
     };
   }
   if (event.type === 'submit_bid') {
+    if (!state.currentAuction) return;
     if (event.params.bidAmount > (state.currentAuction.highestBid ?? 0)) {
       return {
         ...state,
@@ -225,6 +226,7 @@ export const modernArtValidatorHelper = (state: ModernArtState, event: ModernArt
     return !state.started;
   }
   if (event.type === 'submit_bid') {
+    if (!state.currentAuction) return false;
     if (state.currentAuction.status === AuctionStatus.CLOSED) {
       console.log('cannot submit_bid because auction is closed');
       return false;
@@ -232,6 +234,7 @@ export const modernArtValidatorHelper = (state: ModernArtState, event: ModernArt
     return true;
   }
   if (event.type === 'finish_auction') {
+    if (!state.currentAuction) return false;
     if (state.currentAuction.status === AuctionStatus.CLOSED) {
       console.log('cannot finish_auction because auction is closed');
       return false;
@@ -242,6 +245,7 @@ export const modernArtValidatorHelper = (state: ModernArtState, event: ModernArt
     return true;
   }
   if (event.type === 'start_auction') {
+    if (!state.currentAuction) return false;
     if (state.currentAuction.status === AuctionStatus.PENDING) {
       console.log('cannot finish_auction because auction is closed');
       return false;
@@ -253,17 +257,16 @@ export const modernArtValidatorHelper = (state: ModernArtState, event: ModernArt
 
 export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): ModernArtState => {
   try {
-    if (modernArtValidatorHelper(state, event)) {
-      const result = modernArtReducerHelper(state, event);
-      if (!result) {
-        console.warn('skipping invalid event', state, event);
-        return state;
-      }
-      return result;
-    } else {
+    if (!modernArtValidatorHelper(state, event)) {
       console.warn('skipping failed validation event', state, event);
       return state;
     }
+    const result = modernArtReducerHelper(state, event);
+    if (!result) {
+      console.warn('skipping invalid event', state, event);
+      return state;
+    }
+    return result;
   } catch (e) {
     console.warn('failed to reduce', state, event);
     console.error(e);
