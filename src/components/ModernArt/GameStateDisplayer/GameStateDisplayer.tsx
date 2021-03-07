@@ -43,12 +43,14 @@ export const GameStateDisplayer: React.FC<{
           <button onClick={actions.startGame}>Start!</button>
         </div>
       )}
-      <div className={classes.nextButton}>
-        <button onClick={actions.step}>Next!</button>
-      </div>
+      {!gameState.roundStarted && (
+        <div className={classes.nextButton}>
+          <button onClick={actions.step}>Deal!</button>
+        </div>
+      )}
       {gameState.started && <div className={classes.message}>Game has Started</div>}
       <div className={classes.usersList}>
-        {users.length} users here
+        <h3>{users.length} players</h3>
         {users.map((user, i) => (
           <div key={i}>
             {user.icon}
