@@ -12,6 +12,7 @@ export const modernArtReducerHelper = (
   state: ModernArtState,
   event: ModernArtEvent
 ): ModernArtState | undefined => {
+  const timestamp = typeof event.timestamp === 'number' ? event.timestamp : Date.now();
   if (event.type === 'start_game') {
     return {
       ...state,
@@ -210,6 +211,13 @@ export const modernArtReducerHelper = (
           auctions: state.rounds[state.roundIndex].auctions.concat(auction),
         },
       },
+      log: [
+        ...state.log,
+        {
+          timestamp,
+          text: ``,
+        },
+      ],
     };
     // pass
   }
