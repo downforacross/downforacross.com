@@ -47,6 +47,7 @@ export const modernArtReducerHelper = (
     if (!state.currentAuction) return undefined;
     // give winner the painting, store in new rounds field
     const auctioneer = state.currentAuction.auctioneer;
+    // todo: handle when there is no winner (aka nobody wants to bid)
     const winner = state.currentAuction.highestBidder;
     if (!auctioneer || !winner) return undefined;
     const payment = state.currentAuction.highestBid || state.currentAuction.fixedPrice || -1;
@@ -228,12 +229,14 @@ export const modernArtValidatorHelper = (state: ModernArtState, event: ModernArt
   }
   if (event.type === 'submit_bid') {
     if (state.currentAuction.status === AuctionStatus.CLOSED) {
+      console.log('cannot submit_bid because auction is closed');
       return false;
     }
     return true;
   }
   if (event.type === 'finish_auction') {
     if (state.currentAuction.status === AuctionStatus.CLOSED) {
+      console.log('cannot finish_auction because auction is closed');
       return false;
     }
     return true;
@@ -243,6 +246,7 @@ export const modernArtValidatorHelper = (state: ModernArtState, event: ModernArt
   }
   if (event.type === 'start_auction') {
     if (state.currentAuction.status === AuctionStatus.PENDING) {
+      console.log('cannot finish_auction because auction is closed');
       return false;
     }
     return true;
@@ -255,7 +259,7 @@ export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): 
     if (modernArtValidatorHelper(state, event)) {
       return modernArtReducerHelper(state, event) || state;
     } else {
-      console.log(`event ${event} is invalid`);
+      console.log(`event ${JSON.stringify(event)} is invalid`);
       return state;
     }
   } catch (e) {
