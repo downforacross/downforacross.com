@@ -1,8 +1,7 @@
-import _ from 'lodash';
-import {ModernArtState, ModernArtEvent, AuctionStatus} from './types';
 // @ts-ignore
 import seedrandom from 'seedrandom';
-import state from 'sweetalert/typings/modules/state';
+import _ from 'lodash';
+import {ModernArtState, ModernArtEvent, AuctionStatus} from './types';
 
 /**
  * A helper function that contains meat of reducer code.
@@ -158,19 +157,21 @@ export const modernArtReducerHelper = (
 
     // If fifth painting of this color, do not auction and end round
     const count = _.filter(state.rounds[state.roundIndex].auctions, (x) => x.painting.color === color).length;
+    const user = state.users[userId];
+
     if (count === 5) {
       // todo: give priority to lowest color
       const auctions = state.rounds[state.roundIndex].auctions; // color: [painting]
       const colorFreq = _.groupBy(auctions, (x) => x.painting.color);
       const sortedColorFreq = _.sortBy(_.keys(colorFreq), (x) => -colorFreq[x].length);
-      // const sortedColorFreq = _.sortBy(colorFreq, [function(o) { return o.length; }]); // color: freq
       return {
         ...state,
         // remove card
         users: {
           ...state.users,
           [userId]: {
-            ...state.users[userId].cards.splice(idx, 1),
+            ...user,
+            cards: user.cards.splice(idx, 1),
           },
         },
         roundIndex: state.roundIndex + 1,
@@ -199,7 +200,8 @@ export const modernArtReducerHelper = (
       users: {
         ...state.users,
         [userId]: {
-          ...state.users[userId].cards.splice(idx, 1),
+          ...user,
+          cards: [...user.cards.slice(0, idx), ...user.cards.slice(idx + 1)],
         },
       },
       rounds: {
