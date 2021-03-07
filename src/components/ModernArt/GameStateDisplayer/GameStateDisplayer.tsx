@@ -75,17 +75,15 @@ export const GameStateDisplayer: React.FC<{
 
       <div>
         <table>
-          <tr>
-            {_.values(gameState.users).map((user) => (
+          {_.values(gameState.users).map((user) => (
+            <tr>
               <th>{user.name}</th>
-            ))}
-          </tr>
-          <tr>
-            {_.values(gameState.users).map((user) => {
-              const arts = gameState.rounds[gameState.roundIndex].users[user.id]?.acquiredArt;
-              return arts?.map((a) => <td>{a.color}</td>);
-            })}
-          </tr>
+              {_.values(gameState.users).map((user) => {
+                const arts = gameState.rounds[gameState.roundIndex].users[user.id]?.acquiredArt;
+                return arts?.map((a) => <td>{a.color}</td>);
+              })}
+            </tr>
+          ))}
         </table>
       </div>
 
