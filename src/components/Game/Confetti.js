@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import Confetti from 'react-confetti';
+import ReactConfetti from 'react-confetti';
 
-export default class extends Component {
+export default class Confetti extends Component {
   constructor() {
     super();
     this.state = {
@@ -15,13 +15,13 @@ export default class extends Component {
       this.setState({
         numberOfPieces: 0,
       });
-    }, 7000);
+    }, this.props.duration || 7000);
   }
 
   render() {
     if (this.state.done) return null;
     return (
-      <Confetti
+      <ReactConfetti
         numberOfPieces={this.state.numberOfPieces}
         onConfettiComplete={() => this.setState({done: true})}
       />

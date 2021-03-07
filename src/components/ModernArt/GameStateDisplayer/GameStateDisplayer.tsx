@@ -5,6 +5,7 @@ import _ from 'lodash';
 import {PlayerActions} from '../usePlayerActions';
 import {ModernArtState, AuctionType, AuctionStatus} from '../events/types';
 import {Log} from './Log';
+import Confetti from '../../Game/Confetti';
 
 /**
  * This component is parallel to Game -- will render a <Player/>
@@ -93,12 +94,6 @@ export const GameStateDisplayer: React.FC<{
             </h3>
           )}
 
-          {gameState.currentAuction.status === AuctionStatus.PENDING && (
-            <div>
-              <input type="text" onChange={handleInputChange} value={currentBid || ''} />
-              <button onClick={submitBid}> Submit Bid </button>
-            </div>
-          )}
           {gameState.currentAuction.status === AuctionStatus.CLOSED && (
             <div>
               <h1>
@@ -108,13 +103,23 @@ export const GameStateDisplayer: React.FC<{
               </h1>
             </div>
           )}
+
+          {gameState.currentAuction.status === AuctionStatus.PENDING && (
+            <div>
+              <input type="text" onChange={handleInputChange} value={currentBid || ''} />
+              <button onClick={submitBid}> Submit Bid </button>
+            </div>
+          )}
+          {gameState.currentAuction.status === AuctionStatus.PENDING && (
+            <button onClick={finishAuction}> Finish Auction </button>
+          )}
         </div>
       )}
-      <div>
-        <button onClick={finishAuction}> Finish Auction </button>
-      </div>
+      {gameState.currentAuction?.status === AuctionStatus.CLOSED && <Confetti duration={1500} />}
     </div>
   );
+  // todo confetti
+  // todo hammer
 };
 
 const useStyles = makeStyles({
