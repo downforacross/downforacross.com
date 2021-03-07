@@ -169,6 +169,20 @@ export default class MobileGridControls extends GridControls {
   handleTouchEnd = (e) => {
     if (e.touches.length === 0 && this.state.anchors.length === 1 && this.lastPan < Date.now() - 200) {
       this.props.onSetCursorLock(false);
+      let el = e.target; // a descendant of grid for sure
+      let rc;
+      for (let i = 0; el && i < 20; i += 1) {
+        if (el.className.includes('grid--cell')) {
+          rc = el.getAttribute('data-rc');
+          break;
+        }
+        el = el.parentElement;
+      }
+      if (rc) {
+        const [r, c] = rc.split(' ').map((x) => Number(x));
+        console.log(rc);
+        this.props.onSetSelected({r, c});
+      }
       this.focusKeyboard();
     }
     e.preventDefault();
@@ -316,6 +330,7 @@ export default class MobileGridControls extends GridControls {
           e.addEventListener('touchstart', this.handleTouchStart, {passive: false});
           e.addEventListener('touchmove', this.handleTouchMove, {passive: false});
           e.addEventListener('touchend', this.handleTouchEnd, {passive: false});
+          e.addEventListener('mouseup', this.handleTouchEnd, {passive: false});
         }}
       >
         <div
