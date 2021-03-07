@@ -115,16 +115,6 @@ export const GameStateDisplayer: React.FC<{
             </h3>
           )}
 
-          {gameState.currentAuction.status === AuctionStatus.CLOSED && (
-            <div>
-              <h1>
-                Player {gameState.currentAuction.highestBidder} won painting{' '}
-                {gameState.currentAuction.painting.color}
-                for {gameState.currentAuction.highestBid}
-              </h1>
-            </div>
-          )}
-
           {gameState.currentAuction.status === AuctionStatus.PENDING && (
             <div>
               <input type="text" onChange={handleInputChange} value={currentBid || ''} />
