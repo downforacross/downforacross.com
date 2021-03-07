@@ -5,7 +5,7 @@ import {useMount} from 'react-use';
 const Confetti: React.FC<{
   duration?: number;
 }> = (props) => {
-  const [spawning, setSpawning] = useState(false);
+  const [spawning, setSpawning] = useState(true);
   const [visible, setVisible] = useState(true);
   useMount(() => {
     setTimeout(() => {
