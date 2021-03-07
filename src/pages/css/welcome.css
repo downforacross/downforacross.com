@@ -125,6 +125,10 @@
   width: 330px;
 }
 
+.mobile .entry {
+  width: 80vw;
+}
+
 .entry--top--left {
   font-size: 15px;
   font-weight: 400;
