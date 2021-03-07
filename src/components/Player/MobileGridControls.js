@@ -414,7 +414,6 @@ export default class MobileGridControls extends GridControls {
 
   focusKeyboard() {
     this.inputRef.current.focus();
-    this.props.onResize();
   }
 
   keepFocus = () => {
@@ -438,7 +437,6 @@ export default class MobileGridControls extends GridControls {
     if (e.target.name === '2') {
       this.wasUnfocused = Date.now();
     }
-    this.props.onResize();
   };
 
   handleInputChange = (e) => {
