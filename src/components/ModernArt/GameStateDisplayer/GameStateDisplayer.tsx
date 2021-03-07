@@ -46,11 +46,14 @@ export const GameStateDisplayer: React.FC<{
           <button onClick={actions.startGame}>Start!</button>
         </div>
       )}
-      {!gameState.roundStarted && (
+      {gameState.started && !gameState.roundStarted && (
         <div className={classes.nextButton}>
           <button onClick={actions.step}>Deal!</button>
         </div>
       )}
+
+      {/* Scoreboard */}
+
       <div>
         <table>
           <tr>
@@ -85,11 +88,43 @@ export const GameStateDisplayer: React.FC<{
           </tr>
         </table>
       </div>
-      {!gameState.roundStarted && (
-        <div className={classes.nextButton}>
-          <button onClick={actions.step}>Deal!</button>
+
+      {/* Current Auction */}
+
+      {gameState.currentAuction && (
+        <div className={classes.auctionStatus}>
+          <h1>
+            Player {gameState.users[gameState.currentAuction.auctioneer]?.name} is holding a{' '}
+            {gameState.currentAuction.painting.auctionType} auction for a{' '}
+            {gameState.currentAuction.painting.color} painting
+          </h1>
+          {gameState.currentAuction.painting.auctionType === AuctionType.OPEN && (
+            <h3>
+              Highest Bid is currently {gameState.currentAuction.highestBid} by user{' '}
+              {gameState.currentAuction.highestBidder}{' '}
+            </h3>
+          )}
+
+          {gameState.currentAuction.status === AuctionStatus.PENDING && (
+            <span className={classes.submitBidForm}>
+              <input type="text" onChange={handleInputChange} value={currentBid || ''} />
+              <button onClick={submitBid}> Submit Bid </button>
+            </span>
+          )}
+          {gameState.currentAuction.status === AuctionStatus.PENDING && (
+            <button onClick={finishAuction}>
+              {' '}
+              Finish Auction{' '}
+              <span role="img" aria-label="female judge with gavel">
+                👩‍⚖️
+              </span>
+            </button>
+          )}
         </div>
       )}
+
+      {/* Users */}
+
       {gameState.started && <div className={classes.message}>Game has Started</div>}
       <div className={classes.usersList}>
         <h3>{users.length} players</h3>
@@ -119,31 +154,6 @@ export const GameStateDisplayer: React.FC<{
           </div>
         ))}
       </div>
-      {gameState.currentAuction && (
-        <div className={classes.auctionStatus}>
-          <h1>
-            Player {gameState.users[gameState.currentAuction.auctioneer]?.name} is holding a{' '}
-            {gameState.currentAuction.painting.auctionType} auction for a{' '}
-            {gameState.currentAuction.painting.color} painting
-          </h1>
-          {gameState.currentAuction.painting.auctionType === AuctionType.OPEN && (
-            <h3>
-              Highest Bid is currently {gameState.currentAuction.highestBid} by user{' '}
-              {gameState.currentAuction.highestBidder}{' '}
-            </h3>
-          )}
-
-          {gameState.currentAuction.status === AuctionStatus.PENDING && (
-            <span className={classes.submitBidForm}>
-              <input type="text" onChange={handleInputChange} value={currentBid || ''} />
-              <button onClick={submitBid}> Submit Bid </button>
-            </span>
-          )}
-          {gameState.currentAuction.status === AuctionStatus.PENDING && (
-            <button onClick={finishAuction}> Finish Auction 👩‍⚖️</button>
-          )}
-        </div>
-      )}
       {gameState.currentAuction?.status === AuctionStatus.CLOSED && <Confetti duration={1500} />}
     </div>
   );
