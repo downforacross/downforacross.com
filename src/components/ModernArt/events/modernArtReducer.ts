@@ -1,7 +1,7 @@
 // @ts-ignore
 import seedrandom from 'seedrandom';
 import _ from 'lodash';
-import {ModernArtState, ModernArtEvent, AuctionStatus} from './types';
+import {ModernArtState, ModernArtEvent, AuctionStatus, colors} from './types';
 
 /**
  * A helper function that contains meat of reducer code.
@@ -118,7 +118,6 @@ export const modernArtReducerHelper = (
       const cardsToDeal = CARDS_TO_DEAL[`${_.size(state.users)}`]?.[state.roundIndex] ?? 0;
       const auctionTypes = ['hidden', 'open'];
 
-      const colors = ['red', 'blue', 'yellow', 'green', 'purple'];
       const ALL_CARDS = _.flatMap(colors, (color) =>
         auctionTypes.map((auctionType) => ({
           color,
@@ -174,13 +173,55 @@ export const modernArtReducerHelper = (
       const auctions = state.rounds[state.roundIndex].auctions; // color: [painting]
       const colorFreq = _.groupBy(auctions, (x) => x.painting.color);
       const sortedColorFreq = _.sortBy(_.keys(colorFreq), (x) => -colorFreq[x].length);
+
+      const firstColor = sortedColorFreq[0];
+      const secondColor = sortedColorFreq[1];
+      const thirdColor = sortedColorFreq[2];
+
+      // score user's holdings
+      const currentRound = state.rounds[state.roundIndex];
+      const usersRound = currentRound.users;
+      let userToScore: {[userId: string]: number} = {};
+      for (const userId in _.keys(usersRound)) {
+        let score = 0;
+        const userAcquiredArt = usersRound[userId].acquiredArt;
+        for (const idx in userAcquiredArt) {
+          const color = userAcquiredArt[idx].color;
+          if (color === firstColor) {
+            score += 30;
+          } else if (color === secondColor) {
+            score += 20;
+          } else if (color === thirdColor) {
+            score += 10;
+          }
+        }
+        userToScore[userId] = score;
+      }
+
+      const places = {
+        ..._.zipObject(colors, _.times(colors.length, _.constant(0))),
+        firstColor: 30,
+        secondColor: 20,
+        thirdColor: 10,
+      };
+
       return {
         ...state,
         users: nUsers,
         roundIndex: state.roundIndex + 1,
-        // new round
         rounds: {
           ...state.rounds,
+          [state.roundIndex]: {
+            ...state.rounds[state.roundIndex].auctions,
+            users: _.map(state.users, (user) => ({
+              [user.id]: {
+                ...state.rounds[state.roundIndex].users[user.id],
+                score: userToScore[user.id],
+              },
+            })),
+            places: places,
+          },
+          // new round
           [state.roundIndex + 1]: {
             auctions: [],
             users: _.map(state.users, (user) => ({

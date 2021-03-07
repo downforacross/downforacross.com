@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import {makeStyles} from '@material-ui/core';
 import _ from 'lodash';
 import {PlayerActions} from '../usePlayerActions';
-import {ModernArtState, AuctionType, AuctionStatus} from '../events/types';
+import {ModernArtState, AuctionType, AuctionStatus, colors} from '../events/types';
 
 /**
  * This component is parallel to Game -- will render a <Player/>
@@ -45,6 +45,37 @@ export const GameStateDisplayer: React.FC<{
       )}
       <div className={classes.nextButton}>
         <button onClick={actions.step}>Next!</button>
+      </div>
+      <div>
+        <table>
+          <tr>
+            <th></th>
+            {colors.map((i) => (
+              <th>{i}</th>
+            ))}
+            {/* <th>Yellow</th>
+            <th>Blue</th>
+            <th>Red</th>
+            <th>Green</th>
+            <th>Purple</th> */}
+          </tr>
+          {_.values(gameState.rounds).map((round, i) => (
+            <tr>
+              <td>Round {i + 1}</td>
+              {colors.map((color) => (
+                <td>{gameState.rounds[i].places?.color}</td>
+              ))}
+            </tr>
+          ))}
+          {/* <tr>
+            <td>Round 1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+          </tr> */}
+        </table>
       </div>
       {gameState.started && <div className={classes.message}>Game has Started</div>}
       <div className={classes.usersList}>

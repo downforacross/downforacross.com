@@ -20,6 +20,8 @@ export enum AuctionStatus {
   PENDING = 'PENDING',
   CLOSED = 'CLOSED',
 }
+
+export const colors = ['red', 'blue', 'yellow', 'green', 'purple'];
 export interface Auction {
   status: AuctionStatus;
   auctioneer: string;
@@ -36,11 +38,12 @@ export interface Auction {
 export interface Round {
   auctions: Auction[];
   users: {
-    // might delete this
     [id: string]: {
       acquiredArt: Card[];
+      score?: number;
     };
   };
+  places?: {[color: string]: number};
 }
 
 export interface ModernArtState {
