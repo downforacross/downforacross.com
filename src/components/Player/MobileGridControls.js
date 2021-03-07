@@ -306,9 +306,9 @@ export default class MobileGridControls extends GridControls {
         className="mobile-grid-controls--grid-content"
         ref={(e) => {
           if (!e) return;
-          e.addEventListener('touchStart', this.handleTouchStart, {passive: false});
-          e.addEventListener('touchMove', this.handleTouchMove, {passive: false});
-          e.addEventListener('touchEnd', this.handleTouchEnd, {passive: false});
+          e.addEventListener('touchstart', this.handleTouchStart, {passive: false});
+          e.addEventListener('touchmove', this.handleTouchMove, {passive: false});
+          e.addEventListener('touchend', this.handleTouchEnd, {passive: false});
         }}
       >
         <div
@@ -354,9 +354,9 @@ export default class MobileGridControls extends GridControls {
           className={classnames('mobile-grid-controls--clue-bar', {touching: this.state.touchingClueBar})}
           ref={(e) => {
             if (!e) return;
-            e.addEventListener('touchStart', this.handleClueBarTouchStart, {passive: false});
-            e.addEventListener('touchEnd', this.handleClueBarTouchEnd, {passive: false});
-            e.addEventListener('touchMove', this.handleClueBarTouchMove, {passive: false});
+            e.addEventListener('touchstart', this.handleClueBarTouchStart, {passive: false});
+            e.addEventListener('touchend', this.handleClueBarTouchEnd, {passive: false});
+            e.addEventListener('touchmove', this.handleClueBarTouchMove, {passive: false});
           }}
           onClick={this.keepFocus}
         >
