@@ -18,14 +18,18 @@ export const usePlayerActions = (
   startGame() {
     dispatch({
       type: 'start_game',
-      params: {},
+      params: {
+        userId,
+      },
     });
     // TODO
   },
   step() {
     dispatch({
       type: 'step',
-      params: {},
+      params: {
+        userId,
+      },
     });
   },
   startAuction(idx) {
@@ -49,7 +53,9 @@ export const usePlayerActions = (
   finishAuction() {
     dispatch({
       type: 'finish_auction',
-      params: {},
+      params: {
+        userId,
+      },
     });
   },
 });

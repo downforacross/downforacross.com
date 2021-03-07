@@ -1,8 +1,8 @@
 // @ts-ignore
 import seedrandom from 'seedrandom';
 import _ from 'lodash';
-import {ModernArtState, ModernArtEvent, AuctionStatus, AuctionType} from './types';
 import moment from 'moment';
+import {ModernArtState, ModernArtEvent, AuctionStatus, AuctionType} from './types';
 
 /**
  * A helper function that contains meat of reducer code.
@@ -13,30 +13,39 @@ export const modernArtReducerHelper = (
   state: ModernArtState,
   event: ModernArtEvent
 ): ModernArtState | undefined => {
+  const userId = event.params.userId ?? event.params.id;
+  const user = state.users[event.params.userId];
+
   const timestamp = typeof event.timestamp === 'number' ? event.timestamp : Date.now();
   const hhmm = moment(timestamp).format('hh:mm');
   if (event.type === 'start_game') {
     return {
       ...state,
       started: true,
-      users: _.mapValues(state.users, (user) => ({
-        ...user,
+      users: _.mapValues(state.users, (u) => ({
+        ...u,
         money: 100,
       })),
       rounds: {
         '0': {
           auctions: [],
-          users: _.mapValues(state.users, (user) => ({
-            id: user.id,
+          users: _.mapValues(state.users, (u) => ({
+            id: u.id,
             acquiredArt: [],
           })),
         },
       },
+      log: [
+        ...state.log,
+        {
+          hhmm,
+          text: `Game started`,
+        },
+      ],
     };
   }
   if (event.type === 'submit_bid') {
-    if (!state.currentAuction) return;
-    const user = state.users[event.params.userId];
+    if (!state.currentAuction) return undefined;
     if (event.params.bidAmount > (state.currentAuction.highestBid ?? 0)) {
       return {
         ...state,
@@ -105,14 +114,17 @@ export const modernArtReducerHelper = (
           hhmm,
           text: `${state.users[winner].name} won the auction for ${payment} and acquired a ${closedAuction.painting.color}`,
         },
+        {
+          hhmm,
+          text: `${state.users[winner].name} won the auction for ${payment} and acquired a ${closedAuction.painting.color}`,
+        },
       ],
       currentAuction: closedAuction,
     };
   }
   if (event.type === 'update_name') {
-    const user = state.users[event.params.id];
     if (!user && state.started) {
-      return;
+      return undefined;
     }
     return {
       ...state,
@@ -177,9 +189,9 @@ export const modernArtReducerHelper = (
       return {
         ...state,
         deck,
-        users: _.mapValues(state.users, (user) => ({
-          ...user,
-          cards: [...user.cards, ..._.times(cardsToDeal, deal)],
+        users: _.mapValues(state.users, (u) => ({
+          ...u,
+          cards: [...u.cards, ..._.times(cardsToDeal, deal)],
         })),
         roundStarted: true,
         log: [
@@ -196,15 +208,13 @@ export const modernArtReducerHelper = (
   }
 
   if (event.type === 'start_auction') {
-    const userId = event.params.userId;
     const idx = event.params.idx;
-    const card = state.users[userId].cards[idx];
+    const card = user.cards[idx];
     console.log('start auction', card);
-    const color = state.users[userId].cards[idx].color;
+    const color = user.cards[idx].color;
 
     // If fifth painting of this color, do not auction and end round
     const count = _.filter(state.rounds[state.roundIndex].auctions, (x) => x.painting.color === color).length;
-    const user = state.users[userId];
     const nUsers = {
       ...state.users,
       [userId]: {
@@ -229,9 +239,7 @@ export const modernArtReducerHelper = (
           ...state.rounds,
           [state.roundIndex + 1]: {
             auctions: [],
-            users: _.map(state.users, (user) => ({
-              [user.id]: [],
-            })),
+            users: _.fromPairs(_.values(state.users).map((u) => [u.id, []])),
           },
         },
         log: [

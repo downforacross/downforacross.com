@@ -100,6 +100,7 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
         sendEvent({
           type: 'update_name',
           params: {
+            userId,
             id: getUser().id,
             name: names[Math.floor(Math.random() * names.length)],
             icon: icons[Math.floor(Math.random() * icons.length)],
