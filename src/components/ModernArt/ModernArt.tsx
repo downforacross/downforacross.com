@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {useUpdateEffect} from 'react-use';
 import {Helmet} from 'react-helmet';
 import {makeStyles} from '@material-ui/core';
@@ -46,31 +46,42 @@ function subscribeToGameEvents(
 export const ModernArt: React.FC<{gid: string}> = (props) => {
   const {gid} = props;
   const socket = useSocket();
+  const userId = getUser().id;
 
-  async function sendEvent(event: ModernArtEvent) {
-    console.log('send event', event);
-    if (socket) {
-      emitAsync(socket, 'game_event', {
-        gid,
-        event: {
-          ...event,
-          timestamp: {
-            '.sv': 'timestamp',
+  const sendEvent = useCallback(
+    async (event: ModernArtEvent) => {
+      console.log('send event', event);
+      if (socket) {
+        emitAsync(socket, 'game_event', {
+          gid,
+          event: {
+            ...event,
+            timestamp: {
+              '.sv': 'timestamp',
+            },
           },
-        },
-      });
-    } else {
-      console.warn('Cannot send event; not connected to server');
-    }
-  }
+        });
+      } else {
+        console.warn('Cannot send event; not connected to server');
+      }
+    },
+    [socket]
+  );
 
   // these lines could be `const events = useGameEvents()`
   const [events, setEvents] = useState<ModernArtEvent[]>([]);
+  const [isInitialized, setIsInitialized] = useState(false);
+
   useUpdateEffect(() => {
     setEvents([]);
     const {syncPromise, unsubscribe} = subscribeToGameEvents(socket, gid, setEvents);
+    syncPromise.then(() => setIsInitialized(true));
+
+    return unsubscribe;
+  }, [gid, socket]);
+
+  useUpdateEffect(() => {
     const icons = ['🤨', '🧐', '🥺'];
-    console.log('subscribing', syncPromise);
     const names = [
       'manuel',
       'melim',
@@ -83,25 +94,25 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
       'martins',
       'silveira',
     ];
-    syncPromise.then(() =>
-      sendEvent({
-        type: 'update_name',
-        params: {
-          id: getUser().id,
-          name: names[Math.floor(Math.random() * names.length)],
-          icon: icons[Math.floor(Math.random() * icons.length)],
-        },
-      })
-    );
-    return unsubscribe;
-  }, [gid, socket]);
 
+    if (isInitialized) {
+      if (!gameState.users[userId]?.name) {
+        sendEvent({
+          type: 'update_name',
+          params: {
+            id: getUser().id,
+            name: names[Math.floor(Math.random() * names.length)],
+            icon: icons[Math.floor(Math.random() * icons.length)],
+          },
+        });
+      }
+    }
+  }, [isInitialized]);
   const classes = useStyles();
   const gameState = useGameState(events);
   console.log('Events', events);
   console.log('Game State:', gameState);
 
-  const userId = getUser().id;
   const actions = usePlayerActions(sendEvent, userId);
   return (
     <div className={classes.container}>

@@ -92,6 +92,10 @@ export const modernArtReducerHelper = (
     };
   }
   if (event.type === 'update_name') {
+    const user = state.users[event.params.id];
+    if (!user && state.started) {
+      return;
+    }
     return {
       ...state,
       users: {
@@ -105,6 +109,15 @@ export const modernArtReducerHelper = (
           id: event.params.id,
         },
       },
+      log: [
+        ...state.log,
+        {
+          hhmm,
+          text: user
+            ? `${user.name} changed name to ${event.params.name}`
+            : `${event.params.name} has entered the game`,
+        },
+      ],
     };
   }
 
@@ -119,7 +132,8 @@ export const modernArtReducerHelper = (
         3: [10, 10, 10],
         4: [10, 5, 3],
       };
-      const cardsToDeal = CARDS_TO_DEAL[`${_.size(state.users)}`]?.[state.roundIndex] ?? 0;
+      const numPlayers = _.size(state.users);
+      const cardsToDeal = CARDS_TO_DEAL[numPlayers]?.[state.roundIndex] ?? 0;
       const auctionTypes = ['hidden', 'open'];
 
       const colors = ['red', 'blue', 'yellow', 'green', 'purple'];
@@ -150,6 +164,15 @@ export const modernArtReducerHelper = (
           cards: [...user.cards, ..._.times(cardsToDeal, deal)],
         })),
         roundStarted: true,
+        log: [
+          ...state.log,
+          {
+            hhmm,
+            text: `Started round ${
+              state.roundIndex + 1
+            }, dealing ${cardsToDeal} cards to ${numPlayers} players`,
+          },
+        ],
       };
     }
   }
@@ -182,6 +205,7 @@ export const modernArtReducerHelper = (
         ...state,
         users: nUsers,
         roundIndex: state.roundIndex + 1,
+        roundStarted: false,
         // new round
         rounds: {
           ...state.rounds,
@@ -192,6 +216,13 @@ export const modernArtReducerHelper = (
             })),
           },
         },
+        log: [
+          ...state.log,
+          {
+            hhmm,
+            text: `${user.name} plays ${card.auctionType} ${card.color} and ends round ${state.roundIndex}`,
+          },
+        ],
       };
     }
 
