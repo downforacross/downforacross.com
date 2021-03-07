@@ -32,7 +32,7 @@ export const modernArtReducerHelper = (
     };
   }
   if (event.type === 'submit_bid') {
-    if (event.params.bidAmount > state.currentAuction.highestBid!) {
+    if (event.params.bidAmount > (state.currentAuction.highestBid ?? 0)) {
       return {
         ...state,
         currentAuction: {
@@ -195,6 +195,7 @@ export const modernArtReducerHelper = (
       status: AuctionStatus.PENDING,
       auctioneer: userId,
       painting: card,
+      highestBid: 0,
     };
     return {
       ...state,
@@ -249,9 +250,14 @@ export const modernArtValidatorHelper = (state: ModernArtState, event: ModernArt
 export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): ModernArtState => {
   try {
     if (modernArtValidatorHelper(state, event)) {
-      return modernArtReducerHelper(state, event) || state;
+      const result = modernArtReducerHelper(state, event);
+      if (!result) {
+        console.warn('skipping invalid event', state, event);
+        return state;
+      }
+      return result;
     } else {
-      console.log(`event ${event} is invalid`);
+      console.warn('skipping failed validation event', state, event);
       return state;
     }
   } catch (e) {
