@@ -46,13 +46,15 @@ export const GameStateDisplayer: React.FC<{
           <button onClick={actions.startGame}>Start!</button>
         </div>
       )}
-      <div className={classes.nextButton}>
-        <button onClick={actions.step}>Next!</button>
-      </div>
+      {!gameState.roundStarted && (
+        <div className={classes.nextButton}>
+          <button onClick={actions.step}>Deal!</button>
+        </div>
+      )}
       <div>
         <table>
           <tr>
-            <th></th>
+            <th />
             {colors.map((i) => (
               <th>{i}</th>
             ))}

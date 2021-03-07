@@ -270,6 +270,7 @@ export const modernArtReducerHelper = (
         ...state,
         users: nUsers,
         roundIndex: state.roundIndex + 1,
+        roundStarted: false,
         rounds: {
           ...state.rounds,
           [state.roundIndex]: {
@@ -280,7 +281,7 @@ export const modernArtReducerHelper = (
                 score: userToScore[user.id],
               },
             })),
-            places: places,
+            places,
           },
           // new round
           [state.roundIndex + 1]: {
