@@ -1,7 +1,6 @@
 import _ from 'lodash';
 // @ts-ignore
 import pseudoRandom from 'pseudo-random';
-import {useRafState} from 'react-use';
 import {ModernArtState, ModernArtEvent, AuctionType, AuctionStatus} from './types';
 
 export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): ModernArtState => {
@@ -37,7 +36,8 @@ export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): 
     }
   }
   if (event.type === 'finish_auction') {
-    // give winner the painting, store in new rounds field
+    // winner gets the painting, winner pays the auctineer
+    // need to special case when winner = auctioneer
     const auctioneer = state.currentAuction.auctioneer;
     const winner = state.currentAuction.highestBidder || 'error';
     const payment = state.currentAuction.highestBid || state.currentAuction.fixedPrice || -1;
@@ -48,7 +48,6 @@ export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): 
       payment: payment,
     };
 
-    // need to handle case where winner = auctioneer
     return {
       ...state,
       users: {
@@ -140,12 +139,62 @@ export const modernArtReducer = (state: ModernArtState, event: ModernArtEvent): 
   }
 
   if (event.type === 'start_auction') {
+    const userId = event.params.userId;
+    const idx = event.params.idx;
+    const card = state.users[userId].cards[idx];
+    const color = state.users[userId].cards[idx].color;
+
+    // If fifth painting of this color, do not auction and end round
+    const count = _.filter(state.rounds[state.roundIndex].auctions, (x) => x.painting.color === color).length;
+    if (count === 5) {
+      // todo: give priority to lowest color
+      const auctions = state.rounds[state.roundIndex].auctions; // color: [painting]
+      const colorFreq = _.groupBy(auctions, (x) => x.painting.color);
+      const sortedColorFreq = _.sortBy(_.keys(colorFreq), (x) => -colorFreq[x].length);
+      // const sortedColorFreq = _.sortBy(colorFreq, [function(o) { return o.length; }]); // color: freq
+      return {
+        ...state,
+        // remove card
+        users: {
+          ...state.users,
+          [userId]: {
+            ...state.users[userId].cards.splice(idx, 1),
+          },
+        },
+        roundIndex: state.roundIndex + 1,
+        // new round
+        rounds: {
+          ...state.rounds,
+          [state.roundIndex + 1]: {
+            auctions: [],
+            users: _.map(state.users, (user) => ({
+              [user.id]: [],
+            })),
+          },
+        },
+      };
+    }
+
+    // round did not end
+    const auction = {
+      status: AuctionStatus.PENDING,
+      auctioneer: userId,
+      painting: card,
+    };
     return {
       ...state,
+      currentAuction: auction,
       users: {
         ...state.users,
-        [event.params.id]: {
-          ...state.users[event.params.id],
+        [userId]: {
+          ...state.users[userId].cards.splice(idx, 1),
+        },
+      },
+      rounds: {
+        ...state.rounds,
+        [state.roundIndex]: {
+          ...state.rounds[state.roundIndex],
+          auctions: state.rounds[state.roundIndex].auctions.concat(auction),
         },
       },
     };

@@ -16,21 +16,15 @@ export enum AuctionType {
   DOUBLE = 'DOUBLE',
 }
 
-export interface Painting {
-  painter: string;
-  id: number;
-}
-
 export enum AuctionStatus {
   PENDING = 'PENDING',
   CLOSED = 'CLOSED',
 }
 export interface Auction {
   status: AuctionStatus;
-  auctionType: AuctionType;
   auctioneer: string;
-  painting: Painting;
-  secondPainting?: Painting; // DOUBLE
+  painting: Card; // auctionType is on Card
+  secondPainting?: Card; // DOUBLE
   fixedPrice?: number; // FIXED
   highestBid?: number | null; // ONE_OFFER, HIDDEN, OPEN
   highestBidder?: string | null; // ONE_OFFER, HIDDEN, OPEN
@@ -44,7 +38,7 @@ export interface Round {
   users: {
     // might delete this
     [id: string]: {
-      acquiredArt: Painting[];
+      acquiredArt: Card[];
     };
   };
 }
@@ -69,6 +63,17 @@ export interface ModernArtState {
   currentAuction: Auction;
 }
 
+const firstAuction: Auction = {
+  status: AuctionStatus.PENDING,
+  auctioneer: 'cat',
+  painting: {
+    color: 'blue',
+    auctionType: AuctionType.OPEN,
+  },
+  highestBid: null,
+  highestBidder: null,
+};
+
 export const initialState: ModernArtState = {
   started: false,
   users: {
@@ -83,16 +88,11 @@ export const initialState: ModernArtState = {
   deck: [],
   roundIndex: 0,
   roundStarted: false,
-  rounds: {},
-  currentAuction: {
-    status: AuctionStatus.PENDING,
-    auctionType: AuctionType.OPEN,
-    auctioneer: 'cat',
-    painting: {
-      painter: 'sigrid',
-      id: 1,
+  rounds: {
+    '0': {
+      auctions: [firstAuction],
+      users: {},
     },
-    highestBid: null,
-    highestBidder: null,
   },
+  currentAuction: firstAuction,
 };
