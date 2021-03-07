@@ -363,6 +363,7 @@ export default class Player extends Component {
             selected={selected}
             direction={direction}
             onSetDirection={this._setDirection}
+            onChangeDirection={this._changeDirection}
             canSetDirection={this._canSetDirection}
             onSetSelected={this._setSelected}
             updateGrid={updateGrid}

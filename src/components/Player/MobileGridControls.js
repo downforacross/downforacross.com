@@ -182,7 +182,11 @@ export default class MobileGridControls extends GridControls {
       if (rc) {
         const [r, c] = rc.split(' ').map((x) => Number(x));
         console.log(rc);
-        this.props.onSetSelected({r, c});
+        if (this.props.selected.r === r && this.props.selected.c === c) {
+          this.props.onChangeDirection();
+        } else {
+          this.props.onSetSelected({r, c});
+        }
       }
       this.focusKeyboard();
     }
@@ -314,7 +318,7 @@ export default class MobileGridControls extends GridControls {
     const {scale, translateX, translateY} = this.state.transform;
     const style = {
       transform: `translate(${translateX}px, ${translateY}px) scale(${scale})`,
-      transition: this.state.anchors.length === 0 ? '.3s transform ease-out' : '',
+      transition: this.state.anchors.length === 0 ? '.1s transform ease-out' : '',
     };
     return (
       <div
