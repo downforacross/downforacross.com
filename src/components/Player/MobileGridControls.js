@@ -296,14 +296,20 @@ export default class MobileGridControls extends GridControls {
       transition: this.state.anchors.length === 0 ? '.3s transform ease-out' : '',
     };
     return (
-      <Flex
-        grow={1}
-        shrink={1}
-        basis={1}
+      <div
+        style={{
+          display: 'flex',
+          flex: 1,
+          flexShrink: 1,
+          flexBasis: 1,
+        }}
         className="mobile-grid-controls--grid-content"
-        onTouchStart={this.handleTouchStart}
-        onTouchMove={this.handleTouchMove}
-        onTouchEnd={this.handleTouchEnd}
+        ref={(e) => {
+          if (!e) return;
+          e.addEventListener('touchStart', this.handleTouchStart, {passive: false});
+          e.addEventListener('touchMove', this.handleTouchMove, {passive: false});
+          e.addEventListener('touchEnd', this.handleTouchEnd, {passive: false});
+        }}
       >
         <div
           style={{display: 'flex', flexGrow: 1}}
@@ -314,7 +320,7 @@ export default class MobileGridControls extends GridControls {
             {this.props.children}
           </Flex>
         </div>
-      </Flex>
+      </div>
     );
   }
 
@@ -339,13 +345,19 @@ export default class MobileGridControls extends GridControls {
           onTouchEnd={this.handleLeftArrowTouchEnd}
           onClick={this.keepFocus}
         />
-        <Flex
-          grow={1}
-          vAlignContent="center"
+        <div
+          style={{
+            display: 'flex',
+            flexGrow: 1,
+            alignItems: 'center',
+          }}
           className={classnames('mobile-grid-controls--clue-bar', {touching: this.state.touchingClueBar})}
-          onTouchStart={this.handleClueBarTouchStart}
-          onTouchEnd={this.handleClueBarTouchEnd}
-          onTouchMove={this.handleClueBarTouchMove}
+          ref={(e) => {
+            if (!e) return;
+            e.addEventListener('touchStart', this.handleClueBarTouchStart, {passive: false});
+            e.addEventListener('touchEnd', this.handleClueBarTouchEnd, {passive: false});
+            e.addEventListener('touchMove', this.handleClueBarTouchMove, {passive: false});
+          }}
           onClick={this.keepFocus}
         >
           <div className="mobile-grid-controls--clue-bar--clues--container" style={style}>
@@ -366,7 +378,7 @@ export default class MobileGridControls extends GridControls {
               </Flex>
             </div>
           </div>
-        </Flex>
+        </div>
         <MdKeyboardArrowRight
           className="mobile-grid-controls--intra-clue left"
           onClick={this.keepFocus}
