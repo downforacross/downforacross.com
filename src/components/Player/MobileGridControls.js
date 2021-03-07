@@ -363,7 +363,7 @@ export default class MobileGridControls extends GridControls {
     return (
       <Flex className="mobile-grid-controls--clue-bar-container">
         <div
-          ref={(e) => e && e.addEventListener('touchEnd', this.handleLeftArrowTouchEnd, {passive: false})}
+          ref={(e) => e && e.addEventListener('touchend', this.handleLeftArrowTouchEnd, {passive: false})}
           style={{display: 'flex'}}
         >
           <MdKeyboardArrowLeft className="mobile-grid-controls--intra-clue left" onClick={this.keepFocus} />
@@ -403,7 +403,7 @@ export default class MobileGridControls extends GridControls {
           </div>
         </div>
         <div
-          ref={(e) => e && e.addEventListener('touchEnd', this.handleRightArrowTouchEnd, {passive: false})}
+          ref={(e) => e && e.addEventListener('touchend', this.handleRightArrowTouchEnd, {passive: false})}
           style={{display: 'flex'}}
         >
           <MdKeyboardArrowRight className="mobile-grid-controls--intra-clue left" onClick={this.keepFocus} />
