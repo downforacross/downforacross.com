@@ -46,26 +46,26 @@ export const modernArtReducerHelper = (
   }
   if (event.type === 'submit_bid') {
     if (!state.currentAuction) return undefined;
-    if (event.params.bidAmount > (state.currentAuction.highestBid ?? 0)) {
-      return {
-        ...state,
-        currentAuction: {
-          ...state.currentAuction,
-          highestBidder: event.params.userId,
-          highestBid: event.params.bidAmount,
+    // if (event.params.bidAmount > (state.currentAuction.highestBid ?? 0)) {
+    return {
+      ...state,
+      currentAuction: {
+        ...state.currentAuction,
+        highestBidder: event.params.userId,
+        highestBid: event.params.bidAmount,
+      },
+      log: [
+        ...state.log,
+        {
+          hhmm,
+          text:
+            state.currentAuction.painting.auctionType === AuctionType.HIDDEN
+              ? `${user.name} has submitted a bid`
+              : `${user.name} has submitted a bid for ${event.params.bidAmount}`,
         },
-        log: [
-          ...state.log,
-          {
-            hhmm,
-            text:
-              state.currentAuction.painting.auctionType === AuctionType.HIDDEN
-                ? `${user.name} has submitted a bid`
-                : `${user.name} has submitted a bid for ${event.params.bidAmount}`,
-          },
-        ],
-      };
-    }
+      ],
+    };
+    // }
   }
   if (event.type === 'finish_auction') {
     if (!state.currentAuction) return undefined;
