@@ -47,7 +47,8 @@ export default class MobileGridControls extends GridControls {
     if (scale < 1) scale = 1;
     const minTranslateX = -rect.width * (scale - 1);
     const maxTranslateX = 0;
-    const minTranslateY = -rect.height * (scale - 1);
+    const minTranslateY = translateY; // never auto-pan back up, because iOS soft keyboard is insane
+    // https://blog.opendigerati.com/the-eccentric-ways-of-ios-safari-with-the-keyboard-b5aa3f34228d
     const maxTranslateY = 0;
     translateX = _.clamp(translateX, minTranslateX, maxTranslateX);
     translateY = _.clamp(translateY, minTranslateY, maxTranslateY);
