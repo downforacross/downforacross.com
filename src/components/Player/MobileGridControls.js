@@ -25,7 +25,7 @@ export default class MobileGridControls extends GridControls {
     this.inputRef = React.createRef();
     this.zoomContainer = React.createRef();
     this.wasUnfocused = Date.now() - 1000;
-    this.lastPan = Date.now();
+    this.lastTouchMove = Date.now();
   }
 
   componentDidUpdate(prevProps) {
@@ -133,6 +133,7 @@ export default class MobileGridControls extends GridControls {
     if (e.touches.length === 2) {
       this.props.onSetCursorLock(true);
     }
+    this.lastTouchStart = Date.now();
     this.handleTouchMove(e);
   };
 
@@ -157,7 +158,7 @@ export default class MobileGridControls extends GridControls {
     });
     const nTransform = this.getTransform(anchors, transform);
     if (nTransform) {
-      this.lastPan = Date.now();
+      this.lastTouchMove = Date.now();
     }
 
     this.setState({
@@ -167,7 +168,7 @@ export default class MobileGridControls extends GridControls {
   };
 
   handleTouchEnd = (e) => {
-    if (e.touches.length === 0 && this.state.anchors.length === 1 && this.lastPan < Date.now() - 200) {
+    if (e.touches.length === 0 && this.state.anchors.length === 1 && this.lastTouchStart > Date.now() - 100) {
       this.props.onSetCursorLock(false);
       let el = e.target; // a descendant of grid for sure
       let rc;
