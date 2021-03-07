@@ -4,6 +4,8 @@ import {makeStyles} from '@material-ui/core';
 import _ from 'lodash';
 import {PlayerActions} from '../usePlayerActions';
 import {ModernArtState, AuctionType, AuctionStatus, colors} from '../events/types';
+import {Log} from './Log';
+import Confetti from '../../Game/Confetti';
 
 /**
  * This component is parallel to Game -- will render a <Player/>
@@ -37,6 +39,7 @@ export const GameStateDisplayer: React.FC<{
 
   return (
     <div className={classes.gameStateDisplayerContainer}>
+      <Log log={gameState.log} />
       {!gameState.started && (
         <div className={classes.startButton}>
           Click Start!
@@ -53,11 +56,6 @@ export const GameStateDisplayer: React.FC<{
             {colors.map((i) => (
               <th>{i}</th>
             ))}
-            {/* <th>Yellow</th>
-            <th>Blue</th>
-            <th>Red</th>
-            <th>Green</th>
-            <th>Purple</th> */}
           </tr>
           {_.values(gameState.rounds).map((round, i) => (
             <tr>
@@ -67,19 +65,16 @@ export const GameStateDisplayer: React.FC<{
               ))}
             </tr>
           ))}
-          {/* <tr>
-            <td>Round 1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-          </tr> */}
         </table>
       </div>
+      {!gameState.roundStarted && (
+        <div className={classes.nextButton}>
+          <button onClick={actions.step}>Deal!</button>
+        </div>
+      )}
       {gameState.started && <div className={classes.message}>Game has Started</div>}
       <div className={classes.usersList}>
-        {users.length} users here
+        <h3>{users.length} players</h3>
         {users.map((user, i) => (
           <div key={i}>
             {user.icon}
@@ -120,12 +115,6 @@ export const GameStateDisplayer: React.FC<{
             </h3>
           )}
 
-          {gameState.currentAuction.status === AuctionStatus.PENDING && (
-            <div>
-              <input type="text" onChange={handleInputChange} value={currentBid || ''} />
-              <button onClick={submitBid}> Submit Bid </button>
-            </div>
-          )}
           {gameState.currentAuction.status === AuctionStatus.CLOSED && (
             <div>
               <h1>
@@ -135,13 +124,23 @@ export const GameStateDisplayer: React.FC<{
               </h1>
             </div>
           )}
+
+          {gameState.currentAuction.status === AuctionStatus.PENDING && (
+            <div>
+              <input type="text" onChange={handleInputChange} value={currentBid || ''} />
+              <button onClick={submitBid}> Submit Bid </button>
+            </div>
+          )}
+          {gameState.currentAuction.status === AuctionStatus.PENDING && (
+            <button onClick={finishAuction}> Finish Auction </button>
+          )}
         </div>
       )}
-      <div>
-        <button onClick={finishAuction}> Finish Auction </button>
-      </div>
+      {gameState.currentAuction?.status === AuctionStatus.CLOSED && <Confetti duration={1500} />}
     </div>
   );
+  // todo confetti
+  // todo hammer
 };
 
 const useStyles = makeStyles({

@@ -1,6 +1,7 @@
 export interface ModernArtEvent {
   type: 'start_game' | 'update_name' | 'step' | 'start_auction' | 'submit_bid' | 'finish_auction';
   params: any;
+  timestamp?: number | object;
 }
 
 interface Card {
@@ -46,6 +47,10 @@ export interface Round {
   places?: {[color: string]: number};
 }
 
+export interface LogMessage {
+  text: string;
+  hhmm: string;
+}
 export interface ModernArtState {
   started: boolean;
   deck: Card[];
@@ -63,19 +68,9 @@ export interface ModernArtState {
   rounds: {
     [id: string]: Round;
   };
-  currentAuction: Auction;
+  currentAuction?: Auction;
+  log: LogMessage[];
 }
-
-const firstAuction: Auction = {
-  status: AuctionStatus.PENDING,
-  auctioneer: 'cat',
-  painting: {
-    color: 'blue',
-    auctionType: AuctionType.OPEN,
-  },
-  highestBid: null,
-  highestBidder: null,
-};
 
 export const initialState: ModernArtState = {
   started: false,
@@ -93,9 +88,14 @@ export const initialState: ModernArtState = {
   roundStarted: false,
   rounds: {
     '0': {
-      auctions: [firstAuction],
+      auctions: [],
       users: {},
     },
   },
-  currentAuction: firstAuction,
+  log: [
+    {
+      hhmm: '--:--',
+      text: 'Welcome to modern art!',
+    },
+  ],
 };
