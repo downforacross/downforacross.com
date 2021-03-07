@@ -57,14 +57,16 @@ export const GameStateDisplayer: React.FC<{
               {user.cards.map((card, j) => (
                 <div className={classes.card}>
                   <div className={classes.cardHeader} style={{backgroundColor: card.color}} />
-                  {card.auctionType}
-                  <button
-                    onClick={() => {
-                      actions.startAuction(j);
-                    }}
-                  >
-                    Play this card
-                  </button>
+                  <div className={classes.cardBody}>
+                    <div>{card.auctionType}</div>
+                    <button
+                      onClick={() => {
+                        actions.startAuction(j);
+                      }}
+                    >
+                      Play
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -129,31 +131,34 @@ const useStyles = makeStyles({
     flexDirection: 'column',
   },
   card: {
+    padding: 16,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    width: 100,
-    height: 200,
+    width: 40,
+    height: 80,
     backgroundColor: '#CCC',
     color: '#333',
-    fontSize: 24,
-    marginLeft: 24,
-    '&:hover button': {
-      display: 'block',
-    },
+    marginLeft: 10,
     '& button': {
-      display: 'none',
+      fontSize: '10pt',
     },
+    fontSize: '10pt',
   },
   cardHeader: {
-    height: 50,
+    height: 40,
     alignSelf: 'stretch',
   },
-
+  cardBody: {
+    marginTop: 8,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
   usersList: {
     display: 'flex',
     flexDirection: 'column',
-    '& div': {
+    '& > div': {
       padding: 12,
     },
   },

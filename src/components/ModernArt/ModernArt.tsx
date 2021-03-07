@@ -118,48 +118,4 @@ const useStyles = makeStyles({
     height: '100%',
     flexDirection: 'column',
   },
-  startButton: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  nextButton: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  message: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  card: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    width: 100,
-    height: 200,
-    backgroundColor: '#CCC',
-    color: '#333',
-    fontSize: 24,
-    marginLeft: 24,
-    '&:hover button': {
-      display: 'block',
-    },
-    '& button': {
-      display: 'none',
-    },
-  },
-  cardHeader: {
-    height: 50,
-    alignSelf: 'stretch',
-  },
-
-  usersList: {
-    display: 'flex',
-    flexDirection: 'column',
-    '& div': {
-      padding: 12,
-    },
-  },
-  cards: {
-    display: 'flex',
-  },
 });
