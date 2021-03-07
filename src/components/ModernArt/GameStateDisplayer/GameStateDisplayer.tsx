@@ -77,7 +77,7 @@ export const GameStateDisplayer: React.FC<{
         <table>
           <tr>
             {_.values(gameState.users).map((user) => (
-              <th>{user.id}</th>
+              <th>{user.name}</th>
             ))}
           </tr>
           <tr>
