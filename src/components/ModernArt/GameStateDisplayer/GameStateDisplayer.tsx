@@ -102,7 +102,7 @@ export const GameStateDisplayer: React.FC<{
         ))}
       </div>
       {gameState.currentAuction && (
-        <div>
+        <div className={classes.auctionStatus}>
           <h1>
             Player {gameState.users[gameState.currentAuction.auctioneer]?.name} is holding a{' '}
             {gameState.currentAuction.painting.auctionType} auction for a{' '}
@@ -116,20 +116,19 @@ export const GameStateDisplayer: React.FC<{
           )}
 
           {gameState.currentAuction.status === AuctionStatus.PENDING && (
-            <div>
+            <span className={classes.submitBidForm}>
               <input type="text" onChange={handleInputChange} value={currentBid || ''} />
               <button onClick={submitBid}> Submit Bid </button>
-            </div>
+            </span>
           )}
           {gameState.currentAuction.status === AuctionStatus.PENDING && (
-            <button onClick={finishAuction}> Finish Auction </button>
+            <button onClick={finishAuction}> Finish Auction 👩‍⚖️</button>
           )}
         </div>
       )}
       {gameState.currentAuction?.status === AuctionStatus.CLOSED && <Confetti duration={1500} />}
     </div>
   );
-  // todo confetti
   // todo hammer
 };
 
@@ -186,5 +185,19 @@ const useStyles = makeStyles({
   },
   cards: {
     display: 'flex',
+  },
+  auctionStatus: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    '& > *': {
+      marginTop: 8,
+    },
+  },
+  submitBidForm: {
+    display: 'flex',
+    '& > button': {
+      marginLeft: 4,
+    },
   },
 });
