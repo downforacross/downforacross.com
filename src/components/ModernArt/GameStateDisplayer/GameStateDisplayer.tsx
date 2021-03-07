@@ -57,7 +57,7 @@ export const GameStateDisplayer: React.FC<{
       <div>
         <table>
           <tr>
-            <th></th>
+            <td />
             {colors.map((i) => (
               <th>{i}</th>
             ))}
