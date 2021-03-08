@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 import clsx from 'clsx';
+import Tooltip from '@material-ui/core/Tooltip';
 import Emoji from '../common/Emoji';
 import powerups from '../../lib/powerups';
 import {Ping, CellStyles} from './types';
@@ -240,64 +241,70 @@ export default class Cell extends React.Component<Props> {
     const val = value || '';
 
     const l = Math.max(1, val.length);
+
+    const displayNames = this.props.cursors.map((cursor) => cursor.displayName).join(', ');
+
     const style = this.getStyle();
+
     return (
-      <div
-        className={clsx('cell', {
-          selected,
-          highlighted,
-          referenced,
-          shaded,
-          bad,
-          good,
-          revealed,
-          pencil,
-        })}
-        style={style}
-        onClick={this.handleClick}
-        onContextMenu={this.handleRightClick}
-        onTouchStart={(e) => {
-          const touch = e.touches[e.touches.length - 1];
-          this.touchStart = {pageX: touch.pageX, pageY: touch.pageY};
-        }}
-        onTouchEnd={(e) => {
-          if (e.changedTouches.length !== 1 || e.touches.length !== 0) return;
-          const touch = e.changedTouches[0];
-          if (
-            !this.touchStart ||
-            (Math.abs(touch.pageX - this.touchStart.pageX) < 5 &&
-              Math.abs(touch.pageY - this.touchStart.pageY) < 5)
-          ) {
-            onClick(this.props.r, this.props.c);
-          }
-        }}
-      >
-        <div className="cell--wrapper">
-          <div
-            className={clsx('cell--number', {
-              nonempty: !!number,
-            })}
-          >
-            {number}
+      <Tooltip title={displayNames}>
+        <div
+          className={clsx('cell', {
+            selected,
+            highlighted,
+            referenced,
+            shaded,
+            bad,
+            good,
+            revealed,
+            pencil,
+          })}
+          style={style}
+          onClick={this.handleClick}
+          onContextMenu={this.handleRightClick}
+          onTouchStart={(e) => {
+            const touch = e.touches[e.touches.length - 1];
+            this.touchStart = {pageX: touch.pageX, pageY: touch.pageY};
+          }}
+          onTouchEnd={(e) => {
+            if (e.changedTouches.length !== 1 || e.touches.length !== 0) return;
+            const touch = e.changedTouches[0];
+            if (
+              !this.touchStart ||
+              (Math.abs(touch.pageX - this.touchStart.pageX) < 5 &&
+                Math.abs(touch.pageY - this.touchStart.pageY) < 5)
+            ) {
+              onClick(this.props.r, this.props.c);
+            }
+          }}
+        >
+          <div className="cell--wrapper">
+            <div
+              className={clsx('cell--number', {
+                nonempty: !!number,
+              })}
+            >
+              {number}
+            </div>
+            {this.renderFlipButton()}
+            {this.renderCircle()}
+            {this.renderShade()}
+            {this.renderPickup()}
+            {this.renderSolvedBy()}
+            <div
+              className="cell--value"
+              style={{
+                fontSize: `${350 / Math.sqrt(l)}%`,
+                lineHeight: `${Math.sqrt(l) * 98}%`,
+              }}
+            >
+              {val}
+            </div>
           </div>
-          {this.renderFlipButton()}
-          {this.renderCircle()}
-          {this.renderShade()}
-          {this.renderPickup()}
-          {this.renderSolvedBy()}
-          <div
-            className="cell--value"
-            style={{
-              fontSize: `${350 / Math.sqrt(l)}%`,
-              lineHeight: `${Math.sqrt(l) * 98}%`,
-            }}
-          >
-            {val}
-          </div>
+          {this.renderCursors()}
+          {this.renderPings()}
         </div>
-        {this.renderCursors()}
-        {this.renderPings()}
-      </div>
+      </Tooltip>
     );
   }
 }

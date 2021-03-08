@@ -61,6 +61,7 @@ export interface Cursor {
   timestamp: number;
   color?: string;
   active?: boolean;
+  displayName?: string;
 }
 
 /**
