@@ -315,6 +315,7 @@ export default class Player extends Component {
         ...cursor,
         active: cursor.timestamp > currentTime - CURSOR_TIMEOUT,
         color: users[cursor.id]?.color || 'blue',
+        displayName: users[cursor.id]?.displayName || '',
       }));
     const pings = allPings
       .map((ping) => ({
