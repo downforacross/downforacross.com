@@ -21,6 +21,7 @@ export const FencingScoreboard: React.FC<{
 }> = (props) => {
   const classes = useStyles();
   // const allCells = _.flatten(props.gameState.game?.grid);
+  // TODO buttons need to be icons / dropdown menu once team names are editable
   const switchTeamsButton = (
     <button
       onClick={() => {
@@ -80,7 +81,7 @@ export const FencingScoreboard: React.FC<{
                 {userId === props.currentUserId ? changeNameButton : null}
               </td>
               <td>
-                {user.teamId}
+                {user.teamId ? props.gameState.teams[user.teamId]?.name : 'Spectating'}
                 {` `}
                 {userId === props.currentUserId ? switchTeamsButton : null}
                 {` `}

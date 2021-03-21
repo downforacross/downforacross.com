@@ -13,6 +13,7 @@ export interface GameState {
         color: string;
         score: number;
         guesses: number;
+        name: string;
       }
     >
   >;
