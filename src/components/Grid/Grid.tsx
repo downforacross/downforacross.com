@@ -6,17 +6,8 @@ import GridWrapper from '../../lib/wrappers/GridWrapper';
 import RerenderBoundary from '../RerenderBoundary';
 import {hashGridRow} from './hashGridRow';
 import Cell from './Cell';
-import {
-  GridDataWithColor,
-  CellCoords,
-  CellIndex,
-  ClueCoords,
-  BattlePickup,
-  toCellIndex,
-  CellStyles,
-  Ping,
-} from './types';
-import {Cursor, GridData} from '../../shared/types';
+import {GridDataWithColor, CellCoords, ClueCoords, BattlePickup, CellStyles, Ping} from './types';
+import {CellIndex, Cursor, GridData, toCellIndex} from '../../shared/types';
 
 interface GridProps {
   // Grid data

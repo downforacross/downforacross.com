@@ -2,8 +2,8 @@
  * Perhaps this whole file could live elsewhere, e.g. Player/transformGameToPlayerProps?
  * */
 import _ from 'lodash';
-import {CluesJson, GameJson, Cursor, GridData, UserJson} from '../../shared/types';
-import {CellCoords, CellIndex, Ping} from '../Grid/types';
+import {CluesJson, GameJson, Cursor, GridData, UserJson, CellIndex} from '../../shared/types';
+import {CellCoords, Ping} from '../Grid/types';
 import {PlayerActions} from './usePlayerActions';
 
 interface PlayerProps {
@@ -60,6 +60,7 @@ export const transformGameToPlayerProps = (
 ): PlayerProps => {
   const clues = teamId ? applyClueVisibility(game.teamClueVisibility![teamId], game.clues) : game.clues;
   const cursors = _.compact(users.map((user) => user.cursor));
+  debugger;
   return {
     ...playerActions,
     beta: true,
@@ -68,8 +69,8 @@ export const transformGameToPlayerProps = (
       ? applyClueVisibilityToGrid(game.teamClueVisibility![teamId], game.teamGrids![teamId])
       : game.grid,
     solution: game.solution,
-    circles: [],
-    shades: [],
+    circles: game.circles,
+    shades: game.shades,
     clues,
     id,
     cursors,
