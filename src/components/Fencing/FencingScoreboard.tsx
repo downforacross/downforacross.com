@@ -68,7 +68,14 @@ export const FencingScoreboard: React.FC<{
               className={userId === props.currentUserId ? 'fencing-scoreboard--current-user' : ''}
             >
               <td>
-                {user.displayName}
+                <span
+                  style={{
+                    fontWeight: userId === props.currentUserId ? 'bold' : 'initial',
+                    color: props.gameState.teams[user.teamId ?? 0]?.color,
+                  }}
+                >
+                  {user.displayName}
+                </span>
                 {` `}
                 {userId === props.currentUserId ? changeNameButton : null}
               </td>

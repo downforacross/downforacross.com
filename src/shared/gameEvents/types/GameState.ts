@@ -6,4 +6,14 @@ export interface GameState {
   users: {
     [id: string]: UserJson;
   };
+  teams: Partial<
+    Record<
+      string,
+      {
+        color: string;
+        score: number;
+        guesses: number;
+      }
+    >
+  >;
 }
