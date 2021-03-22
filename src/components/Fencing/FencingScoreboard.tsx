@@ -92,6 +92,30 @@ export const FencingScoreboard: React.FC<{
       isCurrent: user.id === props.currentUserId,
     })),
   ]);
+  const spectators = _.values(props.gameState.users).filter((user) => user.teamId === 0);
+  const spectatorRows: {
+    nameEl: React.ReactNode;
+    score?: number;
+    guesses?: number;
+    isCurrent?: boolean;
+  }[] = _.isEmpty(spectators)
+    ? []
+    : [
+        {
+          nameEl: (
+            <span
+              style={{
+                fontWeight: 'bold',
+              }}
+            >
+              Spectators
+            </span>
+          ),
+        },
+        ...spectators.map((user) => ({
+          nameEl: <span>{user.displayName}</span>,
+        })),
+      ];
   return (
     <div className={classes.fencingScoreboardContainer}>
       <h2>Fencing</h2>
@@ -102,7 +126,7 @@ export const FencingScoreboard: React.FC<{
             <th>Score</th>
             <th>Guesses</th>
           </tr>
-          {_.map(rows, ({nameEl, score, guesses, isCurrent}, i) => (
+          {_.map([...rows, ...spectatorRows], ({nameEl, score, guesses, isCurrent}, i) => (
             <tr key={i} className={isCurrent ? 'fencing-scoreboard--current-user' : ''}>
               <td>{nameEl}</td>
               <td>{score}</td>
