@@ -39,7 +39,7 @@ export const toCellIndex = (r: number, c: number, cols: number) => (r * cols + c
 export interface GameJson {
   info: InfoJson;
   grid: GridData;
-  teamGrids?: Record<number, GridData>;
+  teamGrids?: Record<number, GridData>; // TODO move to fencingState.teams[number].grid
   teamClueVisibility?: Record<
     number,
     {
@@ -54,6 +54,7 @@ export interface GameJson {
 }
 
 export interface UserJson {
+  id: string;
   cursor?: Cursor;
   displayName: string;
   teamId?: number;
