@@ -20,7 +20,6 @@ export const FencingScoreboard: React.FC<{
   changeName(newName: string): void;
 }> = (props) => {
   const classes = useStyles();
-  // const allCells = _.flatten(props.gameState.game?.grid);
   // TODO buttons need to be icons / dropdown menu once team names are editable
   const switchTeamsButton = (
     <button
@@ -52,6 +51,47 @@ export const FencingScoreboard: React.FC<{
       Edit
     </button>
   );
+  const teamData = _.keys(props.gameState.teams).map((teamId) => ({
+    team: props.gameState.teams[teamId]!,
+    users: _.values(props.gameState.users).filter((user) => String(user.teamId) === teamId),
+  }));
+  const rows: {
+    nameEl: React.ReactNode;
+    score?: number;
+    guesses?: number;
+    isCurrent?: boolean;
+  }[] = _.flatMap(teamData, ({team, users}) => [
+    {
+      nameEl: (
+        <span
+          style={{
+            fontWeight: 'bold',
+            color: team.color,
+          }}
+        >
+          {team.name}
+        </span>
+      ),
+      score: team.score,
+      guesses: team.guesses,
+    },
+    ...users.map((user) => ({
+      nameEl: (
+        <>
+          <span>{user.displayName}</span>
+          {` `}
+          {user.id === props.currentUserId ? changeNameButton : null}
+          {` `}
+          {user.id === props.currentUserId ? switchTeamsButton : null}
+          {` `}
+          {user.id === props.currentUserId ? spectateButton : null}
+        </>
+      ),
+      score: user.score,
+      guesses: user.misses,
+      isCurrent: user.id === props.currentUserId,
+    })),
+  ]);
   return (
     <div className={classes.fencingScoreboardContainer}>
       <h2>Fencing</h2>
@@ -59,36 +99,14 @@ export const FencingScoreboard: React.FC<{
         <tbody>
           <tr>
             <th>Player</th>
-            <th>Team</th>
             <th>Score</th>
             <th>Guesses</th>
           </tr>
-          {_.map(props.gameState.users, (user, userId) => (
-            <tr
-              key={userId}
-              className={userId === props.currentUserId ? 'fencing-scoreboard--current-user' : ''}
-            >
-              <td>
-                <span
-                  style={{
-                    fontWeight: userId === props.currentUserId ? 'bold' : 'initial',
-                    color: props.gameState.teams[user.teamId ?? 0]?.color,
-                  }}
-                >
-                  {user.displayName}
-                </span>
-                {` `}
-                {userId === props.currentUserId ? changeNameButton : null}
-              </td>
-              <td>
-                {user.teamId ? props.gameState.teams[user.teamId]?.name : 'Spectating'}
-                {` `}
-                {userId === props.currentUserId ? switchTeamsButton : null}
-                {` `}
-                {userId === props.currentUserId ? spectateButton : null}
-              </td>
-              <td>{user.score}</td>
-              <td>{user.misses}</td>
+          {_.map(rows, ({nameEl, score, guesses, isCurrent}, i) => (
+            <tr key={i} className={isCurrent ? 'fencing-scoreboard--current-user' : ''}>
+              <td>{nameEl}</td>
+              <td>{score}</td>
+              <td>{guesses}</td>
             </tr>
           ))}
           {/* <tr>
