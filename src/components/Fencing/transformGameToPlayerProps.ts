@@ -60,7 +60,6 @@ export const transformGameToPlayerProps = (
 ): PlayerProps => {
   const clues = teamId ? applyClueVisibility(game.teamClueVisibility![teamId], game.clues) : game.clues;
   const cursors = _.compact(users.map((user) => user.cursor));
-  debugger;
   return {
     ...playerActions,
     beta: true,
