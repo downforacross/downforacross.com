@@ -165,12 +165,12 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
                 },
               });
             }}
-            switchTeams={() => {
+            joinTeam={(teamId: number) => {
               sendEvent({
                 type: 'updateTeamId',
                 params: {
                   id,
-                  teamId: teamId ? 3 - teamId : 1,
+                  teamId,
                 },
               });
             }}

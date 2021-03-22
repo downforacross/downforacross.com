@@ -10,6 +10,7 @@ export interface GameState {
     Record<
       string,
       {
+        id: number;
         color: string;
         score: number;
         guesses: number;

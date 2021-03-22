@@ -11,32 +11,29 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     alignItems: 'center',
   },
+  name: {
+    '& span': {
+      display: 'flex',
+      justifyContent: 'space-between',
+    },
+  },
 });
 export const FencingScoreboard: React.FC<{
   gameState: GameState;
   currentUserId: string;
-  switchTeams(): void;
+  joinTeam(teamId: number): void;
   spectate(): void;
   changeName(newName: string): void;
 }> = (props) => {
   const classes = useStyles();
   // TODO buttons need to be icons / dropdown menu once team names are editable
-  const switchTeamsButton = (
-    <button
-      onClick={() => {
-        props.switchTeams();
-      }}
-    >
-      Switch
-    </button>
-  );
   const spectateButton = (
     <button
       onClick={() => {
         props.spectate();
       }}
     >
-      Spectate
+      Leave Team
     </button>
   );
   const changeNameButton = (
@@ -55,6 +52,7 @@ export const FencingScoreboard: React.FC<{
     team: props.gameState.teams[teamId]!,
     users: _.values(props.gameState.users).filter((user) => String(user.teamId) === teamId),
   }));
+  const currentUser = _.values(props.gameState.users).find((user) => user.id === props.currentUserId);
   const rows: {
     nameEl: React.ReactNode;
     score?: number;
@@ -69,7 +67,16 @@ export const FencingScoreboard: React.FC<{
             color: team.color,
           }}
         >
-          {team.name}
+          {team.name} {currentUser?.teamId === team.id && spectateButton}
+          {currentUser?.teamId === 0 && (
+            <button
+              onClick={() => {
+                props.joinTeam(team.id);
+              }}
+            >
+              Join Team
+            </button>
+          )}
         </span>
       ),
       score: team.score,
@@ -81,10 +88,6 @@ export const FencingScoreboard: React.FC<{
           <span>{user.displayName}</span>
           {` `}
           {user.id === props.currentUserId ? changeNameButton : null}
-          {` `}
-          {user.id === props.currentUserId ? switchTeamsButton : null}
-          {` `}
-          {user.id === props.currentUserId ? spectateButton : null}
         </>
       ),
       score: user.score,
@@ -128,7 +131,7 @@ export const FencingScoreboard: React.FC<{
           </tr>
           {_.map([...rows, ...spectatorRows], ({nameEl, score, guesses, isCurrent}, i) => (
             <tr key={i} className={isCurrent ? 'fencing-scoreboard--current-user' : ''}>
-              <td>{nameEl}</td>
+              <td className={classes.name}>{nameEl}</td>
               <td>{score}</td>
               <td>{guesses}</td>
             </tr>
