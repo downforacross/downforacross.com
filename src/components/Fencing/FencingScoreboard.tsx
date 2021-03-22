@@ -11,11 +11,14 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     alignItems: 'center',
   },
-  name: {
-    '& span': {
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
+  teamName: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  userName: {
+    marginLeft: 20,
+    display: 'flex',
+    justifyContent: 'space-between',
   },
 });
 export const FencingScoreboard: React.FC<{
@@ -61,13 +64,16 @@ export const FencingScoreboard: React.FC<{
   }[] = _.flatMap(teamData, ({team, users}) => [
     {
       nameEl: (
-        <span
-          style={{
-            fontWeight: 'bold',
-            color: team.color,
-          }}
-        >
-          {team.name} {currentUser?.teamId === team.id && spectateButton}
+        <span className={classes.teamName}>
+          <span
+            style={{
+              fontWeight: 'bold',
+              color: team.color,
+            }}
+          >
+            {team.name}
+          </span>
+          {currentUser?.teamId === team.id && spectateButton}
           {currentUser?.teamId === 0 && (
             <button
               onClick={() => {
@@ -84,11 +90,11 @@ export const FencingScoreboard: React.FC<{
     },
     ...users.map((user) => ({
       nameEl: (
-        <>
+        <span className={classes.userName}>
           <span>{user.displayName}</span>
           {` `}
           {user.id === props.currentUserId ? changeNameButton : null}
-        </>
+        </span>
       ),
       score: user.score,
       guesses: user.misses,
@@ -117,6 +123,7 @@ export const FencingScoreboard: React.FC<{
         },
         ...spectators.map((user) => ({
           nameEl: <span>{user.displayName}</span>,
+          isCurrent: user.id === props.currentUserId,
         })),
       ];
   return (
@@ -131,7 +138,7 @@ export const FencingScoreboard: React.FC<{
           </tr>
           {_.map([...rows, ...spectatorRows], ({nameEl, score, guesses, isCurrent}, i) => (
             <tr key={i} className={isCurrent ? 'fencing-scoreboard--current-user' : ''}>
-              <td className={classes.name}>{nameEl}</td>
+              <td>{nameEl}</td>
               <td>{score}</td>
               <td>{guesses}</td>
             </tr>
