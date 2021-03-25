@@ -210,6 +210,9 @@ export default class GridControls extends Component {
         this.selectNextClue(true);
       } else if (key === 'i') {
         onVimInsert && onVimInsert();
+      } else if (key === 's') {
+        this.handleAction('delete', shiftKey);
+        onVimInsert && onVimInsert();
       }
     } else if (key === '.') {
       onPressPeriod && onPressPeriod();
