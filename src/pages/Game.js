@@ -350,6 +350,7 @@ export default class Game extends Component {
           this.chat = c;
         }}
         info={this.game.info}
+        path={this.gameModel.path}
         data={this.game.chat}
         users={this.game.users}
         id={id}

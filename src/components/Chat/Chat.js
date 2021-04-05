@@ -78,6 +78,14 @@ export default class Chat extends Component {
     this.props.onToggleChat();
   };
 
+  handleCopyClick = () => {
+    navigator.clipboard.writeText(`${window.location.host}/beta${this.props.path}`);
+    let link = document.getElementById('pathText');
+    link.classList.remove('flashBlue');
+    void link.offsetWidth;
+    link.classList.add('flashBlue');
+  };
+
   focus = () => {
     const chatBar = this.chatBar.current;
     if (chatBar) {
@@ -113,9 +121,7 @@ export default class Chat extends Component {
     if (!this.props.mobile) return;
     return (
       <Flex className="toolbar--mobile" vAlignContent="center">
-        <Link to="/">Down for a Cross</Link> 
-        {' '}
-        {this.renderGameButton()}
+        <Link to="/">Down for a Cross</Link> {this.renderGameButton()}
       </Flex>
     );
   }
@@ -172,8 +178,7 @@ export default class Chat extends Component {
     return (
       <span key={id} style={style}>
         <span className="dot">{'\u25CF'}</span>
-        {displayName}
-        {' '}
+        {displayName}{' '}
       </span>
     );
   }
@@ -274,9 +279,7 @@ export default class Chat extends Component {
 
     return (
       <div className={`chat--message${big ? ' big' : ''}`}>
-        {this.renderMessageSender(users[id].displayName, color)}
-        :
-        {this.renderMessageText(message.text)}
+        {this.renderMessageSender(users[id].displayName, color)}:{this.renderMessageText(message.text)}
       </div>
     );
   }
@@ -296,7 +299,6 @@ export default class Chat extends Component {
   render() {
     const messages = this.mergeMessages(this.props.data, this.props.opponentData);
     const users = this.props.users;
-
     return (
       <Flex column grow={1}>
         {this.renderToolbar()}
@@ -312,6 +314,21 @@ export default class Chat extends Component {
             }}
             className="chat--messages"
           >
+            <div className="chat--message chat--system-message">
+              <i>
+                Game created! Share the link to play with your friends:
+                <wbr />
+              </i>
+              <b id="pathText" style={{marginLeft: '5px'}}>
+                {window.location.host}/beta{this.props.path}
+              </b>
+
+              <i
+                className="fa fa-clone copyButton"
+                title="Copy to Clipboard"
+                onClick={this.handleCopyClick}
+              />
+            </div>
             {messages.map((message, i) => (
               <div key={i}>{this.renderMessage(message)}</div>
             ))}
