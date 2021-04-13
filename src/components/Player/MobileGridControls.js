@@ -414,6 +414,7 @@ export default class MobileGridControls extends GridControls {
   }
 
   focusKeyboard() {
+    this.inputRef.current.selectionStart = this.inputRef.current.selectionEnd = this.inputRef.current.value.length;
     this.inputRef.current.focus();
   }
 
