@@ -414,6 +414,7 @@ export default class MobileGridControls extends GridControls {
   }
 
   focusKeyboard() {
+    this.inputRef.current.selectionStart = this.inputRef.current.selectionEnd = this.inputRef.current.value.length;
     this.inputRef.current.focus();
   }
 
@@ -492,7 +493,8 @@ export default class MobileGridControls extends GridControls {
         touchEvents: 'none',
         position: 'absolute',
       },
-      autoComplete: 'nope',
+      autoComplete: 'none',
+      autoCapitalize: 'none',
       onBlur: this.handleInputBlur,
       onFocus: this.handleInputFocus,
       onChange: this.handleInputChange,
