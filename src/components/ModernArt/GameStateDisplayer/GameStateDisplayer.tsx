@@ -139,33 +139,35 @@ export const GameStateDisplayer: React.FC<{
         </div>
         <div className={classes.column}>
           {/* Game board */}
-          {/* <div>
-            <table className={classes.table}>
-              <tr className={classes.tr}>
-                {colors.map((i) => (
-                  <th className={classes.th}>{painters[i]}</th>
-                ))}
-              </tr>
-              {_.values([0,1,2,3]).map((i) => (
-                <tr className={classes.tr}>
-                  {colors.map((color) => (
-                    <td className={classes.td}>{gameState.rounds[i] && gameState.rounds[i].places ? gameState.rounds[i].places?.[color] : ''}</td>
-                  ))}
-                </tr>
-              ))}
-            </table>
-          </div> */}
-
-          {/* <div className={classes.floatContainer}> */}
           <div>
             {colors.map((i) => (
               <div className={classes.floatChild}>
                 {painters[i]}
                 <div id={i} className={classes.gameBoardColumn} style={{backgroundColor: rgbColors[i]}}>
-                  <div className={classes.gameBoardCircle} style={{backgroundColor: '#ffffff'}}></div>
-                  <div className={classes.gameBoardCircle} style={{backgroundColor: '#ffffff'}}></div>
-                  <div className={classes.gameBoardCircle} style={{backgroundColor: '#ffffff'}}></div>
-                  <div className={classes.gameBoardCircle} style={{backgroundColor: '#ffffff'}}></div>
+                  <div
+                    className={classes.gameBoardCircle}
+                    style={{backgroundColor: gameState.rounds[i] ? '#ffffff' : rgbColors[i]}}
+                  >
+                    {gameState.rounds[i] && gameState.rounds[i].places ? gameState.rounds[i].places?.[i] : ''}
+                  </div>
+                  <div
+                    className={classes.gameBoardCircle}
+                    style={{backgroundColor: gameState.rounds[i] ? '#ffffff' : rgbColors[i]}}
+                  >
+                    {gameState.rounds[i] && gameState.rounds[i].places ? gameState.rounds[i].places?.[i] : ''}
+                  </div>
+                  <div
+                    className={classes.gameBoardCircle}
+                    style={{backgroundColor: gameState.rounds[i] ? '#ffffff' : rgbColors[i]}}
+                  >
+                    {gameState.rounds[i] && gameState.rounds[i].places ? gameState.rounds[i].places?.[i] : ''}
+                  </div>
+                  <div
+                    className={classes.gameBoardCircle}
+                    style={{backgroundColor: gameState.rounds[i] ? '#ffffff' : rgbColors[i]}}
+                  >
+                    {gameState.rounds[i] && gameState.rounds[i].places ? gameState.rounds[i].places?.[i] : ''}
+                  </div>
                 </div>
               </div>
             ))}
@@ -289,8 +291,8 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    width: '56px',
-    height: '200px',
+    width: '72px',
+    height: '240px',
     borderRadius: '4px',
   },
   gameBoardCircle: {
@@ -298,17 +300,11 @@ const useStyles = makeStyles({
     width: '40px',
     height: '40px',
     borderRadius: '50%',
+    border: '3px solid #fff',
   },
-  // floatContainer: {
-  //   border: '3px solid #fff',
-  //   padding: '20px',
-  // borderRadius: '4px',
-  // },
   floatChild: {
     width: '12%',
     float: 'left',
     padding: '8px',
-    // border: '2px solid red',
-    // borderRadius: '4px',
   },
 });
