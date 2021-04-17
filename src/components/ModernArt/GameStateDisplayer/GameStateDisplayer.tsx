@@ -33,6 +33,10 @@ export const GameStateDisplayer: React.FC<{
     actions.submitBid(currentBid);
   };
 
+  const skipBid = () => {
+    actions.skipBid();
+  };
+
   const finishAuction = () => {
     actions.finishAuction();
   };
@@ -98,11 +102,15 @@ export const GameStateDisplayer: React.FC<{
             {gameState.currentAuction.painting.auctionType} auction for a{' '}
             {gameState.currentAuction.painting.color} painting
           </h1>
-          {gameState.currentAuction.painting.auctionType === AuctionType.OPEN && (
+          {(gameState.currentAuction.painting.auctionType === AuctionType.OPEN ||
+            gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER) && (
             <h3>
               Highest Bid is currently {gameState.currentAuction.highestBid} by player{' '}
               {gameState.currentAuction.highestBidder}{' '}
             </h3>
+          )}
+          {gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER && (
+            <h3>Active bidder is {gameState.currentAuction.activeBidder}</h3>
           )}
 
           {gameState.currentAuction.status === AuctionStatus.PENDING && (
@@ -110,6 +118,9 @@ export const GameStateDisplayer: React.FC<{
               <input type="text" onChange={handleInputChange} value={currentBid || ''} />
               <button onClick={submitBid}> Submit Bid </button>
             </span>
+          )}
+          {gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER && (
+            <button onClick={skipBid}> Skip Bid </button>
           )}
           {gameState.currentAuction.status === AuctionStatus.PENDING && (
             <button onClick={finishAuction}>

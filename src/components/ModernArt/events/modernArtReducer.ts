@@ -173,7 +173,7 @@ export const modernArtReducerHelper = (
       };
       const numPlayers = _.size(state.players);
       const cardsToDeal = CARDS_TO_DEAL[numPlayers]?.[state.roundIndex] ?? 0;
-      const auctionTypes = ['HIDDEN', 'OPEN'];
+      const auctionTypes = [AuctionType.HIDDEN, AuctionType.OPEN, AuctionType.ONE_OFFER];
 
       const ALL_CARDS = _.flatMap(colors, (color) =>
         auctionTypes.map((auctionType) => ({
@@ -335,6 +335,18 @@ export const modernArtReducerHelper = (
     };
     // pass
   }
+
+  if (event.type === 'skip_bid') {
+    if (!state.currentAuction || !state.currentAuction.activeBidder) return undefined;
+
+    return {
+      ...state,
+      currentAuction: {
+        ...state.currentAuction,
+        activeBidder: (state.currentAuction.activeBidder + 1) % _.keys(state.players).length,
+      },
+    };
+  }
   return state;
 };
 
@@ -361,6 +373,15 @@ export const modernArtValidatorHelper = (state: ModernArtState, event: ModernArt
       console.log(`cannot submit_bid because player has insufficient funds ${money}`);
       return false;
     }
+    // if auction type is one_offer but you are not the active bidder, you're rejected
+    if (state.currentAuction.painting.auctionType === AuctionType.ONE_OFFER) {
+      if (state.currentAuction.activeBidder !== playerId) {
+        console.log(
+          `cannot submit_bid because ${playerId} is not the active bidder ${state.currentAuction.activeBidder}`
+        );
+        return false;
+      }
+    }
 
     return true;
   }
@@ -370,7 +391,7 @@ export const modernArtValidatorHelper = (state: ModernArtState, event: ModernArt
       console.log('cannot finish_auction because auction is closed');
       return false;
     }
-    if (state.currentAuction.auctioneer !== event.params.playerId) {
+    if (state.currentAuction.auctioneer !== playerId) {
       console.log('only auctioneer can finish_auction');
       return false;
     }
@@ -386,10 +407,8 @@ export const modernArtValidatorHelper = (state: ModernArtState, event: ModernArt
       return false;
     }
     const currentPlayer = _.keys(state.players)[state.playerIdx];
-    if (currentPlayer !== event.params.playerId) {
-      console.log(
-        `cannot start_auction because ${event.params.playerId} is not the current player ${currentPlayer}`
-      );
+    if (currentPlayer !== playerId) {
+      console.log(`cannot start_auction because ${playerId} is not the current player ${currentPlayer}`);
       // return false; // ignore this rule in dev
     }
     return true;

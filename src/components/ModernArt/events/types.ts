@@ -1,5 +1,12 @@
 export interface ModernArtEvent {
-  type: 'start_game' | 'update_name' | 'step' | 'start_auction' | 'submit_bid' | 'finish_auction';
+  type:
+    | 'start_game'
+    | 'update_name'
+    | 'step'
+    | 'start_auction'
+    | 'submit_bid'
+    | 'finish_auction'
+    | 'skip_bid';
   params: any;
   timestamp?: number | object;
 }
@@ -31,7 +38,7 @@ export interface Auction {
   fixedPrice?: number; // FIXED
   highestBid?: number | null; // ONE_OFFER, HIDDEN, OPEN
   highestBidder?: string | null; // ONE_OFFER, HIDDEN, OPEN
-  latestBidder?: number | null; // ONE_OFFER, FIXED
+  activeBidder?: number | null; // ONE_OFFER, FIXED
   winner?: string | null; // derived field to standardize across auction types
   payment?: number | null; // derived field to standardize across auction types
 }
