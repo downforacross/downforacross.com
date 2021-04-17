@@ -35,6 +35,7 @@ export const Log: React.FC<{log: LogMessage[]}> = (props) => {
 
 const useStyles = makeStyles({
   container: {
+    float: 'left',
     position: 'relative',
   },
   log: {

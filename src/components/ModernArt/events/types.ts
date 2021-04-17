@@ -29,7 +29,22 @@ export enum AuctionStatus {
   CLOSED = 'CLOSED',
 }
 
-export const colors = ['red', 'blue', 'yellow', 'green', 'purple'];
+export const colors = ['red', 'green', 'orange', 'blue', 'yellow'];
+
+export const rgbColors: {[key: string]: string} = {
+  red: '#CE0000',
+  green: '#00950F',
+  orange: '#FF8A00',
+  blue: '#003CFF',
+  yellow: '#FFE600',
+};
+export const painters: {[key: string]: string} = {
+  red: 'Kadinsky',
+  green: 'Degas',
+  orange: 'Monet',
+  blue: 'Van Eyk',
+  yellow: 'Lorrain',
+};
 export interface Auction {
   status: AuctionStatus;
   auctioneer: string;

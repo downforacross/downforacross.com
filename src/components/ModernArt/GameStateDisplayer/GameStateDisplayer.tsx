@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import {makeStyles} from '@material-ui/core';
 import _ from 'lodash';
 import {PlayerActions} from '../usePlayerActions';
-import {ModernArtState, AuctionType, AuctionStatus, colors} from '../events/types';
+import {ModernArtState, AuctionType, AuctionStatus, colors, painters, rgbColors} from '../events/types';
 import {Log} from './Log';
 import Confetti from '../../Game/Confetti';
 
@@ -43,132 +43,155 @@ export const GameStateDisplayer: React.FC<{
 
   return (
     <div className={classes.gameStateDisplayerContainer}>
-      <Log log={gameState.log} />
-      {!gameState.started && (
-        <div className={classes.startButton}>
-          Click Start!
-          <button onClick={actions.startGame}>Start!</button>
-        </div>
-      )}
-      {gameState.started && !gameState.roundStarted && (
-        <div className={classes.nextButton}>
-          <button onClick={actions.step}>Deal!</button>
-        </div>
-      )}
+      <div className={classes.row}>
+        <div className={classes.column}>
+          {/* Played cards */}
+          <div>
+            <table>
+              {_.values(gameState.players).map((player) => {
+                const arts = gameState.rounds[gameState.roundIndex].players[player.id]?.acquiredArt;
+                return (
+                  <tr>
+                    <th>{player.name}</th>
+                    {arts?.map((a) => (
+                      <td>{a.color}</td>
+                    ))}
+                  </tr>
+                );
+              })}
+            </table>
+          </div>
 
-      {/* Scoreboard */}
+          {/* Current Auction */}
+          {gameState.currentAuction && (
+            <div className={classes.auctionStatus}>
+              <h1>
+                Player {gameState.players[gameState.currentAuction.auctioneer]?.name} is holding a{' '}
+                {gameState.currentAuction.painting.auctionType} auction for a{' '}
+                {gameState.currentAuction.painting.color} painting
+              </h1>
+              {(gameState.currentAuction.painting.auctionType === AuctionType.OPEN ||
+                gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER) && (
+                <h3>
+                  Highest Bid is currently {gameState.currentAuction.highestBid} by player{' '}
+                  {gameState.currentAuction.highestBidder}{' '}
+                </h3>
+              )}
+              {gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER && (
+                <h3>Active bidder is {gameState.currentAuction.activeBidder}</h3>
+              )}
 
-      <div>
-        <table>
-          <tr>
-            <td />
-            {colors.map((i) => (
-              <th>{i}</th>
+              {gameState.currentAuction.status === AuctionStatus.PENDING && (
+                <span className={classes.submitBidForm}>
+                  <input type="text" onChange={handleInputChange} value={currentBid || ''} />
+                  <button onClick={submitBid}> Submit Bid </button>
+                </span>
+              )}
+              {gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER && (
+                <button onClick={skipBid}> Skip Bid </button>
+              )}
+              {gameState.currentAuction.status === AuctionStatus.PENDING && (
+                <button onClick={finishAuction}>
+                  {' '}
+                  Finish Auction{' '}
+                  <span role="img" aria-label="female judge with gavel">
+                    👩‍⚖️
+                  </span>
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* Cards */}
+          {gameState.started && <div className={classes.message}>Game has Started</div>}
+          <div className={classes.playersList}>
+            <h3>{players.length} players</h3>
+            {players.map((player, i) => (
+              <div key={i}>
+                {player.icon}
+                {player.name}
+                {player.id === _.keys(gameState.players)[gameState.playerIdx] && <div>✨your turn✨</div>}
+                <div className={classes.cards}>
+                  {player.cards.map((card, j) => (
+                    <div className={classes.card}>
+                      {player.id === props.playerId && (
+                        <div>
+                          <div className={classes.cardHeader} style={{backgroundColor: card.color}} />
+                          <div className={classes.cardBody}>
+                            <div>{card.auctionType}</div>
+                            <button
+                              onClick={() => {
+                                actions.startAuction(j);
+                              }}
+                            >
+                              Play
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
             ))}
-          </tr>
-          {_.values(gameState.rounds).map((round, i) => (
-            <tr>
-              <td>Round {i + 1}</td>
-              {colors.map((color) => (
-                <td>{gameState.rounds[i].places?.[color]}</td>
-              ))}
-            </tr>
-          ))}
-        </table>
-      </div>
-
-      <div>
-        <table>
-          {_.values(gameState.players).map((player) => {
-            const arts = gameState.rounds[gameState.roundIndex].players[player.id]?.acquiredArt;
-            return (
-              <tr>
-                <th>{player.name}</th>
-                {arts?.map((a) => (
-                  <td>{a.color}</td>
+          </div>
+          {gameState.currentAuction?.status === AuctionStatus.CLOSED && <Confetti duration={1500} />}
+        </div>
+        <div className={classes.column}>
+          {/* Game board */}
+          {/* <div>
+            <table className={classes.table}>
+              <tr className={classes.tr}>
+                {colors.map((i) => (
+                  <th className={classes.th}>{painters[i]}</th>
                 ))}
               </tr>
-            );
-          })}
-        </table>
-      </div>
+              {_.values([0,1,2,3]).map((i) => (
+                <tr className={classes.tr}>
+                  {colors.map((color) => (
+                    <td className={classes.td}>{gameState.rounds[i] && gameState.rounds[i].places ? gameState.rounds[i].places?.[color] : ''}</td>
+                  ))}
+                </tr>
+              ))}
+            </table>
+          </div> */}
 
+          {/* <div className={classes.floatContainer}> */}
+          <div>
+            {colors.map((i) => (
+              <div className={classes.floatChild}>
+                {painters[i]}
+                <div id={i} className={classes.gameBoardColumn} style={{backgroundColor: rgbColors[i]}}>
+                  <div className={classes.gameBoardCircle} style={{backgroundColor: '#ffffff'}}></div>
+                  <div className={classes.gameBoardCircle} style={{backgroundColor: '#ffffff'}}></div>
+                  <div className={classes.gameBoardCircle} style={{backgroundColor: '#ffffff'}}></div>
+                  <div className={classes.gameBoardCircle} style={{backgroundColor: '#ffffff'}}></div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* actions */}
+          <Log log={gameState.log} />
+        </div>
+
+        {/* need to be moved */}
+        {!gameState.started && (
+          <div className={classes.startButton}>
+            Click Start!
+            <button onClick={actions.startGame}>Start!</button>
+          </div>
+        )}
+        {gameState.started && !gameState.roundStarted && (
+          <div className={classes.nextButton}>
+            <button onClick={actions.step}>Deal!</button>
+          </div>
+        )}
+      </div>
+      {/* Scoreboard */}
       {/* Current Auction */}
 
-      {gameState.currentAuction && (
-        <div className={classes.auctionStatus}>
-          <h1>
-            Player {gameState.players[gameState.currentAuction.auctioneer]?.name} is holding a{' '}
-            {gameState.currentAuction.painting.auctionType} auction for a{' '}
-            {gameState.currentAuction.painting.color} painting
-          </h1>
-          {(gameState.currentAuction.painting.auctionType === AuctionType.OPEN ||
-            gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER) && (
-            <h3>
-              Highest Bid is currently {gameState.currentAuction.highestBid} by player{' '}
-              {gameState.currentAuction.highestBidder}{' '}
-            </h3>
-          )}
-          {gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER && (
-            <h3>Active bidder is {gameState.currentAuction.activeBidder}</h3>
-          )}
-
-          {gameState.currentAuction.status === AuctionStatus.PENDING && (
-            <span className={classes.submitBidForm}>
-              <input type="text" onChange={handleInputChange} value={currentBid || ''} />
-              <button onClick={submitBid}> Submit Bid </button>
-            </span>
-          )}
-          {gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER && (
-            <button onClick={skipBid}> Skip Bid </button>
-          )}
-          {gameState.currentAuction.status === AuctionStatus.PENDING && (
-            <button onClick={finishAuction}>
-              {' '}
-              Finish Auction{' '}
-              <span role="img" aria-label="female judge with gavel">
-                👩‍⚖️
-              </span>
-            </button>
-          )}
-        </div>
-      )}
-
       {/* Players */}
-
-      {gameState.started && <div className={classes.message}>Game has Started</div>}
-      <div className={classes.playersList}>
-        <h3>{players.length} players</h3>
-        {players.map((player, i) => (
-          <div key={i}>
-            {player.icon}
-            {player.name}
-            {player.id === _.keys(gameState.players)[gameState.playerIdx] && <div>✨your turn✨</div>}
-            <div className={classes.cards}>
-              {player.cards.map((card, j) => (
-                <div className={classes.card}>
-                  {player.id === props.playerId && (
-                    <div>
-                      <div className={classes.cardHeader} style={{backgroundColor: card.color}} />
-                      <div className={classes.cardBody}>
-                        <div>{card.auctionType}</div>
-                        <button
-                          onClick={() => {
-                            actions.startAuction(j);
-                          }}
-                        >
-                          Play
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-      {gameState.currentAuction?.status === AuctionStatus.CLOSED && <Confetti duration={1500} />}
     </div>
   );
   // todo hammer
@@ -241,5 +264,51 @@ const useStyles = makeStyles({
     '& > button': {
       marginLeft: 4,
     },
+  },
+  column: {
+    flex: '50%',
+  },
+  row: {
+    display: 'flex',
+  },
+  table: {
+    border: '1px solid black',
+    // padding: '10px',
+  },
+  th: {
+    border: '1px solid black',
+  },
+  tr: {
+    border: '1px solid black',
+  },
+  td: {
+    border: '1px solid black',
+  },
+  gameBoardColumn: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    width: '56px',
+    height: '200px',
+    borderRadius: '4px',
+  },
+  gameBoardCircle: {
+    display: 'flex',
+    width: '40px',
+    height: '40px',
+    borderRadius: '50%',
+  },
+  // floatContainer: {
+  //   border: '3px solid #fff',
+  //   padding: '20px',
+  // borderRadius: '4px',
+  // },
+  floatChild: {
+    width: '12%',
+    float: 'left',
+    padding: '8px',
+    // border: '2px solid red',
+    // borderRadius: '4px',
   },
 });

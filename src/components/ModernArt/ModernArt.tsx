@@ -118,7 +118,10 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
   return (
     <div className={classes.container}>
       <Helmet title={`Modern Art ${gid}`} />
-      <h1>Welcome to modern art</h1>
+      <div className={classes.header}>
+        <div className={classes.title}>Modern Art</div>
+      </div>
+      <div className={classes.spacing}></div>
       <GameStateDisplayer gameState={gameState} playerActions={actions} playerId={playerId} />
     </div>
   );
@@ -129,5 +132,34 @@ const useStyles = makeStyles({
     display: 'flex',
     height: '100%',
     flexDirection: 'column',
+  },
+  header: {
+    display: 'flex',
+    width: '100%',
+    height: '96px',
+    left: '0px',
+    top: '0px',
+    background: '#FFFFFF',
+    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+  },
+  title: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    width: '100%',
+    height: '96px',
+    fontFamily: 'Roboto',
+    fontStyle: 'normal',
+    fontWeight: 'lighter',
+    fontSize: '40px',
+    lineHeight: '70%',
+    letterSpacing: '0.1em',
+    color: '#000000',
+  },
+  spacing: {
+    display: 'flex',
+    width: '100%',
+    height: '32px',
   },
 });
