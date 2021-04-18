@@ -43,7 +43,7 @@ export const painters: {[key: string]: string} = {
   green: 'Degas',
   orange: 'Monet',
   blue: 'Van Eyk',
-  yellow: 'Lorrain',
+  yellow: 'Picasso',
 };
 export interface Auction {
   status: AuctionStatus;

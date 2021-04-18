@@ -6,6 +6,167 @@ import {PlayerActions} from '../usePlayerActions';
 import {ModernArtState, AuctionType, AuctionStatus, colors, painters, rgbColors} from '../events/types';
 import {Log} from './Log';
 import Confetti from '../../Game/Confetti';
+import {FaRobot} from 'react-icons/fa';
+
+import Kadinsky1 from '../resources/kadinsky-1.jpeg';
+import Kadinsky2 from '../resources/kadinsky-2.jpeg';
+import Kadinsky3 from '../resources/kadinsky-3.jpeg';
+import Kadinsky4 from '../resources/kadinsky-4.jpeg';
+import Kadinsky5 from '../resources/kadinsky-5.jpeg';
+import Kadinsky6 from '../resources/kadinsky-6.jpeg';
+import Kadinsky7 from '../resources/kadinsky-7.jpeg';
+import Kadinsky8 from '../resources/kadinsky-8.jpeg';
+import Kadinsky9 from '../resources/kadinsky-9.jpeg';
+import Kadinsky10 from '../resources/kadinsky-10.jpeg';
+import Kadinsky11 from '../resources/kadinsky-11.jpeg';
+import Kadinsky12 from '../resources/kadinsky-12.jpeg';
+
+import Degas1 from '../resources/degas-1.jpeg';
+import Degas2 from '../resources/degas-2.jpeg';
+import Degas3 from '../resources/degas-3.jpeg';
+import Degas4 from '../resources/degas-4.jpeg';
+import Degas5 from '../resources/degas-5.jpeg';
+import Degas6 from '../resources/degas-6.jpeg';
+import Degas7 from '../resources/degas-7.jpeg';
+import Degas8 from '../resources/degas-8.jpeg';
+import Degas9 from '../resources/degas-9.jpeg';
+import Degas10 from '../resources/degas-10.jpeg';
+import Degas11 from '../resources/degas-11.jpeg';
+import Degas12 from '../resources/degas-12.jpeg';
+import Degas13 from '../resources/degas-13.jpeg';
+
+import Monet1 from '../resources/monet-1.jpeg';
+import Monet2 from '../resources/monet-2.jpeg';
+import Monet3 from '../resources/monet-3.jpeg';
+import Monet4 from '../resources/monet-4.jpeg';
+import Monet5 from '../resources/monet-5.jpeg';
+import Monet6 from '../resources/monet-6.jpeg';
+import Monet7 from '../resources/monet-7.jpeg';
+import Monet8 from '../resources/monet-8.jpeg';
+import Monet9 from '../resources/monet-9.jpeg';
+import Monet10 from '../resources/monet-10.jpeg';
+import Monet11 from '../resources/monet-11.jpeg';
+import Monet12 from '../resources/monet-12.jpeg';
+import Monet13 from '../resources/monet-13.jpeg';
+import Monet14 from '../resources/monet-14.jpeg';
+
+import VanEyk1 from '../resources/vaneyk-1.jpeg';
+import VanEyk2 from '../resources/vaneyk-2.jpeg';
+import VanEyk3 from '../resources/vaneyk-3.jpeg';
+import VanEyk4 from '../resources/vaneyk-4.jpeg';
+import VanEyk5 from '../resources/vaneyk-5.jpeg';
+import VanEyk6 from '../resources/vaneyk-6.jpeg';
+import VanEyk7 from '../resources/vaneyk-7.jpeg';
+import VanEyk8 from '../resources/vaneyk-8.jpeg';
+import VanEyk9 from '../resources/vaneyk-9.jpeg';
+import VanEyk10 from '../resources/vaneyk-10.jpeg';
+import VanEyk11 from '../resources/vaneyk-11.jpeg';
+import VanEyk12 from '../resources/vaneyk-12.jpeg';
+import VanEyk13 from '../resources/vaneyk-13.jpeg';
+import VanEyk14 from '../resources/vaneyk-14.jpeg';
+import VanEyk15 from '../resources/vaneyk-15.jpeg';
+
+import Picasso1 from '../resources/picasso-1.jpeg';
+import Picasso2 from '../resources/picasso-2.jpeg';
+import Picasso3 from '../resources/picasso-3.jpeg';
+import Picasso4 from '../resources/picasso-4.jpeg';
+import Picasso5 from '../resources/picasso-5.jpeg';
+import Picasso6 from '../resources/picasso-6.jpeg';
+import Picasso7 from '../resources/picasso-7.jpeg';
+import Picasso8 from '../resources/picasso-8.jpeg';
+import Picasso9 from '../resources/picasso-9.jpeg';
+import Picasso10 from '../resources/picasso-10.jpeg';
+import Picasso11 from '../resources/picasso-11.jpeg';
+import Picasso12 from '../resources/picasso-12.jpeg';
+import Picasso13 from '../resources/picasso-13.jpeg';
+import Picasso14 from '../resources/picasso-14.jpeg';
+import Picasso15 from '../resources/picasso-15.jpeg';
+import Picasso16 from '../resources/picasso-16.jpeg';
+
+const kadinskyArt = [
+  Kadinsky1,
+  Kadinsky2,
+  Kadinsky3,
+  Kadinsky4,
+  Kadinsky5,
+  Kadinsky6,
+  Kadinsky7,
+  Kadinsky8,
+  Kadinsky9,
+  Kadinsky10,
+  Kadinsky11,
+  Kadinsky12,
+];
+
+const degasArt = [
+  Degas1,
+  Degas2,
+  Degas3,
+  Degas4,
+  Degas5,
+  Degas6,
+  Degas7,
+  Degas8,
+  Degas9,
+  Degas10,
+  Degas11,
+  Degas12,
+  Degas13,
+];
+
+const monetArt = [
+  Monet1,
+  Monet2,
+  Monet3,
+  Monet4,
+  Monet5,
+  Monet6,
+  Monet7,
+  Monet8,
+  Monet9,
+  Monet10,
+  Monet11,
+  Monet12,
+  Monet13,
+  Monet14,
+];
+
+const vaneykArt = [
+  VanEyk1,
+  VanEyk2,
+  VanEyk3,
+  VanEyk4,
+  VanEyk5,
+  VanEyk6,
+  VanEyk7,
+  VanEyk8,
+  VanEyk9,
+  VanEyk10,
+  VanEyk11,
+  VanEyk12,
+  VanEyk13,
+  VanEyk14,
+  VanEyk15,
+];
+
+const picassoArt = [
+  Picasso1,
+  Picasso2,
+  Picasso3,
+  Picasso4,
+  Picasso5,
+  Picasso6,
+  Picasso7,
+  Picasso8,
+  Picasso9,
+  Picasso10,
+  Picasso11,
+  Picasso12,
+  Picasso13,
+  Picasso14,
+  Picasso15,
+  Picasso16,
+];
 
 /**
  * This component is parallel to Game -- will render a <Player/>
@@ -18,7 +179,7 @@ export const GameStateDisplayer: React.FC<{
   playerId: string;
 }> = (props) => {
   const classes = useStyles();
-  const {gameState, playerActions: actions} = props;
+  const {gameState, playerActions: actions, playerId} = props;
 
   const players = _.values(gameState.players);
 
@@ -44,32 +205,70 @@ export const GameStateDisplayer: React.FC<{
   return (
     <div className={classes.gameStateDisplayerContainer}>
       <div className={classes.row}>
-        <div className={classes.column}>
+        <div className={classes.column} style={{marginRight: '4%'}}>
           {/* Played cards */}
           <div>
-            <table>
-              {_.values(gameState.players).map((player) => {
-                const arts = gameState.rounds[gameState.roundIndex].players[player.id]?.acquiredArt;
-                return (
-                  <tr>
-                    <th>{player.name}</th>
+            {_.values(gameState.players).map((player) => {
+              const arts = gameState.rounds[gameState.roundIndex].players[player.id]?.acquiredArt;
+              return (
+                <div className={classes.floatPlayer}>
+                  <div>{player.name}</div>
+
+                  <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
+                    <FaRobot className={classes.playerIcon} />
+                    {/* <div className={classes.playerIcon}> {player.icon} </div> */}
                     {arts?.map((a) => (
-                      <td>{a.color}</td>
+                      <div className={classes.acquiredArtCircle} style={{backgroundColor: a.color}}></div>
                     ))}
-                  </tr>
-                );
-              })}
-            </table>
+                    <div className={classes.playerSpacing}></div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
+
+          <div className={classes.sectionSpacing}></div>
 
           {/* Current Auction */}
           {gameState.currentAuction && (
             <div className={classes.auctionStatus}>
-              <h1>
+              <div className={classes.sectionHeader}>Current auction</div>
+              <div className={classes.rowFlex}>
+                <div className={classes.auctionPhoto}>
+                  <img src={Kadinsky1} height="200" width="200"></img>
+                </div>
+                <div>
+                  <table>
+                    <tr>
+                      <td>Auctioneer</td>
+                      <td>Player 1</td>
+                    </tr>
+                    <tr>
+                      <td>Highest Bidder</td>
+                      <td>Player 2</td>
+                    </tr>
+                    <tr>
+                      <td>Highest Bid</td>
+                      <td>$30</td>
+                    </tr>
+                    <tr>
+                      <td>Bank</td>
+                      <td>$400</td>
+                    </tr>
+                  </table>
+                  {gameState.currentAuction.status === AuctionStatus.PENDING && (
+                    <span className={classes.submitBidForm}>
+                      <input type="text" onChange={handleInputChange} value={currentBid || ''} />
+                      <button onClick={submitBid}> Submit Bid </button>
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div>
                 Player {gameState.players[gameState.currentAuction.auctioneer]?.name} is holding a{' '}
                 {gameState.currentAuction.painting.auctionType} auction for a{' '}
                 {gameState.currentAuction.painting.color} painting
-              </h1>
+              </div>
               {(gameState.currentAuction.painting.auctionType === AuctionType.OPEN ||
                 gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER) && (
                 <h3>
@@ -79,13 +278,6 @@ export const GameStateDisplayer: React.FC<{
               )}
               {gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER && (
                 <h3>Active bidder is {gameState.currentAuction.activeBidder}</h3>
-              )}
-
-              {gameState.currentAuction.status === AuctionStatus.PENDING && (
-                <span className={classes.submitBidForm}>
-                  <input type="text" onChange={handleInputChange} value={currentBid || ''} />
-                  <button onClick={submitBid}> Submit Bid </button>
-                </span>
               )}
               {gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER && (
                 <button onClick={skipBid}> Skip Bid </button>
@@ -99,45 +291,42 @@ export const GameStateDisplayer: React.FC<{
                   </span>
                 </button>
               )}
+              {gameState.currentAuction?.status === AuctionStatus.CLOSED && <Confetti duration={1500} />}
             </div>
           )}
 
+          <div className={classes.sectionSpacing}></div>
+
           {/* Cards */}
-          {gameState.started && <div className={classes.message}>Game has Started</div>}
-          <div className={classes.playersList}>
-            <h3>{players.length} players</h3>
-            {players.map((player, i) => (
-              <div key={i}>
-                {player.icon}
-                {player.name}
-                {player.id === _.keys(gameState.players)[gameState.playerIdx] && <div>✨your turn✨</div>}
-                <div className={classes.cards}>
-                  {player.cards.map((card, j) => (
-                    <div className={classes.card}>
-                      {player.id === props.playerId && (
-                        <div>
-                          <div className={classes.cardHeader} style={{backgroundColor: card.color}} />
-                          <div className={classes.cardBody}>
-                            <div>{card.auctionType}</div>
-                            <button
-                              onClick={() => {
-                                actions.startAuction(j);
-                              }}
-                            >
-                              Play
-                            </button>
-                          </div>
-                        </div>
-                      )}
+          <div className={classes.playerCards}>
+            <div>
+              {players[0].icon}
+              {players[0].name}
+              {players[0].id === _.keys(gameState.players)[gameState.playerIdx] && <div>✨your turn✨</div>}
+              <div className={classes.cards}>
+                {players[0].cards.map((card, j) => (
+                  <div className={classes.card}>
+                    <div>
+                      <div className={classes.cardHeader} style={{backgroundColor: card.color}} />
+                      <div className={classes.cardBody}>
+                        <div>{card.auctionType}</div>
+                        <button
+                          onClick={() => {
+                            actions.startAuction(j);
+                          }}
+                        >
+                          Play
+                        </button>
+                      </div>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
-          {gameState.currentAuction?.status === AuctionStatus.CLOSED && <Confetti duration={1500} />}
         </div>
-        <div className={classes.column}>
+
+        <div className={classes.column} style={{marginLeft: '4%'}}>
           {/* Game board */}
           <div>
             {colors.map((i) => (
@@ -173,22 +362,26 @@ export const GameStateDisplayer: React.FC<{
             ))}
           </div>
 
+          <div className={classes.sectionSpacing}></div>
+
           {/* actions */}
           <Log log={gameState.log} />
-        </div>
 
-        {/* need to be moved */}
-        {!gameState.started && (
-          <div className={classes.startButton}>
-            Click Start!
-            <button onClick={actions.startGame}>Start!</button>
-          </div>
-        )}
-        {gameState.started && !gameState.roundStarted && (
-          <div className={classes.nextButton}>
-            <button onClick={actions.step}>Deal!</button>
-          </div>
-        )}
+          {/* need to be moved */}
+          {!gameState.started && (
+            <div className={classes.startButton}>
+              Click Start!
+              <button onClick={actions.startGame}>Start!</button>
+            </div>
+          )}
+          {gameState.started && !gameState.roundStarted && (
+            <div className={classes.nextButton}>
+              <button onClick={actions.step}>Deal!</button>
+            </div>
+          )}
+
+          {gameState.started && <div>Game has Started</div>}
+        </div>
       </div>
       {/* Scoreboard */}
       {/* Current Auction */}
@@ -211,10 +404,6 @@ const useStyles = makeStyles({
     flexDirection: 'column',
   },
   nextButton: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  message: {
     display: 'flex',
     flexDirection: 'column',
   },
@@ -243,7 +432,7 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     alignItems: 'center',
   },
-  playersList: {
+  playerCards: {
     display: 'flex',
     flexDirection: 'column',
     '& > div': {
@@ -268,6 +457,8 @@ const useStyles = makeStyles({
     },
   },
   column: {
+    display: 'flex',
+    flexDirection: 'column',
     flex: '50%',
   },
   row: {
@@ -303,8 +494,52 @@ const useStyles = makeStyles({
     border: '3px solid #fff',
   },
   floatChild: {
-    width: '12%',
+    width: 'auto',
     float: 'left',
     padding: '8px',
+  },
+  floatPlayer: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '30%',
+    float: 'left',
+    padding: '8px',
+  },
+  playerIcon: {
+    width: '48px',
+    height: '48px',
+  },
+  acquiredArtCircle: {
+    display: 'flex',
+    width: '16px',
+    height: '16px',
+    borderRadius: '50%',
+  },
+  sectionHeader: {
+    justifyContent: 'center',
+    width: '100%',
+    height: '32px',
+    fontFamily: 'Roboto',
+    fontStyle: 'normal',
+    fontSize: '24px',
+  },
+  sectionSpacing: {
+    display: 'flex',
+    width: '100%',
+    height: '32px',
+  },
+  playerSpacing: {
+    width: '32px',
+    height: '8px',
+  },
+  auctionPhoto: {
+    width: '144px',
+    height: '200px',
+  },
+  rowFlex: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    width: '100%',
   },
 });
