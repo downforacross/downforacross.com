@@ -568,7 +568,7 @@ const useStyles = makeStyles({
     border: '3px solid #fff',
   },
   floatChild: {
-    width: 'auto',
+    width: '15%',
     float: 'left',
     padding: '8px',
   },
