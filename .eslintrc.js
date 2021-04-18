@@ -38,9 +38,9 @@ module.exports = {
     'react/button-has-type': 'off',
     'react/sort-comp': 'off',
     'import/prefer-default-export': 'off',
+    'react/destructuring-assignment': 'off',
 
     // Used too much in existing code to fix, but new code can follow it
-    'react/destructuring-assignment': 'warn',
     'class-methods-use-this': 'warn',
     'jsx-a11y/click-events-have-key-events': 'warn',
     'jsx-a11y/no-static-element-interactions': 'warn',
