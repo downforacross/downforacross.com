@@ -6,7 +6,9 @@ import {PlayerActions} from '../usePlayerActions';
 import {ModernArtState, AuctionType, AuctionStatus, colors, painters, rgbColors} from '../events/types';
 import {Log} from './Log';
 import Confetti from '../../Game/Confetti';
-import {FaRobot} from 'react-icons/fa';
+import {FaRobot, FaGavel, FaTag, FaEye, FaStar, FaLock} from 'react-icons/fa';
+import {BiAddToQueue} from 'react-icons/bi';
+// import { MdGavel  } from 'react-icons/md';
 
 import Kadinsky1 from '../resources/kadinsky-1.jpeg';
 import Kadinsky2 from '../resources/kadinsky-2.jpeg';
@@ -82,6 +84,7 @@ import Picasso13 from '../resources/picasso-13.jpeg';
 import Picasso14 from '../resources/picasso-14.jpeg';
 import Picasso15 from '../resources/picasso-15.jpeg';
 import Picasso16 from '../resources/picasso-16.jpeg';
+import {NONAME} from 'dns';
 
 const kadinskyArt = [
   Kadinsky1,
@@ -212,6 +215,7 @@ export const GameStateDisplayer: React.FC<{
               const arts = gameState.rounds[gameState.roundIndex].players[player.id]?.acquiredArt;
               return (
                 <div className={classes.floatPlayer}>
+                  {player.id === _.keys(gameState.players)[gameState.playerIdx] && <div>✨your turn✨</div>}
                   <div>{player.name}</div>
 
                   <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
@@ -232,64 +236,86 @@ export const GameStateDisplayer: React.FC<{
           {/* Current Auction */}
           {gameState.currentAuction && (
             <div className={classes.auctionStatus}>
-              <div className={classes.sectionHeader}>Current auction</div>
+              <div className={classes.sectionHeader}>Current Auction</div>
               <div className={classes.rowFlex}>
                 <div className={classes.auctionPhoto}>
-                  <img src={Kadinsky1} height="200" width="200"></img>
+                  <img src={Kadinsky1} className={classes.artImageBig}></img>
+                  <div
+                    className={classes.auctionIconBackgroundBig}
+                    style={{backgroundColor: gameState.currentAuction.painting.color}}
+                  >
+                    {gameState.currentAuction.painting.auctionType == AuctionType.OPEN && (
+                      <FaEye className={classes.auctionIconBig} />
+                    )}
+                    {gameState.currentAuction.painting.auctionType == AuctionType.ONE_OFFER && (
+                      <FaStar className={classes.auctionIconBig} />
+                    )}
+                    {gameState.currentAuction.painting.auctionType == AuctionType.FIXED && (
+                      <FaTag className={classes.auctionIconBig} />
+                    )}
+                    {gameState.currentAuction.painting.auctionType == AuctionType.DOUBLE && (
+                      <BiAddToQueue className={classes.auctionIconBig} />
+                    )}
+                    {gameState.currentAuction.painting.auctionType == AuctionType.HIDDEN && (
+                      <FaLock className={classes.auctionIconBig} />
+                    )}
+                  </div>
                 </div>
                 <div>
-                  <table>
-                    <tr>
-                      <td>Auctioneer</td>
-                      <td>Player 1</td>
+                  <table className={classes.table}>
+                    <tr className={classes.tr}>
+                      <td className={classes.td}>Auctioneer</td>
+                      <td className={classes.td}>
+                        {gameState.players[gameState.currentAuction.auctioneer]?.name}
+                      </td>
                     </tr>
-                    <tr>
-                      <td>Highest Bidder</td>
-                      <td>Player 2</td>
-                    </tr>
-                    <tr>
-                      <td>Highest Bid</td>
-                      <td>$30</td>
-                    </tr>
-                    <tr>
-                      <td>Bank</td>
-                      <td>$400</td>
+
+                    {(gameState.currentAuction.painting.auctionType === AuctionType.OPEN ||
+                      gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER) && (
+                      <tr className={classes.tr}>
+                        <td className={classes.td}>Highest Bidder</td>
+                        <td className={classes.td}>
+                          {gameState.currentAuction.highestBidder
+                            ? gameState.currentAuction.highestBidder
+                            : 'Nobody'}
+                        </td>
+                      </tr>
+                    )}
+
+                    {gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER && (
+                      <tr className={classes.tr}>
+                        <td className={classes.td}>Active Bidder</td>
+                        <td className={classes.td}>{gameState.currentAuction.activeBidder}</td>
+                      </tr>
+                    )}
+
+                    {(gameState.currentAuction.painting.auctionType === AuctionType.OPEN ||
+                      gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER) && (
+                      <tr className={classes.tr}>
+                        <td className={classes.td}>Highest Bid</td>
+                        <td className={classes.td}>${gameState.currentAuction.highestBid}</td>
+                      </tr>
+                    )}
+
+                    <tr className={classes.tr}>
+                      <td className={classes.td}>Bank</td>
+                      <td className={classes.td}>$400</td>
                     </tr>
                   </table>
                   {gameState.currentAuction.status === AuctionStatus.PENDING && (
                     <span className={classes.submitBidForm}>
                       <input type="text" onChange={handleInputChange} value={currentBid || ''} />
                       <button onClick={submitBid}> Submit Bid </button>
+                      {/* todo: only show this for auctioneer */}
+                      <button onClick={finishAuction}>
+                        End Auction <FaGavel />
+                      </button>
                     </span>
                   )}
                 </div>
               </div>
-              <div>
-                Player {gameState.players[gameState.currentAuction.auctioneer]?.name} is holding a{' '}
-                {gameState.currentAuction.painting.auctionType} auction for a{' '}
-                {gameState.currentAuction.painting.color} painting
-              </div>
-              {(gameState.currentAuction.painting.auctionType === AuctionType.OPEN ||
-                gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER) && (
-                <h3>
-                  Highest Bid is currently {gameState.currentAuction.highestBid} by player{' '}
-                  {gameState.currentAuction.highestBidder}{' '}
-                </h3>
-              )}
-              {gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER && (
-                <h3>Active bidder is {gameState.currentAuction.activeBidder}</h3>
-              )}
               {gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER && (
                 <button onClick={skipBid}> Skip Bid </button>
-              )}
-              {gameState.currentAuction.status === AuctionStatus.PENDING && (
-                <button onClick={finishAuction}>
-                  {' '}
-                  Finish Auction{' '}
-                  <span role="img" aria-label="female judge with gavel">
-                    👩‍⚖️
-                  </span>
-                </button>
               )}
               {gameState.currentAuction?.status === AuctionStatus.CLOSED && <Confetti duration={1500} />}
             </div>
@@ -299,17 +325,31 @@ export const GameStateDisplayer: React.FC<{
 
           {/* Cards */}
           <div className={classes.playerCards}>
+            <div className={classes.sectionHeader}>Cards to Auction</div>
             <div>
-              {players[0].icon}
-              {players[0].name}
-              {players[0].id === _.keys(gameState.players)[gameState.playerIdx] && <div>✨your turn✨</div>}
               <div className={classes.cards}>
                 {players[0].cards.map((card, j) => (
                   <div className={classes.card}>
                     <div>
-                      <div className={classes.cardHeader} style={{backgroundColor: card.color}} />
-                      <div className={classes.cardBody}>
-                        <div>{card.auctionType}</div>
+                      <div
+                        onClick={() => {
+                          actions.startAuction(j);
+                        }}
+                      >
+                        <img src={Kadinsky1} className={classes.artImage}></img>
+                        <div className={classes.auctionIconBackground} style={{backgroundColor: card.color}}>
+                          {card.auctionType == AuctionType.OPEN && <FaEye className={classes.auctionIcon} />}
+                          {card.auctionType == AuctionType.ONE_OFFER && (
+                            <FaStar className={classes.auctionIcon} />
+                          )}
+                          {card.auctionType == AuctionType.FIXED && <FaTag className={classes.auctionIcon} />}
+                          {card.auctionType == AuctionType.DOUBLE && (
+                            <BiAddToQueue className={classes.auctionIcon} />
+                          )}
+                          {card.auctionType == AuctionType.HIDDEN && (
+                            <FaLock className={classes.auctionIcon} />
+                          )}
+                        </div>
                         <button
                           onClick={() => {
                             actions.startAuction(j);
@@ -383,10 +423,6 @@ export const GameStateDisplayer: React.FC<{
           {gameState.started && <div>Game has Started</div>}
         </div>
       </div>
-      {/* Scoreboard */}
-      {/* Current Auction */}
-
-      {/* Players */}
     </div>
   );
   // todo hammer
@@ -407,15 +443,37 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'column',
   },
-  card: {
-    padding: 16,
+  auctionIconBackgroundBig: {
     display: 'flex',
-    flexDirection: 'column',
+    position: 'absolute',
+    justifyContent: 'center',
     alignItems: 'center',
-    width: 40,
-    height: 80,
-    backgroundColor: '#CCC',
-    color: '#333',
+    width: '48px',
+    height: '48px',
+    marginTop: '-48px',
+  },
+  auctionIconBig: {
+    width: '32px',
+    height: '32px',
+    position: 'absolute',
+    color: '#ffffff',
+  },
+  auctionIconBackground: {
+    display: 'flex',
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '32px',
+    height: '32px',
+    marginTop: '-32px',
+  },
+  auctionIcon: {
+    width: '24px',
+    height: '24px',
+    position: 'absolute',
+    color: '#ffffff',
+  },
+  card: {
     marginLeft: 10,
     '& button': {
       fontSize: '10pt',
@@ -441,6 +499,22 @@ const useStyles = makeStyles({
   },
   cards: {
     display: 'flex',
+    flexDirection: 'row',
+  },
+  artImageBig: {
+    display: 'flex',
+    flexDirection: 'column',
+    borderRadius: '4px',
+    height: '200px',
+    width: '136px',
+  },
+  artImage: {
+    display: 'flex',
+    flexDirection: 'column',
+    filter: 'grayscale(1)',
+    borderRadius: '4px',
+    height: '104px',
+    width: '72px',
   },
   auctionStatus: {
     display: 'flex',
@@ -465,17 +539,17 @@ const useStyles = makeStyles({
     display: 'flex',
   },
   table: {
-    border: '1px solid black',
+    border: '0px solid black',
     // padding: '10px',
   },
   th: {
-    border: '1px solid black',
+    border: '0px solid black',
   },
   tr: {
-    border: '1px solid black',
+    border: '0px solid black',
   },
   td: {
-    border: '1px solid black',
+    border: '0px solid black',
   },
   gameBoardColumn: {
     display: 'flex',
@@ -535,6 +609,7 @@ const useStyles = makeStyles({
   auctionPhoto: {
     width: '144px',
     height: '200px',
+    overflow: 'hidden',
   },
   rowFlex: {
     display: 'flex',
