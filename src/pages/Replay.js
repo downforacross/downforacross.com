@@ -223,50 +223,34 @@ export default class Replay extends Component {
     return this.historyWrapper.getSnapshotAt(position);
   }
 
+  recomputeHistory = () => {
+    const history = [this.historyWrapper.createEvent, ...this.historyWrapper.history];
+    const filteredHistory = history.filter((event) => event.type !== 'updateCursor' && event.type !== 'chat');
+    const position = this.state.position || history[0].timestamp;
+    this.setState({
+      history,
+      filteredHistory,
+      position,
+    });
+  };
+
+  debouncedRecomputeHistory = _.debounce(this.recomputeHistory);
+
   componentDidMount() {
     this.gameModel = new GameModel(`/game/${this.gid}`);
     this.historyWrapper = new HistoryWrapper();
     this.gameModel.on('wsEvent', (event) => {
       this.historyWrapper.addEvent(event);
-      const history = [...this.state.history, event];
-      const position = history[0].timestamp;
-
-      const filteredHistory = history.filter(
-        (event) => event.type !== 'updateCursor' && event.type !== 'chat'
-      );
-      this.setState({history, filteredHistory, position});
+      this.debouncedRecomputeHistory();
     });
     this.gameModel.on('wsCreateEvent', (event) => {
       this.historyWrapper.setCreateEvent(event);
-      const history = [...this.state.history, event];
-      const position = history[0].timestamp;
-
-      const filteredHistory = history.filter(
-        (event) => event.type !== 'updateCursor' && event.type !== 'chat'
-      );
-      this.setState({history, filteredHistory, position});
+      this.debouncedRecomputeHistory();
     });
     this.gameModel.attach();
 
     // compute it here so the grid doesn't go crazy
     this.screenWidth = window.innerWidth;
-
-    // this.historyRef.once('value', (snapshot) => {
-    //   const history = _.values(snapshot.val());
-    //   if (history.length > 0 && history[0].type === 'create') {
-    //     const position = history[0].timestamp;
-    //     this.historyWrapper = new HistoryWrapper(history);
-
-    //     const filteredHistory = history.filter(
-    //       (event) => event.type !== 'updateCursor' && event.type !== 'chat'
-    //     );
-    //     this.setState({history, filteredHistory, position});
-    //   } else {
-    //     this.setState({
-    //       error: true,
-    //     });
-    //   }
-    // });
   }
 
   componentDidUpdate(prevProps, prevState) {
