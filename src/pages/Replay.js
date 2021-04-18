@@ -5,12 +5,12 @@ import React, {Component} from 'react';
 import Flex from 'react-flexview';
 import {Helmet} from 'react-helmet';
 import _ from 'lodash';
+import {GameModel} from '../store';
 
 import HistoryWrapper from '../lib/wrappers/HistoryWrapper';
 import Player from '../components/Player';
 import Chat from '../components/Chat';
 import Nav from '../components/common/Nav';
-import {db} from '../actions';
 import {toArr, pure, isAncestor} from '../lib/jsUtils';
 
 const SCRUB_SPEED = 50; // 30 actions per second
@@ -208,18 +208,6 @@ export default class Replay extends Component {
     this.historyWrapper = null;
   }
 
-  historyPath() {
-    return `game/${this.props.match.params.gid}/events`;
-  }
-
-  backupHistoryPath() {
-    return `history/${this.gid}`;
-  }
-
-  backupUrl() {
-    return `/replay/${this.gid}`;
-  }
-
   handleSetPosition = (position) => {
     this.setState({position});
   };
@@ -231,31 +219,54 @@ export default class Replay extends Component {
   get game() {
     // compute the game state corresponding to current playback time
     const {position} = this.state;
-    if (!this.historyWrapper) return null;
+    if (!this.historyWrapper || !this.historyWrapper.ready) return null;
     return this.historyWrapper.getSnapshotAt(position);
   }
 
   componentDidMount() {
-    this.historyRef = db.ref(this.historyPath());
+    this.gameModel = new GameModel(`/game/${this.gid}`);
+    this.historyWrapper = new HistoryWrapper();
+    this.gameModel.on('wsEvent', (event) => {
+      this.historyWrapper.addEvent(event);
+      const history = [...this.state.history, event];
+      const position = history[0].timestamp;
+
+      const filteredHistory = history.filter(
+        (event) => event.type !== 'updateCursor' && event.type !== 'chat'
+      );
+      this.setState({history, filteredHistory, position});
+    });
+    this.gameModel.on('wsCreateEvent', (event) => {
+      this.historyWrapper.setCreateEvent(event);
+      const history = [...this.state.history, event];
+      const position = history[0].timestamp;
+
+      const filteredHistory = history.filter(
+        (event) => event.type !== 'updateCursor' && event.type !== 'chat'
+      );
+      this.setState({history, filteredHistory, position});
+    });
+    this.gameModel.attach();
+
     // compute it here so the grid doesn't go crazy
     this.screenWidth = window.innerWidth;
 
-    this.historyRef.once('value', (snapshot) => {
-      const history = _.values(snapshot.val());
-      if (history.length > 0 && history[0].type === 'create') {
-        const position = history[0].timestamp;
-        this.historyWrapper = new HistoryWrapper(history);
+    // this.historyRef.once('value', (snapshot) => {
+    //   const history = _.values(snapshot.val());
+    //   if (history.length > 0 && history[0].type === 'create') {
+    //     const position = history[0].timestamp;
+    //     this.historyWrapper = new HistoryWrapper(history);
 
-        const filteredHistory = history.filter(
-          (event) => event.type !== 'updateCursor' && event.type !== 'chat'
-        );
-        this.setState({history, filteredHistory, position});
-      } else {
-        this.setState({
-          error: true,
-        });
-      }
-    });
+    //     const filteredHistory = history.filter(
+    //       (event) => event.type !== 'updateCursor' && event.type !== 'chat'
+    //     );
+    //     this.setState({history, filteredHistory, position});
+    //   } else {
+    //     this.setState({
+    //       error: true,
+    //     });
+    //   }
+    // });
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -520,8 +531,7 @@ export default class Replay extends Component {
   }
 
   getPuzzleTitle() {
-    if (!this.historyWrapper) return '';
-    const game = this.historyWrapper.getSnapshot();
+    const game = this.game;
     if (!game || !game.info) return '';
     return game.info.title;
   }
@@ -561,7 +571,7 @@ export default class Replay extends Component {
         </div>
         <Flex style={{padding: 20}}>
           {this.renderPlayer()}
-          {this.renderChat()}
+          {/* {this.renderChat()} */}
         </Flex>
         {/* Controls:
       Playback scrubber
