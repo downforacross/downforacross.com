@@ -18,10 +18,10 @@ interface Card {
 
 export enum AuctionType {
   OPEN = 'OPEN',
-  HIDDEN = 'HIDDEN',
+  HIDDEN = 'HIDDEN', // to do: 1) show viewer their own bids 2) after auction ends, show selling price
   ONE_OFFER = 'ONE_OFFER',
-  FIXED = 'FIXED',
-  DOUBLE = 'DOUBLE',
+  FIXED = 'FIXED', // todo: 1) allow player to fix the price 2) active bidder turns
+  DOUBLE = 'DOUBLE', // todo: 1) in "Cards to Auction", add UI to select two cards 2) in "Current Auction", display the two cards
 }
 
 export const turnBasedAuctions = [AuctionType.ONE_OFFER, AuctionType.FIXED];

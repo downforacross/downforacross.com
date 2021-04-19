@@ -210,7 +210,13 @@ export const modernArtReducerHelper = (
       };
       const numPlayers = _.size(state.players);
       const cardsToDeal = CARDS_TO_DEAL[numPlayers]?.[state.roundIndex] ?? 0;
-      const auctionTypes = [AuctionType.HIDDEN, AuctionType.OPEN, AuctionType.ONE_OFFER];
+      const auctionTypes = [
+        AuctionType.DOUBLE,
+        AuctionType.FIXED,
+        AuctionType.HIDDEN,
+        AuctionType.OPEN,
+        AuctionType.ONE_OFFER,
+      ];
 
       const ALL_CARDS = _.flatMap(colors, (color) =>
         auctionTypes.map((auctionType) => ({

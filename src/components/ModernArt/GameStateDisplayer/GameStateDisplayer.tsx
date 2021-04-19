@@ -278,16 +278,9 @@ export const GameStateDisplayer: React.FC<{
                         <td className={classes.td}>Highest Bidder</td>
                         <td className={classes.td}>
                           {gameState.currentAuction.highestBidder
-                            ? gameState.currentAuction.highestBidder
+                            ? gameState.players[gameState.currentAuction.highestBidder].name
                             : 'Nobody'}
                         </td>
-                      </tr>
-                    )}
-
-                    {gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER && (
-                      <tr className={classes.tr}>
-                        <td className={classes.td}>Active Bidder</td>
-                        <td className={classes.td}>{gameState.currentAuction.activeBidder}</td>
                       </tr>
                     )}
 
@@ -299,9 +292,21 @@ export const GameStateDisplayer: React.FC<{
                       </tr>
                     )}
 
+                    {gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER && (
+                      <tr className={classes.tr}>
+                        {/* Current Bidder is a better display name */}
+                        <td className={classes.td}>Active Bidder</td>
+                        <td className={classes.td}>
+                          {gameState.currentAuction.activeBidder
+                            ? gameState.players[gameState.currentAuction.activeBidder].name
+                            : 'Nobody'}
+                        </td>
+                      </tr>
+                    )}
+
                     <tr className={classes.tr}>
-                      <td className={classes.td}>Bank</td>
-                      <td className={classes.td}>$400</td>
+                      <td className={classes.td}>Your Bank</td>
+                      <td className={classes.td}>${gameState.players[viewerPlayer.id].money}</td>
                     </tr>
                   </table>
                   {gameState.currentAuction.status === AuctionStatus.PENDING && (
@@ -316,9 +321,10 @@ export const GameStateDisplayer: React.FC<{
                   )}
                 </div>
               </div>
-              {gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER && (
-                <button onClick={skipBid}> Skip Bid </button>
-              )}
+              {gameState.currentAuction.status === AuctionStatus.PENDING &&
+                gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER && (
+                  <button onClick={skipBid}> Skip Bid </button>
+                )}
               {gameState.currentAuction?.status === AuctionStatus.CLOSED && <Confetti duration={1500} />}
             </div>
           )}
@@ -352,13 +358,18 @@ export const GameStateDisplayer: React.FC<{
                             <FaLock className={classes.auctionIcon} />
                           )}
                         </div>
-                        <button
-                          onClick={() => {
-                            actions.startAuction(j);
-                          }}
-                        >
-                          Play
-                        </button>
+                        {/* default */}
+                        {viewerPlayer.id === _.keys(gameState.players)[gameState.playerIdx] &&
+                          gameState.currentAuction?.status !== AuctionStatus.PENDING && (
+                            <button
+                              onClick={() => {
+                                actions.startAuction(j);
+                              }}
+                            >
+                              {' '}
+                              Play{' '}
+                            </button>
+                          )}
                       </div>
                     </div>
                   </div>
@@ -371,34 +382,23 @@ export const GameStateDisplayer: React.FC<{
         <div className={classes.column} style={{marginLeft: '4%'}}>
           {/* Game board */}
           <div>
-            {colors.map((i) => (
+            {colors.map((c) => (
               <div className={classes.floatChild}>
-                {painters[i]}
-                <div id={i} className={classes.gameBoardColumn} style={{backgroundColor: rgbColors[i]}}>
-                  <div
-                    className={classes.gameBoardCircle}
-                    style={{backgroundColor: gameState.rounds[i] ? '#ffffff' : rgbColors[i]}}
-                  >
-                    {gameState.rounds[i] && gameState.rounds[i].places ? gameState.rounds[i].places?.[i] : ''}
-                  </div>
-                  <div
-                    className={classes.gameBoardCircle}
-                    style={{backgroundColor: gameState.rounds[i] ? '#ffffff' : rgbColors[i]}}
-                  >
-                    {gameState.rounds[i] && gameState.rounds[i].places ? gameState.rounds[i].places?.[i] : ''}
-                  </div>
-                  <div
-                    className={classes.gameBoardCircle}
-                    style={{backgroundColor: gameState.rounds[i] ? '#ffffff' : rgbColors[i]}}
-                  >
-                    {gameState.rounds[i] && gameState.rounds[i].places ? gameState.rounds[i].places?.[i] : ''}
-                  </div>
-                  <div
-                    className={classes.gameBoardCircle}
-                    style={{backgroundColor: gameState.rounds[i] ? '#ffffff' : rgbColors[i]}}
-                  >
-                    {gameState.rounds[i] && gameState.rounds[i].places ? gameState.rounds[i].places?.[i] : ''}
-                  </div>
+                {painters[c]}
+                <div id={c} className={classes.gameBoardColumn} style={{backgroundColor: rgbColors[c]}}>
+                  {[0, 1, 2, 3].map((i) => (
+                    <div
+                      className={classes.gameBoardCircle}
+                      style={{
+                        backgroundColor:
+                          gameState.rounds[i] && gameState.rounds[i].places ? '#ffffff' : rgbColors[c],
+                      }}
+                    >
+                      {gameState.rounds[i] && gameState.rounds[i].places
+                        ? gameState.rounds[i].places?.[c]
+                        : ''}
+                    </div>
+                  ))}
                 </div>
               </div>
             ))}
@@ -564,6 +564,8 @@ const useStyles = makeStyles({
   },
   gameBoardCircle: {
     display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     width: '40px',
     height: '40px',
     borderRadius: '50%',
