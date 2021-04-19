@@ -216,6 +216,30 @@ export const GameStateDisplayer: React.FC<{
   return (
     <div className={classes.gameStateDisplayerContainer}>
       <div className={classes.column1} style={{marginRight: '4%'}}>
+        {/* Played cards */}
+        <div className={classes.players}>
+          {_.values(gameState.players).map((player) => {
+            const arts = gameState.rounds[gameState.roundIndex].players[player.id]?.acquiredArt;
+            return (
+              <div className={classes.floatPlayer}>
+                {player.id === _.keys(gameState.players)[gameState.playerIdx] && <div>🎲(turn)🎲</div>}
+                {viewerPlayer?.id === player.id && <div>✨(you)✨</div>}
+                <div>{player.name}</div>
+
+                <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
+                  <FaRobot className={classes.playerIcon} />
+                  {/* <div className={classes.playerIcon}> {player.icon} </div> */}
+                  {arts?.map((a) => (
+                    <div className={classes.acquiredArtCircle} style={{backgroundColor: a.color}}></div>
+                  ))}
+                  <div className={classes.playerSpacing}></div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className={classes.sectionSpacing}></div>
         {/* Current Auction */}
         {gameState.currentAuction && (
           <div className={classes.auctionStatus}>
@@ -294,10 +318,11 @@ export const GameStateDisplayer: React.FC<{
                   <span className={classes.submitBidForm}>
                     <input type="text" onChange={handleInputChange} value={currentBid || ''} />
                     <button onClick={submitBid}> Submit Bid </button>
-                    {/* todo: only show this for auctioneer */}
-                    <button onClick={finishAuction}>
-                      End Auction <FaGavel />
-                    </button>
+                    {viewerPlayer?.id == gameState.currentAuction.auctioneer && (
+                      <button onClick={finishAuction}>
+                        End Auction <FaGavel />
+                      </button>
+                    )}
                   </span>
                 )}
               </div>
@@ -363,33 +388,8 @@ export const GameStateDisplayer: React.FC<{
       </div>
 
       <div className={classes.column2} style={{marginLeft: '4%'}}>
-        {/* Played cards */}
-        <div className={classes.players}>
-          {_.values(gameState.players).map((player) => {
-            const arts = gameState.rounds[gameState.roundIndex].players[player.id]?.acquiredArt;
-            return (
-              <div className={classes.floatPlayer}>
-                {player.id === _.keys(gameState.players)[gameState.playerIdx] && <div>🎲(turn)🎲</div>}
-                {viewerPlayer?.id === player.id && <div>✨(you)✨</div>}
-                <div>{player.name}</div>
-
-                <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
-                  <FaRobot className={classes.playerIcon} />
-                  {/* <div className={classes.playerIcon}> {player.icon} </div> */}
-                  {arts?.map((a) => (
-                    <div className={classes.acquiredArtCircle} style={{backgroundColor: a.color}}></div>
-                  ))}
-                  <div className={classes.playerSpacing}></div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className={classes.sectionSpacing}></div>
-
         {/* Game board */}
-        <div>
+        <div style={{display: 'flex'}}>
           {colors.map((c) => (
             <div className={classes.floatChild}>
               {painters[c]}
