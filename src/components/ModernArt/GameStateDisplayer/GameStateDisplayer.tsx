@@ -208,32 +208,7 @@ export const GameStateDisplayer: React.FC<{
 
   return (
     <div className={classes.gameStateDisplayerContainer}>
-      <div className={classes.column} style={{marginRight: '4%'}}>
-        {/* Played cards */}
-        <div>
-          {_.values(gameState.players).map((player) => {
-            const arts = gameState.rounds[gameState.roundIndex].players[player.id]?.acquiredArt;
-            return (
-              <div className={classes.floatPlayer}>
-                {player.id === _.keys(gameState.players)[gameState.playerIdx] && <div>🎲(turn)🎲</div>}
-                {viewerPlayer?.id === player.id && <div>✨(you)✨</div>}
-                <div>{player.name}</div>
-
-                <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
-                  <FaRobot className={classes.playerIcon} />
-                  {/* <div className={classes.playerIcon}> {player.icon} </div> */}
-                  {arts?.map((a) => (
-                    <div className={classes.acquiredArtCircle} style={{backgroundColor: a.color}}></div>
-                  ))}
-                  <div className={classes.playerSpacing}></div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className={classes.sectionSpacing}></div>
-
+      <div className={classes.column1} style={{marginRight: '4%'}}>
         {/* Current Auction */}
         {gameState.currentAuction && (
           <div className={classes.auctionStatus}>
@@ -376,7 +351,32 @@ export const GameStateDisplayer: React.FC<{
         </div>
       </div>
 
-      <div className={classes.column} style={{marginLeft: '4%'}}>
+      <div className={classes.column2} style={{marginLeft: '4%'}}>
+        {/* Played cards */}
+        <div className={classes.players}>
+          {_.values(gameState.players).map((player) => {
+            const arts = gameState.rounds[gameState.roundIndex].players[player.id]?.acquiredArt;
+            return (
+              <div className={classes.floatPlayer}>
+                {player.id === _.keys(gameState.players)[gameState.playerIdx] && <div>🎲(turn)🎲</div>}
+                {viewerPlayer?.id === player.id && <div>✨(you)✨</div>}
+                <div>{player.name}</div>
+
+                <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
+                  <FaRobot className={classes.playerIcon} />
+                  {/* <div className={classes.playerIcon}> {player.icon} </div> */}
+                  {arts?.map((a) => (
+                    <div className={classes.acquiredArtCircle} style={{backgroundColor: a.color}}></div>
+                  ))}
+                  <div className={classes.playerSpacing}></div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className={classes.sectionSpacing}></div>
+
         {/* Game board */}
         <div>
           {colors.map((c) => (
@@ -494,7 +494,7 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'column',
     '& > div': {
-      padding: 12,
+      padding: 8,
     },
   },
   cards: {
@@ -521,8 +521,8 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    '& > *': {
-      marginTop: 8,
+    '& > div': {
+      padding: 8,
     },
   },
   submitBidForm: {
@@ -531,11 +531,16 @@ const useStyles = makeStyles({
       marginLeft: 4,
     },
   },
-  column: {
+  column1: {
     display: 'flex',
     flexDirection: 'column',
-    // flex: '40%',
-    maxWidth: '40%',
+    maxWidth: '45%',
+    margin: '2%',
+  },
+  column2: {
+    display: 'flex',
+    flexDirection: 'column',
+    maxWidth: '35%',
     margin: '2%',
   },
   table: {
@@ -574,10 +579,14 @@ const useStyles = makeStyles({
     float: 'left',
     padding: '8px',
   },
+  players: {
+    display: 'flex',
+    justifyContent: 'left',
+    padding: '8px',
+  },
   floatPlayer: {
     display: 'flex',
     flexDirection: 'column',
-    width: '30%',
     float: 'left',
     padding: '8px',
   },
@@ -594,7 +603,7 @@ const useStyles = makeStyles({
   sectionHeader: {
     justifyContent: 'center',
     width: '100%',
-    height: '32px',
+    height: '24px',
     fontFamily: 'Roboto',
     fontStyle: 'normal',
     fontSize: '24px',
@@ -602,7 +611,7 @@ const useStyles = makeStyles({
   sectionSpacing: {
     display: 'flex',
     width: '100%',
-    height: '32px',
+    height: '16px',
   },
   playerSpacing: {
     width: '32px',
