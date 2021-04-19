@@ -185,7 +185,7 @@ export const GameStateDisplayer: React.FC<{
   const {gameState, playerActions: actions, playerId} = props;
 
   const players = _.values(gameState.players);
-  const player = gameState.players[playerId];
+  const viewerPlayer = gameState.players[playerId];
 
   const [currentBid, setCurrentBid] = useState(0);
 
@@ -216,7 +216,8 @@ export const GameStateDisplayer: React.FC<{
               const arts = gameState.rounds[gameState.roundIndex].players[player.id]?.acquiredArt;
               return (
                 <div className={classes.floatPlayer}>
-                  {player.id === _.keys(gameState.players)[gameState.playerIdx] && <div>✨your turn✨</div>}
+                  {player.id === _.keys(gameState.players)[gameState.playerIdx] && <div>🎲(turn)🎲</div>}
+                  {viewerPlayer?.id === player.id && <div>✨(you)✨</div>}
                   <div>{player.name}</div>
 
                   <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
@@ -329,7 +330,7 @@ export const GameStateDisplayer: React.FC<{
             <div className={classes.sectionHeader}>Cards to Auction</div>
             <div>
               <div className={classes.cards}>
-                {(player?.cards || []).map((card, j) => (
+                {(viewerPlayer?.cards || []).map((card, j) => (
                   <div className={classes.card}>
                     <div>
                       <div
