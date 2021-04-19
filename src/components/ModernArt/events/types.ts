@@ -13,6 +13,7 @@ export interface ModernArtEvent {
 
 interface Card {
   color: string;
+  paintingIndex: number; // which painting of the artist to display
   auctionType: AuctionType;
 }
 
@@ -44,7 +45,7 @@ export const painters: {[key: string]: string} = {
   red: 'Kadinsky',
   green: 'Degas',
   orange: 'Monet',
-  blue: 'Van Eyk',
+  blue: 'VanEyk',
   yellow: 'Picasso',
 };
 export interface Auction {

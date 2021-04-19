@@ -208,6 +208,13 @@ export const modernArtReducerHelper = (
         3: [10, 10, 10],
         4: [10, 5, 3],
       };
+      const CARDS_PER_COLOR: Record<string, number> = {
+        red: 12,
+        green: 13,
+        orange: 14,
+        blue: 15,
+        yellow: 16,
+      };
       const numPlayers = _.size(state.players);
       const cardsToDeal = CARDS_TO_DEAL[numPlayers]?.[state.roundIndex] ?? 0;
       const auctionTypes = [
@@ -219,12 +226,17 @@ export const modernArtReducerHelper = (
       ];
 
       const ALL_CARDS = _.flatMap(colors, (color) =>
-        auctionTypes.map((auctionType) => ({
-          color,
-          auctionType,
-        }))
+        _.flatMap(auctionTypes, (auctionType) =>
+          Array(CARDS_PER_COLOR[color])
+            .fill(0)
+            .map((_, idx) => ({
+              color,
+              paintingIndex: idx,
+              auctionType,
+            }))
+        )
       );
-      let deck = [...ALL_CARDS, ...ALL_CARDS, ...ALL_CARDS, ...ALL_CARDS];
+      let deck = [...ALL_CARDS];
       for (let i = 0; i < deck.length; i += 1) {
         const j = Math.floor(prng() * (i + 1));
         const tmp = deck[j];

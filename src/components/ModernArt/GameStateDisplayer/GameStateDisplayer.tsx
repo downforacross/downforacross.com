@@ -84,7 +84,6 @@ import Picasso13 from '../resources/picasso-13.jpeg';
 import Picasso14 from '../resources/picasso-14.jpeg';
 import Picasso15 from '../resources/picasso-15.jpeg';
 import Picasso16 from '../resources/picasso-16.jpeg';
-import {NONAME} from 'dns';
 
 const kadinskyArt = [
   Kadinsky1,
@@ -170,6 +169,14 @@ const picassoArt = [
   Picasso15,
   Picasso16,
 ];
+
+const paintings: Record<string, any[]> = {
+  Kadinsky: kadinskyArt,
+  Degas: degasArt,
+  Monet: monetArt,
+  VanEyk: vaneykArt,
+  Picasso: picassoArt,
+};
 
 /**
  * This component is parallel to Game -- will render a <Player/>
@@ -318,7 +325,11 @@ export const GameStateDisplayer: React.FC<{
                         actions.startAuction(j);
                       }}
                     >
-                      <img src={Kadinsky1} className={classes.artImage}></img>
+                      {/* HERE */}
+                      <img
+                        src={paintings[painters[card.color]][card.paintingIndex]}
+                        className={classes.artImage}
+                      ></img>
                       <div className={classes.auctionIconBackground} style={{backgroundColor: card.color}}>
                         {card.auctionType == AuctionType.OPEN && <FaEye className={classes.auctionIcon} />}
                         {card.auctionType == AuctionType.ONE_OFFER && (
