@@ -185,6 +185,7 @@ export const GameStateDisplayer: React.FC<{
   const {gameState, playerActions: actions, playerId} = props;
 
   const players = _.values(gameState.players);
+  const player = gameState.players[playerId];
 
   const [currentBid, setCurrentBid] = useState(0);
 
@@ -328,7 +329,7 @@ export const GameStateDisplayer: React.FC<{
             <div className={classes.sectionHeader}>Cards to Auction</div>
             <div>
               <div className={classes.cards}>
-                {(players[0]?.cards || []).map((card, j) => (
+                {(player?.cards || []).map((card, j) => (
                   <div className={classes.card}>
                     <div>
                       <div
