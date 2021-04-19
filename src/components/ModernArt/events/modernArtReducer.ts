@@ -2,8 +2,95 @@
 import seedrandom from 'seedrandom';
 import moment from 'moment';
 import _ from 'lodash';
-import {ModernArtState, ModernArtEvent, AuctionStatus, colors, AuctionType} from './types';
+import {
+  ModernArtState,
+  ModernArtEvent,
+  AuctionStatus,
+  colors,
+  AuctionType,
+  turnBasedAuctions,
+  ModernArtPlayer,
+} from './types';
 
+const getPlayerIdx = (state: ModernArtState, playerId: string) => {
+  return Object.keys(state.players).indexOf(playerId);
+};
+
+const getPlayerId = (state: ModernArtState, playerIdx: number) => {
+  return Object.keys(state.players)[playerIdx];
+};
+
+const nextIdx = (state: ModernArtState, playerIdx: number) => {
+  return (playerIdx + 1) % Object.keys(state.players).length;
+};
+
+const nextPlayerId = (state: ModernArtState, playerId: string) => {
+  return getPlayerId(state, nextIdx(state, getPlayerIdx(state, playerId)));
+};
+
+const finishAuction = (state: ModernArtState, finishedAt: number, finishedBy?: ModernArtPlayer) => {
+  if (!state.currentAuction) return undefined;
+  const auctioneer = state.currentAuction.auctioneer;
+
+  // If no highestBidder, then painting goes to auctioneer
+  const winner = state.currentAuction.highestBidder || auctioneer;
+  if (!auctioneer || !winner) return undefined;
+  const payment = state.currentAuction.highestBid || state.currentAuction.fixedPrice || 0;
+  const closedAuction = {
+    ...state.currentAuction,
+    status: AuctionStatus.CLOSED,
+    winner,
+    payment,
+  };
+
+  if (state.players[winner].money < payment) return undefined;
+  const hhmm = moment(finishedAt).format('hh:mm');
+  return {
+    ...state,
+    playerIdx: (state.playerIdx + 1) % _.keys(state.players).length, // todo: fix for double auction edge cases
+    players: {
+      ...state.players,
+      // warning: do not switch order of [auctioneer] and [winner] keys!
+      // If auctioneer = winner, then the payment should only be subtracted
+      [auctioneer]: {
+        ...state.players[auctioneer],
+        money: state.players[auctioneer].money + payment,
+      },
+      [winner]: {
+        ...state.players[winner],
+        money: state.players[winner].money - payment,
+      },
+    },
+    rounds: {
+      ...state.rounds,
+      [state.roundIndex]: {
+        ...state.rounds[state.roundIndex],
+        players: {
+          ...state.rounds[state.roundIndex]?.players,
+          [winner]: {
+            ...state.rounds[state.roundIndex]?.players[winner],
+            acquiredArt: [
+              ...(state.rounds[state.roundIndex]?.players[winner]?.acquiredArt ?? []),
+              closedAuction.painting,
+            ],
+          },
+        },
+      },
+    },
+    log: _.compact([
+      ...state.log,
+      finishedBy && {
+        hhmm,
+        text: `${finishedBy.name} finished the auction`,
+      },
+      {
+        hhmm,
+        text: `${state.players[winner].name} won the auction for ${payment} and acquired a ${closedAuction.painting.color}`,
+      },
+    ]),
+    currentAuction: closedAuction,
+  };
+};
 /**
  * A helper function that contains meat of reducer code.
  *
@@ -18,6 +105,7 @@ export const modernArtReducerHelper = (
 
   const timestamp = typeof event.timestamp === 'number' ? event.timestamp : Date.now();
   const hhmm = moment(timestamp).format('hh:mm');
+
   if (event.type === 'start_game') {
     return {
       ...state,
@@ -47,13 +135,16 @@ export const modernArtReducerHelper = (
   }
   if (event.type === 'submit_bid') {
     if (!state.currentAuction) return undefined;
+
     // if (event.params.bidAmount > (state.currentAuction.highestBid ?? 0)) {
-    return {
+    const stateAfterBid = {
       ...state,
       currentAuction: {
         ...state.currentAuction,
         highestBidder: event.params.playerId,
         highestBid: event.params.bidAmount,
+        activeBidder:
+          state.currentAuction.activeBidder && nextPlayerId(state, state.currentAuction.activeBidder),
       },
       log: [
         ...state.log,
@@ -66,71 +157,17 @@ export const modernArtReducerHelper = (
         },
       ],
     };
+    if (
+      turnBasedAuctions.includes(state.currentAuction.painting.auctionType) &&
+      state.currentAuction.auctioneer === playerId
+    ) {
+      // the auction is over
+      return finishAuction(stateAfterBid, timestamp);
+    }
+    return stateAfterBid;
     // }
   }
-  if (event.type === 'finish_auction') {
-    if (!state.currentAuction) return undefined;
-    const auctioneer = state.currentAuction.auctioneer;
-
-    // If no highestBidder, then painting goes to auctioneer
-    const winner = state.currentAuction.highestBidder || auctioneer;
-    if (!auctioneer || !winner) return undefined;
-    const payment = state.currentAuction.highestBid || state.currentAuction.fixedPrice || 0;
-    const closedAuction = {
-      ...state.currentAuction,
-      status: AuctionStatus.CLOSED,
-      winner,
-      payment,
-    };
-
-    if (state.players[winner].money < payment) return undefined;
-
-    return {
-      ...state,
-      playerIdx: (state.playerIdx + 1) % _.keys(state.players).length, // todo: fix for double auction edge cases
-      players: {
-        ...state.players,
-        // warning: do not switch order of [auctioneer] and [winner] keys!
-        // If auctioneer = winner, then the payment should only be subtracted
-        [auctioneer]: {
-          ...state.players[auctioneer],
-          money: state.players[auctioneer].money + payment,
-        },
-        [winner]: {
-          ...state.players[winner],
-          money: state.players[winner].money - payment,
-        },
-      },
-      rounds: {
-        ...state.rounds,
-        [state.roundIndex]: {
-          ...state.rounds[state.roundIndex],
-          players: {
-            ...state.rounds[state.roundIndex]?.players,
-            [winner]: {
-              ...state.rounds[state.roundIndex]?.players[winner],
-              acquiredArt: [
-                ...(state.rounds[state.roundIndex]?.players[winner]?.acquiredArt ?? []),
-                closedAuction.painting,
-              ],
-            },
-          },
-        },
-      },
-      log: _.compact([
-        ...state.log,
-        player && {
-          hhmm,
-          text: `${player.name} finished the auction`,
-        },
-        {
-          hhmm,
-          text: `${state.players[winner].name} won the auction for ${payment} and acquired a ${closedAuction.painting.color}`,
-        },
-      ]),
-      currentAuction: closedAuction,
-    };
-  }
+  if (event.type === 'finish_auction') return finishAuction(state, timestamp, player);
   if (event.type === 'update_name') {
     if (!player && state.started) {
       return undefined;
@@ -313,7 +350,9 @@ export const modernArtReducerHelper = (
       auctioneer: playerId,
       painting: card,
       highestBid: 0,
+      activeBidder: nextPlayerId(state, playerId),
     };
+
     return {
       ...state,
       currentAuction: auction,
@@ -333,7 +372,6 @@ export const modernArtReducerHelper = (
         },
       ],
     };
-    // pass
   }
 
   if (event.type === 'skip_bid') {
@@ -343,7 +381,7 @@ export const modernArtReducerHelper = (
       ...state,
       currentAuction: {
         ...state.currentAuction,
-        activeBidder: (state.currentAuction.activeBidder + 1) % _.keys(state.players).length,
+        activeBidder: nextPlayerId(state, state.currentAuction.activeBidder),
       },
     };
   }
@@ -363,6 +401,7 @@ export const modernArtValidatorHelper = (state: ModernArtState, event: ModernArt
     return !state.started;
   }
   if (event.type === 'submit_bid') {
+    console.log('validating submit bid');
     if (!state.currentAuction) return false;
     if (state.currentAuction.status === AuctionStatus.CLOSED) {
       console.log('cannot submit_bid because auction is closed');
@@ -373,14 +412,17 @@ export const modernArtValidatorHelper = (state: ModernArtState, event: ModernArt
       console.log(`cannot submit_bid because player has insufficient funds ${money}`);
       return false;
     }
-    // if auction type is one_offer but you are not the active bidder, you're rejected
-    if (state.currentAuction.painting.auctionType === AuctionType.ONE_OFFER) {
-      if (state.currentAuction.activeBidder !== playerId) {
-        console.log(
-          `cannot submit_bid because ${playerId} is not the active bidder ${state.currentAuction.activeBidder}`
-        );
-        return false;
-      }
+    // If it's a turn based auction, only the active bidder can bid
+    console.log(
+      `auction of type ${state.currentAuction.painting.auctionType} is turn based?`,
+      turnBasedAuctions.includes(state.currentAuction.painting.auctionType)
+    );
+    if (
+      turnBasedAuctions.includes(state.currentAuction.painting.auctionType) &&
+      state.currentAuction.activeBidder !== playerId
+    ) {
+      console.log('out of turn');
+      return false;
     }
 
     return true;

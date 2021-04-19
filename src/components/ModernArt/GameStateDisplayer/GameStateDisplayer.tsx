@@ -328,7 +328,7 @@ export const GameStateDisplayer: React.FC<{
             <div className={classes.sectionHeader}>Cards to Auction</div>
             <div>
               <div className={classes.cards}>
-                {players[0].cards.map((card, j) => (
+                {(players[0]?.cards || []).map((card, j) => (
                   <div className={classes.card}>
                     <div>
                       <div

@@ -7,13 +7,13 @@ export interface ModernArtEvent {
     | 'submit_bid'
     | 'finish_auction'
     | 'skip_bid';
-  params: any;
+  params: any; // oh no
   timestamp?: number | object;
 }
 
 interface Card {
   color: string;
-  auctionType: string;
+  auctionType: AuctionType;
 }
 
 export enum AuctionType {
@@ -23,6 +23,8 @@ export enum AuctionType {
   FIXED = 'FIXED',
   DOUBLE = 'DOUBLE',
 }
+
+export const turnBasedAuctions = [AuctionType.ONE_OFFER, AuctionType.FIXED];
 
 export enum AuctionStatus {
   PENDING = 'PENDING',
@@ -53,7 +55,7 @@ export interface Auction {
   fixedPrice?: number; // FIXED
   highestBid?: number | null; // ONE_OFFER, HIDDEN, OPEN
   highestBidder?: string | null; // ONE_OFFER, HIDDEN, OPEN
-  activeBidder?: number | null; // ONE_OFFER, FIXED
+  activeBidder?: string | null; // ONE_OFFER, FIXED
   winner?: string | null; // derived field to standardize across auction types
   payment?: number | null; // derived field to standardize across auction types
 }
@@ -73,18 +75,21 @@ export interface LogMessage {
   text: string;
   hhmm: string;
 }
+
+export interface ModernArtPlayer {
+  id: string;
+  name: string;
+  icon: string;
+  cards: Card[];
+  money: number;
+}
+
 export interface ModernArtState {
   started: boolean;
   deck: Card[];
   playerIdx: number;
   players: {
-    [id: string]: {
-      id: string;
-      name: string;
-      icon: string;
-      cards: Card[];
-      money: number;
-    };
+    [id: string]: ModernArtPlayer;
   };
   roundIndex: number;
   roundStarted: boolean;
@@ -98,15 +103,7 @@ export interface ModernArtState {
 export const initialState: ModernArtState = {
   started: false,
   playerIdx: 0,
-  players: {
-    cat: {
-      id: 'cat',
-      name: 'catcat',
-      icon: '',
-      cards: [],
-      money: 100,
-    },
-  },
+  players: {},
   deck: [],
   roundIndex: 0,
   roundStarted: false,
