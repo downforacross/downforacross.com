@@ -185,7 +185,7 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
             }}
           />
         </div>
-        {gameState.loaded && (
+        {gameState.loaded && gameState.started && (
           <div>
             <FencingToolbar toolbarActions={toolbarActions} />
             <Player
@@ -200,6 +200,11 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
             />
           </div>
         )}
+
+        {!gameState.started && (
+          <button onClick={playerActions.startGame}>Start Game (wait for everyone to join!)</button>
+        )}
+
         {!gameState.loaded && <div>Loading your game...</div>}
       </div>
     </Flex>

@@ -5,6 +5,7 @@ import updateCursor from './eventDefs/updateCursor';
 import updateCell from './eventDefs/updateCell';
 import check from './eventDefs/check';
 import reveal from './eventDefs/reveal';
+import startGame from './eventDefs/startGame';
 
 export default {
   create,
@@ -14,4 +15,5 @@ export default {
   updateCell,
   check,
   reveal,
+  startGame,
 };
