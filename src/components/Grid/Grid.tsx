@@ -74,7 +74,7 @@ export default class Grid extends React.PureComponent<GridProps> {
 
   isCircled(r: number, c: number) {
     const {grid, circles} = this.props;
-    const idx = toCellIndex(r, c, grid.length);
+    const idx = toCellIndex(r, c, grid[0].length);
     return (circles || []).indexOf(idx) !== -1;
   }
 
