@@ -275,7 +275,6 @@ export const modernArtReducerHelper = (
     console.log('start auction', card);
     const color = player.cards[idx].color;
 
-
     // If fifth painting of this color, do not auction and end round
     const count = _.filter(state.rounds[state.roundIndex].auctions, (x) => x.painting.color === color).length;
     if (count === 4) {
@@ -381,41 +380,44 @@ export const modernArtReducerHelper = (
           ...player,
           // remove card
           cards: [...player.cards.slice(0, idx), ...player.cards.slice(idx + 1)],
-
         },
       };
 
-  // If the card was a double, don't start an auction
-    if (card.auctionType === AuctionType.DOUBLE) {
-      return {
-        ...state,
-        currentDouble: {
-          card,
-          activePlayer: playerId,
-        },
-        players: nPlayers,
-        log: [
-          ...state.log,
-          {
-            hhmm,
-            text: `${player.name} plays ${card.auctionType} ${card.color}`,
+      // If the card was a double, don't start an auction
+      if (card.auctionType === AuctionType.DOUBLE) {
+        return {
+          ...state,
+          currentDouble: {
+            card,
+            activePlayer: playerId,
           },
-        ],
-      };
-    }
+          players: nPlayers,
+          log: [
+            ...state.log,
+            {
+              hhmm,
+              text: `${player.name} plays ${card.auctionType} ${card.color}`,
+            },
+          ],
+        };
+      }
 
-      const auction = {
+      const auction: Auction = {
         status: AuctionStatus.PENDING,
         auctioneer: playerId,
         painting: card,
         highestBid: 0,
         activeBidder: nextPlayerId(state, playerId),
       };
+      if (state.currentDouble) {
+        auction.double = state.currentDouble.card;
+      }
 
       return {
         ...state,
         currentAuction: auction,
         players: nPlayers,
+        currentDouble: undefined,
         rounds: {
           ...state.rounds,
           [state.roundIndex]: {
