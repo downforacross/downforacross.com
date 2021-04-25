@@ -228,6 +228,10 @@ export const GameStateDisplayer: React.FC<{
     actions.skipBid();
   };
 
+  const skipDouble = () => {
+    actions.skipDouble();
+  };
+
   const finishAuction = () => {
     actions.finishAuction();
   };
@@ -284,7 +288,7 @@ export const GameStateDisplayer: React.FC<{
             {gameState.currentDouble.activePlayer === playerId && (
               <>
                 <div>It's your turn to play the second painting</div>
-                <button onClick={skipBid}> Pass </button>
+                <button onClick={skipDouble}> Pass </button>
               </>
             )}
           </div>

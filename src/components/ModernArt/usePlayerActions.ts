@@ -8,6 +8,7 @@ export interface PlayerActions {
   submitBid(bidAmount: number): void;
   finishAuction(): void;
   skipBid(): void;
+  skipDouble(): void;
 }
 
 // translate <Player/> callbacks to game events emitted
@@ -62,6 +63,14 @@ export const usePlayerActions = (
   skipBid() {
     dispatch({
       type: 'skip_bid',
+      params: {
+        playerId,
+      },
+    });
+  },
+  skipDouble() {
+    dispatch({
+      type: 'skip_double',
       params: {
         playerId,
       },

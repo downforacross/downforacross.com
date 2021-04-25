@@ -468,6 +468,18 @@ export const modernArtReducerHelper = (
       },
     };
   }
+
+  if (event.type === 'skip_double') {
+    if (!state.currentDouble || !state.currentDouble.activePlayer) return undefined;
+
+    return {
+      ...state,
+      currentDouble: {
+        ...state.currentDouble,
+        activePlayer: nextPlayerId(state, state.currentDouble.activePlayer),
+      },
+    };
+  }
   return state;
 };
 
