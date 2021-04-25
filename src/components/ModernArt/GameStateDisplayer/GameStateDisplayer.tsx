@@ -184,19 +184,21 @@ const paintings: Record<string, any[]> = {
   Picasso: picassoArt,
 };
 
+const playerIconStyle = {width: '48px', height: '48px'};
+
 export const icons = [
-  <FaRobot />,
-  <GiRobotAntennas />,
-  <GiVintageRobot />,
-  <GrDiamond />,
-  <SiTencentqq />,
-  <SiSwarm />,
-  <RiMoonClearLine />,
-  <RiAliensLine />,
-  <RiSeedlingLine />,
-  <RiCactusLine />,
-  <IoMdBeer />,
-  <GoSquirrel />,
+  <FaRobot style={playerIconStyle} />,
+  <GiRobotAntennas style={playerIconStyle} />,
+  <GiVintageRobot style={playerIconStyle} />,
+  <GrDiamond style={playerIconStyle} />,
+  <SiTencentqq style={playerIconStyle} />,
+  <SiSwarm style={playerIconStyle} />,
+  <RiMoonClearLine style={playerIconStyle} />,
+  <RiAliensLine style={playerIconStyle} />,
+  <RiSeedlingLine style={playerIconStyle} />,
+  <RiCactusLine style={playerIconStyle} />,
+  <IoMdBeer style={playerIconStyle} />,
+  <GoSquirrel style={playerIconStyle} />,
 ];
 
 /**
@@ -300,7 +302,7 @@ export const GameStateDisplayer: React.FC<{
                 <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
                   {/* <FaRobot className={classes.playerIcon} /> */}
                   {/* <GiRobotAntennas className={classes.playerIcon} /> */}
-                  <div className={classes.playerIcon}> {icons[player.iconIdx]} </div>
+                  <div> {icons[player.iconIdx]} </div>
                   {arts?.map((a) => (
                     <div className={classes.acquiredArtCircle} style={{backgroundColor: a.color}}></div>
                   ))}
@@ -703,10 +705,6 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     float: 'left',
     padding: '8px',
-  },
-  playerIcon: {
-    width: '48px',
-    height: '48px',
   },
   acquiredArtCircle: {
     display: 'flex',
