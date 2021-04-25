@@ -38,7 +38,8 @@ const finishAuction = (state: ModernArtState, finishedAt: number, finishedBy?: M
   const winner = state.currentAuction.highestBidder || auctioneer;
   if (!auctioneer || !winner) return undefined;
   const payment = state.currentAuction.highestBid || state.currentAuction.fixedPrice || 0;
-  const painting = state.currentAuction.painting;
+  const paintings = [state.currentAuction.painting];
+  state.currentAuction.double && paintings.push(state.currentAuction.double);
 
   if (state.players[winner].money < payment) return undefined;
   const hhmm = moment(finishedAt).format('hh:mm');
@@ -66,7 +67,10 @@ const finishAuction = (state: ModernArtState, finishedAt: number, finishedBy?: M
           ...state.rounds[state.roundIndex]?.players,
           [winner]: {
             ...state.rounds[state.roundIndex]?.players[winner],
-            acquiredArt: [...(state.rounds[state.roundIndex]?.players[winner]?.acquiredArt ?? []), painting],
+            acquiredArt: [
+              ...(state.rounds[state.roundIndex]?.players[winner]?.acquiredArt ?? []),
+              ...paintings,
+            ],
           },
         },
       },
@@ -79,7 +83,7 @@ const finishAuction = (state: ModernArtState, finishedAt: number, finishedBy?: M
       },
       {
         hhmm,
-        text: `${state.players[winner].name} won the auction for ${payment} and acquired a ${painting.color}`,
+        text: `${state.players[winner].name} won the auction for ${payment} and acquired a ${paintings[0].color}`,
       },
     ]),
     currentAuction: {
