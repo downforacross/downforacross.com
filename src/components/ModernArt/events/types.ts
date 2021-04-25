@@ -6,7 +6,8 @@ export interface ModernArtEvent {
     | 'start_auction'
     | 'submit_bid'
     | 'finish_auction'
-    | 'skip_bid';
+    | 'skip_bid'
+    | 'skip_double';
   params: any; // oh no
   timestamp?: number | object;
 }

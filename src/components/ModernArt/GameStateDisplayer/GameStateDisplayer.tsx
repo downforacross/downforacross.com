@@ -264,6 +264,10 @@ export const GameStateDisplayer: React.FC<{
     actions.skipBid();
   };
 
+  const skipDouble = () => {
+    actions.skipDouble();
+  };
+
   const finishAuction = () => {
     actions.finishAuction();
   };
@@ -309,6 +313,35 @@ export const GameStateDisplayer: React.FC<{
 
         <div className={classes.sectionSpacing}></div>
         {/* Current Auction */}
+        {gameState.currentDouble && (
+          <div className={classes.auctionStatus}>
+            <div className={classes.sectionHeader}>Double Played</div>
+            <div className={classes.rowFlex}>
+              <div className={classes.auctionPhoto}>
+                <img
+                  src={
+                    paintings[painters[gameState.currentDouble.card.color]][
+                      gameState.currentDouble.card.paintingIndex
+                    ]
+                  }
+                  className={classes.artImageBig}
+                ></img>
+                <div
+                  className={classes.auctionIconBackgroundBig}
+                  style={{backgroundColor: gameState.currentDouble.card.color}}
+                >
+                  <BiAddToQueue className={classes.auctionIconBig} />
+                </div>
+              </div>
+            </div>
+            {gameState.currentDouble.activePlayer === playerId && (
+              <>
+                <div>It's your turn to play the second painting</div>
+                <button onClick={skipDouble}> Pass </button>
+              </>
+            )}
+          </div>
+        )}
         {gameState.currentAuction && (
           <div className={classes.auctionStatus}>
             <div className={classes.sectionHeader}>Current Auction</div>
