@@ -4,7 +4,7 @@ import {ModernArtEvent} from './events/types';
 export interface PlayerActions {
   startGame(): void;
   step(): void;
-  startAuction(idx: number): void;
+  startAuction(idx: number | number[]): void;
   submitBid(bidAmount: number): void;
   finishAuction(): void;
   skipBid(): void;

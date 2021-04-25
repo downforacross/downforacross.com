@@ -201,6 +201,24 @@ export const GameStateDisplayer: React.FC<{
     setCurrentBid(number);
   };
 
+  const [selectedDoubleCard, setSelectedDoubleCard] = useState<number | null>(null);
+
+  const playCard = (i: number) => {
+    // if (selectedDoubleCard !== null) {
+    //    console.log('Playing double auction');
+    //    actions.startAuction([selectedDoubleCard, i]);
+    //    setSelectedDoubleCard(null);
+    //    return;
+    // }
+    // if (viewerPlayer.cards[i].auctionType === AuctionType.DOUBLE) {
+    //    console.log('Setting double card');
+    //    setSelectedDoubleCard(i);
+    //    return;
+    // }
+    // console.log('Starting auction');
+    actions.startAuction(i);
+  };
+
   const submitBid = () => {
     actions.submitBid(currentBid);
     setCurrentBid(0);
@@ -312,7 +330,9 @@ export const GameStateDisplayer: React.FC<{
 
                   <tr className={classes.tr}>
                     <td className={classes.td}>Your Bank</td>
-                    <td className={classes.td}>${gameState.players[viewerPlayer.id].money}</td>
+                    <td className={classes.td}>
+                      ${viewerPlayer ? gameState.players[viewerPlayer.id].money : 0}
+                    </td>
                   </tr>
                 </table>
                 {gameState.currentAuction.status === AuctionStatus.PENDING && (
@@ -366,7 +386,7 @@ export const GameStateDisplayer: React.FC<{
                       gameState.currentAuction?.status !== AuctionStatus.PENDING && (
                         <button
                           onClick={() => {
-                            actions.startAuction(j);
+                            playCard(j);
                           }}
                         >
                           {' '}

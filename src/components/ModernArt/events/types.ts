@@ -53,7 +53,7 @@ export interface Auction {
   status: AuctionStatus;
   auctioneer: string;
   painting: Card; // auctionType is on Card
-  secondPainting?: Card; // DOUBLE
+  double?: Card; // DOUBLE
   fixedPrice?: number; // FIXED
   highestBid?: number | null; // ONE_OFFER, HIDDEN, OPEN
   highestBidder?: string | null; // ONE_OFFER, HIDDEN, OPEN
@@ -99,6 +99,10 @@ export interface ModernArtState {
     [id: string]: Round;
   };
   currentAuction?: Auction;
+  currentDouble?: {
+    card: Card;
+    activePlayer: string;
+  };
   log: LogMessage[];
 }
 

@@ -10,6 +10,7 @@ import {
   AuctionType,
   turnBasedAuctions,
   ModernArtPlayer,
+  Auction,
 } from './types';
 
 const getPlayerIdx = (state: ModernArtState, playerId: string) => {
@@ -297,7 +298,6 @@ export const modernArtReducerHelper = (
 
     // If fifth painting of this color, do not auction and end round
     const count = _.filter(state.rounds[state.roundIndex].auctions, (x) => x.painting.color === color).length;
-
     if (count === 4) {
       // todo: give priority to lowest color
       const auctions = state.rounds[state.roundIndex].auctions; // color: [painting]
@@ -404,18 +404,41 @@ export const modernArtReducerHelper = (
         },
       };
 
-      const auction = {
+      // If the card was a double, don't start an auction
+      if (card.auctionType === AuctionType.DOUBLE) {
+        return {
+          ...state,
+          currentDouble: {
+            card,
+            activePlayer: playerId,
+          },
+          players: nPlayers,
+          log: [
+            ...state.log,
+            {
+              hhmm,
+              text: `${player.name} plays ${card.auctionType} ${card.color}`,
+            },
+          ],
+        };
+      }
+
+      const auction: Auction = {
         status: AuctionStatus.PENDING,
         auctioneer: playerId,
         painting: card,
         highestBid: 0,
         activeBidder: nextPlayerId(state, playerId),
       };
+      if (state.currentDouble) {
+        auction.double = state.currentDouble.card;
+      }
 
       return {
         ...state,
         currentAuction: auction,
         players: nPlayers,
+        currentDouble: undefined,
         rounds: {
           ...state.rounds,
           [state.roundIndex]: {
