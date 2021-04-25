@@ -1,13 +1,17 @@
 Todo list:
 
 need to have
-1. [half] double auction (need to add validation, need to support case where everyone passes)
+1. [done] double auction
 2. [done] fixed price (ui to set price + backend) 
 3. [done] deal art cards for real 
 4. [done] distribute money for acquired art after a round ends 
 5. [done] change your player name, change icon
 6. [done] change "current auction" photo
 7. [done] one offer auction should end itself but currently if the last player skips then the auction does not end. also, do not need to show `end auction`. also, there's also a bug where player 1 bids x, player 2 bids x - 1 and wins.
+8. hidden auction: fix bid handling. right now, last bidder wins
+9. double auction: [done] ending a round w/ a double doesn't work, need to support case where everyone passes, do not allow players to try to play two doubles, enforce that both cards are same color, other validation
+10. is bid = 0 allowed?
+11: fixed price: force auctioneer to buy painting if everyone else refuses
 
 nice to have
 1. maybe a way to view the full painting
@@ -17,7 +21,7 @@ nice to have
 5. show money even if there is no current auction (ie after clicking `start` game)
 6. show your "investment returns" (money paid and money garnered for acquired art)  when round ends or game ends
 
-random:
+card distribution:
 
       // yellow 12 (was: red)
       // AuctionType.DOUBLE, 2

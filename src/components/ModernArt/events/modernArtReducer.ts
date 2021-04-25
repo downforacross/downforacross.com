@@ -12,6 +12,7 @@ import {
   ModernArtPlayer,
   Auction,
   LogMessage,
+  Card,
 } from './types';
 import {time} from 'console';
 
@@ -32,19 +33,40 @@ const nextPlayerId = (state: ModernArtState, playerId: string) => {
 };
 
 const finishAuction = (state: ModernArtState, finishedAt: number, logMessage?: LogMessage) => {
-  if (!state.currentAuction) return undefined;
+  let paintings: Card[] = [];
+  let auctioneer = '';
+  let winner = '';
+  let payment = 0;
 
-  const auctioneer = state.currentAuction.auctioneer;
+  if (!state.currentAuction) {
+    if (state.currentDouble) {
+      auctioneer = state.currentDouble.auctioneer;
+      winner = auctioneer;
+      paintings = [state.currentDouble.card];
+    } else {
+      return undefined;
+    }
+  } else {
+    auctioneer = state.currentAuction.auctioneer;
 
-  // If no highestBidder, then painting goes to auctioneer
-  const winner = state.currentAuction.highestBidder || auctioneer;
-  if (!auctioneer || !winner) return undefined;
-  const payment = state.currentAuction.highestBid || state.currentAuction.fixedPrice || 0;
-  const paintings = [state.currentAuction.painting];
-  state.currentAuction.double && paintings.push(state.currentAuction.double);
+    // If no highestBidder, then painting goes to auctioneer
+    winner = state.currentAuction.highestBidder || auctioneer;
+    if (!auctioneer || !winner) return undefined;
+    payment = state.currentAuction.highestBid || state.currentAuction.fixedPrice || 0;
+    paintings = [state.currentAuction.painting];
+    state.currentAuction.double && paintings.push(state.currentAuction.double);
 
-  if (state.players[winner].money < payment) return undefined;
+    if (state.players[winner].money < payment) return undefined;
+  }
+
   const hhmm = moment(finishedAt).format('hh:mm');
+  console.log(
+    'acquired Art: ',
+    state.rounds[state.roundIndex]?.players[winner]?.acquiredArt,
+    'paintings: ',
+    paintings
+  );
+
   return {
     ...state,
     playerIdx: (state.playerIdx + 1) % _.keys(state.players).length,
@@ -82,15 +104,23 @@ const finishAuction = (state: ModernArtState, finishedAt: number, logMessage?: L
       logMessage,
       {
         hhmm,
-        text: `${state.players[winner].name} won the auction for ${payment} and acquired a ${paintings[0].color}`,
+        text: `${state.players[winner].name} won the auction for ${payment} and acquired ${
+          paintings.length === 1
+            ? '1 ' + paintings[0].color
+            : paintings.length + ' ' + paintings[0].color + 's'
+        }`,
       },
     ]),
-    currentAuction: {
-      ...state.currentAuction,
-      status: AuctionStatus.CLOSED,
-      winner,
-      payment,
-    },
+    currentAuction: state.currentAuction
+      ? {
+          ...state.currentAuction,
+          status: AuctionStatus.CLOSED,
+          winner,
+          payment,
+          double: undefined,
+        }
+      : state.currentAuction,
+    currentDouble: undefined,
   };
 };
 
@@ -135,12 +165,6 @@ const skipBid = (state: ModernArtState, finishedAt: number, player: ModernArtPla
     hhmm,
     text: `${player.name} elected to skip`,
   };
-  console.log(
-    `activeBidder ${state.currentAuction.activeBidder}; nextPlayerId ${nextPlayerId(
-      state,
-      state.currentAuction.activeBidder
-    )}; auctioneer ${state.currentAuction.auctioneer}`
-  );
   // end the auction
   // if (nextPlayerId(state, state.currentAuction.activeBidder) === state.currentAuction.auctioneer) {
   //   return finishAuction(state, timestamp, logMessage)
@@ -173,7 +197,7 @@ export const modernArtReducerHelper = (
 
   const timestamp = typeof event.timestamp === 'number' ? event.timestamp : Date.now();
   const hhmm = moment(timestamp).format('hh:mm');
-
+  console.log('Processing event of type ', event.type);
   if (event.type === 'start_game') {
     return {
       ...state,
@@ -211,8 +235,9 @@ export const modernArtReducerHelper = (
       },
     };
   } else if (event.type === 'accept_fixed_price') {
-    if (state.currentAuction?.fixedPrice === undefined) return undefined;
-    return submitBid(state, timestamp, player, state.currentAuction?.fixedPrice);
+    if (!state.currentAuction) return undefined;
+    if (state.currentAuction.fixedPrice === undefined) return undefined;
+    return submitBid(state, timestamp, player, state.currentAuction.fixedPrice);
   } else if (event.type === 'submit_bid') {
     if (!state.currentAuction) return undefined;
     // if submitted bid is less than highest bid, process as skip if one_offer
@@ -375,8 +400,11 @@ export const modernArtReducerHelper = (
     // If fifth painting of this color, do not auction and end round
     const count =
       _.filter(state.rounds[state.roundIndex].auctions, (x) => x.painting.color === color).length +
-      _.filter(state.rounds[state.roundIndex].auctions, (x) => x.double?.color === color).length;
+      _.filter(state.rounds[state.roundIndex].auctions, (x) => x.double?.color === color).length +
+      (state.currentDouble ? 1 : 0);
 
+    console.log('count: ', count);
+    console.log('state.currentAuction?.double', state.currentAuction?.double);
     if (count === 4) {
       // todo: give priority to lowest color
       const auctions = state.rounds[state.roundIndex].auctions; // color: [painting]
@@ -424,6 +452,7 @@ export const modernArtReducerHelper = (
               status: AuctionStatus.CLOSED,
             }
           : undefined,
+        currentDouble: undefined,
         players: _.mapValues(state.players, (player) => {
           if (player.id === playerId) {
             return {
@@ -486,6 +515,7 @@ export const modernArtReducerHelper = (
           ...state,
           currentDouble: {
             card,
+            auctioneer: playerId,
             activePlayer: playerId,
           },
           players: nPlayers,
@@ -533,33 +563,21 @@ export const modernArtReducerHelper = (
     }
   } else if (event.type === 'skip_bid') {
     return skipBid(state, timestamp, player);
-    // const logMessage = {
-    //   hhmm,
-    //   text: `${player.name} elected to skip`,
-    // }
-    // console.log(`activeBidder ${state.currentAuction.activeBidder}; nextPlayerId ${nextPlayerId(state, state.currentAuction.activeBidder)}; auctioneer ${state.currentAuction.auctioneer}`)
-    // // end the auction
-    // // if (nextPlayerId(state, state.currentAuction.activeBidder) === state.currentAuction.auctioneer) {
-    // //   return finishAuction(state, timestamp, logMessage)
-    // // }
-    // // i think this is wrong?
-    // if (state.currentAuction.activeBidder === state.currentAuction.auctioneer) {
-    //   return finishAuction(state, timestamp, logMessage)
-    // }
-
-    // return {
-    //   ...state,
-    //   currentAuction: {
-    //     ...state.currentAuction,
-    //     activeBidder: nextPlayerId(state, state.currentAuction.activeBidder),
-    //   },
-    //   log: [
-    //     ...state.log,
-    //     logMessage,
-    //   ],
-    // };
   } else if (event.type === 'skip_double') {
-    if (!state.currentDouble || !state.currentDouble.activePlayer) return undefined;
+    if (!state.currentDouble || !state.currentAuction || !state.currentDouble.activePlayer) return undefined;
+
+    const logMessage = {
+      hhmm,
+      text: `${player.name} skips playing double`,
+    };
+    // everyone skipped
+    console.log(
+      `state.currentAuction.activeBidder: ${state.currentAuction.activeBidder}, state.currentAuction.auctioneer: ${state.currentAuction.auctioneer}`
+    );
+    if (nextPlayerId(state, state.currentDouble.activePlayer) === state.currentDouble.auctioneer) {
+      console.log('finishing auction');
+      return finishAuction(state, timestamp, logMessage);
+    }
 
     return {
       ...state,
@@ -567,6 +585,7 @@ export const modernArtReducerHelper = (
         ...state.currentDouble,
         activePlayer: nextPlayerId(state, state.currentDouble.activePlayer),
       },
+      log: [...state.log, logMessage],
     };
   }
   return state;

@@ -104,6 +104,7 @@ export interface ModernArtState {
   currentAuction?: Auction;
   currentDouble?: {
     card: Card;
+    auctioneer: string;
     activePlayer: string;
   };
   log: LogMessage[];
