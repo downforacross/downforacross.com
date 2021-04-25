@@ -7,13 +7,14 @@ need to have
 4. [done] distribute money for acquired art after a round ends 
 5. change your player name, change icon
 6. show your "investment returns" (money paid and money garnered for acquired art)  when round ends or game ends
-7. show money even when there is no auction
+7. [done] change "current auction" photo
 
 nice to have
 1. maybe a way to view the full painting
 2. Add link to rules in header
 3. Make the `start` and `deal` experience nicer
 4. [done] clear submit box after submission
+5. show money even if there is no current auction (ie after clicking `start` game)
 
 random:
 

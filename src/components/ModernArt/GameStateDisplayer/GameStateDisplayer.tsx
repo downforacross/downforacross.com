@@ -265,7 +265,14 @@ export const GameStateDisplayer: React.FC<{
             <div className={classes.sectionHeader}>Current Auction</div>
             <div className={classes.rowFlex}>
               <div className={classes.auctionPhoto}>
-                <img src={Kadinsky1} className={classes.artImageBig}></img>
+                <img
+                  src={
+                    paintings[painters[gameState.currentAuction.painting.color]][
+                      gameState.currentAuction.painting.paintingIndex
+                    ]
+                  }
+                  className={classes.artImageBig}
+                ></img>
                 <div
                   className={classes.auctionIconBackgroundBig}
                   style={{backgroundColor: gameState.currentAuction.painting.color}}
