@@ -238,11 +238,17 @@ export const GameStateDisplayer: React.FC<{
   const viewerPlayer = gameState.players[playerId];
 
   const [currentBid, setCurrentBid] = useState(0);
+  const [fixedPrice, setFixedPrice] = useState(0);
   const [currentName, setName] = useState<null | string>(null);
 
-  const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+  const handleBidChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const number = Number(e.currentTarget.value);
     setCurrentBid(number);
+  };
+
+  const handleFixedPriceChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    const number = Number(e.currentTarget.value);
+    setFixedPrice(number);
   };
 
   const handleTextChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -252,34 +258,36 @@ export const GameStateDisplayer: React.FC<{
     }
   };
 
-  const [selectedDoubleCard, setSelectedDoubleCard] = useState<number | null>(null);
-
   const playCard = (i: number) => {
-    // if (selectedDoubleCard !== null) {
-    //    console.log('Playing double auction');
-    //    actions.startAuction([selectedDoubleCard, i]);
-    //    setSelectedDoubleCard(null);
-    //    return;
-    // }
-    // if (viewerPlayer.cards[i].auctionType === AuctionType.DOUBLE) {
-    //    console.log('Setting double card');
-    //    setSelectedDoubleCard(i);
-    //    return;
-    // }
-    // console.log('Starting auction');
     actions.startAuction(i);
   };
 
   const updateName = () => {
     if (currentName !== null) {
       actions.updateName(currentName);
-      // setName('');
     }
   };
 
   const submitBid = () => {
     actions.submitBid(currentBid);
     setCurrentBid(0);
+  };
+
+  const waitingForFixedPrice = (gameState: ModernArtState) => {
+    if (!gameState || !gameState.currentAuction) return false;
+    return (
+      gameState.currentAuction.painting.auctionType === AuctionType.FIXED &&
+      gameState.currentAuction.fixedPrice === undefined
+    );
+  };
+
+  const submitFixedPrice = () => {
+    actions.submitFixedPrice(fixedPrice);
+    setFixedPrice(0);
+  };
+
+  const acceptFixedPrice = () => {
+    actions.acceptFixedPrice();
   };
 
   const skipBid = () => {
@@ -324,8 +332,6 @@ export const GameStateDisplayer: React.FC<{
                 <div>{player.name}</div>
 
                 <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
-                  {/* <FaRobot className={classes.playerIcon} /> */}
-                  {/* <GiRobotAntennas className={classes.playerIcon} /> */}
                   <div> {icons[player.iconIdx]} </div>
                   {arts?.map((a) => (
                     <div className={classes.acquiredArtCircle} style={{backgroundColor: a.color}}></div>
@@ -368,7 +374,8 @@ export const GameStateDisplayer: React.FC<{
             )}
           </div>
         )}
-        {gameState.currentAuction && (
+
+        {gameState.currentAuction && !gameState.currentDouble && (
           <div className={classes.auctionStatus}>
             <div className={classes.sectionHeader}>Current Auction</div>
             <div className={classes.rowFlex}>
@@ -405,6 +412,13 @@ export const GameStateDisplayer: React.FC<{
                     </tr>
                   )}
 
+                  {gameState.currentAuction.painting.auctionType === AuctionType.FIXED && (
+                    <tr className={classes.tr}>
+                      <td className={classes.td}>Fixed Price</td>
+                      <td className={classes.td}>${gameState.currentAuction.fixedPrice}</td>
+                    </tr>
+                  )}
+
                   {gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER && (
                     <tr className={classes.tr}>
                       {/* Current Bidder is a better display name */}
@@ -424,23 +438,67 @@ export const GameStateDisplayer: React.FC<{
                     </td>
                   </tr>
                 </table>
-                {gameState.currentAuction.status === AuctionStatus.PENDING && (
+
+                {waitingForFixedPrice(gameState) && viewerPlayer?.id === gameState.currentAuction.auctioneer && (
                   <span className={classes.submitBidForm}>
-                    <input type="text" onChange={handleInputChange} value={currentBid || 0} />
-                    <button onClick={submitBid}> Submit Bid </button>
-                    {viewerPlayer?.id == gameState.currentAuction.auctioneer && (
-                      <button onClick={finishAuction}>
-                        End Auction <FaGavel />
-                      </button>
-                    )}
+                    <input type="text" onChange={handleFixedPriceChange} value={fixedPrice || 0} />
+                    <button onClick={submitFixedPrice}> Submit Fixed Price </button>
                   </span>
                 )}
+
+                {waitingForFixedPrice(gameState) &&
+                  viewerPlayer?.id !== gameState.currentAuction.auctioneer && (
+                    <div>
+                      Waiting for player {gameState.players[gameState.currentAuction.auctioneer].name} to
+                      submit fixed price
+                    </div>
+                  )}
+
+                {![AuctionType.FIXED, AuctionType.ONE_OFFER].includes(
+                  gameState.currentAuction.painting.auctionType
+                ) &&
+                  gameState.currentAuction.status === AuctionStatus.PENDING && (
+                    <span className={classes.submitBidForm}>
+                      <input type="text" onChange={handleBidChange} value={currentBid || 0} />
+                      <button onClick={submitBid}> Submit Bid </button>
+                    </span>
+                  )}
+                {gameState.currentAuction.status === AuctionStatus.PENDING &&
+                  gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER &&
+                  viewerPlayer?.id === gameState.currentAuction.activeBidder && (
+                    <div>
+                      <span className={classes.submitBidForm}>
+                        <input type="text" onChange={handleBidChange} value={currentBid || 0} />
+                        <button onClick={submitBid}> Submit Bid </button>
+                      </span>
+                      <button onClick={skipBid}> Skip Bid </button>
+                    </div>
+                  )}
+
+                {gameState.currentAuction.painting.auctionType === AuctionType.FIXED &&
+                  !waitingForFixedPrice(gameState) &&
+                  gameState.currentAuction.status === AuctionStatus.PENDING &&
+                  viewerPlayer?.id === gameState.currentAuction.activeBidder && (
+                    <div>
+                      <span className={classes.submitBidForm}>
+                        <button onClick={acceptFixedPrice}> Accept Fixed Price </button>
+                      </span>
+                      <button onClick={skipBid}> Skip Bid </button>
+                    </div>
+                  )}
+
+                {!waitingForFixedPrice(gameState) &&
+                  gameState.currentAuction.status === AuctionStatus.PENDING &&
+                  [AuctionType.HIDDEN, AuctionType.OPEN].includes(
+                    gameState.currentAuction.painting.auctionType
+                  ) &&
+                  viewerPlayer?.id === gameState.currentAuction.auctioneer && (
+                    <button onClick={finishAuction}>
+                      End Auction <FaGavel />
+                    </button>
+                  )}
               </div>
             </div>
-            {gameState.currentAuction.status === AuctionStatus.PENDING &&
-              gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER && (
-                <button onClick={skipBid}> Skip Bid </button>
-              )}
             {gameState.currentAuction?.status === AuctionStatus.CLOSED && <Confetti duration={1500} />}
           </div>
         )}

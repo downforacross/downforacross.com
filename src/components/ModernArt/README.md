@@ -2,12 +2,12 @@ Todo list:
 
 need to have
 1. [half] double auction (need to add validation, need to support case where everyone passes)
-2. fixed price (ui to set price + backend) 
+2. [done] fixed price (ui to set price + backend) 
 3. [done] deal art cards for real 
 4. [done] distribute money for acquired art after a round ends 
 5. [done] change your player name, change icon
 6. [done] change "current auction" photo
-7. one offer auction should end itself (do not show `end auction`)
+7. [done] one offer auction should end itself but currently if the last player skips then the auction does not end. also, do not need to show `end auction`. also, there's also a bug where player 1 bids x, player 2 bids x - 1 and wins.
 
 nice to have
 1. maybe a way to view the full painting

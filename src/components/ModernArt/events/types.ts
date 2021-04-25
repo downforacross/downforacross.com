@@ -4,6 +4,8 @@ export interface ModernArtEvent {
     | 'update_name'
     | 'step'
     | 'start_auction'
+    | 'submit_fixed_price'
+    | 'accept_fixed_price'
     | 'submit_bid'
     | 'finish_auction'
     | 'skip_bid'

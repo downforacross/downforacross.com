@@ -6,6 +6,8 @@ export interface PlayerActions {
   updateName(name: string): void;
   step(): void;
   startAuction(idx: number | number[]): void;
+  submitFixedPrice(fixedPrice: number): void;
+  acceptFixedPrice(): void;
   submitBid(bidAmount: number): void;
   finishAuction(): void;
   skipBid(): void;
@@ -50,6 +52,23 @@ export const usePlayerActions = (
       params: {
         playerId,
         idx,
+      },
+    });
+  },
+  submitFixedPrice(fixedPrice) {
+    dispatch({
+      type: 'submit_fixed_price',
+      params: {
+        playerId,
+        fixedPrice,
+      },
+    });
+  },
+  acceptFixedPrice() {
+    dispatch({
+      type: 'accept_fixed_price',
+      params: {
+        playerId,
       },
     });
   },
