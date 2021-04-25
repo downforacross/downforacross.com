@@ -27,6 +27,7 @@ export const FencingScoreboard: React.FC<{
   joinTeam(teamId: number): void;
   spectate(): void;
   changeName(newName: string): void;
+  changeTeamName(newName: string): void;
 }> = (props) => {
   const classes = useStyles();
   // TODO buttons need to be icons / dropdown menu once team names are editable
@@ -42,10 +43,22 @@ export const FencingScoreboard: React.FC<{
   const changeNameButton = (
     <button
       onClick={() => {
-        props.changeName(
-          window.prompt('Your Name', props.gameState.users[props.currentUserId].displayName) ||
-            nameGenerator()
-        );
+        const result = window.prompt('Your Name', props.gameState.users[props.currentUserId].displayName);
+        if (typeof result === 'string') {
+          props.changeName(result || nameGenerator());
+        }
+      }}
+    >
+      Edit
+    </button>
+  );
+  const changeTeamNameButton = (
+    <button
+      onClick={() => {
+        const result = window.prompt('Team Name', props.gameState.users[props.currentUserId].displayName);
+        if (typeof result === 'string') {
+          props.changeTeamName(result);
+        }
       }}
     >
       Edit
@@ -73,6 +86,7 @@ export const FencingScoreboard: React.FC<{
           >
             {team.name}
           </span>
+          {currentUser?.teamId === team.id && changeTeamNameButton}
           {currentUser?.teamId === team.id && spectateButton}
           {currentUser?.teamId === 0 && (
             <button
@@ -143,11 +157,6 @@ export const FencingScoreboard: React.FC<{
               <td>{guesses}</td>
             </tr>
           ))}
-          {/* <tr>
-            <td>Team {1}</td>
-            <td>1</td>
-            <td>{allCells.filter((cell) => cell).length}</td>
-          </tr> */}
         </tbody>
       </table>
     </div>

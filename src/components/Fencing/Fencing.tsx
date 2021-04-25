@@ -165,6 +165,16 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
                 },
               });
             }}
+            changeTeamName={(newName) => {
+              if (!teamId) return;
+              sendEvent({
+                type: 'updateTeamName',
+                params: {
+                  teamId,
+                  teamName: newName,
+                },
+              });
+            }}
             joinTeam={(teamId: number) => {
               sendEvent({
                 type: 'updateTeamId',

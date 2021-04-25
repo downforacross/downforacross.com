@@ -7,6 +7,7 @@ export interface PlayerActions {
   updateGrid(r: number, c: number, value: string): void;
   addPing(): void; // TODO
   startGame(): void;
+  updateTeamName(name: string): void;
 }
 
 export interface DispatchFn {
@@ -27,6 +28,9 @@ export const usePlayerActions = (dispatch: DispatchFn, id: string): PlayerAction
     }, 10);
   },
   addPing() {},
+  updateTeamName(name: string) {
+    dispatch({type: 'updateTeamName', params: {}});
+  },
   startGame() {
     dispatch({type: 'startGame', params: {}});
   },
