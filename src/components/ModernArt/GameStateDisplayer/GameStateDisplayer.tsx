@@ -203,6 +203,7 @@ export const GameStateDisplayer: React.FC<{
 
   const submitBid = () => {
     actions.submitBid(currentBid);
+    setCurrentBid(0);
   };
 
   const skipBid = () => {
@@ -316,7 +317,7 @@ export const GameStateDisplayer: React.FC<{
                 </table>
                 {gameState.currentAuction.status === AuctionStatus.PENDING && (
                   <span className={classes.submitBidForm}>
-                    <input type="text" onChange={handleInputChange} value={currentBid || ''} />
+                    <input type="text" onChange={handleInputChange} value={currentBid || 0} />
                     <button onClick={submitBid}> Submit Bid </button>
                     {viewerPlayer?.id == gameState.currentAuction.auctioneer && (
                       <button onClick={finishAuction}>
@@ -345,7 +346,6 @@ export const GameStateDisplayer: React.FC<{
               {(viewerPlayer?.cards || []).map((card, j) => (
                 <div className={classes.card}>
                   <div>
-                    {/* HERE */}
                     <img
                       src={paintings[painters[card.color]][card.paintingIndex]}
                       className={classes.artImage}
