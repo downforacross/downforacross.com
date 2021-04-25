@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import {makeStyles} from '@material-ui/core';
 import _ from 'lodash';
 import {PlayerActions} from '../usePlayerActions';
-import {ModernArtState, AuctionType, AuctionStatus, colors, painters, rgbColors} from '../events/types';
+import {ModernArtState, AuctionType, AuctionStatus, Card, colors, painters, rgbColors} from '../events/types';
 import {Log} from './Log';
 import Confetti from '../../Game/Confetti';
 import {FaRobot, FaGavel, FaTag, FaEye, FaStar, FaLock} from 'react-icons/fa';
@@ -90,6 +90,7 @@ import Picasso13 from '../resources/picasso-13.jpeg';
 import Picasso14 from '../resources/picasso-14.jpeg';
 import Picasso15 from '../resources/picasso-15.jpeg';
 import Picasso16 from '../resources/picasso-16.jpeg';
+import {ClassNameMap} from '@material-ui/core/styles/withStyles';
 
 const kadinskyArt = [
   Kadinsky1,
@@ -200,6 +201,25 @@ export const icons = [
   <IoMdBeer style={playerIconStyle} />,
   <GoSquirrel style={playerIconStyle} />,
 ];
+
+const makeCurrentAuctionImg = (classes: ClassNameMap, painting: Card) => {
+  return (
+    <div className={classes.auctionPhoto}>
+      <img
+        src={paintings[painters[painting.color]][painting.paintingIndex]}
+        className={classes.artImageBig}
+      ></img>
+
+      <div className={classes.auctionIconBackgroundBig} style={{backgroundColor: painting.color}}>
+        {painting.auctionType == AuctionType.OPEN && <FaEye className={classes.auctionIconBig} />}
+        {painting.auctionType == AuctionType.ONE_OFFER && <FaStar className={classes.auctionIconBig} />}
+        {painting.auctionType == AuctionType.FIXED && <FaTag className={classes.auctionIconBig} />}
+        {painting.auctionType == AuctionType.DOUBLE && <BiAddToQueue className={classes.auctionIconBig} />}
+        {painting.auctionType == AuctionType.HIDDEN && <FaLock className={classes.auctionIconBig} />}
+      </div>
+    </div>
+  );
+};
 
 /**
  * This component is parallel to Game -- will render a <Player/>
@@ -352,36 +372,10 @@ export const GameStateDisplayer: React.FC<{
           <div className={classes.auctionStatus}>
             <div className={classes.sectionHeader}>Current Auction</div>
             <div className={classes.rowFlex}>
-              <div className={classes.auctionPhoto}>
-                <img
-                  src={
-                    paintings[painters[gameState.currentAuction.painting.color]][
-                      gameState.currentAuction.painting.paintingIndex
-                    ]
-                  }
-                  className={classes.artImageBig}
-                ></img>
-                <div
-                  className={classes.auctionIconBackgroundBig}
-                  style={{backgroundColor: gameState.currentAuction.painting.color}}
-                >
-                  {gameState.currentAuction.painting.auctionType == AuctionType.OPEN && (
-                    <FaEye className={classes.auctionIconBig} />
-                  )}
-                  {gameState.currentAuction.painting.auctionType == AuctionType.ONE_OFFER && (
-                    <FaStar className={classes.auctionIconBig} />
-                  )}
-                  {gameState.currentAuction.painting.auctionType == AuctionType.FIXED && (
-                    <FaTag className={classes.auctionIconBig} />
-                  )}
-                  {gameState.currentAuction.painting.auctionType == AuctionType.DOUBLE && (
-                    <BiAddToQueue className={classes.auctionIconBig} />
-                  )}
-                  {gameState.currentAuction.painting.auctionType == AuctionType.HIDDEN && (
-                    <FaLock className={classes.auctionIconBig} />
-                  )}
-                </div>
-              </div>
+              {makeCurrentAuctionImg(classes, gameState.currentAuction.painting)}
+              {gameState.currentAuction.double &&
+                makeCurrentAuctionImg(classes, gameState.currentAuction.double)}
+
               <div>
                 <table className={classes.table}>
                   <tr className={classes.tr}>

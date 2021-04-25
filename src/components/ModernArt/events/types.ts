@@ -12,7 +12,7 @@ export interface ModernArtEvent {
   timestamp?: number | object;
 }
 
-interface Card {
+export interface Card {
   color: string;
   paintingIndex: number; // which painting of the artist to display
   auctionType: AuctionType;
