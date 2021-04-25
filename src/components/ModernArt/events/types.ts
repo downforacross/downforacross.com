@@ -81,7 +81,7 @@ export interface LogMessage {
 export interface ModernArtPlayer {
   id: string;
   name: string;
-  icon: string;
+  iconIdx: number;
   cards: Card[];
   money: number;
 }

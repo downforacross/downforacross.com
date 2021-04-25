@@ -5,16 +5,16 @@ need to have
 2. fixed price (ui to set price + backend) 
 3. [done] deal art cards for real 
 4. [done] distribute money for acquired art after a round ends 
-5. change your player name, change icon
-6. show your "investment returns" (money paid and money garnered for acquired art)  when round ends or game ends
-7. [done] change "current auction" photo
+5. [done] change your player name, change icon
+6. [done] change "current auction" photo
 
 nice to have
 1. maybe a way to view the full painting
 2. Add link to rules in header
-3. Make the `start` and `deal` experience nicer
+3. Make the `start`, `deal`, `change name` experiences prettier
 4. [done] clear submit box after submission
 5. show money even if there is no current auction (ie after clicking `start` game)
+6. show your "investment returns" (money paid and money garnered for acquired art)  when round ends or game ends
 
 random:
 

@@ -9,7 +9,7 @@ import {usePlayerActions} from './usePlayerActions';
 import {getUser} from '../../store/user';
 import {useGameState} from './useGameState';
 import {ModernArtEvent} from './events/types';
-import {GameStateDisplayer} from './GameStateDisplayer/GameStateDisplayer';
+import {GameStateDisplayer, icons} from './GameStateDisplayer/GameStateDisplayer';
 
 function subscribeToGameEvents(
   socket: SocketIOClient.Socket | undefined,
@@ -81,7 +81,6 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
   }, [gid, socket]);
 
   useUpdateEffect(() => {
-    const icons = ['🤨', '🧐', '🥺'];
     const names = [
       'manuel',
       'melim',
@@ -103,7 +102,7 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
             playerId,
             id: getUser().id,
             name: names[Math.floor(Math.random() * names.length)],
-            icon: icons[Math.floor(Math.random() * icons.length)],
+            iconIdx: Math.floor(Math.random() * icons.length),
           },
         });
       }

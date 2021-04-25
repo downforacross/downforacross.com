@@ -171,17 +171,20 @@ export const modernArtReducerHelper = (
     if (!player && state.started) {
       return undefined;
     }
+    if (!playerId) {
+      return undefined;
+    }
     return {
       ...state,
       players: {
         ...state.players,
-        [event.params.id]: {
+        [playerId]: {
           // @ts-ignore
           cards: [],
-          ...state.players[event.params.id],
+          ...state.players[playerId],
           name: event.params.name,
-          icon: event.params.icon,
-          id: event.params.id,
+          iconIdx: event.params.iconIdx ? event.params.iconIdx : state.players[playerId].iconIdx,
+          id: playerId,
         },
       },
       log: [
@@ -523,7 +526,7 @@ export const modernArtValidatorHelper = (state: ModernArtState, event: ModernArt
     return true;
   }
   if (event.type === 'update_name') {
-    return true;
+    return !state.started;
   }
   if (event.type === 'start_auction') {
     if (!state.currentAuction) return true;

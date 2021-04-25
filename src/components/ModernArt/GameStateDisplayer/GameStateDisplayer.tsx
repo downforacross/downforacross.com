@@ -7,7 +7,13 @@ import {ModernArtState, AuctionType, AuctionStatus, colors, painters, rgbColors}
 import {Log} from './Log';
 import Confetti from '../../Game/Confetti';
 import {FaRobot, FaGavel, FaTag, FaEye, FaStar, FaLock} from 'react-icons/fa';
+import {GiRobotAntennas, GiVintageRobot} from 'react-icons/gi';
+import {GrDiamond} from 'react-icons/gr';
 import {BiAddToQueue} from 'react-icons/bi';
+import {SiTencentqq, SiSwarm} from 'react-icons/si';
+import {RiMoonClearLine, RiAliensLine, RiSeedlingLine, RiCactusLine} from 'react-icons/ri';
+import {IoMdBeer} from 'react-icons/io';
+import {GoSquirrel} from 'react-icons/go';
 // import { MdGavel  } from 'react-icons/md';
 
 import Kadinsky1 from '../resources/kadinsky-1.jpeg';
@@ -178,6 +184,21 @@ const paintings: Record<string, any[]> = {
   Picasso: picassoArt,
 };
 
+export const icons = [
+  <FaRobot />,
+  <GiRobotAntennas />,
+  <GiVintageRobot />,
+  <GrDiamond />,
+  <SiTencentqq />,
+  <SiSwarm />,
+  <RiMoonClearLine />,
+  <RiAliensLine />,
+  <RiSeedlingLine />,
+  <RiCactusLine />,
+  <IoMdBeer />,
+  <GoSquirrel />,
+];
+
 /**
  * This component is parallel to Game -- will render a <Player/>
  * Will implement custom competitive crossword logic (see PR #145)
@@ -195,10 +216,18 @@ export const GameStateDisplayer: React.FC<{
   const viewerPlayer = gameState.players[playerId];
 
   const [currentBid, setCurrentBid] = useState(0);
+  const [currentName, setName] = useState<null | string>(null);
 
   const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const number = Number(e.currentTarget.value);
     setCurrentBid(number);
+  };
+
+  const handleTextChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    const text = String(e.currentTarget.value);
+    if (text !== null) {
+      setName(text);
+    }
   };
 
   const [selectedDoubleCard, setSelectedDoubleCard] = useState<number | null>(null);
@@ -217,6 +246,13 @@ export const GameStateDisplayer: React.FC<{
     // }
     // console.log('Starting auction');
     actions.startAuction(i);
+  };
+
+  const updateName = () => {
+    if (currentName !== null) {
+      actions.updateName(currentName);
+      // setName('');
+    }
   };
 
   const submitBid = () => {
@@ -243,11 +279,24 @@ export const GameStateDisplayer: React.FC<{
               <div className={classes.floatPlayer}>
                 {player.id === _.keys(gameState.players)[gameState.playerIdx] && <div>🎲(turn)🎲</div>}
                 {viewerPlayer?.id === player.id && <div>✨(you)✨</div>}
+                {/* make this editable until game starts */}
+                {!gameState.started && viewerPlayer?.id === player.id && (
+                  // <span className={classes.submitNewName}>
+                  <span>
+                    <input
+                      type="text"
+                      onChange={handleTextChange}
+                      value={currentName === null ? viewerPlayer?.name : currentName}
+                    />
+                    <button onClick={updateName}> Submit New Name </button>
+                  </span>
+                )}
                 <div>{player.name}</div>
 
                 <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
-                  <FaRobot className={classes.playerIcon} />
-                  {/* <div className={classes.playerIcon}> {player.icon} </div> */}
+                  {/* <FaRobot className={classes.playerIcon} /> */}
+                  {/* <GiRobotAntennas className={classes.playerIcon} /> */}
+                  <div className={classes.playerIcon}> {icons[player.iconIdx]} </div>
                   {arts?.map((a) => (
                     <div className={classes.acquiredArtCircle} style={{backgroundColor: a.color}}></div>
                   ))}

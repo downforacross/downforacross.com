@@ -3,6 +3,7 @@ import {ModernArtEvent} from './events/types';
 
 export interface PlayerActions {
   startGame(): void;
+  updateName(name: string): void;
   step(): void;
   startAuction(idx: number | number[]): void;
   submitBid(bidAmount: number): void;
@@ -24,6 +25,15 @@ export const usePlayerActions = (
       },
     });
     // TODO
+  },
+  updateName(name) {
+    dispatch({
+      type: 'update_name',
+      params: {
+        playerId,
+        name,
+      },
+    });
   },
   step() {
     dispatch({
