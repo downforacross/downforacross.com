@@ -345,40 +345,34 @@ export const GameStateDisplayer: React.FC<{
               {(viewerPlayer?.cards || []).map((card, j) => (
                 <div className={classes.card}>
                   <div>
-                    <div
-                      onClick={() => {
-                        actions.startAuction(j);
-                      }}
-                    >
-                      {/* HERE */}
-                      <img
-                        src={paintings[painters[card.color]][card.paintingIndex]}
-                        className={classes.artImage}
-                      ></img>
-                      <div className={classes.auctionIconBackground} style={{backgroundColor: card.color}}>
-                        {card.auctionType == AuctionType.OPEN && <FaEye className={classes.auctionIcon} />}
-                        {card.auctionType == AuctionType.ONE_OFFER && (
-                          <FaStar className={classes.auctionIcon} />
-                        )}
-                        {card.auctionType == AuctionType.FIXED && <FaTag className={classes.auctionIcon} />}
-                        {card.auctionType == AuctionType.DOUBLE && (
-                          <BiAddToQueue className={classes.auctionIcon} />
-                        )}
-                        {card.auctionType == AuctionType.HIDDEN && <FaLock className={classes.auctionIcon} />}
-                      </div>
-                      {/* default */}
-                      {viewerPlayer.id === _.keys(gameState.players)[gameState.playerIdx] &&
-                        gameState.currentAuction?.status !== AuctionStatus.PENDING && (
-                          <button
-                            onClick={() => {
-                              actions.startAuction(j);
-                            }}
-                          >
-                            {' '}
-                            Play{' '}
-                          </button>
-                        )}
+                    {/* HERE */}
+                    <img
+                      src={paintings[painters[card.color]][card.paintingIndex]}
+                      className={classes.artImage}
+                    ></img>
+                    <div className={classes.auctionIconBackground} style={{backgroundColor: card.color}}>
+                      {card.auctionType == AuctionType.OPEN && <FaEye className={classes.auctionIcon} />}
+                      {card.auctionType == AuctionType.ONE_OFFER && (
+                        <FaStar className={classes.auctionIcon} />
+                      )}
+                      {card.auctionType == AuctionType.FIXED && <FaTag className={classes.auctionIcon} />}
+                      {card.auctionType == AuctionType.DOUBLE && (
+                        <BiAddToQueue className={classes.auctionIcon} />
+                      )}
+                      {card.auctionType == AuctionType.HIDDEN && <FaLock className={classes.auctionIcon} />}
                     </div>
+                    {/* default */}
+                    {viewerPlayer.id === _.keys(gameState.players)[gameState.playerIdx] &&
+                      gameState.currentAuction?.status !== AuctionStatus.PENDING && (
+                        <button
+                          onClick={() => {
+                            actions.startAuction(j);
+                          }}
+                        >
+                          {' '}
+                          Play{' '}
+                        </button>
+                      )}
                   </div>
                 </div>
               ))}

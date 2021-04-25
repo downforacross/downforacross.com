@@ -30,18 +30,14 @@ const nextPlayerId = (state: ModernArtState, playerId: string) => {
 
 const finishAuction = (state: ModernArtState, finishedAt: number, finishedBy?: ModernArtPlayer) => {
   if (!state.currentAuction) return undefined;
+
   const auctioneer = state.currentAuction.auctioneer;
 
   // If no highestBidder, then painting goes to auctioneer
   const winner = state.currentAuction.highestBidder || auctioneer;
   if (!auctioneer || !winner) return undefined;
   const payment = state.currentAuction.highestBid || state.currentAuction.fixedPrice || 0;
-  const closedAuction = {
-    ...state.currentAuction,
-    status: AuctionStatus.CLOSED,
-    winner,
-    payment,
-  };
+  const painting = state.currentAuction.painting;
 
   if (state.players[winner].money < payment) return undefined;
   const hhmm = moment(finishedAt).format('hh:mm');
@@ -69,10 +65,7 @@ const finishAuction = (state: ModernArtState, finishedAt: number, finishedBy?: M
           ...state.rounds[state.roundIndex]?.players,
           [winner]: {
             ...state.rounds[state.roundIndex]?.players[winner],
-            acquiredArt: [
-              ...(state.rounds[state.roundIndex]?.players[winner]?.acquiredArt ?? []),
-              closedAuction.painting,
-            ],
+            acquiredArt: [...(state.rounds[state.roundIndex]?.players[winner]?.acquiredArt ?? []), painting],
           },
         },
       },
@@ -85,10 +78,15 @@ const finishAuction = (state: ModernArtState, finishedAt: number, finishedBy?: M
       },
       {
         hhmm,
-        text: `${state.players[winner].name} won the auction for ${payment} and acquired a ${closedAuction.painting.color}`,
+        text: `${state.players[winner].name} won the auction for ${payment} and acquired a ${painting.color}`,
       },
     ]),
-    currentAuction: closedAuction,
+    currentAuction: {
+      ...state.currentAuction,
+      status: AuctionStatus.CLOSED,
+      winner,
+      payment,
+    },
   };
 };
 /**
@@ -278,14 +276,6 @@ export const modernArtReducerHelper = (
 
     // If fifth painting of this color, do not auction and end round
     const count = _.filter(state.rounds[state.roundIndex].auctions, (x) => x.painting.color === color).length;
-    const nPlayers = {
-      ...state.players,
-      [playerId]: {
-        ...player,
-        // remove card
-        cards: [...player.cards.slice(0, idx), ...player.cards.slice(idx + 1)],
-      },
-    };
 
     if (count === 4) {
       // todo: give priority to lowest color
@@ -331,7 +321,27 @@ export const modernArtReducerHelper = (
 
       return {
         ...state,
-        players: nPlayers,
+        currentAuction: state.currentAuction
+          ? {
+              ...state.currentAuction,
+              status: AuctionStatus.CLOSED,
+            }
+          : undefined,
+        players: _.mapValues(state.players, (player) => {
+          if (player.id === playerId) {
+            return {
+              ...player,
+              money: player.money + playerToScore[player.id],
+              // remove card
+              cards: [...player.cards.slice(0, idx), ...player.cards.slice(idx + 1)],
+            };
+          } else {
+            return {
+              ...player,
+              money: player.money + playerToScore[player.id],
+            };
+          }
+        }),
         roundIndex: state.roundIndex + 1,
         roundStarted: false,
         rounds: {
@@ -363,33 +373,44 @@ export const modernArtReducerHelper = (
     }
 
     // round did not end
-    const auction = {
-      status: AuctionStatus.PENDING,
-      auctioneer: playerId,
-      painting: card,
-      highestBid: 0,
-      activeBidder: nextPlayerId(state, playerId),
-    };
+    else {
+      const nPlayers = {
+        ...state.players,
+        [playerId]: {
+          ...player,
+          // remove card
+          cards: [...player.cards.slice(0, idx), ...player.cards.slice(idx + 1)],
+        },
+      };
 
-    return {
-      ...state,
-      currentAuction: auction,
-      players: nPlayers,
-      rounds: {
-        ...state.rounds,
-        [state.roundIndex]: {
-          ...state.rounds[state.roundIndex],
-          auctions: [...state.rounds[state.roundIndex].auctions, auction],
+      const auction = {
+        status: AuctionStatus.PENDING,
+        auctioneer: playerId,
+        painting: card,
+        highestBid: 0,
+        activeBidder: nextPlayerId(state, playerId),
+      };
+
+      return {
+        ...state,
+        currentAuction: auction,
+        players: nPlayers,
+        rounds: {
+          ...state.rounds,
+          [state.roundIndex]: {
+            ...state.rounds[state.roundIndex],
+            auctions: [...state.rounds[state.roundIndex].auctions, auction],
+          },
         },
-      },
-      log: [
-        ...state.log,
-        {
-          hhmm,
-          text: `${player.name} plays ${card.auctionType} ${card.color}`,
-        },
-      ],
-    };
+        log: [
+          ...state.log,
+          {
+            hhmm,
+            text: `${player.name} plays ${card.auctionType} ${card.color}`,
+          },
+        ],
+      };
+    }
   }
 
   if (event.type === 'skip_bid') {
@@ -463,7 +484,7 @@ export const modernArtValidatorHelper = (state: ModernArtState, event: ModernArt
   if (event.type === 'start_auction') {
     if (!state.currentAuction) return true;
     if (state.currentAuction.status === AuctionStatus.PENDING) {
-      console.log('cannot start_auction because there is a pending auction');
+      console.log('cannot start_auction because there is a pending auction', state);
       return false;
     }
     const currentPlayer = _.keys(state.players)[state.playerIdx];
