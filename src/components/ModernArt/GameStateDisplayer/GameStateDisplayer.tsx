@@ -272,6 +272,10 @@ export const GameStateDisplayer: React.FC<{
     actions.finishAuction();
   };
 
+  const viewersTurnToPlayCard = gameState.currentDouble
+    ? gameState.currentDouble.activePlayer === playerId
+    : playerId === _.keys(gameState.players)[gameState.playerIdx] &&
+      gameState.currentAuction?.status !== AuctionStatus.PENDING;
   return (
     <div className={classes.gameStateDisplayerContainer}>
       <div className={classes.column1} style={{marginRight: '4%'}}>
@@ -471,17 +475,16 @@ export const GameStateDisplayer: React.FC<{
                       {card.auctionType == AuctionType.HIDDEN && <FaLock className={classes.auctionIcon} />}
                     </div>
                     {/* default */}
-                    {viewerPlayer.id === _.keys(gameState.players)[gameState.playerIdx] &&
-                      gameState.currentAuction?.status !== AuctionStatus.PENDING && (
-                        <button
-                          onClick={() => {
-                            playCard(j);
-                          }}
-                        >
-                          {' '}
-                          Play{' '}
-                        </button>
-                      )}
+                    {viewersTurnToPlayCard && (
+                      <button
+                        onClick={() => {
+                          playCard(j);
+                        }}
+                      >
+                        {' '}
+                        Play{' '}
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
