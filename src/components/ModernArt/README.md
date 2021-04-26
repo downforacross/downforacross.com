@@ -11,7 +11,7 @@ need to have
 8. hidden auction: fix bid handling. right now, last bidder wins
 9. [done] double auction: [done] ending a round w/ a double doesn't work, [done] need to support case where everyone passes, [done] do not allow players to try to play two doubles, [done] enforce that both cards are same color, [done] check whether doubles are scored correctly, other validation
 10. [done] prevent bid <= 0
-11: fixed price: force auctioneer to buy painting if everyone else refuses
+11: [done] fixed price: force auctioneer to buy painting if everyone else refuses
 12: [done] include previous valuations when distributing money
 
 nice to have

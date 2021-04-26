@@ -158,12 +158,18 @@ const skipBid = (state: ModernArtState, finishedAt: number, player: ModernArtPla
     hhmm,
     text: `${player.name} elected to skip`,
   };
-  // end the auction
-  // if (nextPlayerId(state, state.currentAuction.activeBidder) === state.currentAuction.auctioneer) {
-  //   return finishAuction(state, timestamp, logMessage)
-  // }
-  // i think this is wrong?
-  if (state.currentAuction.activeBidder === state.currentAuction.auctioneer) {
+
+  if (
+    state.currentAuction.painting.auctionType === AuctionType.FIXED &&
+    nextPlayerId(state, state.currentAuction.activeBidder) === state.currentAuction.auctioneer
+  ) {
+    return finishAuction(state, finishedAt, logMessage);
+  }
+
+  if (
+    state.currentAuction.painting.auctionType === AuctionType.ONE_OFFER &&
+    state.currentAuction.activeBidder === state.currentAuction.auctioneer
+  ) {
     return finishAuction(state, finishedAt, logMessage);
   }
 
