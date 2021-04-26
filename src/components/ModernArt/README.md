@@ -13,6 +13,8 @@ need to have
 10. [done] prevent bid <= 0
 11: [done] fixed price: force auctioneer to buy painting if everyone else refuses
 12: [done] include previous valuations when distributing money
+13: make sure that painting goes to correct person if there's a hidden auction tie
+14: [done] dealing results in duplicates
 
 nice to have
 1. maybe a way to view the full painting
@@ -21,6 +23,8 @@ nice to have
 4. [done] clear submit box after submission
 5. show money even if there is no current auction (ie after clicking `start` game)
 6. show your "investment returns" (money paid and money garnered for acquired art)  when round ends or game ends
+7. add button to "hide your hand" in case youre sitting by people
+8. after a double auction ends, only the non double painting remains in the "current auction" section (since we clear state.currentDouble)
 
 card distribution:
 

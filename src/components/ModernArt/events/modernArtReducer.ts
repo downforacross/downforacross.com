@@ -1,7 +1,7 @@
 // @ts-ignore
 import seedrandom from 'seedrandom';
 import moment from 'moment';
-import _ from 'lodash';
+import _, {identity} from 'lodash';
 import {
   ModernArtState,
   ModernArtEvent,
@@ -54,13 +54,21 @@ const finishAuction = (state: ModernArtState, finishedAt: number, logMessage?: L
       if (!state.currentAuction.hiddenBids) return undefined;
       winner = auctioneer;
       payment = 0;
-      for (let [key, value] of Object.entries(state.currentAuction.hiddenBids)) {
-        if (value > payment) {
-          winner = key;
-          payment = value;
+      // give preference to first player after auctioneer
+      let firstPlayer = nextPlayerId(state, auctioneer);
+      console.log('firstPlayer is ', firstPlayer);
+      let seenPlayers = [];
+      for (let id = firstPlayer; !(id in seenPlayers); id = nextPlayerId(state, id)) {
+        seenPlayers.push(id);
+        console.log('evaluating id ', id, state.currentAuction.hiddenBids);
+        if (id in state.currentAuction.hiddenBids) {
+          let bid = state.currentAuction.hiddenBids[id];
+          if (bid > payment) {
+            winner = id;
+            payment = bid;
+          }
         }
       }
-      console.log('winner is ', winner, ' and payment is ', payment);
     } else {
       // If no highestBidder, then painting goes to auctioneer
       winner = state.currentAuction.highestBidder || auctioneer;
@@ -478,83 +486,91 @@ export const modernArtReducerHelper = (
   } else if (event.type === 'step') {
     // do the next automated step depending on the game state
     if (!state.roundStarted) {
-      const prng = seedrandom(event.params.seed ?? 1);
-      const CARDS_TO_DEAL: Record<string, number[] | undefined> = {
+      let deck: Card[];
+      if (state.deck.length === 0) {
+        const prng = seedrandom(event.params.seed ?? 1);
+
+        const CARDS_TYPES_PER_COLOR: Record<string, AuctionType[]> = {
+          yellow: _.concat(
+            _.times(2, () => AuctionType.DOUBLE),
+            _.times(2, () => AuctionType.FIXED),
+            _.times(2, () => AuctionType.HIDDEN),
+            _.times(3, () => AuctionType.OPEN),
+            _.times(3, () => AuctionType.ONE_OFFER)
+          ),
+          blue: _.concat(
+            _.times(2, () => AuctionType.DOUBLE),
+            _.times(3, () => AuctionType.FIXED),
+            _.times(3, () => AuctionType.HIDDEN),
+            _.times(3, () => AuctionType.OPEN),
+            _.times(2, () => AuctionType.ONE_OFFER)
+          ),
+          red: _.concat(
+            _.times(2, () => AuctionType.DOUBLE),
+            _.times(3, () => AuctionType.FIXED),
+            _.times(3, () => AuctionType.HIDDEN),
+            _.times(3, () => AuctionType.OPEN),
+            _.times(3, () => AuctionType.ONE_OFFER)
+          ),
+          green: _.concat(
+            _.times(3, () => AuctionType.DOUBLE),
+            _.times(3, () => AuctionType.FIXED),
+            _.times(3, () => AuctionType.HIDDEN),
+            _.times(3, () => AuctionType.OPEN),
+            _.times(3, () => AuctionType.ONE_OFFER)
+          ),
+          orange: _.concat(
+            _.times(3, () => AuctionType.DOUBLE),
+            _.times(3, () => AuctionType.FIXED),
+            _.times(3, () => AuctionType.HIDDEN),
+            _.times(4, () => AuctionType.OPEN),
+            _.times(3, () => AuctionType.ONE_OFFER)
+          ),
+        };
+
+        const ALL_CARDS = _.flatMap(colors, (color) =>
+          _.map(CARDS_TYPES_PER_COLOR[color], (auctionType, idx) => ({
+            color,
+            paintingIndex: idx,
+            auctionType,
+          }))
+        );
+        deck = [...ALL_CARDS];
+        for (let i = 0; i < deck.length; i += 1) {
+          const j = Math.floor(prng() * (i + 1));
+          const tmp = deck[j];
+          deck[j] = deck[i];
+          deck[i] = tmp;
+        }
+      } else {
+        deck = state.deck;
+      }
+
+      const CARDS_TO_DEAL: Record<string, number[]> = {
         1: [10, 10, 10],
         2: [10, 10, 10],
-        3: [10, 10, 10],
-        4: [9, 9, 9],
-        5: [8, 8, 8],
+        3: [10, 6, 6],
+        4: [9, 4, 4],
+        5: [8, 3, 3],
       };
-
-      const CARDS_TYPES_PER_COLOR: Record<string, AuctionType[]> = {
-        yellow: _.concat(
-          _.times(2, () => AuctionType.DOUBLE),
-          _.times(2, () => AuctionType.FIXED),
-          _.times(2, () => AuctionType.HIDDEN),
-          _.times(3, () => AuctionType.OPEN),
-          _.times(3, () => AuctionType.ONE_OFFER)
-        ),
-        blue: _.concat(
-          _.times(2, () => AuctionType.DOUBLE),
-          _.times(3, () => AuctionType.FIXED),
-          _.times(3, () => AuctionType.HIDDEN),
-          _.times(3, () => AuctionType.OPEN),
-          _.times(2, () => AuctionType.ONE_OFFER)
-        ),
-        red: _.concat(
-          _.times(2, () => AuctionType.DOUBLE),
-          _.times(3, () => AuctionType.FIXED),
-          _.times(3, () => AuctionType.HIDDEN),
-          _.times(3, () => AuctionType.OPEN),
-          _.times(3, () => AuctionType.ONE_OFFER)
-        ),
-        green: _.concat(
-          _.times(3, () => AuctionType.DOUBLE),
-          _.times(3, () => AuctionType.FIXED),
-          _.times(3, () => AuctionType.HIDDEN),
-          _.times(3, () => AuctionType.OPEN),
-          _.times(3, () => AuctionType.ONE_OFFER)
-        ),
-        orange: _.concat(
-          _.times(3, () => AuctionType.DOUBLE),
-          _.times(3, () => AuctionType.FIXED),
-          _.times(3, () => AuctionType.HIDDEN),
-          _.times(4, () => AuctionType.OPEN),
-          _.times(3, () => AuctionType.ONE_OFFER)
-        ),
-      };
-
       const numPlayers = _.size(state.players);
       const cardsToDeal = CARDS_TO_DEAL[numPlayers]?.[state.roundIndex] ?? 0;
 
-      const ALL_CARDS = _.flatMap(colors, (color) =>
-        _.map(CARDS_TYPES_PER_COLOR[color], (auctionType, idx) => ({
-          color,
-          paintingIndex: idx,
-          auctionType,
-        }))
-      );
-      let deck = [...ALL_CARDS];
-      for (let i = 0; i < deck.length; i += 1) {
-        const j = Math.floor(prng() * (i + 1));
-        const tmp = deck[j];
-        deck[j] = deck[i];
-        deck[i] = tmp;
-      }
       const deal = () => {
         const res = deck[0];
         deck = deck.slice(1);
         return res;
       };
 
+      const nPlayers = _.mapValues(state.players, (u) => ({
+        ...u,
+        cards: [...u.cards, ..._.times(cardsToDeal, deal)],
+      }));
+
       return {
         ...state,
-        deck,
-        players: _.mapValues(state.players, (u) => ({
-          ...u,
-          cards: [...u.cards, ..._.times(cardsToDeal, deal)],
-        })),
+        deck: deck,
+        players: nPlayers,
         roundStarted: true,
         log: [
           ...state.log,
