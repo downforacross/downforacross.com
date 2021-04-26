@@ -38,6 +38,7 @@ const finishAuction = (state: ModernArtState, finishedAt: number, logMessage?: L
   let payment = 0;
 
   if (!state.currentAuction) {
+    // handle when there is one double, but no second painting
     if (state.currentDouble) {
       auctioneer = state.currentDouble.auctioneer;
       winner = auctioneer;
@@ -47,15 +48,26 @@ const finishAuction = (state: ModernArtState, finishedAt: number, logMessage?: L
     }
   } else {
     auctioneer = state.currentAuction.auctioneer;
-
-    // If no highestBidder, then painting goes to auctioneer
-    winner = state.currentAuction.highestBidder || auctioneer;
-    if (!auctioneer || !winner) return undefined;
-    payment = state.currentAuction.highestBid || state.currentAuction.fixedPrice || 0;
     paintings = [state.currentAuction.painting];
-    state.currentAuction.double && paintings.push(state.currentAuction.double);
 
-    if (state.players[winner].money < payment) return undefined;
+    if (state.currentAuction.painting.auctionType === AuctionType.HIDDEN) {
+      if (!state.currentAuction.hiddenBids) return undefined;
+      winner = auctioneer;
+      payment = 0;
+      for (let [key, value] of Object.entries(state.currentAuction.hiddenBids)) {
+        if (value > payment) {
+          winner = key;
+          payment = value;
+        }
+      }
+      console.log('winner is ', winner, ' and payment is ', payment);
+    } else {
+      // If no highestBidder, then painting goes to auctioneer
+      winner = state.currentAuction.highestBidder || auctioneer;
+      if (!auctioneer || !winner) return undefined;
+      payment = state.currentAuction.highestBid || state.currentAuction.fixedPrice || 0;
+      state.currentAuction.double && paintings.push(state.currentAuction.double);
+    }
   }
 
   const hhmm = moment(finishedAt).format('hh:mm');
@@ -121,33 +133,59 @@ const submitBid = (state: ModernArtState, finishedAt: number, player: ModernArtP
   if (!state.currentAuction) return undefined;
   const hhmm = moment(finishedAt).format('hh:mm');
 
-  const stateAfterBid = {
-    ...state,
-    currentAuction: {
-      ...state.currentAuction,
-      highestBidder: player.id,
-      highestBid: bidAmount,
-      activeBidder:
-        state.currentAuction.activeBidder && nextPlayerId(state, state.currentAuction.activeBidder),
-    },
-    log: [
-      ...state.log,
-      {
-        hhmm,
-        text:
-          state.currentAuction.painting.auctionType === AuctionType.HIDDEN
-            ? `${player.name} has submitted a bid`
-            : `${player.name} has submitted a bid for ${bidAmount}`,
+  let stateAfterBid;
+  if (state.currentAuction.painting.auctionType === AuctionType.HIDDEN) {
+    stateAfterBid = {
+      ...state,
+      currentAuction: {
+        ...state.currentAuction,
+        hiddenBids: {
+          ...state.currentAuction.hiddenBids,
+          [player.id]: bidAmount,
+        },
       },
-    ],
-  };
+      log: [
+        ...state.log,
+        {
+          hhmm,
+          text: `${player.name} has submitted a bid`,
+        },
+      ],
+    };
+  } else {
+    stateAfterBid = {
+      ...state,
+      currentAuction: {
+        ...state.currentAuction,
+        highestBidder: player.id,
+        highestBid: bidAmount,
+        activeBidder:
+          state.currentAuction.activeBidder && nextPlayerId(state, state.currentAuction.activeBidder),
+      },
+      log: [
+        ...state.log,
+        {
+          hhmm,
+          text: `${player.name} has submitted a bid for ${bidAmount}`,
+        },
+      ],
+    };
+  }
+
   if (
     turnBasedAuctions.includes(state.currentAuction.painting.auctionType) &&
     state.currentAuction.auctioneer === player.id
   ) {
-    // the auction is over
     return finishAuction(stateAfterBid, finishedAt);
   }
+
+  if (
+    state.currentAuction.painting.auctionType === AuctionType.HIDDEN &&
+    _.keys(stateAfterBid.currentAuction.hiddenBids).length === _.keys(state.players).length
+  ) {
+    return finishAuction(stateAfterBid, finishedAt);
+  }
+
   return stateAfterBid;
 };
 
@@ -364,7 +402,11 @@ export const modernArtReducerHelper = (
   } else if (event.type === 'submit_bid') {
     if (!state.currentAuction) return undefined;
     // if submitted bid is less than highest bid, process as skip if one_offer
-    if (state.currentAuction.highestBid && event.params.bidAmount <= state.currentAuction.highestBid) {
+    if (
+      [AuctionType.ONE_OFFER, AuctionType.OPEN].includes(state.currentAuction.painting.auctionType) &&
+      state.currentAuction.highestBid &&
+      event.params.bidAmount <= state.currentAuction.highestBid
+    ) {
       if (state.currentAuction.painting.auctionType === AuctionType.ONE_OFFER) {
         return skipBid(state, timestamp, player);
       } else if (state.currentAuction.painting.auctionType === AuctionType.OPEN) {
@@ -379,6 +421,22 @@ export const modernArtReducerHelper = (
           ],
         };
       }
+    }
+    if (
+      state.currentAuction.painting.auctionType === AuctionType.HIDDEN &&
+      state.currentAuction.hiddenBids &&
+      player.id in state.currentAuction.hiddenBids
+    ) {
+      return {
+        ...state,
+        log: [
+          ...state.log,
+          {
+            hhmm,
+            text: `${player.name} submitted another bid, but only first bid is accepted.`,
+          },
+        ],
+      };
     }
     // same as submitting a bid for that price
     return submitBid(state, timestamp, player, event.params.bidAmount);

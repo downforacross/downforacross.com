@@ -58,7 +58,8 @@ export interface Auction {
   painting: Card; // auctionType is on Card
   double?: Card; // DOUBLE
   fixedPrice?: number; // FIXED
-  highestBid?: number | null; // ONE_OFFER, HIDDEN, OPEN
+  highestBid?: number | null; // ONE_OFFER, OPEN
+  hiddenBids?: {[id: string]: number}; // HIDDEN
   highestBidder?: string | null; // ONE_OFFER, HIDDEN, OPEN
   activeBidder?: string | null; // ONE_OFFER, FIXED
   winner?: string | null; // derived field to standardize across auction types
