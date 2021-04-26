@@ -13,7 +13,7 @@ need to have
 10. [done] prevent bid <= 0
 11: [done] fixed price: force auctioneer to buy painting if everyone else refuses
 12: [done] include previous valuations when distributing money
-13: make sure that painting goes to correct person if there's a hidden auction tie
+13: [done] make sure that painting goes to correct person if there's a hidden auction tie
 14: [done] dealing results in duplicates
 
 nice to have
