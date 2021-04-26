@@ -518,15 +518,15 @@ export const GameStateDisplayer: React.FC<{
                       className={classes.artImage}
                     ></img>
                     <div className={classes.auctionIconBackground} style={{backgroundColor: card.color}}>
-                      {card.auctionType == AuctionType.OPEN && <FaEye className={classes.auctionIcon} />}
-                      {card.auctionType == AuctionType.ONE_OFFER && (
+                      {card.auctionType === AuctionType.OPEN && <FaEye className={classes.auctionIcon} />}
+                      {card.auctionType === AuctionType.ONE_OFFER && (
                         <FaStar className={classes.auctionIcon} />
                       )}
-                      {card.auctionType == AuctionType.FIXED && <FaTag className={classes.auctionIcon} />}
-                      {card.auctionType == AuctionType.DOUBLE && (
+                      {card.auctionType === AuctionType.FIXED && <FaTag className={classes.auctionIcon} />}
+                      {card.auctionType === AuctionType.DOUBLE && (
                         <BiAddToQueue className={classes.auctionIcon} />
                       )}
-                      {card.auctionType == AuctionType.HIDDEN && <FaLock className={classes.auctionIcon} />}
+                      {card.auctionType === AuctionType.HIDDEN && <FaLock className={classes.auctionIcon} />}
                     </div>
                     {/* default */}
                     {viewersTurnToPlayCard && (

@@ -57,8 +57,8 @@ const finishAuction = (state: ModernArtState, finishedAt: number, logMessage?: L
       // give preference to first player after auctioneer
       let firstPlayer = nextPlayerId(state, auctioneer);
       console.log('firstPlayer is ', firstPlayer);
-      let seenPlayers = [];
-      for (let id = firstPlayer; !(id in seenPlayers); id = nextPlayerId(state, id)) {
+      let seenPlayers: string[] = [];
+      for (let id = firstPlayer; !seenPlayers.includes(id); id = nextPlayerId(state, id)) {
         seenPlayers.push(id);
         console.log('evaluating id ', id, state.currentAuction.hiddenBids);
         if (id in state.currentAuction.hiddenBids) {
