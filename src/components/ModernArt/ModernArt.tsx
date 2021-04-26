@@ -50,7 +50,6 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
 
   const sendEvent = useCallback(
     async (event: ModernArtEvent) => {
-      console.log('send event', event);
       if (socket) {
         emitAsync(socket, 'game_event', {
           gid,
@@ -110,8 +109,6 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
   }, [isInitialized]);
   const classes = useStyles();
   const gameState = useGameState(events);
-  console.log('Events', events);
-  console.log('Game State:', gameState);
 
   const actions = usePlayerActions(sendEvent, playerId);
   return (

@@ -9,9 +9,10 @@ need to have
 6. [done] change "current auction" photo
 7. [done] one offer auction should end itself but currently if the last player skips then the auction does not end. also, do not need to show `end auction`. also, there's also a bug where player 1 bids x, player 2 bids x - 1 and wins.
 8. hidden auction: fix bid handling. right now, last bidder wins
-9. double auction: [done] ending a round w/ a double doesn't work, need to support case where everyone passes, do not allow players to try to play two doubles, enforce that both cards are same color, other validation
-10. is bid = 0 allowed?
+9. [done] double auction: [done] ending a round w/ a double doesn't work, [done] need to support case where everyone passes, [done] do not allow players to try to play two doubles, [done] enforce that both cards are same color, [done] check whether doubles are scored correctly, other validation
+10. [done] prevent bid <= 0
 11: fixed price: force auctioneer to buy painting if everyone else refuses
+12: [done] include previous valuations when distributing money
 
 nice to have
 1. maybe a way to view the full painting

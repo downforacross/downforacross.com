@@ -14,7 +14,6 @@ import {
   LogMessage,
   Card,
 } from './types';
-import {time} from 'console';
 
 const getPlayerIdx = (state: ModernArtState, playerId: string) => {
   return Object.keys(state.players).indexOf(playerId);
@@ -60,12 +59,6 @@ const finishAuction = (state: ModernArtState, finishedAt: number, logMessage?: L
   }
 
   const hhmm = moment(finishedAt).format('hh:mm');
-  console.log(
-    'acquired Art: ',
-    state.rounds[state.roundIndex]?.players[winner]?.acquiredArt,
-    'paintings: ',
-    paintings
-  );
 
   return {
     ...state,
@@ -183,6 +176,125 @@ const skipBid = (state: ModernArtState, finishedAt: number, player: ModernArtPla
     log: [...state.log, logMessage],
   };
 };
+
+const finishRound = (
+  state: ModernArtState,
+  finishedAt: number,
+  playerId: string,
+  card: Card,
+  cardIdx: number
+) => {
+  const hhmm = moment(finishedAt).format('hh:mm');
+
+  const auctions = state.rounds[state.roundIndex].auctions;
+  const colorFreq = _.groupBy(auctions, (x) => x.painting.color); // color: [painting]
+  console.log(`colorFreq ${JSON.stringify(colorFreq)}`);
+  const sortedColorFreq = _.sortBy(colors, (x) => (x in colorFreq ? -colorFreq[x].length : 0));
+  console.log(`sortedColorFreq ${JSON.stringify(sortedColorFreq)}`);
+
+  const firstColor = sortedColorFreq[0] in colorFreq ? sortedColorFreq[0] : 'None';
+  const secondColor = sortedColorFreq[1] in colorFreq ? sortedColorFreq[1] : 'None'; // for when only one color is played
+  const thirdColor = sortedColorFreq[2] in colorFreq ? sortedColorFreq[2] : 'None'; // for when only two colors are played
+
+  // score player's holdings
+  // for rounds before current round index, if there's is a value then add to score; otherwise break
+  const payouts = {
+    [firstColor]: 30,
+    [secondColor]: 20,
+    [thirdColor]: 10,
+  };
+  for (let id in _.keys(payouts)) {
+    let color = _.keys(payouts)[id];
+    for (let round = state.roundIndex - 1; round > -1; round--) {
+      let temp = state.rounds[round].places?.[color];
+      if (!!temp) {
+        payouts[color] += temp;
+      } else {
+        break;
+      }
+    }
+  }
+
+  const currentRound = state.rounds[state.roundIndex];
+  const playersRound = currentRound.players;
+  const playerToScore: {[playerId: string]: number} = {};
+  for (const playerId of _.keys(playersRound)) {
+    let score = 0;
+    const playerAcquiredArt = playersRound[playerId].acquiredArt;
+    // eslint-disable-next-line guard-for-in
+    for (const idx in playerAcquiredArt) {
+      const color = playerAcquiredArt[idx].color;
+      if (color === firstColor) {
+        score += payouts[firstColor];
+      } else if (color === secondColor) {
+        score += payouts[secondColor];
+      } else if (color === thirdColor) {
+        score += payouts[thirdColor];
+      }
+    }
+    playerToScore[playerId] = score;
+  }
+
+  const places = {
+    ..._.zipObject(colors, _.times(colors.length, _.constant(0))),
+    [firstColor]: 30,
+    [secondColor]: 20,
+    [thirdColor]: 10,
+  };
+
+  return {
+    ...state,
+    currentAuction: state.currentAuction
+      ? {
+          ...state.currentAuction,
+          status: AuctionStatus.CLOSED,
+        }
+      : undefined,
+    currentDouble: undefined,
+    players: _.mapValues(state.players, (player) => {
+      if (player.id === playerId) {
+        return {
+          ...player,
+          money: player.money + playerToScore[player.id],
+          // remove card
+          cards: [...player.cards.slice(0, cardIdx), ...player.cards.slice(cardIdx + 1)],
+        };
+      } else {
+        return {
+          ...player,
+          money: player.money + playerToScore[player.id],
+        };
+      }
+    }),
+    roundIndex: state.roundIndex + 1,
+    roundStarted: false,
+    rounds: {
+      ...state.rounds,
+      [state.roundIndex]: {
+        ...state.rounds[state.roundIndex],
+        players: _.map(state.players, (player) => ({
+          [player.id]: {
+            ...state.rounds[state.roundIndex].players[player.id],
+            score: playerToScore[player.id],
+          },
+        })),
+        places,
+      },
+      // new round
+      [state.roundIndex + 1]: {
+        auctions: [],
+        players: _.fromPairs(_.values(state.players).map((u) => [u.id, []])),
+      },
+    },
+    log: [
+      ...state.log,
+      {
+        hhmm,
+        text: `${state.players[playerId].name} plays ${card.auctionType} ${card.color} and ends round ${state.roundIndex}`,
+      },
+    ],
+  };
+};
 /**
  * A helper function that contains meat of reducer code.
  *
@@ -197,7 +309,6 @@ export const modernArtReducerHelper = (
 
   const timestamp = typeof event.timestamp === 'number' ? event.timestamp : Date.now();
   const hhmm = moment(timestamp).format('hh:mm');
-  console.log('Processing event of type ', event.type);
   if (event.type === 'start_game') {
     return {
       ...state,
@@ -226,13 +337,19 @@ export const modernArtReducerHelper = (
     };
   } else if (event.type === 'submit_fixed_price') {
     if (!state.currentAuction) return undefined;
-    console.log('new fixedPrice of ', event.params.fixedPrice);
     return {
       ...state,
       currentAuction: {
         ...state.currentAuction,
         fixedPrice: event.params.fixedPrice,
       },
+      log: [
+        ...state.log,
+        {
+          hhmm,
+          text: `${player.name} set fixed price to ${event.params.fixedPrice}`,
+        },
+      ],
     };
   } else if (event.type === 'accept_fixed_price') {
     if (!state.currentAuction) return undefined;
@@ -241,12 +358,6 @@ export const modernArtReducerHelper = (
   } else if (event.type === 'submit_bid') {
     if (!state.currentAuction) return undefined;
     // if submitted bid is less than highest bid, process as skip if one_offer
-    console.log(
-      'state.currentAuction.highestBid: ',
-      state.currentAuction.highestBid,
-      'state.currentAuction.highestBid && event.params.bidAmount: ',
-      state.currentAuction.highestBid && event.params.bidAmount
-    );
     if (state.currentAuction.highestBid && event.params.bidAmount <= state.currentAuction.highestBid) {
       if (state.currentAuction.painting.auctionType === AuctionType.ONE_OFFER) {
         return skipBid(state, timestamp, player);
@@ -398,104 +509,12 @@ export const modernArtReducerHelper = (
     const color = player.cards[idx].color;
 
     // If fifth painting of this color, do not auction and end round
-    const count =
-      _.filter(state.rounds[state.roundIndex].auctions, (x) => x.painting.color === color).length +
-      _.filter(state.rounds[state.roundIndex].auctions, (x) => x.double?.color === color).length +
-      (state.currentDouble ? 1 : 0);
+    const count = _.filter(state.rounds[state.roundIndex].auctions, (x) => x.painting.color === color).length;
+    // + _.filter(state.rounds[state.roundIndex].auctions, (x) => x.double?.color === color).length
+    // + (state.currentDouble ? 1 : 0);
 
-    console.log('count: ', count);
-    console.log('state.currentAuction?.double', state.currentAuction?.double);
     if (count === 4) {
-      // todo: give priority to lowest color
-      const auctions = state.rounds[state.roundIndex].auctions; // color: [painting]
-      const colorFreq = _.groupBy(auctions, (x) => x.painting.color);
-      const sortedColorFreq = _.sortBy(_.keys(colorFreq), (x) => -colorFreq[x].length);
-
-      const firstColor = sortedColorFreq[0];
-      const secondColor = sortedColorFreq[1];
-      const thirdColor = sortedColorFreq[2];
-
-      // score player's holdings
-      // todo: not sure if this scores double paintings correctly
-      const currentRound = state.rounds[state.roundIndex];
-      const playersRound = currentRound.players;
-      const playerToScore: {[playerId: string]: number} = {};
-      for (const playerId of _.keys(playersRound)) {
-        let score = 0;
-        const playerAcquiredArt = playersRound[playerId].acquiredArt;
-        // eslint-disable-next-line guard-for-in
-        for (const idx in playerAcquiredArt) {
-          const color = playerAcquiredArt[idx].color;
-          if (color === firstColor) {
-            score += 30;
-          } else if (color === secondColor) {
-            score += 20;
-          } else if (color === thirdColor) {
-            score += 10;
-          }
-        }
-        playerToScore[playerId] = score;
-      }
-
-      const places = {
-        ..._.zipObject(colors, _.times(colors.length, _.constant(0))),
-        [firstColor]: 30,
-        [secondColor]: 20,
-        [thirdColor]: 10,
-      };
-
-      return {
-        ...state,
-        currentAuction: state.currentAuction
-          ? {
-              ...state.currentAuction,
-              status: AuctionStatus.CLOSED,
-            }
-          : undefined,
-        currentDouble: undefined,
-        players: _.mapValues(state.players, (player) => {
-          if (player.id === playerId) {
-            return {
-              ...player,
-              money: player.money + playerToScore[player.id],
-              // remove card
-              cards: [...player.cards.slice(0, idx), ...player.cards.slice(idx + 1)],
-            };
-          } else {
-            return {
-              ...player,
-              money: player.money + playerToScore[player.id],
-            };
-          }
-        }),
-        roundIndex: state.roundIndex + 1,
-        roundStarted: false,
-        rounds: {
-          ...state.rounds,
-          [state.roundIndex]: {
-            ...state.rounds[state.roundIndex].auctions,
-            players: _.map(state.players, (player) => ({
-              [player.id]: {
-                ...state.rounds[state.roundIndex].players[player.id],
-                score: playerToScore[player.id],
-              },
-            })),
-            places,
-          },
-          // new round
-          [state.roundIndex + 1]: {
-            auctions: [],
-            players: _.fromPairs(_.values(state.players).map((u) => [u.id, []])),
-          },
-        },
-        log: [
-          ...state.log,
-          {
-            hhmm,
-            text: `${player.name} plays ${card.auctionType} ${card.color} and ends round ${state.roundIndex}`,
-          },
-        ],
-      };
+      return finishRound(state, timestamp, playerId, card, idx);
     }
 
     // round did not end
@@ -511,6 +530,15 @@ export const modernArtReducerHelper = (
 
       // If the card was a double, don't start an auction
       if (card.auctionType === AuctionType.DOUBLE) {
+        // kind of a hack. needed when a player plays a DOUBLE, but no player plays another card.
+        const placeholderAuction: Auction = {
+          status: AuctionStatus.PENDING,
+          auctioneer: playerId,
+          painting: card,
+          highestBid: 0,
+          activeBidder: '',
+        };
+
         return {
           ...state,
           currentDouble: {
@@ -518,6 +546,14 @@ export const modernArtReducerHelper = (
             auctioneer: playerId,
             activePlayer: playerId,
           },
+          rounds: {
+            ...state.rounds,
+            [state.roundIndex]: {
+              ...state.rounds[state.roundIndex],
+              auctions: [...state.rounds[state.roundIndex].auctions, placeholderAuction],
+            },
+          },
+          currentAuction: undefined,
           players: nPlayers,
           log: [
             ...state.log,
@@ -564,18 +600,14 @@ export const modernArtReducerHelper = (
   } else if (event.type === 'skip_bid') {
     return skipBid(state, timestamp, player);
   } else if (event.type === 'skip_double') {
-    if (!state.currentDouble || !state.currentAuction || !state.currentDouble.activePlayer) return undefined;
+    if (!state.currentDouble || !state.currentDouble.activePlayer) return undefined;
 
     const logMessage = {
       hhmm,
       text: `${player.name} skips playing double`,
     };
     // everyone skipped
-    console.log(
-      `state.currentAuction.activeBidder: ${state.currentAuction.activeBidder}, state.currentAuction.auctioneer: ${state.currentAuction.auctioneer}`
-    );
     if (nextPlayerId(state, state.currentDouble.activePlayer) === state.currentDouble.auctioneer) {
-      console.log('finishing auction');
       return finishAuction(state, timestamp, logMessage);
     }
 
@@ -598,6 +630,7 @@ export const modernArtReducerHelper = (
  */
 export const modernArtValidatorHelper = (state: ModernArtState, event: ModernArtEvent): boolean => {
   const playerId = event.params.playerId ?? event.params.id;
+  const player = state.players[event.params.playerId];
 
   if (event.type === 'start_game') {
     return !state.started;
@@ -615,6 +648,11 @@ export const modernArtValidatorHelper = (state: ModernArtState, event: ModernArt
       console.log(
         `cannot submit_fixed_price since ${playerId} is not the auctioneer ${state.currentAuction.auctioneer}`
       );
+      return false;
+    }
+    if (event.params.fixedPrice <= 0) {
+      console.log(`cannot submit_fixed_price since ${event.params.fixedPrice} <= 0`);
+      return false;
     }
     return true;
   } else if (event.type === 'accept_fixed_price') {
@@ -632,6 +670,10 @@ export const modernArtValidatorHelper = (state: ModernArtState, event: ModernArt
     if (!state.currentAuction) return false;
     if (state.currentAuction.status === AuctionStatus.CLOSED) {
       console.log('cannot submit_bid because auction is closed');
+      return false;
+    }
+    if (event.params.bidAmount <= 0) {
+      console.log(`cannot submit_bid since ${event.params.bidAmount} <= 0`);
       return false;
     }
     const money = state.players[playerId].money;
@@ -671,17 +713,41 @@ export const modernArtValidatorHelper = (state: ModernArtState, event: ModernArt
     return !state.started;
   }
   if (event.type === 'start_auction') {
-    if (!state.currentAuction) return true;
-    if (state.currentAuction.status === AuctionStatus.PENDING) {
+    const currentPlayer = _.keys(state.players)[state.playerIdx];
+
+    if (state.currentAuction?.status === AuctionStatus.PENDING) {
       console.log('cannot start_auction because there is a pending auction', state);
       return false;
     }
-    const currentPlayer = _.keys(state.players)[state.playerIdx];
-    if (currentPlayer !== playerId) {
+
+    // double auction rules
+    if (state.currentDouble) {
+      const idx = event.params.idx;
+      const card = player.cards[idx];
+
+      console.log('validating start_auction, state is ', state, state.currentDouble.card.color, card.color);
+      if (state.currentDouble.card.color !== card.color) {
+        console.log(
+          `second card (${card.color}) must be same color as double (${state.currentDouble.card.color})`
+        );
+        return false;
+      }
+      if (card.auctionType === AuctionType.DOUBLE) {
+        console.log(`second card (${card.auctionType}) cannot be another double`);
+        return false;
+      }
+
+      if (playerId !== state.currentDouble.activePlayer) {
+        console.log(
+          `second card cannot be played by ${playerId} (it is ${state.currentDouble.activePlayer}'s turn)`,
+          state
+        );
+        return false;
+      }
+    } else if (currentPlayer !== playerId) {
       console.log(`cannot start_auction because ${playerId} is not the current player ${currentPlayer}`);
-      // return false; // ignore this rule in dev
+      return false;
     }
-    return true;
   }
   return true;
 };

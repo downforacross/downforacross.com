@@ -211,11 +211,11 @@ const makeCurrentAuctionImg = (classes: ClassNameMap, painting: Card) => {
       ></img>
 
       <div className={classes.auctionIconBackgroundBig} style={{backgroundColor: painting.color}}>
-        {painting.auctionType == AuctionType.OPEN && <FaEye className={classes.auctionIconBig} />}
-        {painting.auctionType == AuctionType.ONE_OFFER && <FaStar className={classes.auctionIconBig} />}
-        {painting.auctionType == AuctionType.FIXED && <FaTag className={classes.auctionIconBig} />}
-        {painting.auctionType == AuctionType.DOUBLE && <BiAddToQueue className={classes.auctionIconBig} />}
-        {painting.auctionType == AuctionType.HIDDEN && <FaLock className={classes.auctionIconBig} />}
+        {painting.auctionType === AuctionType.OPEN && <FaEye className={classes.auctionIconBig} />}
+        {painting.auctionType === AuctionType.ONE_OFFER && <FaStar className={classes.auctionIconBig} />}
+        {painting.auctionType === AuctionType.FIXED && <FaTag className={classes.auctionIconBig} />}
+        {painting.auctionType === AuctionType.DOUBLE && <BiAddToQueue className={classes.auctionIconBig} />}
+        {painting.auctionType === AuctionType.HIDDEN && <FaLock className={classes.auctionIconBig} />}
       </div>
     </div>
   );
