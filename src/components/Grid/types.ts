@@ -20,9 +20,6 @@ export interface CellCoords {
   c: number;
 }
 
-export type CellIndex = Brand<number, 'CellIndex'>;
-export const toCellIndex = (r: number, c: number, cols: number) => (r * cols + c) as CellIndex;
-
 export type ClueCoords = {
   ori: string;
   num: number;

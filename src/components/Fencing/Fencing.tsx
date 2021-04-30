@@ -165,12 +165,22 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
                 },
               });
             }}
-            switchTeams={() => {
+            changeTeamName={(newName) => {
+              if (!teamId) return;
+              sendEvent({
+                type: 'updateTeamName',
+                params: {
+                  teamId,
+                  teamName: newName,
+                },
+              });
+            }}
+            joinTeam={(teamId: number) => {
               sendEvent({
                 type: 'updateTeamId',
                 params: {
                   id,
-                  teamId: teamId ? 3 - teamId : 1,
+                  teamId,
                 },
               });
             }}
@@ -185,7 +195,7 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
             }}
           />
         </div>
-        {gameState.loaded && (
+        {gameState.loaded && gameState.started && (
           <div>
             <FencingToolbar toolbarActions={toolbarActions} />
             <Player
@@ -200,6 +210,11 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
             />
           </div>
         )}
+
+        {!gameState.started && (
+          <button onClick={playerActions.startGame}>Start Game (wait for everyone to join!)</button>
+        )}
+
         {!gameState.loaded && <div>Loading your game...</div>}
       </div>
     </Flex>

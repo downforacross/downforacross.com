@@ -1,3 +1,5 @@
+import {Brand} from 'utility-types';
+
 export interface InfoJson {
   type?: string; // this is sometimes set by the frontend, e.g. by the FileUpload module
   title: string;
@@ -31,10 +33,13 @@ export interface CellData {
 }
 export type GridData = CellData[][];
 
+export type CellIndex = Brand<number, 'CellIndex'>;
+export const toCellIndex = (r: number, c: number, cols: number) => (r * cols + c) as CellIndex;
+
 export interface GameJson {
   info: InfoJson;
   grid: GridData;
-  teamGrids?: Record<number, GridData>;
+  teamGrids?: Record<number, GridData>; // TODO move to fencingState.teams[number].grid
   teamClueVisibility?: Record<
     number,
     {
@@ -44,9 +49,12 @@ export interface GameJson {
   >;
   solution: string[][];
   clues: CluesJson;
+  circles?: CellIndex[];
+  shades?: CellIndex[];
 }
 
 export interface UserJson {
+  id: string;
   cursor?: Cursor;
   displayName: string;
   teamId?: number;

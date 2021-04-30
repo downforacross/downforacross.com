@@ -87,6 +87,13 @@ const reveal: EventDef<RevealEvent> = {
           score: (state.users[id].score || 0) + 1,
         },
       },
+      teams: {
+        ...state.teams,
+        [teamId]: {
+          ...state.teams[teamId],
+          score: state.teams[teamId]!.score + 1,
+        },
+      },
     };
   },
 };

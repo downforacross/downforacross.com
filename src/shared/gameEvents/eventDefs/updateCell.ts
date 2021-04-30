@@ -22,7 +22,7 @@ export interface UpdateCellEvent {
 const updateCell: EventDef<UpdateCellEvent> = {
   reducer(state, {cell, value, id}) {
     const teamId = state.users[id]?.teamId;
-    if (!teamId) {
+    if (!teamId || !(teamId in state.teams)) {
       return state; // illegal update if no user exists with id
     }
     const {r, c} = cell;

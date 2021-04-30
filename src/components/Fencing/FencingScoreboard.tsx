@@ -11,46 +11,135 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     alignItems: 'center',
   },
+  teamName: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  userName: {
+    marginLeft: 20,
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
 });
 export const FencingScoreboard: React.FC<{
   gameState: GameState;
   currentUserId: string;
-  switchTeams(): void;
+  joinTeam(teamId: number): void;
   spectate(): void;
   changeName(newName: string): void;
+  changeTeamName(newName: string): void;
 }> = (props) => {
   const classes = useStyles();
-  // const allCells = _.flatten(props.gameState.game?.grid);
-  const switchTeamsButton = (
-    <button
-      onClick={() => {
-        props.switchTeams();
-      }}
-    >
-      Switch
-    </button>
-  );
+  // TODO buttons need to be icons / dropdown menu once team names are editable
   const spectateButton = (
     <button
       onClick={() => {
         props.spectate();
       }}
     >
-      Spectate
+      Leave Team
     </button>
   );
   const changeNameButton = (
     <button
       onClick={() => {
-        props.changeName(
-          window.prompt('Your Name', props.gameState.users[props.currentUserId].displayName) ||
-            nameGenerator()
-        );
+        const result = window.prompt('Your Name', props.gameState.users[props.currentUserId].displayName);
+        if (typeof result === 'string') {
+          props.changeName(result || nameGenerator());
+        }
       }}
     >
       Edit
     </button>
   );
+  const changeTeamNameButton = (
+    <button
+      onClick={() => {
+        const result = window.prompt('Team Name', props.gameState.users[props.currentUserId].displayName);
+        if (typeof result === 'string') {
+          props.changeTeamName(result);
+        }
+      }}
+    >
+      Edit
+    </button>
+  );
+  const teamData = _.keys(props.gameState.teams).map((teamId) => ({
+    team: props.gameState.teams[teamId]!,
+    users: _.values(props.gameState.users).filter((user) => String(user.teamId) === teamId),
+  }));
+  const currentUser = _.values(props.gameState.users).find((user) => user.id === props.currentUserId);
+  const rows: {
+    nameEl: React.ReactNode;
+    score?: number;
+    guesses?: number;
+    isCurrent?: boolean;
+  }[] = _.flatMap(teamData, ({team, users}) => [
+    {
+      nameEl: (
+        <span className={classes.teamName}>
+          <span
+            style={{
+              fontWeight: 'bold',
+              color: team.color,
+            }}
+          >
+            {team.name}
+          </span>
+          {currentUser?.teamId === team.id && changeTeamNameButton}
+          {currentUser?.teamId === team.id && spectateButton}
+          {currentUser?.teamId === 0 && (
+            <button
+              onClick={() => {
+                props.joinTeam(team.id);
+              }}
+            >
+              Join Team
+            </button>
+          )}
+        </span>
+      ),
+      score: team.score,
+      guesses: team.guesses,
+    },
+    ...users.map((user) => ({
+      nameEl: (
+        <span className={classes.userName}>
+          <span>{user.displayName}</span>
+          {` `}
+          {user.id === props.currentUserId ? changeNameButton : null}
+        </span>
+      ),
+      score: user.score,
+      guesses: user.misses,
+      isCurrent: user.id === props.currentUserId,
+    })),
+  ]);
+  const spectators = _.values(props.gameState.users).filter((user) => user.teamId === 0);
+  const spectatorRows: {
+    nameEl: React.ReactNode;
+    score?: number;
+    guesses?: number;
+    isCurrent?: boolean;
+  }[] = _.isEmpty(spectators)
+    ? []
+    : [
+        {
+          nameEl: (
+            <span
+              style={{
+                fontWeight: 'bold',
+              }}
+            >
+              Spectators
+            </span>
+          ),
+        },
+        ...spectators.map((user) => ({
+          nameEl: <span>{user.displayName}</span>,
+          isCurrent: user.id === props.currentUserId,
+        })),
+      ];
   return (
     <div className={classes.fencingScoreboardContainer}>
       <h2>Fencing</h2>
@@ -58,36 +147,16 @@ export const FencingScoreboard: React.FC<{
         <tbody>
           <tr>
             <th>Player</th>
-            <th>Team</th>
             <th>Score</th>
             <th>Guesses</th>
           </tr>
-          {_.map(props.gameState.users, (user, userId) => (
-            <tr
-              key={userId}
-              className={userId === props.currentUserId ? 'fencing-scoreboard--current-user' : ''}
-            >
-              <td>
-                {user.displayName}
-                {` `}
-                {userId === props.currentUserId ? changeNameButton : null}
-              </td>
-              <td>
-                {user.teamId}
-                {` `}
-                {userId === props.currentUserId ? switchTeamsButton : null}
-                {` `}
-                {userId === props.currentUserId ? spectateButton : null}
-              </td>
-              <td>{user.score}</td>
-              <td>{user.misses}</td>
+          {_.map([...rows, ...spectatorRows], ({nameEl, score, guesses, isCurrent}, i) => (
+            <tr key={i} className={isCurrent ? 'fencing-scoreboard--current-user' : ''}>
+              <td>{nameEl}</td>
+              <td>{score}</td>
+              <td>{guesses}</td>
             </tr>
           ))}
-          {/* <tr>
-            <td>Team {1}</td>
-            <td>1</td>
-            <td>{allCells.filter((cell) => cell).length}</td>
-          </tr> */}
         </tbody>
       </table>
     </div>

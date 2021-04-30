@@ -74,6 +74,7 @@ const check: EventDef<CheckEvent> = {
     };
 
     const isCorrect = state.game.solution[r][c] === teamGrid[r][c].value;
+    debugger;
     if (isCorrect) {
       return {
         ...state,
@@ -102,6 +103,13 @@ const check: EventDef<CheckEvent> = {
             score: (state.users[id].score || 0) + 1,
           },
         },
+        teams: {
+          ...state.teams,
+          [teamId]: {
+            ...state.teams[teamId],
+            score: state.teams[teamId]!.score + 1,
+          },
+        },
       };
     }
     return {
@@ -118,6 +126,13 @@ const check: EventDef<CheckEvent> = {
         [id]: {
           ...state.users[id],
           misses: (state.users[id].misses || 0) + 1,
+        },
+      },
+      teams: {
+        ...state.teams,
+        [teamId]: {
+          ...state.teams[teamId],
+          guesses: state.teams[teamId]!.guesses + 1,
         },
       },
     };

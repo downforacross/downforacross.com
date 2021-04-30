@@ -13,6 +13,7 @@ const updateDisplayName: EventDef<UpdateDisplayNameEvent> = {
         ...state.users,
         [id]: {
           ...state.users[id],
+          id,
           displayName,
         },
       },
