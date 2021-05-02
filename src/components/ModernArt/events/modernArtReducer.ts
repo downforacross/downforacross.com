@@ -180,6 +180,9 @@ const submitBid = (state: ModernArtState, finishedAt: number, player: ModernArtP
     };
   }
 
+  if (state.currentAuction.painting.auctionType === AuctionType.FIXED) {
+    return finishAuction(stateAfterBid, finishedAt);
+  }
   if (
     turnBasedAuctions.includes(state.currentAuction.painting.auctionType) &&
     state.currentAuction.auctioneer === player.id
