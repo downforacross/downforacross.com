@@ -48,7 +48,7 @@ export function colorAverage(hex1, hex2, weight) {
 if (typeof window !== 'undefined') {
   window.requestIdleCallback =
     window.requestIdleCallback ||
-    function(cb) {
+    function (cb) {
       const start = Date.now();
       return setTimeout(() => {
         cb({
@@ -62,7 +62,7 @@ if (typeof window !== 'undefined') {
 
   window.cancelIdleCallback =
     window.cancelIdleCallback ||
-    function(id) {
+    function (id) {
       clearTimeout(id);
     };
 }
@@ -128,6 +128,13 @@ function isMobile() {
       /Mobile|Windows Phone|Lumia|Android|webOS|iPhone|iPod|Blackberry|PlayBook|BB10|Opera Mini|\bCrMo\/|Opera Mobi/i
     )
   ) {
+    // do mobile stuff
+    return true;
+  }
+  // iPadOS mimics desktop clients by default, but can be detected by the
+  // presence of touch support.
+  // https://stackoverflow.com/a/64559209
+  if (navigator.platform.match(/MacIntel/) && navigator.maxTouchPoints > 0) {
     // do mobile stuff
     return true;
   }
