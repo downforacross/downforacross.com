@@ -59,6 +59,8 @@ interface Props {
  * - Grid
  * */
 export default class Cell extends React.Component<Props> {
+  private touchStart: {pageX: number; pageY: number} = {pageX: 0, pageY: 0};
+
   shouldComponentUpdate(nextProps: Props) {
     const pathsToOmit = ['cursors', 'pings', 'cellStyle'] as const;
     if (!_.isEqual(_.omit(nextProps, ...pathsToOmit), _.omit(this.props, pathsToOmit))) {
@@ -260,6 +262,21 @@ export default class Cell extends React.Component<Props> {
           style={style}
           onClick={this.handleClick}
           onContextMenu={this.handleRightClick}
+          onTouchStart={(e) => {
+            const touch = e.touches[e.touches.length - 1];
+            this.touchStart = {pageX: touch.pageX, pageY: touch.pageY};
+          }}
+          onTouchEnd={(e) => {
+            if (e.changedTouches.length !== 1 || e.touches.length !== 0) return;
+            const touch = e.changedTouches[0];
+            if (
+              !this.touchStart ||
+              (Math.abs(touch.pageX - this.touchStart.pageX) < 5 &&
+                Math.abs(touch.pageY - this.touchStart.pageY) < 5)
+            ) {
+              onClick(this.props.r, this.props.c);
+            }
+          }}
         >
           <div className="cell--wrapper">
             <div
