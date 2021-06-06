@@ -274,6 +274,7 @@ export default class Cell extends React.Component<Props> {
               (Math.abs(touch.pageX - this.touchStart.pageX) < 5 &&
                 Math.abs(touch.pageY - this.touchStart.pageY) < 5)
             ) {
+              e.preventDefault();
               onClick(this.props.r, this.props.c);
             }
           }}
