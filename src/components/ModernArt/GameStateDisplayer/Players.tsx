@@ -56,6 +56,7 @@ export const Players: React.FC<{
           <div className={classes.floatPlayer}>
             {/* {gameState.started && player.id === _.keys(gameState.players)[gameState.playerIdx] && <div>🎲Auctioneer🎲</div>} */}
             {viewerPlayer?.id === player.id && <div>✨you✨</div>}
+            <div> {icons[player.iconIdx]} </div>
 
             {/* Name can be changed until game starts */}
             {!gameState.started && viewerPlayer?.id === player.id && (
@@ -71,14 +72,12 @@ export const Players: React.FC<{
             {(gameState.started || viewerPlayer?.id !== player.id) && <div>{player.name}</div>}
 
             <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
-              <div> {icons[player.iconIdx]} </div>
               {arts?.map((a) => (
                 <div
                   className={classes.acquiredArtCircle}
                   style={{backgroundColor: rgbColors[a.color]}}
                 ></div>
               ))}
-              <div className={classes.playerSpacing}></div>
             </div>
           </div>
         );
@@ -98,10 +97,7 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     float: 'left',
     padding: '8px',
-  },
-  playerSpacing: {
-    width: '32px',
-    height: '8px',
+    margin: '16px',
   },
   acquiredArtCircle: {
     display: 'flex',
