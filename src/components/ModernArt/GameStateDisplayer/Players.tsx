@@ -1,4 +1,4 @@
-import {ModernArtState, ModernArtPlayer} from '../events/types';
+import {ModernArtState, ModernArtPlayer, rgbColors} from '../events/types';
 import {PlayerActions} from '../usePlayerActions';
 import React, {useState} from 'react';
 import {makeStyles} from '@material-ui/core';
@@ -73,7 +73,10 @@ export const Players: React.FC<{
             <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
               <div> {icons[player.iconIdx]} </div>
               {arts?.map((a) => (
-                <div className={classes.acquiredArtCircle} style={{backgroundColor: a.color}}></div>
+                <div
+                  className={classes.acquiredArtCircle}
+                  style={{backgroundColor: rgbColors[a.color]}}
+                ></div>
               ))}
               <div className={classes.playerSpacing}></div>
             </div>

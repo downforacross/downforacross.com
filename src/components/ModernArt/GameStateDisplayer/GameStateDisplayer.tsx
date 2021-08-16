@@ -189,7 +189,7 @@ const makeCurrentAuctionImg = (classes: ClassNameMap, painting: Card) => {
         className={classes.artImageBig}
       ></img>
 
-      <div className={classes.auctionIconBackgroundBig} style={{backgroundColor: painting.color}}>
+      <div className={classes.auctionIconBackgroundBig} style={{backgroundColor: rgbColors[painting.color]}}>
         {painting.auctionType === AuctionType.OPEN && <FaEye className={classes.auctionIconBig} />}
         {painting.auctionType === AuctionType.ONE_OFFER && <FaStar className={classes.auctionIconBig} />}
         {painting.auctionType === AuctionType.FIXED && <FaTag className={classes.auctionIconBig} />}
@@ -514,7 +514,8 @@ export const GameStateDisplayer: React.FC<{
                       ) &&
                       viewerPlayer?.id === gameState.currentAuction.auctioneer && (
                         <button onClick={finishAuction}>
-                          End Auction <FaGavel />
+                          End Auction
+                          {/* <FaGavel /> */}
                         </button>
                       )}
                   </div>
@@ -537,7 +538,10 @@ export const GameStateDisplayer: React.FC<{
                           src={paintings[painters[card.color]][card.paintingIndex]}
                           className={classes.artImage}
                         ></img>
-                        <div className={classes.auctionIconBackground} style={{backgroundColor: card.color}}>
+                        <div
+                          className={classes.auctionIconBackground}
+                          style={{backgroundColor: rgbColors[card.color]}}
+                        >
                           {card.auctionType === AuctionType.OPEN && <FaEye className={classes.auctionIcon} />}
                           {card.auctionType === AuctionType.ONE_OFFER && (
                             <FaStar className={classes.auctionIcon} />
@@ -723,15 +727,19 @@ const useStyles = makeStyles({
   },
   table: {
     border: '0px solid black',
+    margin: '8px',
   },
   th: {
     border: '0px solid black',
+    padding: '8px',
   },
   tr: {
     border: '0px solid black',
+    padding: '8px',
   },
   td: {
     border: '0px solid black',
+    padding: '8px',
   },
   gameBoardColumn: {
     display: 'flex',

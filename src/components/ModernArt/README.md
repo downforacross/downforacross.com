@@ -17,46 +17,49 @@ need to have
 14: [done] dealing results in duplicates
 
 nice to have
-1. maybe a way to view the full painting
+1. Add a way to view the full painting
 2. Add link to rules in header
-3. Make the `start`, `deal`, `change name` experiences prettier
+3. [done] Make the `start`, `deal`, `change name` experiences prettier
 4. [done] clear submit box after submission
 5. show money even if there is no current auction (ie after clicking `start` game)
 6. show your "investment returns" (money paid and money garnered for acquired art)  when round ends or game ends
 7. add button to "hide your hand" in case youre sitting by people
-8. after a double auction ends, only the non double painting remains in the "current auction" section (since we clear state.currentDouble)
+8. [done] after a double auction ends, only the non double painting remains in the "current auction" section (since we clear state.currentDouble)
+9. Add more icons to make the auction info more playful (eg "Your Bank", Active Bidder, etc)
+10. Hover on auction type to learn the rules of that auction
+11. Highlight "Current Auction" or "Your Cards" to tell you which section to focus on. If someone else is picking what's up for auction, highlight "Last Auction... waiting for {player}"
 
 card distribution:
 
-      // yellow 12 (was: red)
+      // yellow 12
       // AuctionType.DOUBLE, 2
       // AuctionType.FIXED, 2
       // AuctionType.HIDDEN, 2
       // AuctionType.OPEN, 3
       // AuctionType.ONE_OFFER, 3
 
-      // blue 13 (was: green)
+      // blue 13
       // AuctionType.DOUBLE, 2
       // AuctionType.FIXED, 3
       // AuctionType.HIDDEN, 3
       // AuctionType.OPEN, 3
       // AuctionType.ONE_OFFER, 2
 
-      // red 14 (was: orange)
+      // red 14
       // AuctionType.DOUBLE, 2
       // AuctionType.FIXED, 3
       // AuctionType.HIDDEN, 3
       // AuctionType.OPEN, 3
       // AuctionType.ONE_OFFER, 3
 
-      // green 15 (was: blue)
+      // green 15
       // AuctionType.DOUBLE, 3
       // AuctionType.FIXED, 3
       // AuctionType.HIDDEN, 3
       // AuctionType.OPEN, 3
       // AuctionType.ONE_OFFER, 3
 
-      // orange 16 (was: yellow)
+      // orange 16
       // AuctionType.DOUBLE, 3
       // AuctionType.FIXED, 3
       // AuctionType.HIDDEN, 3

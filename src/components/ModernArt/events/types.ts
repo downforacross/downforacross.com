@@ -38,11 +38,11 @@ export enum AuctionStatus {
 export const colors = ['yellow', 'blue', 'red', 'green', 'orange'];
 
 export const rgbColors: {[key: string]: string} = {
-  red: '#CE0000',
-  green: '#00950F',
-  orange: '#FF8A00',
-  blue: '#003CFF',
-  yellow: '#FFE600', // should be darker (?)
+  red: '#DC2626',
+  green: '#059669',
+  orange: '#FD6A02',
+  blue: '#2563EB',
+  yellow: '#FCD34D', // should be darker (?)
 };
 
 export const painters: {[key: string]: string} = {
