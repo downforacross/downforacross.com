@@ -419,17 +419,17 @@ export const GameStateDisplayer: React.FC<{
                         </tr>
                       )}
 
-                      {gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER ||
-                        (gameState.currentAuction.painting.auctionType === AuctionType.FIXED && (
-                          <tr className={classes.tr}>
-                            <td className={classes.td}>Active Bidder</td>
-                            <td className={classes.td}>
-                              {gameState.currentAuction.activeBidder
-                                ? gameState.players[gameState.currentAuction.activeBidder].name
-                                : 'Nobody'}
-                            </td>
-                          </tr>
-                        ))}
+                      {(gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER ||
+                        gameState.currentAuction.painting.auctionType === AuctionType.FIXED) && (
+                        <tr className={classes.tr}>
+                          <td className={classes.td}>Active Bidder</td>
+                          <td className={classes.td}>
+                            {gameState.currentAuction.activeBidder
+                              ? gameState.players[gameState.currentAuction.activeBidder].name
+                              : 'Nobody'}
+                          </td>
+                        </tr>
+                      )}
 
                       <tr className={classes.tr}>
                         <td className={classes.td}>Your Bank</td>
@@ -758,7 +758,6 @@ const useStyles = makeStyles({
   sectionHeader: {
     justifyContent: 'center',
     width: '100%',
-    height: '24px',
     fontSize: '24px',
   },
   sectionSpacing: {
