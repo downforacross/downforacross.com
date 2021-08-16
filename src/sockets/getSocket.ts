@@ -10,7 +10,6 @@ let websocketPromise: Promise<SocketIOClient.Socket>;
 export const getSocket = () => {
   if (!websocketPromise) {
     websocketPromise = (async () => {
-      console.log('in promise');
       // Note: In attempt to increase websocket limit, use upgrade false
       // https://stackoverflow.com/questions/15872788/maximum-concurrent-socket-io-connections
       const socket = io(SOCKET_HOST, {upgrade: false, transports: ['websocket']});
