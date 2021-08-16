@@ -36,34 +36,8 @@ const Root = () => {
     <Router>
       <GlobalContext.Provider value={{toggleMolesterMoons}}>
         <div className={classnames('router-wrapper', {mobile: isMobile(), dark: darkMode})}>
-          <Route exact path="/" component={Welcome} />
-          <Route exact path="/stats" component={Stats} />
-          <Route exact path="/game/:gid" component={Game} />
-          <Route exact path="/embed/game/:gid" component={Game} />
-          <Route exact path="/room/:rid" component={Room} />
-          <Route exact path="/embed/room/:rid" component={Room} />
-          <Route exact path="/replay/:gid" component={Replay} />
-          <Route exact path="/beta/replay/:gid" component={Replay} />
-          <Route exact path="/replays/:pid" component={Replays} />
-          <Route exact path="/replays" component={Replays} />
-          <Route exact path="/beta" component={Welcome} />
-          <Route exact path="/beta/game/:gid" component={Game} />
-          <Route exact path="/beta/battle/:bid" component={Battle} />
-          <Route exact path="/beta/play/:pid" component={Play} />
-          <Route path="/account" component={Account} />
-          <Route exact path="/compose" component={Compose} />
-          <Route exact path="/composition/:cid" component={Composition} />
-          <Route exact path="/fencing/:gid" component={Fencing} />
-          <Route exact path="/beta/fencing/:gid" component={Fencing} />
-          <Route exact path="/beta/modernart/:gid" component={ModernArt} />
-          <Route
-            exact
-            path="/discord"
-            component={() => {
-              window.location.href = 'https://discord.gg/KjPHFw8';
-              return null;
-            }}
-          />
+          <Route exact path="/" component={ModernArt} />
+          <Route exact path="/:gid" component={ModernArt} />
         </div>
       </GlobalContext.Provider>
     </Router>
