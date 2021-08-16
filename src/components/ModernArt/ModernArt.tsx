@@ -9,7 +9,8 @@ import {usePlayerActions} from './usePlayerActions';
 import {getUser} from '../../store/user';
 import {useGameState} from './useGameState';
 import {ModernArtEvent} from './events/types';
-import {GameStateDisplayer, icons} from './GameStateDisplayer/GameStateDisplayer';
+import {GameStateDisplayer} from './GameStateDisplayer/GameStateDisplayer';
+import {iconsLength} from './GameStateDisplayer/Players';
 
 function subscribeToGameEvents(
   socket: SocketIOClient.Socket | undefined,
@@ -101,7 +102,7 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
             playerId,
             id: getUser().id,
             name: names[Math.floor(Math.random() * names.length)],
-            iconIdx: Math.floor(Math.random() * icons.length),
+            iconIdx: Math.floor(Math.random() * iconsLength),
           },
         });
       }
@@ -117,7 +118,6 @@ export const ModernArt: React.FC<{gid: string}> = (props) => {
       <div className={classes.header}>
         <div className={classes.title}>Modern Art</div>
       </div>
-      {/* <div className={classes.spacing}></div> */}
       <GameStateDisplayer gameState={gameState} playerActions={actions} playerId={playerId} />
     </div>
   );
@@ -153,9 +153,4 @@ const useStyles = makeStyles({
     letterSpacing: '0.1em',
     color: '#000000',
   },
-  // spacing: {
-  //   display: 'flex',
-  //   width: '100%',
-  //   height: '16px',
-  // },
 });

@@ -5,16 +5,12 @@ import _ from 'lodash';
 import {PlayerActions} from '../usePlayerActions';
 import {ModernArtState, AuctionType, AuctionStatus, Card, colors, painters, rgbColors} from '../events/types';
 import {Log} from './Log';
+import {Players} from './Players';
 import Confetti from '../../Game/Confetti';
-import {FaRobot, FaGavel, FaTag, FaEye, FaStar, FaLock} from 'react-icons/fa';
-import {GiRobotAntennas, GiVintageRobot} from 'react-icons/gi';
-import {GrDiamond} from 'react-icons/gr';
+import '../../../pages/css/tailwind.css';
+
+import {FaGavel, FaTag, FaEye, FaStar, FaLock} from 'react-icons/fa';
 import {BiAddToQueue} from 'react-icons/bi';
-import {SiTencentqq, SiSwarm} from 'react-icons/si';
-import {RiMoonClearLine, RiAliensLine, RiSeedlingLine, RiCactusLine} from 'react-icons/ri';
-import {IoMdBeer} from 'react-icons/io';
-import {GoSquirrel} from 'react-icons/go';
-// import { MdGavel  } from 'react-icons/md';
 
 import Kadinsky1 from '../resources/kadinsky-1.jpeg';
 import Kadinsky2 from '../resources/kadinsky-2.jpeg';
@@ -185,23 +181,6 @@ const paintings: Record<string, any[]> = {
   Picasso: picassoArt,
 };
 
-const playerIconStyle = {width: '48px', height: '48px'};
-
-export const icons = [
-  <FaRobot style={playerIconStyle} />,
-  <GiRobotAntennas style={playerIconStyle} />,
-  <GiVintageRobot style={playerIconStyle} />,
-  <GrDiamond style={playerIconStyle} />,
-  <SiTencentqq style={playerIconStyle} />,
-  <SiSwarm style={playerIconStyle} />,
-  <RiMoonClearLine style={playerIconStyle} />,
-  <RiAliensLine style={playerIconStyle} />,
-  <RiSeedlingLine style={playerIconStyle} />,
-  <RiCactusLine style={playerIconStyle} />,
-  <IoMdBeer style={playerIconStyle} />,
-  <GoSquirrel style={playerIconStyle} />,
-];
-
 const makeCurrentAuctionImg = (classes: ClassNameMap, painting: Card) => {
   return (
     <div className={classes.auctionPhoto}>
@@ -234,12 +213,10 @@ export const GameStateDisplayer: React.FC<{
   const classes = useStyles();
   const {gameState, playerActions: actions, playerId} = props;
 
-  const players = _.values(gameState.players);
   const viewerPlayer = gameState.players[playerId];
 
   const [currentBid, setCurrentBid] = useState(0);
   const [fixedPrice, setFixedPrice] = useState(0);
-  const [currentName, setName] = useState<null | string>(null);
 
   const handleBidChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const number = Number(e.currentTarget.value);
@@ -251,21 +228,8 @@ export const GameStateDisplayer: React.FC<{
     setFixedPrice(number);
   };
 
-  const handleTextChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    const text = String(e.currentTarget.value);
-    if (text !== null) {
-      setName(text);
-    }
-  };
-
   const playCard = (i: number) => {
     actions.startAuction(i);
-  };
-
-  const updateName = () => {
-    if (currentName !== null) {
-      actions.updateName(currentName);
-    }
   };
 
   const submitBid = () => {
@@ -302,294 +266,338 @@ export const GameStateDisplayer: React.FC<{
     actions.finishAuction();
   };
 
+  const copyGameLink = () => {
+    var dummy = document.createElement('input'),
+      text = window.location.href;
+
+    document.body.appendChild(dummy);
+    dummy.value = text;
+    dummy.select();
+    document.execCommand('copy');
+    document.body.removeChild(dummy);
+  };
+
+  const recommendedActionStyle =
+    'w-64 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 text-white font-medium my-2 py-2 px-4 rounded';
+  const secondaryActionStyle = 'bg-blue-100 hover:bg-blue-200 my-2 py-2 px-4 rounded';
+  const inputStyle = 'm-2 p-2 border-2 border-blue-100 rounded';
+
   const viewersTurnToPlayCard = gameState.currentDouble
     ? gameState.currentDouble.activePlayer === playerId
     : playerId === _.keys(gameState.players)[gameState.playerIdx] &&
       gameState.currentAuction?.status !== AuctionStatus.PENDING;
   return (
-    <div className={classes.gameStateDisplayerContainer}>
-      <div className={classes.column1} style={{marginRight: '4%'}}>
-        {/* Played cards */}
-        <div className={classes.players}>
-          {_.values(gameState.players).map((player) => {
-            const arts = gameState.rounds[gameState.roundIndex].players[player.id]?.acquiredArt;
-            return (
-              <div className={classes.floatPlayer}>
-                {player.id === _.keys(gameState.players)[gameState.playerIdx] && <div>🎲(turn)🎲</div>}
-                {viewerPlayer?.id === player.id && <div>✨(you)✨</div>}
-                {/* make this editable until game starts */}
-                {!gameState.started && viewerPlayer?.id === player.id && (
-                  // <span className={classes.submitNewName}>
-                  <span>
-                    <input
-                      type="text"
-                      onChange={handleTextChange}
-                      value={currentName === null ? viewerPlayer?.name : currentName}
-                    />
-                    <button onClick={updateName}> Submit New Name </button>
-                  </span>
-                )}
-                <div>{player.name}</div>
+    <div>
+      {!gameState.started && (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: '32px',
+          }}
+        >
+          <Players gameState={gameState} viewerPlayer={viewerPlayer} playerActions={actions} />
 
-                <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
-                  <div> {icons[player.iconIdx]} </div>
-                  {arts?.map((a) => (
-                    <div className={classes.acquiredArtCircle} style={{backgroundColor: a.color}}></div>
-                  ))}
-                  <div className={classes.playerSpacing}></div>
-                </div>
-              </div>
-            );
-          })}
+          <div className={classes.sectionSpacing}></div>
+
+          {Object.keys(gameState.players).length < 2 && (
+            <button onClick={copyGameLink} className={recommendedActionStyle}>
+              Copy game link
+            </button>
+          )}
+          {Object.keys(gameState.players).length > 2 && (
+            <button onClick={copyGameLink} className={secondaryActionStyle}>
+              Copy game link
+            </button>
+          )}
+
+          <div className={classes.sectionSpacing}></div>
+
+          {Object.keys(gameState.players).length > 2 && (
+            <button onClick={actions.startGame} className={recommendedActionStyle}>
+              Start game
+            </button>
+          )}
         </div>
+      )}
 
-        <div className={classes.sectionSpacing}></div>
-        {/* Current Auction */}
-        {gameState.currentDouble && (
-          <div className={classes.auctionStatus}>
-            <div className={classes.sectionHeader}>Double Played</div>
-            <div className={classes.rowFlex}>
-              <div className={classes.auctionPhoto}>
-                <img
-                  src={
-                    paintings[painters[gameState.currentDouble.card.color]][
-                      gameState.currentDouble.card.paintingIndex
-                    ]
-                  }
-                  className={classes.artImageBig}
-                ></img>
-                <div
-                  className={classes.auctionIconBackgroundBig}
-                  style={{backgroundColor: gameState.currentDouble.card.color}}
-                >
-                  <BiAddToQueue className={classes.auctionIconBig} />
+      {gameState.started && (
+        <div className={classes.gameStateDisplayerContainer}>
+          <div className={classes.column1} style={{marginRight: '4%'}}>
+            <Players gameState={gameState} viewerPlayer={viewerPlayer} playerActions={actions} />
+
+            <div className={classes.sectionSpacing}></div>
+
+            {gameState.started && !gameState.roundStarted && (
+              <div className={classes.nextButton}>
+                <button onClick={actions.step} className={recommendedActionStyle}>
+                  Deal!
+                </button>
+              </div>
+            )}
+
+            <div className={classes.sectionSpacing}></div>
+            {/* Current Auction */}
+            {gameState.currentDouble && (
+              <div className={classes.auctionStatus}>
+                <div className={classes.sectionHeader}>Double Played</div>
+                <div className={classes.rowFlex}>
+                  <div className={classes.auctionPhoto}>
+                    <img
+                      src={
+                        paintings[painters[gameState.currentDouble.card.color]][
+                          gameState.currentDouble.card.paintingIndex
+                        ]
+                      }
+                      className={classes.artImageBig}
+                    ></img>
+                    <div
+                      className={classes.auctionIconBackgroundBig}
+                      style={{backgroundColor: gameState.currentDouble.card.color}}
+                    >
+                      <BiAddToQueue className={classes.auctionIconBig} />
+                    </div>
+                  </div>
+                </div>
+                {gameState.currentDouble.activePlayer === playerId && (
+                  <>
+                    <div>It's your turn to play the second painting</div>
+                    <button onClick={skipDouble}> Pass </button>
+                  </>
+                )}
+              </div>
+            )}
+
+            {gameState.currentAuction && !gameState.currentDouble && (
+              <div className={classes.auctionStatus}>
+                <div className={classes.sectionHeader}>Current Auction</div>
+                <div className={classes.rowFlex}>
+                  {makeCurrentAuctionImg(classes, gameState.currentAuction.painting)}
+                  {gameState.currentAuction.double &&
+                    makeCurrentAuctionImg(classes, gameState.currentAuction.double)}
+
+                  <div>
+                    <table className={classes.table}>
+                      <tr className={classes.tr}>
+                        <td className={classes.td}>Auctioneer</td>
+                        <td className={classes.td}>
+                          {gameState.players[gameState.currentAuction.auctioneer]?.name}
+                        </td>
+                      </tr>
+
+                      {(gameState.currentAuction.painting.auctionType === AuctionType.OPEN ||
+                        gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER) && (
+                        <tr className={classes.tr}>
+                          <td className={classes.td}>Highest Bidder</td>
+                          <td className={classes.td}>
+                            {gameState.currentAuction.highestBidder
+                              ? gameState.players[gameState.currentAuction.highestBidder].name
+                              : 'Nobody'}
+                          </td>
+                        </tr>
+                      )}
+
+                      {(gameState.currentAuction.painting.auctionType === AuctionType.OPEN ||
+                        gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER) && (
+                        <tr className={classes.tr}>
+                          <td className={classes.td}>Highest Bid</td>
+                          <td className={classes.td}>${gameState.currentAuction.highestBid}</td>
+                        </tr>
+                      )}
+
+                      {gameState.currentAuction.painting.auctionType === AuctionType.FIXED && (
+                        <tr className={classes.tr}>
+                          <td className={classes.td}>Fixed Price</td>
+                          <td className={classes.td}>${gameState.currentAuction.fixedPrice}</td>
+                        </tr>
+                      )}
+
+                      {gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER && (
+                        <tr className={classes.tr}>
+                          {/* Current Bidder is a better display name */}
+                          <td className={classes.td}>Active Bidder</td>
+                          <td className={classes.td}>
+                            {gameState.currentAuction.activeBidder
+                              ? gameState.players[gameState.currentAuction.activeBidder].name
+                              : 'Nobody'}
+                          </td>
+                        </tr>
+                      )}
+
+                      <tr className={classes.tr}>
+                        <td className={classes.td}>Your Bank</td>
+                        <td className={classes.td}>
+                          ${viewerPlayer ? gameState.players[viewerPlayer.id].money : 0}
+                        </td>
+                      </tr>
+                    </table>
+
+                    {waitingForFixedPrice(gameState) &&
+                      viewerPlayer?.id === gameState.currentAuction.auctioneer && (
+                        <span>
+                          <input
+                            className={inputStyle}
+                            type="text"
+                            onChange={handleFixedPriceChange}
+                            value={fixedPrice || 0}
+                          />
+                          <button onClick={submitFixedPrice}> Submit Fixed Price </button>
+                        </span>
+                      )}
+
+                    {waitingForFixedPrice(gameState) &&
+                      viewerPlayer?.id !== gameState.currentAuction.auctioneer && (
+                        <div>
+                          Waiting for player {gameState.players[gameState.currentAuction.auctioneer].name} to
+                          submit fixed price
+                        </div>
+                      )}
+
+                    {![AuctionType.FIXED, AuctionType.ONE_OFFER].includes(
+                      gameState.currentAuction.painting.auctionType
+                    ) &&
+                      gameState.currentAuction.status === AuctionStatus.PENDING && (
+                        <span>
+                          <input
+                            className={inputStyle}
+                            type="text"
+                            onChange={handleBidChange}
+                            value={currentBid || 0}
+                          />
+                          <button onClick={submitBid}> Submit Bid </button>
+                        </span>
+                      )}
+                    {gameState.currentAuction.status === AuctionStatus.PENDING &&
+                      gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER &&
+                      viewerPlayer?.id === gameState.currentAuction.activeBidder && (
+                        <div>
+                          <span>
+                            <input
+                              className={inputStyle}
+                              type="text"
+                              onChange={handleBidChange}
+                              value={currentBid || 0}
+                            />
+                            <button onClick={submitBid}> Submit Bid </button>
+                          </span>
+                          <button onClick={skipBid}> Skip Bid </button>
+                        </div>
+                      )}
+
+                    {gameState.currentAuction.painting.auctionType === AuctionType.FIXED &&
+                      !waitingForFixedPrice(gameState) &&
+                      gameState.currentAuction.status === AuctionStatus.PENDING &&
+                      viewerPlayer?.id === gameState.currentAuction.activeBidder && (
+                        <div>
+                          <span>
+                            <button onClick={acceptFixedPrice}> Accept Fixed Price </button>
+                          </span>
+                          <button onClick={skipBid}> Skip Bid </button>
+                        </div>
+                      )}
+
+                    {!waitingForFixedPrice(gameState) &&
+                      gameState.currentAuction.status === AuctionStatus.PENDING &&
+                      [AuctionType.HIDDEN, AuctionType.OPEN].includes(
+                        gameState.currentAuction.painting.auctionType
+                      ) &&
+                      viewerPlayer?.id === gameState.currentAuction.auctioneer && (
+                        <button onClick={finishAuction}>
+                          End Auction <FaGavel />
+                        </button>
+                      )}
+                  </div>
+                </div>
+                {gameState.currentAuction?.status === AuctionStatus.CLOSED && <Confetti duration={1500} />}
+              </div>
+            )}
+
+            <div className={classes.sectionSpacing}></div>
+
+            {/* Cards */}
+            <div className={classes.playerCards}>
+              {gameState.started && <div className={classes.sectionHeader}>Cards to Auction</div>}
+              <div>
+                <div className={classes.cards}>
+                  {(viewerPlayer?.cards || []).map((card, j) => (
+                    <div className={classes.card}>
+                      <div>
+                        <img
+                          src={paintings[painters[card.color]][card.paintingIndex]}
+                          className={classes.artImage}
+                        ></img>
+                        <div className={classes.auctionIconBackground} style={{backgroundColor: card.color}}>
+                          {card.auctionType === AuctionType.OPEN && <FaEye className={classes.auctionIcon} />}
+                          {card.auctionType === AuctionType.ONE_OFFER && (
+                            <FaStar className={classes.auctionIcon} />
+                          )}
+                          {card.auctionType === AuctionType.FIXED && (
+                            <FaTag className={classes.auctionIcon} />
+                          )}
+                          {card.auctionType === AuctionType.DOUBLE && (
+                            <BiAddToQueue className={classes.auctionIcon} />
+                          )}
+                          {card.auctionType === AuctionType.HIDDEN && (
+                            <FaLock className={classes.auctionIcon} />
+                          )}
+                        </div>
+                        {/* default */}
+                        {viewersTurnToPlayCard && (
+                          <button
+                            className="w-full m-0 mt-2"
+                            onClick={() => {
+                              playCard(j);
+                            }}
+                          >
+                            Play
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
-            {gameState.currentDouble.activePlayer === playerId && (
-              <>
-                <div>It's your turn to play the second painting</div>
-                <button onClick={skipDouble}> Pass </button>
-              </>
-            )}
           </div>
-        )}
 
-        {gameState.currentAuction && !gameState.currentDouble && (
-          <div className={classes.auctionStatus}>
-            <div className={classes.sectionHeader}>Current Auction</div>
-            <div className={classes.rowFlex}>
-              {makeCurrentAuctionImg(classes, gameState.currentAuction.painting)}
-              {gameState.currentAuction.double &&
-                makeCurrentAuctionImg(classes, gameState.currentAuction.double)}
-
-              <div>
-                <table className={classes.table}>
-                  <tr className={classes.tr}>
-                    <td className={classes.td}>Auctioneer</td>
-                    <td className={classes.td}>
-                      {gameState.players[gameState.currentAuction.auctioneer]?.name}
-                    </td>
-                  </tr>
-
-                  {(gameState.currentAuction.painting.auctionType === AuctionType.OPEN ||
-                    gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER) && (
-                    <tr className={classes.tr}>
-                      <td className={classes.td}>Highest Bidder</td>
-                      <td className={classes.td}>
-                        {gameState.currentAuction.highestBidder
-                          ? gameState.players[gameState.currentAuction.highestBidder].name
-                          : 'Nobody'}
-                      </td>
-                    </tr>
-                  )}
-
-                  {(gameState.currentAuction.painting.auctionType === AuctionType.OPEN ||
-                    gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER) && (
-                    <tr className={classes.tr}>
-                      <td className={classes.td}>Highest Bid</td>
-                      <td className={classes.td}>${gameState.currentAuction.highestBid}</td>
-                    </tr>
-                  )}
-
-                  {gameState.currentAuction.painting.auctionType === AuctionType.FIXED && (
-                    <tr className={classes.tr}>
-                      <td className={classes.td}>Fixed Price</td>
-                      <td className={classes.td}>${gameState.currentAuction.fixedPrice}</td>
-                    </tr>
-                  )}
-
-                  {gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER && (
-                    <tr className={classes.tr}>
-                      {/* Current Bidder is a better display name */}
-                      <td className={classes.td}>Active Bidder</td>
-                      <td className={classes.td}>
-                        {gameState.currentAuction.activeBidder
-                          ? gameState.players[gameState.currentAuction.activeBidder].name
-                          : 'Nobody'}
-                      </td>
-                    </tr>
-                  )}
-
-                  <tr className={classes.tr}>
-                    <td className={classes.td}>Your Bank</td>
-                    <td className={classes.td}>
-                      ${viewerPlayer ? gameState.players[viewerPlayer.id].money : 0}
-                    </td>
-                  </tr>
-                </table>
-
-                {waitingForFixedPrice(gameState) && viewerPlayer?.id === gameState.currentAuction.auctioneer && (
-                  <span className={classes.submitBidForm}>
-                    <input type="text" onChange={handleFixedPriceChange} value={fixedPrice || 0} />
-                    <button onClick={submitFixedPrice}> Submit Fixed Price </button>
-                  </span>
-                )}
-
-                {waitingForFixedPrice(gameState) &&
-                  viewerPlayer?.id !== gameState.currentAuction.auctioneer && (
-                    <div>
-                      Waiting for player {gameState.players[gameState.currentAuction.auctioneer].name} to
-                      submit fixed price
-                    </div>
-                  )}
-
-                {![AuctionType.FIXED, AuctionType.ONE_OFFER].includes(
-                  gameState.currentAuction.painting.auctionType
-                ) &&
-                  gameState.currentAuction.status === AuctionStatus.PENDING && (
-                    <span className={classes.submitBidForm}>
-                      <input type="text" onChange={handleBidChange} value={currentBid || 0} />
-                      <button onClick={submitBid}> Submit Bid </button>
-                    </span>
-                  )}
-                {gameState.currentAuction.status === AuctionStatus.PENDING &&
-                  gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER &&
-                  viewerPlayer?.id === gameState.currentAuction.activeBidder && (
-                    <div>
-                      <span className={classes.submitBidForm}>
-                        <input type="text" onChange={handleBidChange} value={currentBid || 0} />
-                        <button onClick={submitBid}> Submit Bid </button>
-                      </span>
-                      <button onClick={skipBid}> Skip Bid </button>
-                    </div>
-                  )}
-
-                {gameState.currentAuction.painting.auctionType === AuctionType.FIXED &&
-                  !waitingForFixedPrice(gameState) &&
-                  gameState.currentAuction.status === AuctionStatus.PENDING &&
-                  viewerPlayer?.id === gameState.currentAuction.activeBidder && (
-                    <div>
-                      <span className={classes.submitBidForm}>
-                        <button onClick={acceptFixedPrice}> Accept Fixed Price </button>
-                      </span>
-                      <button onClick={skipBid}> Skip Bid </button>
-                    </div>
-                  )}
-
-                {!waitingForFixedPrice(gameState) &&
-                  gameState.currentAuction.status === AuctionStatus.PENDING &&
-                  [AuctionType.HIDDEN, AuctionType.OPEN].includes(
-                    gameState.currentAuction.painting.auctionType
-                  ) &&
-                  viewerPlayer?.id === gameState.currentAuction.auctioneer && (
-                    <button onClick={finishAuction}>
-                      End Auction <FaGavel />
-                    </button>
-                  )}
-              </div>
-            </div>
-            {gameState.currentAuction?.status === AuctionStatus.CLOSED && <Confetti duration={1500} />}
-          </div>
-        )}
-
-        <div className={classes.sectionSpacing}></div>
-
-        {/* Cards */}
-        <div className={classes.playerCards}>
-          <div className={classes.sectionHeader}>Cards to Auction</div>
-          <div>
-            <div className={classes.cards}>
-              {(viewerPlayer?.cards || []).map((card, j) => (
-                <div className={classes.card}>
-                  <div>
-                    <img
-                      src={paintings[painters[card.color]][card.paintingIndex]}
-                      className={classes.artImage}
-                    ></img>
-                    <div className={classes.auctionIconBackground} style={{backgroundColor: card.color}}>
-                      {card.auctionType === AuctionType.OPEN && <FaEye className={classes.auctionIcon} />}
-                      {card.auctionType === AuctionType.ONE_OFFER && (
-                        <FaStar className={classes.auctionIcon} />
-                      )}
-                      {card.auctionType === AuctionType.FIXED && <FaTag className={classes.auctionIcon} />}
-                      {card.auctionType === AuctionType.DOUBLE && (
-                        <BiAddToQueue className={classes.auctionIcon} />
-                      )}
-                      {card.auctionType === AuctionType.HIDDEN && <FaLock className={classes.auctionIcon} />}
-                    </div>
-                    {/* default */}
-                    {viewersTurnToPlayCard && (
-                      <button
-                        onClick={() => {
-                          playCard(j);
+          <div className={classes.column2} style={{marginLeft: '4%'}}>
+            {/* Game board */}
+            <div style={{display: 'flex'}}>
+              {colors.map((c) => (
+                <div className={classes.floatChild}>
+                  {painters[c]}
+                  <div id={c} className={classes.gameBoardColumn} style={{backgroundColor: rgbColors[c]}}>
+                    {[0, 1, 2, 3].map((i) => (
+                      <div
+                        className={classes.gameBoardCircle}
+                        style={{
+                          backgroundColor:
+                            gameState.rounds[i] && gameState.rounds[i].places ? '#ffffff' : rgbColors[c],
                         }}
                       >
-                        {' '}
-                        Play{' '}
-                      </button>
-                    )}
+                        {gameState.rounds[i] && gameState.rounds[i].places
+                          ? gameState.rounds[i].places?.[c]
+                          : ''}
+                      </div>
+                    ))}
                   </div>
                 </div>
               ))}
             </div>
+
+            <div className={classes.sectionSpacing}></div>
+
+            {/* actions */}
+            <Log log={gameState.log} />
+
+            <div className={classes.sectionSpacing}></div>
+
+            {gameState.started && <div>Game has Started</div>}
           </div>
         </div>
-      </div>
-
-      <div className={classes.column2} style={{marginLeft: '4%'}}>
-        {/* Game board */}
-        <div style={{display: 'flex'}}>
-          {colors.map((c) => (
-            <div className={classes.floatChild}>
-              {painters[c]}
-              <div id={c} className={classes.gameBoardColumn} style={{backgroundColor: rgbColors[c]}}>
-                {[0, 1, 2, 3].map((i) => (
-                  <div
-                    className={classes.gameBoardCircle}
-                    style={{
-                      backgroundColor:
-                        gameState.rounds[i] && gameState.rounds[i].places ? '#ffffff' : rgbColors[c],
-                    }}
-                  >
-                    {gameState.rounds[i] && gameState.rounds[i].places ? gameState.rounds[i].places?.[c] : ''}
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className={classes.sectionSpacing}></div>
-
-        {/* actions */}
-        <Log log={gameState.log} />
-
-        {/* need to be moved */}
-        {!gameState.started && (
-          <div className={classes.startButton}>
-            Click Start!
-            <button onClick={actions.startGame}>Start!</button>
-          </div>
-        )}
-        {gameState.started && !gameState.roundStarted && (
-          <div className={classes.nextButton}>
-            <button onClick={actions.step}>Deal!</button>
-          </div>
-        )}
-
-        {gameState.started && <div>Game has Started</div>}
-      </div>
+      )}
     </div>
   );
 };
@@ -696,12 +704,6 @@ const useStyles = makeStyles({
       padding: 8,
     },
   },
-  submitBidForm: {
-    display: 'flex',
-    '& > button': {
-      marginLeft: 4,
-    },
-  },
   column1: {
     display: 'flex',
     flexDirection: 'column',
@@ -716,7 +718,6 @@ const useStyles = makeStyles({
   },
   table: {
     border: '0px solid black',
-    // padding: '10px',
   },
   th: {
     border: '0px solid black',
@@ -732,7 +733,6 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    width: '72px',
     height: '240px',
     borderRadius: '4px',
   },
@@ -746,26 +746,9 @@ const useStyles = makeStyles({
     border: '3px solid #fff',
   },
   floatChild: {
-    width: '15%',
+    width: '20%',
     float: 'left',
     padding: '8px',
-  },
-  players: {
-    display: 'flex',
-    justifyContent: 'left',
-    padding: '8px',
-  },
-  floatPlayer: {
-    display: 'flex',
-    flexDirection: 'column',
-    float: 'left',
-    padding: '8px',
-  },
-  acquiredArtCircle: {
-    display: 'flex',
-    width: '16px',
-    height: '16px',
-    borderRadius: '50%',
   },
   sectionHeader: {
     justifyContent: 'center',
@@ -778,11 +761,7 @@ const useStyles = makeStyles({
   sectionSpacing: {
     display: 'flex',
     width: '100%',
-    height: '16px',
-  },
-  playerSpacing: {
-    width: '32px',
-    height: '8px',
+    height: '32px',
   },
   auctionPhoto: {
     width: '144px',

@@ -6,6 +6,7 @@
     "node": "^12.0.0"
   },
   "dependencies": {
+    "@craco/craco": "5.8.0",
     "@material-ui/core": "^4.9.14",
     "@sweetalert/with-react": "^0.1.1",
     "@types/jest": "^25.2.1",
@@ -23,6 +24,7 @@
     "body-parser": "^1.19.0",
     "clsx": "^1.1.0",
     "cors": "^2.8.5",
+    "craco": "0.0.1",
     "cross-env": "^7.0.3",
     "express": "^4.17.1",
     "firebase": "^7.8.1",
@@ -77,6 +79,7 @@
     "@typescript-eslint/eslint-plugin": "^4.4.1",
     "@typescript-eslint/parser": "^4.14.0",
     "argparse": "^1.0.10",
+    "autoprefixer": "^9",
     "eslint": "^6.8",
     "eslint-config-airbnb-typescript": "^12.0.0",
     "eslint-config-prettier": "^7.2.0",
@@ -87,20 +90,22 @@
     "eslint-plugin-react-hooks": "^4.0.8",
     "husky": "^1.0.0-rc.15",
     "lint-staged": "^10.5.3",
+    "postcss": "^7",
     "prettier": "^2.0.5",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "ts-node": "^9.1.1"
   },
   "scripts": {
-    "start": "cross-env PORT=3020 react-scripts start",
-    "devfrontend": "REACT_APP_USE_LOCAL_SERVER=1 PORT=3020 react-scripts start",
-    "devfrontendprod": "REACT_APP_ENV=production REACT_APP_USE_LOCAL_SERVER=1 PORT=3020 react-scripts start",
+    "start": "cross-env PORT=3020 craco start",
+    "devfrontend": "REACT_APP_USE_LOCAL_SERVER=1 PORT=3020 craco start",
+    "devfrontendprod": "REACT_APP_ENV=production REACT_APP_USE_LOCAL_SERVER=1 PORT=3020 craco start",
     "devbackend": "PORT=3021 nodemon --watch server -e \"ts\" --exec \"npx ts-node -P server/tsconfig.json server/server.ts\"",
     "devbackendprod": "source .env.prod; PORT=3021 nodemon --watch server -e \"ts\" --exec \"npx ts-node -P server/tsconfig.json server/server.ts\"",
     "servebackendprod": "while true; do env $(cat .env.prod | xargs) PORT=3021 ts-node -P server/tsconfig.json server/server.ts || true; done",
     "servebackendstaging": "while true; do env $(cat .env.staging | xargs) PORT=4021 ts-node -P server/tsconfig.json server/server.ts || true; done",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "build": "craco build",
+    "test": "craco test --env=jsdom",
+    "eject": "craco eject"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

@@ -16,8 +16,20 @@ input,
 }
 
 button {
-  margin: 0;
+  background-color: #DBEAFE;
   font-family: 'avenir next', avenir, 'Nunito', 'helvetica neue', 'Helvetica', 'arial', sans-serif;
+  margin: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+}
+
+button:hover {
+  background-color: #92C5FD;
+}
+
+span {
+  display: flex;
+  flex-direction: row;
 }
 
 @media only screen and (max-device-width: 480px) {
