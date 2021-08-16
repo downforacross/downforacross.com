@@ -39,11 +39,6 @@ function subscribeToGameEvents(
   return {syncPromise, unsubscribe};
 }
 
-/**
- * This component is parallel to Game -- will render a <Player/>
- * Will implement custom competitive crossword logic (see PR #145)
- * @param props
- */
 export const ModernArt: React.FC<{gid: string}> = (props) => {
   const {gid} = props;
   const socket = useSocket();

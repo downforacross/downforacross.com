@@ -5,21 +5,7 @@ import React from 'react';
 
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import {isMobile} from './lib/jsUtils';
-import {
-  Account,
-  Battle,
-  Compose,
-  Composition,
-  Game,
-  Play,
-  Replay,
-  Replays,
-  Welcome,
-  Stats,
-  Room,
-  Fencing,
-  ModernArt,
-} from './pages';
+import {ModernArt} from './pages';
 import GlobalContext from './lib/GlobalContext';
 
 import './style.css';

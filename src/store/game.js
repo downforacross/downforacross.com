@@ -9,7 +9,7 @@ import {db, SERVER_TIME} from './firebase';
 import Puzzle from './puzzle';
 import * as colors from '../lib/colors';
 
-Promise.promisifyAll(io);
+// Promise.promisifyAll(io);
 
 // ============ Serialize / Deserialize Helpers ========== //
 
