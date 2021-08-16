@@ -356,7 +356,7 @@ export const GameStateDisplayer: React.FC<{
                     ></img>
                     <div
                       className={classes.auctionIconBackgroundBig}
-                      style={{backgroundColor: gameState.currentDouble.card.color}}
+                      style={{backgroundColor: rgbColors[gameState.currentDouble.card.color]}}
                     >
                       <BiAddToQueue className={classes.auctionIconBig} />
                     </div>
@@ -557,7 +557,7 @@ export const GameStateDisplayer: React.FC<{
                           )}
                         </div>
                         {/* default */}
-                        {viewersTurnToPlayCard && (
+                        {gameState.started && gameState.roundStarted && viewersTurnToPlayCard && (
                           <button
                             className="w-full m-0 mt-2"
                             onClick={() => {

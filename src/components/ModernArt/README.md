@@ -29,12 +29,12 @@ nice to have
 10. Hover on auction type to learn the rules of that auction
 11. Highlight "Current Auction" or "Your Cards" to tell you which section to focus on. If someone else is picking what's up for auction, highlight "Last Auction... waiting for {player}"
 
-Deploy
+Deploy on EC2
 
-yarn build
-gcloud compute scp build/* web-1:~/modern-art --recurse
-gcloud beta compute ssh --zone "us-central1-a" "web-1"  --project "modern-art-323019"
-sudo cp -r modern-art/* /var/www/html
+1. yarn build
+2. gcloud compute scp build/* web-1:~/modern-art --recurse
+3. gcloud beta compute ssh --zone "us-central1-a" "web-1"  --project "modern-art-323019"
+4. sudo cp -r modern-art/* /var/www/html
 
 card distribution:
 
