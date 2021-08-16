@@ -339,6 +339,7 @@ export const GameStateDisplayer: React.FC<{
             )}
 
             <div className={classes.sectionSpacing}></div>
+
             {/* Current Auction */}
             {gameState.currentDouble && (
               <div className={classes.auctionStatus}>
@@ -362,17 +363,21 @@ export const GameStateDisplayer: React.FC<{
                   </div>
                 </div>
                 {gameState.currentDouble.activePlayer === playerId && (
-                  <>
+                  <span>
                     <div>It's your turn to play the second painting</div>
                     <button onClick={skipDouble}> Pass </button>
-                  </>
+                  </span>
                 )}
               </div>
             )}
 
             {gameState.currentAuction && !gameState.currentDouble && (
               <div className={classes.auctionStatus}>
-                <div className={classes.sectionHeader}>Current Auction</div>
+                <div className={classes.sectionHeader}>
+                  {gameState.currentAuction.status == AuctionStatus.PENDING
+                    ? 'Current Auction'
+                    : 'Auction Ended'}
+                </div>
                 <div className={classes.rowFlex}>
                   {makeCurrentAuctionImg(classes, gameState.currentAuction.painting)}
                   {gameState.currentAuction.double &&
@@ -414,17 +419,17 @@ export const GameStateDisplayer: React.FC<{
                         </tr>
                       )}
 
-                      {gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER && (
-                        <tr className={classes.tr}>
-                          {/* Current Bidder is a better display name */}
-                          <td className={classes.td}>Active Bidder</td>
-                          <td className={classes.td}>
-                            {gameState.currentAuction.activeBidder
-                              ? gameState.players[gameState.currentAuction.activeBidder].name
-                              : 'Nobody'}
-                          </td>
-                        </tr>
-                      )}
+                      {gameState.currentAuction.painting.auctionType === AuctionType.ONE_OFFER ||
+                        (gameState.currentAuction.painting.auctionType === AuctionType.FIXED && (
+                          <tr className={classes.tr}>
+                            <td className={classes.td}>Active Bidder</td>
+                            <td className={classes.td}>
+                              {gameState.currentAuction.activeBidder
+                                ? gameState.players[gameState.currentAuction.activeBidder].name
+                                : 'Nobody'}
+                            </td>
+                          </tr>
+                        ))}
 
                       <tr className={classes.tr}>
                         <td className={classes.td}>Your Bank</td>
@@ -443,7 +448,7 @@ export const GameStateDisplayer: React.FC<{
                             onChange={handleFixedPriceChange}
                             value={fixedPrice || 0}
                           />
-                          <button onClick={submitFixedPrice}> Submit Fixed Price </button>
+                          <button onClick={submitFixedPrice}> Submit </button>
                         </span>
                       )}
 
@@ -480,9 +485,11 @@ export const GameStateDisplayer: React.FC<{
                               onChange={handleBidChange}
                               value={currentBid || 0}
                             />
-                            <button onClick={submitBid}> Submit Bid </button>
+                            <button onClick={submitBid}> Submit </button>
                           </span>
-                          <button onClick={skipBid}> Skip Bid </button>
+                          <span>
+                            <button onClick={skipBid}> Skip </button>
+                          </span>
                         </div>
                       )}
 
@@ -492,9 +499,11 @@ export const GameStateDisplayer: React.FC<{
                       viewerPlayer?.id === gameState.currentAuction.activeBidder && (
                         <div>
                           <span>
-                            <button onClick={acceptFixedPrice}> Accept Fixed Price </button>
+                            <button onClick={acceptFixedPrice}> Accept </button>
                           </span>
-                          <button onClick={skipBid}> Skip Bid </button>
+                          <span>
+                            <button onClick={skipBid}> Skip </button>
+                          </span>
                         </div>
                       )}
 
@@ -518,7 +527,7 @@ export const GameStateDisplayer: React.FC<{
 
             {/* Cards */}
             <div className={classes.playerCards}>
-              {gameState.started && <div className={classes.sectionHeader}>Cards to Auction</div>}
+              {gameState.started && <div className={classes.sectionHeader}>Your Cards</div>}
               <div>
                 <div className={classes.cards}>
                   {(viewerPlayer?.cards || []).map((card, j) => (
@@ -591,10 +600,6 @@ export const GameStateDisplayer: React.FC<{
 
             {/* actions */}
             <Log log={gameState.log} />
-
-            <div className={classes.sectionSpacing}></div>
-
-            {gameState.started && <div>Game has Started</div>}
           </div>
         </div>
       )}
@@ -754,8 +759,6 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     width: '100%',
     height: '24px',
-    fontFamily: 'Roboto',
-    fontStyle: 'normal',
     fontSize: '24px',
   },
   sectionSpacing: {

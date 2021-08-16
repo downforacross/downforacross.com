@@ -2,6 +2,7 @@ import React, {useRef, useState} from 'react';
 import {useUpdateEffect} from 'react-use';
 import {makeStyles} from '@material-ui/core';
 import {LogMessage} from '../events/types';
+import {FaArrowDown} from 'react-icons/fa';
 
 export const Log: React.FC<{log: LogMessage[]}> = (props) => {
   const classes = useStyles();
@@ -20,29 +21,37 @@ export const Log: React.FC<{log: LogMessage[]}> = (props) => {
     }
   }, [props.log]);
   return (
-    <div className={classes.container}>
-      <pre ref={logRef} className={classes.log} onScroll={checkScroll}>
-        {props.log.map((message) => (
-          <div className={classes.logMessage}>
-            {'>'} {message.hhmm} {message.text}
-          </div>
-        ))}
-      </pre>
-      {!fullyScrolled && <div className={classes.notFullyScrolledMessage}>Scroll for more messages</div>}
+    <div className="flex-col">
+      <div className={classes.container}>
+        <pre ref={logRef} className={classes.log} onScroll={checkScroll}>
+          {props.log.map((message) => (
+            <div className={classes.logMessage}>
+              {'>'} {message.hhmm} {message.text}
+            </div>
+          ))}
+        </pre>
+      </div>
+      {!fullyScrolled && (
+        <svg className="animate-bounce w-6 h-6">
+          {' '}
+          <FaArrowDown />{' '}
+        </svg>
+      )}
     </div>
   );
 };
 
 const useStyles = makeStyles({
   container: {
-    float: 'left',
     position: 'relative',
   },
   log: {
     overflow: 'auto',
-    maxHeight: 200,
+    maxHeight: 400,
   },
-  logMessage: {},
+  logMessage: {
+    fontSize: 'small',
+  },
   notFullyScrolledMessage: {
     position: 'absolute',
     bottom: 0,

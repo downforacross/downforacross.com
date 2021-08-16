@@ -130,7 +130,7 @@ const finishAuction = (state: ModernArtState, finishedAt: number, logMessage?: L
           status: AuctionStatus.CLOSED,
           winner,
           payment,
-          double: undefined,
+          // double: undefined,
         }
       : state.currentAuction,
     currentDouble: undefined,
