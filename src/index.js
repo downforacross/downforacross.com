@@ -29,10 +29,5 @@ const Root = () => {
     </Router>
   );
 };
-/*
-ReactDOM.render(
-  <h4 style={{marginLeft: 10}}>down for a maintenance</h4>,
-  document.getElementById('root')
-);
-*/
+
 ReactDOM.render(<Root />, document.getElementById('root'));
