@@ -355,7 +355,6 @@ export default class MobileGridControls extends GridControls {
     const Y = py || y;
     const style = {
       flexDirection: X > 0 ? 'row-reverse' : X < 0 ? 'row' : Y >= 0 ? 'column-reverse' : 'column',
-      [X ? 'width' : 'height']: '200%',
       transform: px || py ? `translate(${px * 50}%, ${py * 50}%)` : `translate(${x || 0}px, ${y || 0}px)`,
       left: X > 0 ? '-100%' : 0,
       top: Y >= 0 ? '-100%' : 0,
@@ -391,14 +390,6 @@ export default class MobileGridControls extends GridControls {
               </div>
               <Flex className="mobile-grid-controls--clue-bar--text" grow={1}>
                 <Clue text={this.getClueText(this.mainClue)} />
-              </Flex>
-            </div>
-            <div className="mobile-grid-controls--clue-bar--preview">
-              <div className="mobile-grid-controls--clue-bar--number">
-                <Clue text={this.getClueAbbreviation(this.previewClue)} />
-              </div>
-              <Flex className="mobile-grid-controls--clue-bar--text" grow={1}>
-                <Clue text={this.getClueText(this.previewClue)} />
               </Flex>
             </div>
           </div>

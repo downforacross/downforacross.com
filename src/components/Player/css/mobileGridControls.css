@@ -64,6 +64,10 @@
   max-height: 100%;
 }
 
+.mobile-grid-controls--clue-bar--text > span {
+  overflow-y: auto;
+}
+
 .mobile-grid-controls--clue-bar--clues--container {
   position: absolute;
   width: 100%;
@@ -76,6 +80,7 @@
 .mobile-grid-controls--clue-bar--main,
 .mobile-grid-controls--clue-bar--preview {
   flex: 1;
+  min-height: 1px;
   display: flex;
   align-items: center;
 }
