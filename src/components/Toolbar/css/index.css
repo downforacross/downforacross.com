@@ -79,6 +79,32 @@ code {
 
 .toolbar--pencil {
   cursor: pointer;
+  display: flex;
+}
+
+.toolbar--pencil-color-picker-container {
+  width: 14px;
+  height: 14px;
+  margin-left: 3px;
+}
+
+.toolbar--pencil-color-picker {
+  cursor: pointer;
+  background-color: var(--pencil-color);
+  width: 14px;
+  height: 14px;
+  position: absolute;
+  z-index: 10;
+  border-radius: 3px;
+  border: 1px solid black;
+}
+
+.toolbar--pencil-color-picker-container input {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+  width: 14px;
+  height: 14px;
 }
 
 .toolbar--autocheck {
