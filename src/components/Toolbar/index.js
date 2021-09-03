@@ -25,9 +25,19 @@ export default class Toolbar extends Component {
 
   handlePencilColorPickerClick = (e) => {
     e.stopPropagation();
-    this.pencilColorPicker.value = getComputedStyle(document.documentElement).getPropertyValue(
-      '--pencil-color'
-    );
+    let hexColor = getComputedStyle(document.documentElement)
+      .getPropertyValue('--pencil-color')
+      .trim()
+      .substring(1);
+    if (hexColor.length === 3) {
+      hexColor = hexColor
+        .split('')
+        .map(function (hex) {
+          return hex + hex;
+        })
+        .join('');
+    }
+    this.pencilColorPicker.value = '#' + hexColor;
     this.pencilColorPicker.click();
   };
 

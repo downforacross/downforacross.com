@@ -40,7 +40,7 @@ button {
   --main-blue-3: #dcefff;
   --main-green-1: rgba(31, 255, 61, 0.3);
   --main-green-2: rgba(31, 255, 61, 1);
-  --pencil-color:#888888;
+  --pencil-color: #888888; /* must be 3 or 6 digit hex */
 }
 
 .swal-modal {
