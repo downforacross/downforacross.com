@@ -274,6 +274,8 @@ export default class Game extends Component {
         mobile={mobile}
         pickups={this.props.pickups}
         optimisticCounter={optimisticCounter}
+        onCheck={this.handleCheck}
+        onReveal={this.handleReveal}
         {...themeStyles}
       />
     );

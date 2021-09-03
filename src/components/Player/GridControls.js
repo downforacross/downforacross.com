@@ -128,7 +128,7 @@ export default class GridControls extends Component {
   }
 
   // takes in key, a string
-  _handleKeyDown = (key, shiftKey) => {
+  _handleKeyDown = (key, shiftKey, altKey) => {
     const actionKeys = {
       ArrowLeft: 'left',
       ArrowUp: 'up',
@@ -162,6 +162,20 @@ export default class GridControls extends Component {
       onPressEnter && onPressEnter();
       return true;
     }
+    if (altKey) {
+      key = key.toLowerCase();
+      const altAction = shiftKey ? this.props.onReveal : this.props.onCheck;
+      if (key === 's') {
+        altAction('square');
+      }
+      if (key === 'w') {
+        altAction('word');
+      }
+      if (key === 'p') {
+        altAction('puzzle');
+      }
+      return true;
+    }
     if (key === 'Escape') {
       onPressEscape && onPressEscape();
     } else if (!this.props.frozen) {
@@ -173,7 +187,7 @@ export default class GridControls extends Component {
     }
   };
 
-  _handleKeyDownVim = (key, shiftKey) => {
+  _handleKeyDownVim = (key, shiftKey, altKey) => {
     const actionKeys = {
       ArrowLeft: 'left',
       ArrowUp: 'up',
@@ -239,7 +253,7 @@ export default class GridControls extends Component {
     if (ev.target.tagName === 'INPUT' || ev.metaKey || ev.ctrlKey) {
       return;
     }
-    if (_handleKeyDown(ev.key, ev.shiftKey)) {
+    if (_handleKeyDown(ev.key, ev.shiftKey, ev.altKey)) {
       ev.preventDefault();
       ev.stopPropagation();
     }
