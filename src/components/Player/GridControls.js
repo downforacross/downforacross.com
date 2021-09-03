@@ -121,6 +121,20 @@ export default class GridControls extends Component {
     actions[action](shiftKey);
   }
 
+  handleAltKey(key, shiftKey) {
+    key = key.toLowerCase();
+    const altAction = shiftKey ? this.props.onReveal : this.props.onCheck;
+    if (key === 's') {
+      altAction('square');
+    }
+    if (key === 'w') {
+      altAction('word');
+    }
+    if (key === 'p') {
+      altAction('puzzle');
+    }
+  }
+
   validLetter(letter) {
     const VALID_SYMBOLS = '!@#$%^&*()-+=`~/?\\'; // special theme puzzles have these sometimes;
     if (VALID_SYMBOLS.indexOf(letter) !== -1) return true;
@@ -163,17 +177,7 @@ export default class GridControls extends Component {
       return true;
     }
     if (altKey) {
-      key = key.toLowerCase();
-      const altAction = shiftKey ? this.props.onReveal : this.props.onCheck;
-      if (key === 's') {
-        altAction('square');
-      }
-      if (key === 'w') {
-        altAction('word');
-      }
-      if (key === 'p') {
-        altAction('puzzle');
-      }
+      this.handleAltKey(key, shiftKey);
       return true;
     }
     if (key === 'Escape') {
@@ -213,6 +217,10 @@ export default class GridControls extends Component {
     const {onVimNormal, onVimInsert, vimInsert, onPressEnter, onPressPeriod} = this.props;
     if (key in actionKeys) {
       this.handleAction(actionKeys[key], shiftKey);
+      return true;
+    }
+    if (altKey) {
+      this.handleAltKey(key, shiftKey);
       return true;
     }
     if (!vimInsert) {
