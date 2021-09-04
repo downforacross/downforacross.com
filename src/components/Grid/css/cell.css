@@ -84,7 +84,7 @@ div:focus .cell.referenced {
 }
 
 .cell.pencil .cell--value {
-  color: #888;
+  color: var(--pencil-color);
 }
 
 .cell.bad .cell--value {

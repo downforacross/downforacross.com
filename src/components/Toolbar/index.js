@@ -23,6 +23,28 @@ export default class Toolbar extends Component {
     this.props.onTogglePencil();
   };
 
+  handlePencilColorPickerClick = (e) => {
+    e.stopPropagation();
+    let hexColor = getComputedStyle(document.documentElement)
+      .getPropertyValue('--pencil-color')
+      .trim()
+      .substring(1);
+    if (hexColor.length === 3) {
+      hexColor = hexColor
+        .split('')
+        .map(function (hex) {
+          return hex + hex;
+        })
+        .join('');
+    }
+    this.pencilColorPicker.value = '#' + hexColor;
+    this.pencilColorPicker.click();
+  };
+
+  handlePencilColorPickerChange = (e) => {
+    document.documentElement.style.setProperty('--pencil-color', e.target.value);
+  };
+
   handleAutocheckClick = (e) => {
     e.preventDefault();
     this.props.onToggleAutocheck();
@@ -135,6 +157,15 @@ export default class Toolbar extends Component {
         title="Shortcut: ."
       >
         <i className="fa fa-pencil" />
+        <div className={'toolbar--pencil-color-picker-container'}>
+          <div className={'toolbar--pencil-color-picker'} onClick={this.handlePencilColorPickerClick}></div>
+          <input
+            type="color"
+            ref={(input) => (this.pencilColorPicker = input)}
+            onClick={(e) => e.stopPropagation()}
+            onChange={this.handlePencilColorPickerChange}
+          ></input>
+        </div>
       </div>
     );
   }
