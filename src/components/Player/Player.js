@@ -42,12 +42,13 @@ const PING_TIMEOUT = 10000;
 export default class Player extends Component {
   constructor(props) {
     super(props);
+    const selected =
+      this.props.currentCursor?.r && this.props.currentCursor?.c
+        ? this.props.currentCursor
+        : this.getInitialSelected();
     this.state = {
-      selected: {
-        r: this.props.currentCursor?.r ?? 0,
-        c: this.props.currentCursor?.c ?? 0,
-      },
-      direction: 'across',
+      selected: selected,
+      direction: this.props.clues.across.length ? 'across' : 'down',
     };
 
     // for deferring scroll-to-clue actions
@@ -110,11 +111,30 @@ export default class Player extends Component {
   get selected() {
     let {r, c} = this.state.selected;
     while (!this.grid.isWhite(r, c)) {
-      if (c < this.props.grid[0].length) {
+      if (c + 1 < this.props.grid[0].length) {
         c += 1;
-      } else {
+      } else if (r + 1 < this.props.grid.length) {
         r += 1;
         c = 0;
+      } else {
+        return {r: 0, c: 0};
+      }
+    }
+    return {r, c};
+  }
+
+  getInitialSelected() {
+    let r = 0;
+    let c = 0;
+    let direction = this.props.clues.across.length ? 'across' : 'down';
+    while (!this.grid.isWhite(r, c) || !this.props.clues[direction][this.grid.getParent(r, c, direction)]) {
+      if (c + 1 < this.props.grid[0].length) {
+        c += 1;
+      } else if (r + 1 < this.props.grid.length) {
+        r += 1;
+        c = 0;
+      } else {
+        return {r: 0, c: 0};
       }
     }
     return {r, c};
