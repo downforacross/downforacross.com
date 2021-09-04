@@ -262,7 +262,7 @@ export default class GridWrapper {
   }
 
   getParent(r, c, direction) {
-    return this.grid[r][c].parents[direction];
+    return this.grid[r][c].parents?.[direction] ?? 0;
   }
 
   isStartOfClue(r, c, direction) {
