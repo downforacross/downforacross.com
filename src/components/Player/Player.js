@@ -423,6 +423,8 @@ export default class Player extends Component {
           grid={grid}
           clues={clues}
           beta={beta}
+          onCheck={this.props.onCheck}
+          onReveal={this.props.onReveal}
         >
           <div className="player--main">
             <div className="player--main--left">

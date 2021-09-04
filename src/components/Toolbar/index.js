@@ -250,6 +250,22 @@ export default class Toolbar extends Component {
                 </td>
                 <td>Clear current cell</td>
               </tr>
+              <tr>
+                <td>
+                  <code>Alt</code> + <code>S</code>, <code>W</code>, or <code>P</code>
+                </td>
+                <td>
+                  Check <b>S</b>quare, <b>W</b>ord, or <b>P</b>uzzle
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <code>Alt</code> + <code>Shift</code> + <code>S</code>, <code>W</code>, or <code>P</code>
+                </td>
+                <td>
+                  Reveal <b>S</b>quare, <b>W</b>ord, or <b>P</b>uzzle
+                </td>
+              </tr>
             </tbody>
           </table>
         </Popup>

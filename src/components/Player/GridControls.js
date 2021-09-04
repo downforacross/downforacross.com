@@ -121,6 +121,20 @@ export default class GridControls extends Component {
     actions[action](shiftKey);
   }
 
+  handleAltKey(key, shiftKey) {
+    key = key.toLowerCase();
+    const altAction = shiftKey ? this.props.onReveal : this.props.onCheck;
+    if (key === 's') {
+      altAction('square');
+    }
+    if (key === 'w') {
+      altAction('word');
+    }
+    if (key === 'p') {
+      altAction('puzzle');
+    }
+  }
+
   validLetter(letter) {
     const VALID_SYMBOLS = '!@#$%^&*()-+=`~/?\\'; // special theme puzzles have these sometimes;
     if (VALID_SYMBOLS.indexOf(letter) !== -1) return true;
@@ -128,7 +142,7 @@ export default class GridControls extends Component {
   }
 
   // takes in key, a string
-  _handleKeyDown = (key, shiftKey) => {
+  _handleKeyDown = (key, shiftKey, altKey) => {
     const actionKeys = {
       ArrowLeft: 'left',
       ArrowUp: 'up',
@@ -162,6 +176,10 @@ export default class GridControls extends Component {
       onPressEnter && onPressEnter();
       return true;
     }
+    if (altKey) {
+      this.handleAltKey(key, shiftKey);
+      return true;
+    }
     if (key === 'Escape') {
       onPressEscape && onPressEscape();
     } else if (!this.props.frozen) {
@@ -173,7 +191,7 @@ export default class GridControls extends Component {
     }
   };
 
-  _handleKeyDownVim = (key, shiftKey) => {
+  _handleKeyDownVim = (key, shiftKey, altKey) => {
     const actionKeys = {
       ArrowLeft: 'left',
       ArrowUp: 'up',
@@ -199,6 +217,10 @@ export default class GridControls extends Component {
     const {onVimNormal, onVimInsert, vimInsert, onPressEnter, onPressPeriod} = this.props;
     if (key in actionKeys) {
       this.handleAction(actionKeys[key], shiftKey);
+      return true;
+    }
+    if (altKey) {
+      this.handleAltKey(key, shiftKey);
       return true;
     }
     if (!vimInsert) {
@@ -239,7 +261,7 @@ export default class GridControls extends Component {
     if (ev.target.tagName === 'INPUT' || ev.metaKey || ev.ctrlKey) {
       return;
     }
-    if (_handleKeyDown(ev.key, ev.shiftKey)) {
+    if (_handleKeyDown(ev.key, ev.shiftKey, ev.altKey)) {
       ev.preventDefault();
       ev.stopPropagation();
     }
