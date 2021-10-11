@@ -78,7 +78,6 @@ export default class Game extends EventEmitter {
     if (event.type === 'create') {
       this.emit('wsCreateEvent', event);
       console.log('Connected!');
-      console.log(event);
     } else {
       this.emit('wsEvent', event);
     }
@@ -93,7 +92,6 @@ export default class Game extends EventEmitter {
   }
 
   async addEvent(event) {
-    console.log('add event', event);
     event.id = uuid.v4();
     this.emitOptimisticEvent(event);
     await this.connectToWebsocket();

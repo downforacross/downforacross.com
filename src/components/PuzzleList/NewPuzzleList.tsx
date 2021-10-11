@@ -75,7 +75,6 @@ const NewPuzzleList: React.FC<NewPuzzleListProps> = (props) => {
     }
   };
   const handleTouchEnd = async () => {
-    console.log('touchend');
     if (containerRef.current) return;
     await handleScroll();
   };

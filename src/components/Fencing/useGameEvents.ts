@@ -23,7 +23,6 @@ const makeHistoryWrappper = (events: GameEvent[]): HistoryWrapper => {
 export const useGameEvents = (): GameEventsHook => {
   const historyWrapperRef = useRef<HistoryWrapper>(makeHistoryWrappper([]));
   const [version, setVersion] = useState(0);
-  console.log('version is', version);
   return {
     gameState: historyWrapperRef.current.getSnapshot(),
     setEvents(events) {

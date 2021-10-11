@@ -199,7 +199,6 @@ export default class Player extends Component {
   }
 
   handlePing = (r, c) => {
-    console.log('pinng at', r, c);
     this.props.addPing({r, c});
   };
 

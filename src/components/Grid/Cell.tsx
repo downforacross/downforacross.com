@@ -72,7 +72,6 @@ export default class Cell extends React.Component<Props> {
       return true;
     }
     if (_.some(pathsToOmit, (p) => JSON.stringify(nextProps[p]) !== JSON.stringify(this.props[p]))) {
-      console.log(nextProps);
       console.debug('cell update for array');
       return true;
     }

@@ -24,7 +24,6 @@ export default class Powerups extends React.Component {
   // TODO: forceUpdate to make sure hasExpired check clears powerups that time out.
   // Maybe by using a delay callback?
   renderPowerup(powerup, count) {
-    console.log(powerup);
     if (hasExpired(powerup)) {
       return;
     }
@@ -46,9 +45,7 @@ export default class Powerups extends React.Component {
           <Flex column>
             <Emoji emoji={icon} big className="powerups--eemoji" />
             <div className="powerups--info" style={{opacity: inuse ? 1 : 0}}>
-              {timeMins}
-              :
-              {timeSecs}
+              {timeMins}:{timeSecs}
             </div>
           </Flex>
           {count > 1 && <div className="powerups--count">{count}</div>}

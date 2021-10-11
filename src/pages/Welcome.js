@@ -134,7 +134,6 @@ export default class Welcome extends Component {
 
   handleScroll = (top) => {
     if (!this.mobile) return;
-    console.log(top);
     const motion = _.clamp(top / 100, 0, 1);
     this.setState({
       motion,

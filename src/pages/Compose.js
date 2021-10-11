@@ -27,7 +27,6 @@ export default class Compose extends Component {
   handleAuth = () => {
     if (this.user.fb) {
       this.user.listCompositions().then((compositions) => {
-        console.log('list compositions', compositions);
         this.setState({compositions});
       });
     }
@@ -51,11 +50,7 @@ export default class Compose extends Component {
   linkToComposition(cid, {title, author}) {
     return (
       <span>
-        <a href={`/composition/${cid}/`}>{cid}</a>
-        :
-        {title}
-        {' '}
-        by
+        <a href={`/composition/${cid}/`}>{cid}</a>:{title} by
         {author}
       </span>
     );
@@ -70,9 +65,7 @@ export default class Compose extends Component {
           <title>Down for Across: Compose</title>
         </Helmet>
         <Flex shrink={0} hAlignContent="center">
-          Limit: 
-          {' '}
-          {limit}
+          Limit: {limit}
           &nbsp;
           <button
             onClick={() => {

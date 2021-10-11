@@ -184,7 +184,6 @@ export default class MobileGridControls extends GridControls {
       }
       if (rc) {
         const [r, c] = rc.split(' ').map((x) => Number(x));
-        console.log(rc);
         if (this.props.selected.r === r && this.props.selected.c === c) {
           this.props.onChangeDirection();
         } else {

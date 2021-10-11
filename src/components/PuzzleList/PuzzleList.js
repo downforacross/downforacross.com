@@ -42,7 +42,6 @@ export default class PuzzleList extends PureComponent {
   };
 
   handleTouchEnd = () => {
-    console.log('touchend');
     if (this.container.current) return;
     const scrollTop = this.container.scrollTop;
     const direction = this.direction;

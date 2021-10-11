@@ -53,14 +53,12 @@ export default class MobileKeyboard extends React.PureComponent {
 
   componentDidMount() {
     globalKeyboardState.ref = this;
-    console.log('MOUNT');
     this.componentDidUpdate();
   }
 
   componentDidUpdate() {
     Array.from(document.querySelectorAll('.hg-button')).forEach((el) => {
       if (el.attributes['data-react']) return;
-      console.log('killed', el);
       el.ontouchstart = () => {};
     });
   }
@@ -68,7 +66,6 @@ export default class MobileKeyboard extends React.PureComponent {
   handleTouchStart = (e) => {
     if (!e.target.attributes['data-skbtn']) return;
     const val = e.target.attributes['data-skbtn'].value;
-    console.log(val);
     this.handleKeyPress(val);
     e.preventDefault();
     e.stopPropagation();

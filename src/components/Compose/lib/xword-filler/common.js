@@ -41,7 +41,6 @@ class BucketedWordlist {
   makeBuckets(scoredWordlist) {
     this.buckets = {};
     const words = _.sortBy(_.keys(scoredWordlist), (word) => -scoredWordlist[word]);
-    console.log(words);
     _.forEach(words, (word) => {
       this.storeWordInBucket(word, []);
     });

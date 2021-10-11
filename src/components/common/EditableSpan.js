@@ -87,7 +87,6 @@ export default class EditableSpan extends PureComponent {
   }
 
   handleKeyDownMobile = (key) => {
-    console.log('handle key down', key);
     const {caret} = this.state;
     let newCaret = caret;
     if (key === '{enter}') {
