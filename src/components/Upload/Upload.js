@@ -12,7 +12,7 @@ export default class Upload extends Component {
     this.state = {
       puzzle: null,
       recentUnlistedPid: null,
-      unlistedCheckboxChecked: false,
+      publicCheckboxChecked: false,
     };
   }
 
@@ -20,13 +20,13 @@ export default class Upload extends Component {
     this.setState({
       puzzle: {...puzzle},
       recentUnlistedPid: null,
-      unlistedCheckboxChecked: false,
+      publicCheckboxChecked: false,
     });
     this.renderSuccessModal(puzzle);
   };
 
   create = async () => {
-    const isPublic = !this.state.unlistedCheckboxChecked;
+    const isPublic = this.state.publicCheckboxChecked;
     const puzzle = {
       ...this.state.puzzle,
       private: !isPublic,
@@ -73,11 +73,16 @@ export default class Upload extends Component {
           <p>
             You are about to upload the puzzle &quot;
             {puzzleTitle}
-            &quot; to the Daily Puzzle repository. Continue?
+            &quot;. Continue?
           </p>
           <div id="unlistedRow">
             <label>
-              <input type="checkbox" onChange={this.handleChangeUnlistedCheckbox} /> Upload as unlisted
+              <input
+                checked={this.state.publicCheckboxChecked}
+                type="checkbox"
+                onChange={this.handleChangePublicCheckbox}
+              />{' '}
+              Upload Publicly
             </label>
           </div>
         </div>
@@ -135,9 +140,9 @@ export default class Upload extends Component {
     });
   };
 
-  handleChangeUnlistedCheckbox = (e) => {
+  handleChangePublicCheckbox = (e) => {
     this.setState({
-      unlistedCheckboxChecked: e.target.checked,
+      publicCheckboxChecked: e.target.checked,
     });
   };
 
