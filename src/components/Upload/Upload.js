@@ -78,7 +78,6 @@ export default class Upload extends Component {
           <div id="unlistedRow">
             <label>
               <input
-                checked={this.state.publicCheckboxChecked}
                 type="checkbox"
                 onChange={this.handleChangePublicCheckbox}
               />{' '}
