@@ -79,8 +79,13 @@ export default class Chat extends Component {
     this.props.onToggleChat();
   };
 
+  get url() {
+    return `${window.location.protocol}//${window.location.host}/beta${this.props.path}`;
+  }
+
   handleCopyClick = () => {
-    navigator.clipboard.writeText(`${window.location.host}/beta${this.props.path}`);
+    navigator.clipboard.writeText(this.url);
+    // `${window.location.host}/beta${this.props.path}`);
     let link = document.getElementById('pathText');
     link.classList.remove('flashBlue');
     void link.offsetWidth;
@@ -322,7 +327,7 @@ export default class Chat extends Component {
                 <wbr />
               </i>
               <b id="pathText" style={{marginLeft: '5px'}}>
-                {window.location.host}/beta{this.props.path}
+                {this.url}
               </b>
 
               <i
