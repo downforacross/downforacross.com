@@ -18,7 +18,7 @@ export async function getPuzzle(pid: string): Promise<PuzzleJson> {
   );
   const ms = Date.now() - startTime;
   console.log(`getPuzzle (${pid}) took ${ms}ms`);
-  return _.first(rows)!;
+  return _.first(rows)!.content;
 }
 
 const mapSizeFilterForDB = (sizeFilter: ListPuzzleRequestFilters['sizeFilter']): string[] => {

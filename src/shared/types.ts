@@ -79,6 +79,7 @@ export interface Cursor {
 
 export interface PuzzleJson {
   grid: string[][];
+  solution: string[][];
   info: InfoJson;
   circles: string[];
   shades: string[];

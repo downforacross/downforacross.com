@@ -8,6 +8,7 @@ import Nav from '../components/common/Nav';
 import actions from '../actions';
 import {getUser, GameModel, PuzzleModel, BattleModel} from '../store';
 import redirect from '../lib/redirect';
+import {createGame} from '../api/create_game';
 
 export default class Play extends Component {
   constructor() {
@@ -84,22 +85,14 @@ export default class Play extends Component {
     this.setState({
       creating: true,
     });
-    actions.getNextGid((gid) => {
-      const game = new GameModel(`/game/${gid}`);
-      const puzzle = new PuzzleModel(`/puzzle/${this.pid}`);
-      puzzle.attach();
-      puzzle.once('ready', async () => {
-        const rawGame = puzzle.toGame();
-        await Promise.all([
-          game.initialize(rawGame),
-          this.user.joinGame(gid, {
-            pid: this.pid,
-            solved: false,
-            v2: true,
-          }),
-        ]);
-        redirect(`/beta/game/${gid}`);
+    actions.getNextGid(async (gid) => {
+      await createGame({gid, pid: this.pid});
+      await this.user.joinGame(gid, {
+        pid: this.pid,
+        solved: false,
+        v2: true,
       });
+      redirect(`/beta/game/${gid}`);
     });
   }
 

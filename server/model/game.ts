@@ -1,5 +1,8 @@
 import _ from 'lodash';
+// @ts-ignore
+import {makeGrid} from '../gameUtils';
 import {pool} from './pool';
+import {getPuzzle} from './puzzle';
 
 export async function getGameEvents(gid: string) {
   const startTime = Date.now();
@@ -36,4 +39,40 @@ export async function addGameEvent(gid: string, event: GameEvent) {
   );
   const ms = Date.now() - startTime;
   console.log(`addGameEvent(${gid}, ${event.type}) took ${ms}ms`);
+}
+
+export async function addInitialGameEvent(gid: string, pid: string) {
+  const puzzle = await getPuzzle(pid);
+  console.log('got puzzle', puzzle);
+  const {info = {}, grid: solution = [['']], circles = []} = puzzle;
+
+  const gridObject = makeGrid(solution);
+  const clues = gridObject.alignClues(puzzle.clues);
+  const grid = gridObject.toArray();
+
+  const initialEvent = {
+    user: '',
+    timestamp: Date.now(),
+    type: 'create',
+    params: {
+      pid,
+      version: 1.0,
+      game: {
+        info,
+        grid,
+        solution,
+        circles,
+        chat: {messages: []},
+        cursor: {},
+        clock: {
+          lastUpdated: 0,
+          totalTime: 0,
+          paused: true,
+        },
+        solved: false,
+        clues,
+      },
+    },
+  };
+  addGameEvent(gid, initialEvent);
 }
