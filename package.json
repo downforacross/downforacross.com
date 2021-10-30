@@ -46,6 +46,7 @@
     "react-fontawesome": "^1.6.1",
     "react-helmet": "^5.2.0",
     "react-icons": "^3.10.0",
+    "react-linkify": "^1.0.0-alpha",
     "react-router-dom": "^4.1.2",
     "react-scripts": "^3.4.3",
     "react-simple-keyboard": "^1.15.2",

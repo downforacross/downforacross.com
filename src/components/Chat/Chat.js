@@ -2,6 +2,7 @@ import './css/index.css';
 import React, {Component} from 'react';
 import _ from 'lodash';
 import Flex from 'react-flexview';
+import Linkify from 'react-linkify';
 import {Link} from 'react-router-dom';
 import {MdClose} from 'react-icons/md';
 import Emoji from '../common/Emoji';
@@ -130,15 +131,16 @@ export default class Chat extends Component {
     if (this.props.header) return this.props.header;
     const {info = {}, bid} = this.props;
     const {title, description, author, type} = info;
+    const desc = description?.startsWith('; ') ? description.substring(2) : description;
 
     return (
       <div className="chat--header">
         <div className="chat--header--title">{title}</div>
         <div className="chat--header--subtitle">{type && `${type} | By ${author}`}</div>
-        {description && (
+        {desc && (
           <div className="chat--header--description">
             <strong>Note: </strong>
-            {description}
+            <Linkify>{desc}</Linkify>
           </div>
         )}
 
