@@ -210,6 +210,14 @@ export default class Chat extends Component {
     );
   }
 
+  renderMessageTimestamp(timestamp) {
+    return (
+      <span className="chat--message--timestamp">
+        [{new Date(timestamp).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}]
+      </span>
+    );
+  }
+
   renderMessageSender(name, color) {
     const style = color && {
       color,
@@ -279,14 +287,15 @@ export default class Chat extends Component {
   }
 
   renderMessage(message) {
-    const {text, senderId: id, isOpponent} = message;
+    const {text, senderId: id, isOpponent, timestamp} = message;
     const big = text.length <= 10 && isEmojis(text);
     const color = this.getMessageColor(id, isOpponent);
     const users = this.props.users;
 
     return (
       <div className={`chat--message${big ? ' big' : ''}`}>
-        {this.renderMessageSender(users[id].displayName, color)}:{this.renderMessageText(message.text)}
+        {this.renderMessageTimestamp(timestamp)} {this.renderMessageSender(users[id].displayName, color)}:
+        {this.renderMessageText(message.text)}
       </div>
     );
   }

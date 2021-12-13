@@ -104,10 +104,15 @@
   margin-bottom: 10px;
 }
 
+.chat--message--timestamp {
+  white-space: nowrap;
+  margin-left: -15px;
+}
+
 .chat--message--sender {
   font-weight: bold;
   white-space: nowrap;
-  margin-left: -15px;
+  margin-left: 5px;
 }
 
 .chat--message--text {
