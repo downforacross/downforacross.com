@@ -91,12 +91,12 @@
 }
 
 .chat--message {
-  display: inline-block;
+  display: inline-flex;
   font-size: 15px;
   padding-left: 20px;
-  overflow-wrap: break-word;
-  align-items: center;
-  max-width: calc(100% - 20px);
+  overflow-wrap: anywhere;
+  align-items: bottom;
+  width: calc(100% - 20px);
 }
 
 .chat--system-message {
@@ -106,13 +106,28 @@
 
 .chat--message--timestamp {
   white-space: nowrap;
-  margin-left: -15px;
+  margin-left: 10px;
+  color: var(--main-gray-2);
+  /* background-color: var(--main-gray-1); */
+}
+
+.chat--message--timestamp::selection {
+  color: var(--main-gray-1);
+  background-color: highlight;
+}
+
+.chat--message:hover .chat--message--timestamp {
+  color: var(--main-gray-1);
+}
+
+.chat--message--content {
+  flex: 1;
 }
 
 .chat--message--sender {
   font-weight: bold;
   white-space: nowrap;
-  margin-left: 5px;
+  margin-left: -15px;
 }
 
 .chat--message--text {
@@ -142,7 +157,7 @@
 
 .copyButton {
   padding-left: 5px;
-  transform: scale(0.85,1);
+  transform: scale(0.85, 1);
 }
 
 .copyButton:hover {
@@ -156,7 +171,7 @@
 }
 @keyframes flash-blue-keyframes {
   0% {
-    color: var(--main-blue);;
+    color: var(--main-blue);
   }
   100% {
     color: var(--main-gray-1);
