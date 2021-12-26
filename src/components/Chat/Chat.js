@@ -210,13 +210,21 @@ export default class Chat extends Component {
     );
   }
 
+  renderMessageTimestamp(timestamp) {
+    return (
+      <span className="chat--message--timestamp">
+        {new Date(timestamp).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'})}
+      </span>
+    );
+  }
+
   renderMessageSender(name, color) {
     const style = color && {
       color,
     };
     return (
       <span className="chat--message--sender" style={style}>
-        {name}
+        {name}:
       </span>
     );
   }
@@ -279,14 +287,18 @@ export default class Chat extends Component {
   }
 
   renderMessage(message) {
-    const {text, senderId: id, isOpponent} = message;
+    const {text, senderId: id, isOpponent, timestamp} = message;
     const big = text.length <= 10 && isEmojis(text);
     const color = this.getMessageColor(id, isOpponent);
     const users = this.props.users;
 
     return (
       <div className={`chat--message${big ? ' big' : ''}`}>
-        {this.renderMessageSender(users[id].displayName, color)}:{this.renderMessageText(message.text)}
+        <div className="chat--message--content">
+          {this.renderMessageSender(users[id].displayName, color)}
+          {this.renderMessageText(message.text)}
+        </div>
+        <div className="chat--message--timestamp">{this.renderMessageTimestamp(timestamp)}</div>
       </div>
     );
   }
@@ -322,19 +334,21 @@ export default class Chat extends Component {
             className="chat--messages"
           >
             <div className="chat--message chat--system-message">
-              <i>
-                Game created! Share the link to play with your friends:
-                <wbr />
-              </i>
-              <b id="pathText" style={{marginLeft: '5px'}}>
-                {this.url}
-              </b>
+              <div>
+                <i>
+                  Game created! Share the link to play with your friends:
+                  <wbr />
+                </i>
+                <b id="pathText" style={{marginLeft: '5px'}}>
+                  {this.url}
+                </b>
 
-              <i
-                className="fa fa-clone copyButton"
-                title="Copy to Clipboard"
-                onClick={this.handleCopyClick}
-              />
+                <i
+                  className="fa fa-clone copyButton"
+                  title="Copy to Clipboard"
+                  onClick={this.handleCopyClick}
+                />
+              </div>
             </div>
             {messages.map((message, i) => (
               <div key={i}>{this.renderMessage(message)}</div>
