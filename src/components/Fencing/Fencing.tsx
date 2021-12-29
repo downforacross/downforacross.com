@@ -157,6 +157,10 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
             gameState={gameState}
             currentUserId={id}
             changeName={(newName) => {
+              if (newName.trim().length === 0) {
+                newName = nameGenerator();
+              }
+
               sendEvent({
                 type: 'updateDisplayName',
                 params: {
@@ -167,6 +171,9 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
             }}
             changeTeamName={(newName) => {
               if (!teamId) return;
+              if (newName.trim().length === 0) {
+                newName = nameGenerator();
+              }
               sendEvent({
                 type: 'updateTeamName',
                 params: {
