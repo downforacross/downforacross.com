@@ -20,6 +20,7 @@ import nameGenerator from '../../lib/nameGenerator';
 import {useGameEvents, GameEventsHook} from './useGameEvents';
 import {getStartingCursorPosition} from '../../shared/gameEvents/eventDefs/create';
 import Nav from '../common/Nav';
+import Chat from '../Chat';
 
 function subscribeToGameEvents(
   socket: SocketIOClient.Socket | undefined,
@@ -50,6 +51,7 @@ function subscribeToGameEvents(
 }
 const useStyles = makeStyles({
   container: {
+    flex: 1,
     display: 'flex',
     height: '100%',
     padding: 24,
@@ -58,12 +60,10 @@ const useStyles = makeStyles({
   scoreboardContainer: {
     display: 'flex',
     justifyContent: 'space-around',
-    paddingBottom: 12,
-    marginBottom: 32,
+    marginBottom: 12,
     '& *': {
       borderCollapse: 'collapse',
     },
-    borderBottom: '1px solid black', // TODO find a designer
   },
 });
 /**
@@ -147,82 +147,106 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
   const toolbarActions = useToolbarActions(sendEvent, gameState, id);
   const playerActions = usePlayerActions(sendEvent, id);
 
+  const fencingScoreboard = (
+    <FencingScoreboard
+      gameState={gameState}
+      currentUserId={id}
+      changeName={(newName) => {
+        if (newName.trim().length === 0) {
+          newName = nameGenerator();
+        }
+        sendEvent({
+          type: 'updateDisplayName',
+          params: {
+            id,
+            displayName: newName,
+          },
+        });
+      }}
+      changeTeamName={(newName) => {
+        if (!teamId) return;
+        if (newName.trim().length === 0) {
+          newName = nameGenerator();
+        }
+        sendEvent({
+          type: 'updateTeamName',
+          params: {
+            teamId,
+            teamName: newName,
+          },
+        });
+      }}
+      joinTeam={(teamId: number) => {
+        sendEvent({
+          type: 'updateTeamId',
+          params: {
+            id,
+            teamId,
+          },
+        });
+      }}
+      spectate={() => {
+        sendEvent({
+          type: 'updateTeamId',
+          params: {
+            id,
+            teamId: teamId ? 0 : 1,
+          },
+        });
+      }}
+    />
+  );
   return (
-    <Flex column>
+    <Flex column style={{flex: 1}}>
       <Nav hidden={false} v2 canLogin={false} divRef={null} linkStyle={null} mobile={null} />
-      <div className={classes.container}>
-        <Helmet title={`Fencing ${gid}`} />
-        <div className={classes.scoreboardContainer}>
-          <FencingScoreboard
-            gameState={gameState}
-            currentUserId={id}
-            changeName={(newName) => {
-              if (newName.trim().length === 0) {
-                newName = nameGenerator();
-              }
-              sendEvent({
-                type: 'updateDisplayName',
-                params: {
+      <Flex style={{flex: 1}}>
+        <div className={classes.container}>
+          <Helmet title={`Fencing ${gid}`} />
+          {gameState.loaded && gameState.started && (
+            <div>
+              <FencingToolbar toolbarActions={toolbarActions} />
+              <Player
+                // eslint-disable-next-line react/jsx-props-no-spreading
+                {...transformGameToPlayerProps(
+                  gameState.game!,
+                  _.values(gameState.users),
+                  playerActions,
                   id,
-                  displayName: newName,
-                },
-              });
-            }}
-            changeTeamName={(newName) => {
-              if (!teamId) return;
-              if (newName.trim().length === 0) {
-                newName = nameGenerator();
-              }
-              sendEvent({
-                type: 'updateTeamName',
-                params: {
-                  teamId,
-                  teamName: newName,
-                },
-              });
-            }}
-            joinTeam={(teamId: number) => {
-              sendEvent({
-                type: 'updateTeamId',
-                params: {
-                  id,
-                  teamId,
-                },
-              });
-            }}
-            spectate={() => {
-              sendEvent({
-                type: 'updateTeamId',
-                params: {
-                  id,
-                  teamId: teamId ? 0 : 1,
-                },
-              });
-            }}
-          />
+                  teamId
+                )}
+              />
+            </div>
+          )}
         </div>
-        {gameState.loaded && gameState.started && (
-          <div>
-            <FencingToolbar toolbarActions={toolbarActions} />
-            <Player
-              // eslint-disable-next-line react/jsx-props-no-spreading
-              {...transformGameToPlayerProps(
-                gameState.game!,
-                _.values(gameState.users),
-                playerActions,
-                id,
-                teamId
-              )}
-            />
-          </div>
-        )}
+        <Flex column style={{flex: 1, borderLeft: '1px solid black', padding: 12}}>
+          <div className={classes.scoreboardContainer}>{fencingScoreboard}</div>
 
-        {!gameState.started && (
-          <button onClick={playerActions.startGame}>Start Game (wait for everyone to join!)</button>
-        )}
+          {!gameState.started && (
+            <button onClick={playerActions.startGame}>Start Game (wait for everyone to join!)</button>
+          )}
 
-        {!gameState.loaded && <div>Loading your game...</div>}
-      </div>
+          {!gameState.loaded && <div>Loading your game...</div>}
+          {/* <Chat
+      //   info={this.game.info}
+      //   path={this.gameModel.path}
+      //   data={this.game.chat}
+      //   game={this.game}
+      //   gid={this.state.gid}
+      //   users={this.game.users}
+      //   id={id}
+      //   myColor={color}
+      //   onChat={this.handleChat}
+      //   onUpdateDisplayName={this.handleUpdateDisplayName}
+      //   onUpdateColor={this.handleUpdateColor}
+      //   onUnfocus={this.handleUnfocusChat}
+      //   onToggleChat={this.handleToggleChat}
+      //   mobile={mobile}
+      //   opponentData={this.opponentGame && this.opponentGame.chat}
+      //   bid={this.state.bid}
+      //   updateSeenChatMessage={this.updateSeenChatMessage}
+      // />         */}
+        </Flex>
+      </Flex>
     </Flex>
   );
 };
