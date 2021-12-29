@@ -225,11 +225,10 @@ export default class GridWrapper {
   }
 
   getCellByNumber(number) {
-    for (const [r, c, cell] of this.items()) {
-      if (cell.number === number) {
-        return {r, c};
-      }
+    if (!this.cellsByNumber) {
+      this.computeCellsByNumber();
     }
+    return this.cellsByNumber[number];
   }
 
   fixSelect({r, c}) {
@@ -317,6 +316,16 @@ export default class GridWrapper {
           ? 0
           : this.grid[r - 1][c].parents.down,
       };
+    }
+    this.computeCellsByNumber();
+  }
+
+  computeCellsByNumber() {
+    this.cellsByNumber = {};
+    for (const [r, c, cell] of this.items()) {
+      if (cell.number) {
+        this.cellsByNumber[cell.number] = {r, c};
+      }
     }
   }
 

@@ -105,7 +105,10 @@ export default class Player extends Component {
   }
 
   get grid() {
-    return new GridObject(this.props.grid);
+    if (!this._grid || this._grid.grid !== this.props.grid) {
+      this._grid = new GridObject(this.props.grid);
+    }
+    return this._grid;
   }
 
   get selected() {

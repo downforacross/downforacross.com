@@ -177,7 +177,11 @@ export default class Grid extends React.PureComponent<GridProps> {
       >
         <tbody>
           {data.map((row, i) => (
-            <RerenderBoundary key={i} hash={hashGridRow(row, {...this.props.cellStyle, size})}>
+            <RerenderBoundary
+              name={`grid row ${i}`}
+              key={i}
+              hash={hashGridRow(row, {...this.props.cellStyle, size})}
+            >
               <tr>
                 {row.map((cellProps) => (
                   <td
