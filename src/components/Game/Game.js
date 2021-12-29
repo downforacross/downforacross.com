@@ -238,7 +238,7 @@ export default class Game extends Component {
     const cols = grid[0].length;
     const rows = grid.length;
     const width = Math.min((35 * 15 * cols) / rows, screenWidth);
-    const size = width / cols;
+    const size = Math.max(20, width / cols);
     return (
       <Player
         ref={(c) => {
