@@ -10,9 +10,7 @@
   background-color: #ffffff;
 }
 
-.popup-menu table,
-th,
-td {
+.popup-menu table > th > td {
   border: 1px solid black;
   padding: 10px;
 }

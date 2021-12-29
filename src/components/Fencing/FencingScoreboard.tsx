@@ -9,7 +9,10 @@ const useStyles = makeStyles({
   fencingScoreboardContainer: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
+    // alignItems: 'center',
+    '& td, th': {
+      padding: 8,
+    },
   },
   teamName: {
     display: 'flex',
@@ -133,7 +136,6 @@ export const FencingScoreboard: React.FC<{
       ];
   return (
     <div className={classes.fencingScoreboardContainer}>
-      <h2>Fencing</h2>
       <table>
         <tbody>
           <tr>

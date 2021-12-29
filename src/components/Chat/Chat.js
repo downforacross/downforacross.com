@@ -50,7 +50,7 @@ export default class Chat extends Component {
   };
 
   handleUpdateDisplayName = (username) => {
-    if (!this.usernameInput.current.focused) {
+    if (!this.usernameInput?.current?.focused) {
       username = username || nameGenerator();
     }
     const {id} = this.props;
@@ -137,8 +137,9 @@ export default class Chat extends Component {
 
   renderFencingOptions() {
     const fencingUrl = `/beta/fencing/${this.props.gid}`;
+    const normalUrl = `/beta/game/${this.props.gid}`;
     const isFencing = this.props.isFencing;
-    const fencingStarted = this.props.game.isFencing;
+    // const fencingStarted = this.props.game.isFencing;
     const fencingPlayers = this.props.game.fencingUsers?.length ?? 0;
     return (
       <div>
@@ -148,7 +149,7 @@ export default class Chat extends Component {
             X
           </a>
         )}
-        {isFencing && <a href={fencingUrl}>Back to Normal</a>}
+        {isFencing && <a href={normalUrl}>Leave Fencing</a>}
       </div>
     );
   }
@@ -337,16 +338,26 @@ export default class Chat extends Component {
     );
   }
 
+  renderChatSubheader() {
+    if (this.props.subheader) return this.props.subheader;
+    const users = this.props.users;
+
+    return (
+      <>
+        {this.renderUsernameInput()}
+        {this.renderUsersPresent(users)}
+      </>
+    );
+  }
+
   render() {
     const messages = this.mergeMessages(this.props.data, this.props.opponentData);
-    const users = this.props.users;
     return (
       <Flex column grow={1}>
         {this.renderToolbar()}
         <div className="chat">
           {this.renderChatHeader()}
-          {this.renderUsernameInput()}
-          {this.renderUsersPresent(users)}
+          {this.renderChatSubheader()}
           <div
             ref={(el) => {
               if (el) {
@@ -376,7 +387,6 @@ export default class Chat extends Component {
               <div key={i}>{this.renderMessage(message)}</div>
             ))}
           </div>
-
           {this.renderChatBar()}
         </div>
       </Flex>

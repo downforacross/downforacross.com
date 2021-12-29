@@ -53,7 +53,7 @@ const useStyles = makeStyles({
   container: {
     flex: 1,
     display: 'flex',
-    height: '100%',
+    // height: '100%',
     padding: 24,
     flexDirection: 'column',
   },
@@ -219,7 +219,7 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
   return (
     <Flex column style={{flex: 1}}>
       <Nav hidden={false} v2 canLogin={false} divRef={null} linkStyle={null} mobile={null} />
-      <Flex style={{flex: 1}}>
+      <Flex style={{flex: 1, overflow: 'auto'}}>
         <div className={classes.container}>
           <Helmet title={`Fencing ${gid}`} />
           {gameState.loaded && gameState.started && (
@@ -238,9 +238,7 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
             </div>
           )}
         </div>
-        <Flex column style={{flex: 1, borderLeft: '1px solid black', padding: 12}}>
-          <div className={classes.scoreboardContainer}>{fencingScoreboard}</div>
-
+        <Flex column style={{flexBasis: 500}}>
           {!gameState.started && (
             <button onClick={playerActions.startGame}>Start Game (wait for everyone to join!)</button>
           )}
@@ -248,12 +246,14 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
           {!gameState.loaded && <div>Loading your game...</div>}
           {gameState.game && (
             <Chat
+              isFencing
+              subheader={<div className={classes.scoreboardContainer}>{fencingScoreboard}</div>}
               info={gameState.game.info}
               teams={gameState.teams}
-              path={null}
+              path={`/fencing/${gid}`}
               data={gameState.chat}
               game={gameState.game}
-              gid={null}
+              gid={gid}
               users={gameState.users}
               id={id}
               myColor={null}
