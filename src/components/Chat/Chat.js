@@ -132,6 +132,24 @@ export default class Chat extends Component {
     );
   }
 
+  renderFencingOptions() {
+    const fencingUrl = `/beta/fencing/${this.props.gid}`;
+    const isFencing = this.props.isFencing;
+    const fencingStarted = this.props.game.isFencing;
+    const fencingPlayers = this.props.game.fencingUsers?.length ?? 0;
+    return (
+      <div>
+        {!isFencing && !!fencingPlayers && <a href={fencingUrl}>Join Fencing ({fencingPlayers} joined)</a>}
+        {!isFencing && !fencingPlayers && (
+          <a href={fencingUrl} style={{opacity: 0.1, textDecoration: 'none'}}>
+            X
+          </a>
+        )}
+        {isFencing && <a href={fencingUrl}>Back to Normal</a>}
+      </div>
+    );
+  }
+
   renderChatHeader() {
     if (this.props.header) return this.props.header;
     const {info = {}, bid} = this.props;
@@ -155,6 +173,7 @@ export default class Chat extends Component {
             {bid}
           </div>
         )}
+        {this.renderFencingOptions()}
       </div>
     );
   }

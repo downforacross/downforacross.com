@@ -74,7 +74,6 @@ const check: EventDef<CheckEvent> = {
     };
 
     const isCorrect = state.game.solution[r][c] === teamGrid[r][c].value;
-    debugger;
     if (isCorrect) {
       return {
         ...state,

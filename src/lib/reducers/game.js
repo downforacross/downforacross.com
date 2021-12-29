@@ -1,5 +1,6 @@
 import {MAX_CLOCK_INCREMENT} from '../timing';
 import {MAIN_BLUE_3} from '../colors';
+import _ from 'lodash';
 
 function getScopeGrid(grid, scope) {
   const scopeGrid = grid.map((row) => row.map(() => false));
@@ -284,6 +285,17 @@ const reducers = {
     return {
       ...game,
       chat,
+    };
+  },
+  startGame: (game) => ({
+    ...game,
+    isFencing: true,
+  }),
+  updateTeamId: (game, params) => {
+    console.log(params);
+    return {
+      ...game,
+      fencingUsers: _.uniq([...(game.fencingUsers || []), params.id]),
     };
   },
 };

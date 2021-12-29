@@ -351,6 +351,8 @@ export default class Game extends Component {
         info={this.game.info}
         path={this.gameModel.path}
         data={this.game.chat}
+        game={this.game}
+        gid={this.state.gid}
         users={this.game.users}
         id={id}
         myColor={color}

@@ -160,7 +160,6 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
               if (newName.trim().length === 0) {
                 newName = nameGenerator();
               }
-
               sendEvent({
                 type: 'updateDisplayName',
                 params: {
