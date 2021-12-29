@@ -147,53 +147,73 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
   const toolbarActions = useToolbarActions(sendEvent, gameState, id);
   const playerActions = usePlayerActions(sendEvent, id);
 
+  const changeName = (newName: string): void => {
+    if (newName.trim().length === 0) {
+      newName = nameGenerator();
+    }
+    sendEvent({
+      type: 'updateDisplayName',
+      params: {
+        id,
+        displayName: newName,
+      },
+    });
+  };
+  const changeTeamName = (newName: string): void => {
+    if (!teamId) return;
+    if (newName.trim().length === 0) {
+      newName = nameGenerator();
+    }
+    sendEvent({
+      type: 'updateTeamName',
+      params: {
+        teamId,
+        teamName: newName,
+      },
+    });
+  };
+  const joinTeam = (teamId: number) => {
+    sendEvent({
+      type: 'updateTeamId',
+      params: {
+        id,
+        teamId,
+      },
+    });
+  };
+  const spectate = () => {
+    sendEvent({
+      type: 'updateTeamId',
+      params: {
+        id,
+        teamId: teamId ? 0 : 1,
+      },
+    });
+  };
+  const handleChat = (username: string, id: string, message: string) => {
+    sendEvent({
+      type: 'sendChatMessage',
+      params: {
+        id,
+        message,
+      },
+    });
+    sendEvent({
+      type: 'chat' as any,
+      params: {
+        id,
+        text: message,
+      },
+    });
+  };
   const fencingScoreboard = (
     <FencingScoreboard
       gameState={gameState}
       currentUserId={id}
-      changeName={(newName) => {
-        if (newName.trim().length === 0) {
-          newName = nameGenerator();
-        }
-        sendEvent({
-          type: 'updateDisplayName',
-          params: {
-            id,
-            displayName: newName,
-          },
-        });
-      }}
-      changeTeamName={(newName) => {
-        if (!teamId) return;
-        if (newName.trim().length === 0) {
-          newName = nameGenerator();
-        }
-        sendEvent({
-          type: 'updateTeamName',
-          params: {
-            teamId,
-            teamName: newName,
-          },
-        });
-      }}
-      joinTeam={(teamId: number) => {
-        sendEvent({
-          type: 'updateTeamId',
-          params: {
-            id,
-            teamId,
-          },
-        });
-      }}
-      spectate={() => {
-        sendEvent({
-          type: 'updateTeamId',
-          params: {
-            id,
-            teamId: teamId ? 0 : 1,
-          },
-        });
-      }}
+      changeName={changeName}
+      changeTeamName={changeTeamName}
+      joinTeam={joinTeam}
+      spectate={spectate}
     />
   );
   return (
@@ -226,25 +246,23 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
           )}
 
           {!gameState.loaded && <div>Loading your game...</div>}
-          {/* <Chat
-      //   info={this.game.info}
-      //   path={this.gameModel.path}
-      //   data={this.game.chat}
-      //   game={this.game}
-      //   gid={this.state.gid}
-      //   users={this.game.users}
-      //   id={id}
-      //   myColor={color}
-      //   onChat={this.handleChat}
-      //   onUpdateDisplayName={this.handleUpdateDisplayName}
-      //   onUpdateColor={this.handleUpdateColor}
-      //   onUnfocus={this.handleUnfocusChat}
-      //   onToggleChat={this.handleToggleChat}
-      //   mobile={mobile}
-      //   opponentData={this.opponentGame && this.opponentGame.chat}
-      //   bid={this.state.bid}
-      //   updateSeenChatMessage={this.updateSeenChatMessage}
-      // />         */}
+          {gameState.game && (
+            <Chat
+              info={gameState.game.info}
+              teams={gameState.teams}
+              path={null}
+              data={gameState.chat}
+              game={gameState.game}
+              gid={null}
+              users={gameState.users}
+              id={id}
+              myColor={null}
+              onChat={handleChat}
+              mobile={false}
+              updateSeenChatMessage={null}
+              onUpdateDisplayName={(_id: string, name: string) => changeName(name)}
+            />
+          )}
         </Flex>
       </Flex>
     </Flex>

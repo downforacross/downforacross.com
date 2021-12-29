@@ -19,4 +19,11 @@ export interface GameState {
       }
     >
   >;
+  chat: {
+    messages: {
+      text: string;
+      senderId: string;
+      timestamp: number | undefined;
+    }[];
+  };
 }

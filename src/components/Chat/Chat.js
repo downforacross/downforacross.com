@@ -66,7 +66,7 @@ export default class Chat extends Component {
   };
 
   handleUnfocus = () => {
-    this.props.onUnfocus();
+    this.props.onUnfocus && this.props.onUnfocus();
   };
 
   handleBlur = () => {
@@ -112,9 +112,12 @@ export default class Chat extends Component {
   }
 
   getMessageColor(senderId, isOpponent) {
-    const {users} = this.props;
+    const {users, teams} = this.props;
     if (isOpponent === undefined) {
-      return users[senderId].color;
+      if (users[senderId]?.teamId) {
+        return teams?.[users[senderId].teamId]?.color;
+      }
+      return users[senderId]?.color;
     }
     return isOpponent ? 'rgb(220, 107, 103)' : 'rgb(47, 137, 141)';
   }
@@ -314,7 +317,7 @@ export default class Chat extends Component {
     return (
       <div className={`chat--message${big ? ' big' : ''}`}>
         <div className="chat--message--content">
-          {this.renderMessageSender(users[id].displayName, color)}
+          {this.renderMessageSender(users[id]?.displayName ?? 'Unknown', color)}
           {this.renderMessageText(message.text)}
         </div>
         <div className="chat--message--timestamp">{this.renderMessageTimestamp(timestamp)}</div>

@@ -21,4 +21,7 @@ export const initialState: GameState = {
       name: 'Team 2',
     },
   },
+  chat: {
+    messages: [],
+  },
 };

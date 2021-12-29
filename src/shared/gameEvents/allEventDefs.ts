@@ -7,6 +7,7 @@ import updateCell from './eventDefs/updateCell';
 import check from './eventDefs/check';
 import reveal from './eventDefs/reveal';
 import startGame from './eventDefs/startGame';
+import sendChatMessage from './eventDefs/sendChatMessage';
 
 export default {
   create,
@@ -18,4 +19,5 @@ export default {
   check,
   reveal,
   startGame,
+  sendChatMessage,
 };

@@ -9,5 +9,5 @@ export default (state: GameState, event: GameEvent): GameState => {
   if (!(event.type in allEventDefs)) {
     console.warn(`Game event not implemented: ${event.type}`);
   }
-  return allEventDefs[event.type]?.reducer(state, event.params as any) ?? state; // TODO fix ts here
+  return allEventDefs[event.type]?.reducer(state, event.params as any, event.timestamp) ?? state; // TODO fix ts here
 };
