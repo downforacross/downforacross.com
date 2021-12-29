@@ -62,6 +62,7 @@
 }
 
 .player--main--clues {
+  display: flex;
 }
 
 .player--mobile--wrapper {

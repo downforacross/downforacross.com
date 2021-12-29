@@ -30,7 +30,8 @@
 
 .clues--list--scroll {
   position: relative;
-  height: 570px;
+  flex-basis: 570px;
+  flex-grow: 1;
   overflow-y: auto;
   border-top: 1px solid #e2e2e2;
   margin-top: 5px;
