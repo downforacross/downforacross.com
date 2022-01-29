@@ -3,6 +3,7 @@ import {GameJson, UserJson} from '../../types';
 export interface GameState {
   loaded: boolean;
   started: boolean;
+  startedAt: number | null;
   game: null | GameJson;
   users: {
     [id: string]: UserJson;
@@ -16,6 +17,7 @@ export interface GameState {
         score: number;
         guesses: number;
         name: string;
+        lockedUntil: number;
       }
     >
   >;

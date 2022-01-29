@@ -57,7 +57,7 @@ module.exports = {
     'react/jsx-props-no-spreading': 'warn',
     'react/no-array-index-key': 'warn',
     'no-restricted-syntax': 'off',
-
+    'react/jsx-one-expression-per-line': 'off',
     // Configs for rules to match the codebase
     'react/prop-types': ['error', {skipUndeclared: true}],
     'no-underscore-dangle': ['warn', {allowAfterThis: true}],

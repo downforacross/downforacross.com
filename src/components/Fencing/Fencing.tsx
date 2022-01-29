@@ -21,6 +21,7 @@ import {useGameEvents, GameEventsHook} from './useGameEvents';
 import {getStartingCursorPosition} from '../../shared/gameEvents/eventDefs/create';
 import Nav from '../common/Nav';
 import Chat from '../Chat';
+import {FencingCountdown} from './FencingCountdown';
 
 function subscribeToGameEvents(
   socket: SocketIOClient.Socket | undefined,
@@ -223,18 +224,20 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
         <div className={classes.container}>
           <Helmet title={`Fencing ${gid}`} />
           {gameState.loaded && gameState.started && (
-            <div>
-              <FencingToolbar toolbarActions={toolbarActions} />
-              <Player
-                // eslint-disable-next-line react/jsx-props-no-spreading
-                {...transformGameToPlayerProps(
-                  gameState.game!,
-                  _.values(gameState.users),
-                  playerActions,
-                  id,
-                  teamId
-                )}
-              />
+            <div style={{flex: 1}}>
+              <FencingCountdown gameState={gameState} gameEventsHook={eventsHook}>
+                <FencingToolbar toolbarActions={toolbarActions} />
+                <Player
+                  // eslint-disable-next-line react/jsx-props-no-spreading
+                  {...transformGameToPlayerProps(
+                    gameState.game!,
+                    _.values(gameState.users),
+                    playerActions,
+                    id,
+                    teamId
+                  )}
+                />
+              </FencingCountdown>
             </div>
           )}
         </div>

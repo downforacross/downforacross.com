@@ -9,6 +9,7 @@ export interface GameEventsHook {
   setEvents(gameEvents: GameEvent[]): void;
   addEvent(gameEvent: GameEvent): void;
   addOptimisticEvent(gameEvent: GameEvent): void;
+  getServerTime(): number;
 }
 
 const makeHistoryWrappper = (events: GameEvent[]): HistoryWrapper => {
@@ -22,6 +23,7 @@ const makeHistoryWrappper = (events: GameEvent[]): HistoryWrapper => {
 
 export const useGameEvents = (): GameEventsHook => {
   const historyWrapperRef = useRef<HistoryWrapper>(makeHistoryWrappper([]));
+  const serverTimeOffsetRef = useRef<number>(0);
   const [, setVersion] = useState(0);
   return {
     gameState: historyWrapperRef.current.getSnapshot(),
@@ -30,12 +32,16 @@ export const useGameEvents = (): GameEventsHook => {
       setVersion((version) => version + 1);
     },
     addEvent(event) {
+      serverTimeOffsetRef.current = event.timestamp! - Date.now();
       historyWrapperRef.current.addEvent(event);
       setVersion((version) => version + 1);
     },
     addOptimisticEvent(event) {
       historyWrapperRef.current.addOptimisticEvent(event);
       setVersion((version) => version + 1);
+    },
+    getServerTime() {
+      return Date.now() + serverTimeOffsetRef.current;
     },
   };
 };

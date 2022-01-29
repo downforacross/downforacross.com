@@ -3,6 +3,7 @@ import {GameState} from './types/GameState';
 export const initialState: GameState = {
   loaded: false,
   started: false,
+  startedAt: null,
   game: null,
   users: {},
   teams: {
@@ -12,6 +13,7 @@ export const initialState: GameState = {
       score: 0,
       guesses: 0,
       name: 'Team 1',
+      lockedUntil: 0,
     },
     2: {
       id: 2,
@@ -19,6 +21,7 @@ export const initialState: GameState = {
       score: 0,
       guesses: 0,
       name: 'Team 2',
+      lockedUntil: 0,
     },
   },
   chat: {
