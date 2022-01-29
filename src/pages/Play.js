@@ -40,6 +40,10 @@ export default class Play extends Component {
     return querystring.parse(this.props.location.search.slice(1));
   }
 
+  get is_fencing() {
+    return !!querystring.parse(this.props.location.search.slice(1)).fencing;
+  }
+
   componentDidUpdate() {
     if (this.query.mode === 'battle') {
       return;
@@ -55,7 +59,7 @@ export default class Play extends Component {
     if (shouldAutojoin) {
       const {gid} = games[0];
       const {v2} = games[0];
-      const href = v2 ? `/beta/game/${gid}` : `/game/${gid}`;
+      const href = v2 ? (this.is_fencing ? `/beta/fencing/${gid}` : `/beta/game/${gid}`) : `/game/${gid}`;
 
       if (games.length > 1) {
         setTimeout(() => {
@@ -92,7 +96,7 @@ export default class Play extends Component {
         solved: false,
         v2: true,
       });
-      redirect(`/beta/game/${gid}`);
+      redirect(this.is_fencing ? `/beta/fencing/${gid}` : `/beta/game/${gid}`);
     });
   }
 
