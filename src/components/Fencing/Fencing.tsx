@@ -223,29 +223,28 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
       <Flex style={{flex: 1, overflow: 'auto'}}>
         <div className={classes.container}>
           <Helmet title={`Fencing ${gid}`} />
-          {gameState.loaded && gameState.started && (
-            <div style={{flex: 1}}>
-              <FencingCountdown gameState={gameState} gameEventsHook={eventsHook}>
-                <FencingToolbar toolbarActions={toolbarActions} />
-                <Player
-                  // eslint-disable-next-line react/jsx-props-no-spreading
-                  {...transformGameToPlayerProps(
-                    gameState.game!,
-                    _.values(gameState.users),
-                    playerActions,
-                    id,
-                    teamId
-                  )}
-                />
-              </FencingCountdown>
-            </div>
-          )}
+          <div style={{flex: 1}}>
+            <FencingCountdown playerActions={playerActions} gameState={gameState} gameEventsHook={eventsHook}>
+              {gameState.loaded && gameState.started && (
+                <>
+                  {' '}
+                  <FencingToolbar toolbarActions={toolbarActions} />
+                  <Player
+                    // eslint-disable-next-line react/jsx-props-no-spreading
+                    {...transformGameToPlayerProps(
+                      gameState.game!,
+                      _.values(gameState.users),
+                      playerActions,
+                      id,
+                      teamId
+                    )}
+                  />
+                </>
+              )}
+            </FencingCountdown>
+          </div>
         </div>
         <Flex column style={{flexBasis: 500}}>
-          {!gameState.started && (
-            <button onClick={playerActions.startGame}>Start Game (wait for everyone to join!)</button>
-          )}
-
           {!gameState.loaded && <div>Loading your game...</div>}
           {gameState.game && (
             <Chat
