@@ -64,9 +64,11 @@ export default class Entry extends Component<EntryProps> {
               </p>
             </Flex>
             <Flex>
-              {fencing && <GiCrossedSwords className="entry--icon fencing" />}
               {status === 'started' && <MdRadioButtonUnchecked className="entry--icon" />}
               {status === 'solved' && <MdCheckCircle className="entry--icon" />}
+              {status !== 'started' && status !== 'solved' && fencing && (
+                <GiCrossedSwords className="entry--icon fencing" />
+              )}
             </Flex>
           </Flex>
           <Flex className="entry--main">

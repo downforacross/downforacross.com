@@ -77,10 +77,11 @@ export default function Nav({hidden, v2, canLogin, mobile, linkStyle, divRef}) {
   const {toggleMolesterMoons} = useContext(GlobalContext);
   if (hidden) return null; // no nav for mobile
   const user = getUser();
+  const fencing = window.location.href.includes('fencing');
   return (
     <div className={classnames('nav', {mobile})} ref={divRef}>
       <div className="nav--left" style={linkStyle}>
-        <Link to={v2 ? '/beta' : '/'}>Down for a Cross</Link>
+        <Link to={fencing ? '/fencing' : '/'}>Down for a Cross</Link>
       </div>
       <div className="nav--right">
         <div className="molester-moon" onClick={toggleMolesterMoons}>
