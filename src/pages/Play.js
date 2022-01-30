@@ -59,7 +59,7 @@ export default class Play extends Component {
     if (shouldAutojoin) {
       const {gid} = games[0];
       const {v2} = games[0];
-      const href = v2 ? (this.is_fencing ? `/beta/fencing/${gid}` : `/beta/game/${gid}`) : `/game/${gid}`;
+      const href = v2 ? (this.is_fencing ? `/fencing/${gid}` : `/beta/game/${gid}`) : `/game/${gid}`;
 
       if (games.length > 1) {
         setTimeout(() => {
@@ -96,7 +96,7 @@ export default class Play extends Component {
         solved: false,
         v2: true,
       });
-      redirect(this.is_fencing ? `/beta/fencing/${gid}` : `/beta/game/${gid}`);
+      redirect(this.is_fencing ? `/fencing/${gid}` : `/beta/game/${gid}`);
     });
   }
 

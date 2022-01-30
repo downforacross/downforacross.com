@@ -12,7 +12,7 @@ export const FencingCountdown: React.FC<{
   const [renderCount, setRenderCount] = useState(0);
   const classes = useStyles();
   const serverTime = props.gameEventsHook.getServerTime();
-  const GAME_START_DELAY_MS = 1000 * 10;
+  const GAME_START_DELAY_MS = 1000 * 5;
   const notLoaded = !props.gameState.loaded;
   const notStarted = !props.gameState.loaded || !props.gameState.started;
   const countingDown =

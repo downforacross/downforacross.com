@@ -136,7 +136,7 @@ export default class Chat extends Component {
   }
 
   renderFencingOptions() {
-    const fencingUrl = `/beta/fencing/${this.props.gid}`;
+    const fencingUrl = `/fencing/${this.props.gid}`;
     const normalUrl = `/beta/game/${this.props.gid}`;
     const isFencing = this.props.isFencing;
     // const fencingStarted = this.props.game.isFencing;
