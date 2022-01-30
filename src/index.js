@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import ReactDOM from 'react-dom';
 import React from 'react';
 
-import {BrowserRouter as Router, Route} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import {isMobile} from './lib/jsUtils';
 import {
   Account,
@@ -35,33 +35,38 @@ const Root = () => {
     <Router>
       <GlobalContext.Provider value={{toggleMolesterMoons}}>
         <div className={classnames('router-wrapper', {mobile: isMobile(), dark: darkMode})}>
-          <Route exact path="/" component={Welcome} />
-          <Route exact path="/stats" component={Stats} />
-          <Route exact path="/game/:gid" component={Game} />
-          <Route exact path="/embed/game/:gid" component={Game} />
-          <Route exact path="/room/:rid" component={Room} />
-          <Route exact path="/embed/room/:rid" component={Room} />
-          <Route exact path="/replay/:gid" component={Replay} />
-          <Route exact path="/beta/replay/:gid" component={Replay} />
-          <Route exact path="/replays/:pid" component={Replays} />
-          <Route exact path="/replays" component={Replays} />
-          <Route exact path="/beta" component={Welcome} />
-          <Route exact path="/beta/game/:gid" component={Game} />
-          <Route exact path="/beta/battle/:bid" component={Battle} />
-          <Route exact path="/beta/play/:pid" component={Play} />
-          <Route path="/account" component={Account} />
-          <Route exact path="/compose" component={Compose} />
-          <Route exact path="/composition/:cid" component={Composition} />
-          <Route exact path="/fencing/:gid" component={Fencing} />
-          <Route exact path="/beta/fencing/:gid" component={Fencing} />
-          <Route
-            exact
-            path="/discord"
-            component={() => {
-              window.location.href = 'https://discord.gg/KjPHFw8';
-              return null;
-            }}
-          />
+          <Switch>
+            <Route exact path="/" component={Welcome} />
+            <Route exact path="/fencing">
+              <Welcome fencing />
+            </Route>
+            <Route exact path="/stats" component={Stats} />
+            <Route exact path="/game/:gid" component={Game} />
+            <Route exact path="/embed/game/:gid" component={Game} />
+            <Route exact path="/room/:rid" component={Room} />
+            <Route exact path="/embed/room/:rid" component={Room} />
+            <Route exact path="/replay/:gid" component={Replay} />
+            <Route exact path="/beta/replay/:gid" component={Replay} />
+            <Route exact path="/replays/:pid" component={Replays} />
+            <Route exact path="/replays" component={Replays} />
+            <Route exact path="/beta" component={Welcome} />
+            <Route exact path="/beta/game/:gid" component={Game} />
+            <Route exact path="/beta/battle/:bid" component={Battle} />
+            <Route exact path="/beta/play/:pid" component={Play} />
+            <Route path="/account" component={Account} />
+            <Route exact path="/compose" component={Compose} />
+            <Route exact path="/composition/:cid" component={Composition} />
+            <Route exact path="/fencing/:gid" component={Fencing} />
+            <Route exact path="/beta/fencing/:gid" component={Fencing} />
+            <Route
+              exact
+              path="/discord"
+              component={() => {
+                window.location.href = 'https://discord.gg/KjPHFw8';
+                return null;
+              }}
+            />
+          </Switch>
         </div>
       </GlobalContext.Provider>
     </Router>

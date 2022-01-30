@@ -11,6 +11,7 @@ import Nav from '../components/common/Nav';
 import Upload from '../components/Upload';
 import {getUser, PuzzlelistModel} from '../store';
 import PuzzleList from '../components/PuzzleList';
+import {WelcomeVariantsControl} from '../components/WelcomeVariantsControl';
 import {isMobile, colorAverage} from '../lib/jsUtils';
 
 const BLUE = '#6aa9f4';
@@ -144,6 +145,7 @@ export default class Welcome extends Component {
     const {userHistory, puzzles, sizeFilter, statusFilter, search} = this.state;
     return (
       <PuzzleList
+        fencing={this.props.fencing}
         puzzles={puzzles}
         uploadedPuzzles={this.uploadedPuzzles}
         userHistory={userHistory}
@@ -336,7 +338,7 @@ export default class Welcome extends Component {
   renderQuickUpload() {
     return (
       <Flex className="quickplay" style={{width: 200}}>
-        <Upload v2 onCreate={this.handleCreatePuzzle} />
+        <Upload v2 fencing={this.props.fencing} onCreate={this.handleCreatePuzzle} />
       </Flex>
     );
   }
@@ -360,6 +362,7 @@ export default class Welcome extends Component {
           {this.showingSidebar && (
             <Flex className="welcome--sidebar" column shrink={0} style={{justifyContent: 'space-between'}}>
               {this.renderFilters()}
+              <WelcomeVariantsControl fencing={this.props.fencing} />
               {!this.mobile && this.renderQuickUpload()}
             </Flex>
           )}

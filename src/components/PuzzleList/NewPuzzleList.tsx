@@ -17,6 +17,7 @@ interface NewPuzzleListProps {
   };
   puzzleStatuses: PuzzleStatuses;
   uploadedPuzzles: number;
+  fencing?: boolean;
 }
 
 const NewPuzzleList: React.FC<NewPuzzleListProps> = (props) => {
@@ -92,6 +93,7 @@ const NewPuzzleList: React.FC<NewPuzzleListProps> = (props) => {
         pid: puzzle.pid,
         stats: puzzle.stats,
         status: props.puzzleStatuses[puzzle.pid],
+        fencing: props.fencing,
       },
     }))
     .filter((data) => {

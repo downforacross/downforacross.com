@@ -77,11 +77,7 @@ export default class Upload extends Component {
           </p>
           <div id="unlistedRow">
             <label>
-              <input
-                type="checkbox"
-                onChange={this.handleChangePublicCheckbox}
-              />{' '}
-              Upload Publicly
+              <input type="checkbox" onChange={this.handleChangePublicCheckbox} /> Upload Publicly
             </label>
           </div>
         </div>
@@ -106,7 +102,7 @@ export default class Upload extends Component {
         text: 'You may now view your puzzle on the home page.',
       });
     } else {
-      const url = `/beta/play/${this.state.recentUnlistedPid}`;
+      const url = `/beta/play/${this.state.recentUnlistedPid}${this.props.fencing ? '?fencing=1' : ''}`;
       swal({
         title: 'Upload Success!',
         icon: 'success',

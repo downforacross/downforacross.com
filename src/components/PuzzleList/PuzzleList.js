@@ -136,6 +136,7 @@ export default class PuzzleList extends PureComponent {
     };
     return (
       <NewPuzzleList
+        fencing={this.props.fencing}
         filter={filter}
         statusFilter={this.props.statusFilter}
         puzzleStatuses={this.puzzleStatuses}

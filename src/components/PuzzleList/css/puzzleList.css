@@ -6,6 +6,9 @@
 .entry--icon {
   fill: #6aa9f4;
 }
+.entry--icon.fencing {
+  fill: #353d46;
+}
 
 .mobile .entry--container {
   margin: 18px auto 0;
