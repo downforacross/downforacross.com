@@ -446,6 +446,8 @@ export default class MobileGridControls extends GridControls {
       // hack hack
       // for some reason, email input [on ios safari & chrome mobile inspector] doesn't fire onChange at all when pressing spacebar
       this.handleAction('space');
+    } else if (input === ',') {
+      this.handleAction('tab');
     } else if (input === '.') {
       this.props.onPressPeriod && this.props.onPressPeriod();
     } else {
