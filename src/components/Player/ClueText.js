@@ -8,7 +8,6 @@ function decodeHtml(htmlText) {
 
 export default ({text = ''}) => {
   const parts = [];
-
   while (text.length > 0) {
     const s = text.indexOf('<i>');
     const e = text.indexOf('</i>');
@@ -30,7 +29,6 @@ export default ({text = ''}) => {
       text = '';
     }
   }
-
   return (
     <>
       {parts.map(({text, ital}, i) => (
