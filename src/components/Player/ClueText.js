@@ -1,7 +1,14 @@
 import React from 'react';
 
+function decodeHtml(htmlText) {
+  let text = document.createElement("textarea");
+  text.innerHTML = htmlText;
+  return text.value;
+}
+
 export default ({text = ''}) => {
   const parts = [];
+
   while (text.length > 0) {
     const s = text.indexOf('<i>');
     const e = text.indexOf('</i>');
@@ -23,11 +30,12 @@ export default ({text = ''}) => {
       text = '';
     }
   }
+
   return (
     <>
       {parts.map(({text, ital}, i) => (
         <span key={i} style={{fontStyle: ital ? 'italic' : 'inherit'}}>
-          {text}
+          {decodeHtml(text)}
         </span>
       ))}
     </>
