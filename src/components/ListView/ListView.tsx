@@ -120,7 +120,7 @@ export default class ListView extends React.PureComponent<ListViewProps> {
       lazy(`scrollToClue${dir}${num}`, () => {
         const parent = el.offsetParent;
         if (parent) {
-          parent.scrollTop = el.offsetTop - parent.offsetHeight * 0.4;
+          parent.scrollTop = el.offsetTop - parent.offsetHeight * 0.2;
         }
       });
     }

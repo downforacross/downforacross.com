@@ -13,6 +13,7 @@ import Clues from './Clues';
 import Clue from './ClueText';
 import GridControls from './GridControls';
 import MobileGridControls from './MobileGridControls';
+import MobileListViewControls from './MobileListViewControls';
 import ListViewControls from './ListViewControls';
 import ConnectionStats from './ConnectionStats';
 
@@ -398,32 +399,29 @@ export default class Player extends Component {
       if (listMode) {
         return (
           <div className="player--mobile--wrapper mobile">
-            <ListViewControls
-              ref="gridControls"
+            <MobileListViewControls
+              ref="mobileGridControls"
               onPressEnter={onPressEnter}
               onPressPeriod={onPressPeriod}
-              vimMode={vimMode}
-              vimInsert={vimInsert}
-              onVimInsert={onVimInsert}
-              onVimNormal={onVimNormal}
               selected={selected}
               direction={direction}
               onSetDirection={this._setDirection}
+              onChangeDirection={this._changeDirection}
               canSetDirection={this._canSetDirection}
               onSetSelected={this._setSelected}
               updateGrid={updateGrid}
+              size={size}
               grid={grid}
               clues={clues}
-              beta={beta}
-              onCheck={this.props.onCheck}
-              onReveal={this.props.onReveal}
+              onSetCursorLock={this.handleSetCursorLock}
+              enableDebug={window.location.search.indexOf('debug') !== -1}
             >
               <div className="player--mobile" ref={this.mobileContainer}>
                 <div className={`player--mobile--list-view`}>
                   <ListView ref="grid" {...listViewProps} />
                 </div>
               </div>
-            </ListViewControls>
+            </MobileListViewControls>
           </div>
         );
       }
