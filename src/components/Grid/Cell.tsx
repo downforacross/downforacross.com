@@ -6,21 +6,11 @@ import Emoji from '../common/Emoji';
 import powerups from '../../lib/powerups';
 import {Ping, CellStyles} from './types';
 import './css/cell.css';
-import {Cursor} from '../../shared/types';
+import {CellData, Cursor} from '../../shared/types';
 
-interface Props {
+export interface EnhancedCellData extends CellData {
   r: number;
   c: number;
-  // Cell data
-  value?: string;
-  number?: number;
-  revealed?: boolean;
-  bad?: boolean;
-  good?: boolean;
-  pencil?: boolean;
-  black?: boolean;
-  hidden?: boolean;
-  solvedBy?: {id: string; teamId: number};
 
   // Player interactions
   cursors: Cursor[];
@@ -41,7 +31,9 @@ interface Props {
   attributionColor: string;
   cellStyle: CellStyles;
   myColor: string;
+}
 
+interface Props extends EnhancedCellData {
   // Callbacks
   onClick: (r: number, c: number) => void;
   onContextMenu: (r: number, c: number) => void;
@@ -206,7 +198,7 @@ export default class Cell extends React.Component<Props> {
   render() {
     const {
       black,
-      hidden,
+      isHidden,
       selected,
       highlighted,
       shaded,
@@ -220,13 +212,13 @@ export default class Cell extends React.Component<Props> {
       number,
       referenced,
     } = this.props;
-    if (black || hidden) {
+    if (black || isHidden) {
       return (
         <div
           className={clsx('cell', {
             selected,
             black,
-            hidden,
+            hidden: isHidden,
           })}
           style={selected ? {borderColor: myColor} : undefined}
           onClick={this.handleClick}

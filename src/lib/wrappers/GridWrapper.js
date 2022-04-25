@@ -108,6 +108,18 @@ export default class GridWrapper {
     return undefined;
   }
 
+  getPreviousCell(r, c, direction) {
+    if (direction === 'across') {
+      c -= 1;
+    } else {
+      r -= 1;
+    }
+    if (this.isWriteable(r, c)) {
+      return {r, c};
+    }
+    return undefined;
+  }
+
   getNextEmptyCell(r, c, direction, options = {}) {
     const _r = r;
     const _c = c;

@@ -13,7 +13,7 @@
   top: 100%;
   background-color: var(--main-gray-3);
   display: none;
-  z-index: 12;
+  z-index: 13;
 }
 
 .active .action-menu--list {

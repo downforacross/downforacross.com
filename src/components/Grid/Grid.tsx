@@ -9,7 +9,7 @@ import Cell from './Cell';
 import {GridDataWithColor, CellCoords, ClueCoords, BattlePickup, CellStyles, Ping} from './types';
 import {CellIndex, Cursor, GridData, toCellIndex} from '../../shared/types';
 
-interface GridProps {
+export interface GridProps {
   // Grid data
   solution: string[][];
   grid: GridDataWithColor;
