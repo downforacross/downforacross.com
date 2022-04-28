@@ -16,6 +16,7 @@ export default class Game extends Component {
   constructor() {
     super();
     this.state = {
+      listMode: false,
       pencilMode: false,
       autocheckMode: false,
       screenWidth: 0,
@@ -172,6 +173,12 @@ export default class Game extends Component {
     }));
   };
 
+  handleToggleListView = () => {
+    this.setState((prevState) => ({
+      listMode: !prevState.listMode,
+    }));
+  };
+
   handleToggleChat = () => {
     this.props.onToggleChat();
   };
@@ -267,6 +274,7 @@ export default class Game extends Component {
         addPing={this.handleAddPing}
         onPressEnter={this.handlePressEnter}
         onPressPeriod={this.handlePressPeriod}
+        listMode={this.state.listMode}
         vimMode={this.state.vimMode}
         vimInsert={this.state.vimInsert}
         onVimInsert={this.handleVimInsert}
@@ -286,7 +294,7 @@ export default class Game extends Component {
     if (!this.game) return;
     const {clock} = this.game;
     const {mobile} = this.props;
-    const {pencilMode, autocheckMode, vimMode, vimInsert} = this.state;
+    const {pencilMode, autocheckMode, vimMode, vimInsert, listMode} = this.state;
     const {lastUpdated: startTime, totalTime: pausedTime, paused: isPaused} = clock;
     return (
       <Toolbar
@@ -295,6 +303,7 @@ export default class Game extends Component {
         startTime={startTime}
         pausedTime={pausedTime}
         isPaused={isPaused}
+        listMode={listMode}
         pencilMode={pencilMode}
         autocheckMode={autocheckMode}
         vimMode={vimMode}
@@ -308,6 +317,7 @@ export default class Game extends Component {
         onKeybind={this.handleKeybind}
         onTogglePencil={this.handleTogglePencil}
         onToggleAutocheck={this.handleToggleAutocheck}
+        onToggleListView={this.handleToggleListView}
         onToggleChat={this.handleToggleChat}
         colorAttributionMode={this.state.colorAttributionMode}
         onToggleColorAttributionMode={() => {

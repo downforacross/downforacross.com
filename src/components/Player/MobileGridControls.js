@@ -20,6 +20,7 @@ export default class MobileGridControls extends GridControls {
       touchingClueBar: false,
       anchors: [],
       transform: {scale: 1, translateX: 0, translateY: 0},
+      dbgstr: undefined,
     };
     this.prvInput = '';
     this.inputRef = React.createRef();

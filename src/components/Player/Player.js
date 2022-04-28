@@ -8,10 +8,13 @@ import {lazy} from '../../lib/jsUtils';
 import GridObject from '../../lib/wrappers/GridWrapper';
 
 import Grid from '../Grid';
+import ListView from '../ListView';
 import Clues from './Clues';
 import Clue from './ClueText';
 import GridControls from './GridControls';
 import MobileGridControls from './MobileGridControls';
+import MobileListViewControls from './MobileListViewControls';
+import ListViewControls from './ListViewControls';
 import ConnectionStats from './ConnectionStats';
 
 import {lightenHsl} from '../../lib/colors';
@@ -307,6 +310,7 @@ export default class Player extends Component {
       mobile,
       onPressEnter,
       onPressPeriod,
+      listMode,
       vimMode,
       vimInsert,
       onVimNormal,
@@ -375,7 +379,52 @@ export default class Player extends Component {
       frozen,
     };
 
+    const clueProps = {
+      clues: this.props.clues,
+      clueLengths: this.grid.clueLengths,
+      isClueSelected: this._isClueSelected,
+      isClueHalfSelected: this._isClueHalfSelected,
+      isClueFilled: this._isClueFilled,
+      scrollToClue: this._scrollToClue,
+      selectClue: this._selectClue,
+    };
+
+    const listViewProps = {
+      ...gridProps,
+      ...clueProps,
+      size: Math.min(20, size),
+    };
+
     if (mobile) {
+      if (listMode) {
+        return (
+          <div className="player--mobile--wrapper mobile">
+            <MobileListViewControls
+              ref="mobileGridControls"
+              onPressEnter={onPressEnter}
+              onPressPeriod={onPressPeriod}
+              selected={selected}
+              direction={direction}
+              onSetDirection={this._setDirection}
+              onChangeDirection={this._changeDirection}
+              canSetDirection={this._canSetDirection}
+              onSetSelected={this._setSelected}
+              updateGrid={updateGrid}
+              size={size}
+              grid={grid}
+              clues={clues}
+              onSetCursorLock={this.handleSetCursorLock}
+              enableDebug={window.location.search.indexOf('debug') !== -1}
+            >
+              <div className="player--mobile" ref={this.mobileContainer}>
+                <div className={`player--mobile--list-view`}>
+                  <ListView ref="grid" {...listViewProps} />
+                </div>
+              </div>
+            </MobileListViewControls>
+          </div>
+        );
+      }
       return (
         <div className="player--mobile--wrapper mobile">
           <MobileGridControls
@@ -402,6 +451,39 @@ export default class Player extends Component {
               </div>
             </div>
           </MobileGridControls>
+        </div>
+      );
+    }
+
+    if (listMode) {
+      return (
+        <div className="player--main--wrapper">
+          <ListViewControls
+            ref="gridControls"
+            onPressEnter={onPressEnter}
+            onPressPeriod={onPressPeriod}
+            vimMode={vimMode}
+            vimInsert={vimInsert}
+            onVimInsert={onVimInsert}
+            onVimNormal={onVimNormal}
+            selected={selected}
+            direction={direction}
+            onSetDirection={this._setDirection}
+            canSetDirection={this._canSetDirection}
+            onSetSelected={this._setSelected}
+            updateGrid={updateGrid}
+            grid={grid}
+            clues={clues}
+            beta={beta}
+            onCheck={this.props.onCheck}
+            onReveal={this.props.onReveal}
+          >
+            <div className="player--main">
+              <div className="player--main--list-view">
+                <ListView ref="grid" {...listViewProps} />
+              </div>
+            </div>
+          </ListViewControls>
         </div>
       );
     }
@@ -445,15 +527,7 @@ export default class Player extends Component {
             </div>
 
             <div className="player--main--clues">
-              <Clues
-                clues={this.props.clues}
-                clueLengths={this.grid.clueLengths}
-                isClueSelected={this._isClueSelected}
-                isClueHalfSelected={this._isClueHalfSelected}
-                isClueFilled={this._isClueFilled}
-                scrollToClue={this._scrollToClue}
-                selectClue={this._selectClue}
-              />
+              <Clues {...clueProps} />
             </div>
           </div>
         </GridControls>

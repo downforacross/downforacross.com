@@ -1,6 +1,6 @@
 import './css/index.css';
 import React, {Component} from 'react';
-import {MdChatBubble} from 'react-icons/md';
+import {MdBorderAll, MdChatBubble, MdList} from 'react-icons/md';
 
 import Flex from 'react-flexview';
 import {Link} from 'react-router-dom';
@@ -48,6 +48,11 @@ export default class Toolbar extends Component {
   handleAutocheckClick = (e) => {
     e.preventDefault();
     this.props.onToggleAutocheck();
+  };
+
+  handleToggleListView = (e) => {
+    e.preventDefault();
+    this.props.onToggleListView();
   };
 
   handleToggleChat = (e) => {
@@ -140,6 +145,36 @@ export default class Toolbar extends Component {
           'Color Attribution': onToggleColorAttributionMode,
         }}
       />
+    );
+  }
+
+  renderListViewButton() {
+    const {listMode, mobile} = this.props;
+    if (mobile) {
+      if (listMode) {
+        return (
+          <MdBorderAll
+            onClick={this.handleToggleListView}
+            className={`toolbar--list-view${listMode ? ' on' : ''}`}
+          />
+        );
+      }
+      return (
+        <MdList
+          onClick={this.handleToggleListView}
+          className={`toolbar--list-view${listMode ? ' on' : ''}`}
+        />
+      );
+    }
+    return (
+      <div
+        className={`toolbar--list-view${listMode ? ' on' : ''}`}
+        onClick={this.handleToggleListView}
+        onMouseDown={this.handleMouseDown}
+        title="List View"
+      >
+        <i className="fa fa-list" />
+      </div>
     );
   }
 
@@ -323,6 +358,7 @@ export default class Toolbar extends Component {
             />
             {solved ? null : this.renderCheckMenu()}
             {solved ? null : this.renderRevealMenu()}
+            {this.renderListViewButton()}
             {this.renderChatButton()}
           </Flex>
         </Flex>
@@ -346,6 +382,7 @@ export default class Toolbar extends Component {
         {solved ? null : this.renderRevealMenu()}
         <div className="toolbar--menu reset">{this.renderResetMenu()}</div>
         {this.renderModeMenu()}
+        {this.renderListViewButton()}
         {this.renderPencil()}
         {this.renderAutocheck()}
         {this.renderInfo()}

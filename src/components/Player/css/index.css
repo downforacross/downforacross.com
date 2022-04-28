@@ -8,6 +8,10 @@
   display: flex;
 }
 
+.player--main--list-view {
+  display: flex;
+}
+
 .player--main--clue-bar {
   background-color: var(--main-blue-3);
   padding: 10px 20px 10px 20px;
@@ -79,6 +83,10 @@
 }
 
 .player--mobile--grid {
+  display: flex;
+}
+
+.player--mobile--list-view {
   display: flex;
 }
 

@@ -13,6 +13,19 @@ function safe_while(condition, step, cap = 500) {
 }
 
 export default class GridControls extends Component {
+  actions = {
+    left: this.setDirectionWithCallback('across', this.moveSelectedBy(0, -1).bind(this)).bind(this),
+    up: this.setDirectionWithCallback('down', this.moveSelectedBy(-1, 0).bind(this)).bind(this),
+    down: this.setDirectionWithCallback('down', this.moveSelectedBy(1, 0).bind(this)).bind(this),
+    right: this.setDirectionWithCallback('across', this.moveSelectedBy(0, 1).bind(this)).bind(this),
+    forward: this.moveSelectedUsingDirection(1).bind(this),
+    backward: this.moveSelectedUsingDirection(-1).bind(this),
+    backspace: this.backspace.bind(this),
+    delete: this.delete.bind(this),
+    tab: this.selectNextClue.bind(this),
+    space: this.flipDirection.bind(this),
+  };
+
   get grid() {
     return new GridObject(this.props.grid);
   }
@@ -58,9 +71,8 @@ export default class GridControls extends Component {
     }
   }
 
-  // factored out handleAction for mobileGridControls
-  handleAction(action, shiftKey) {
-    const moveSelectedBy = (dr, dc) => () => {
+  moveSelectedBy(dr, dc) {
+    return () => {
       const {selected} = this.props;
       let {r, c} = selected;
       const step = () => {
@@ -73,13 +85,17 @@ export default class GridControls extends Component {
         this.setSelected({r, c});
       }
     };
+  }
 
-    const moveSelectedUsingDirection = (d) => () => {
+  moveSelectedUsingDirection(d) {
+    return () => {
       const [dr, dc] = this.props.direction === 'down' ? [0, d] : [d, 0];
-      return moveSelectedBy(dr, dc)();
+      return this.moveSelectedBy(dr, dc)();
     };
+  }
 
-    const setDirection = (direction, cbk) => () => {
+  setDirectionWithCallback(direction, cbk) {
+    return () => {
       if (this.props.direction !== direction) {
         if (this.canSetDirection(direction)) {
           this.setDirection(direction);
@@ -90,25 +106,15 @@ export default class GridControls extends Component {
         cbk();
       }
     };
+  }
 
-    const actions = {
-      left: setDirection('across', moveSelectedBy(0, -1)),
-      up: setDirection('down', moveSelectedBy(-1, 0)),
-      down: setDirection('down', moveSelectedBy(1, 0)),
-      right: setDirection('across', moveSelectedBy(0, 1)),
-      forward: moveSelectedUsingDirection(1),
-      backward: moveSelectedUsingDirection(-1),
-      backspace: this.backspace.bind(this),
-      delete: this.delete.bind(this),
-      tab: this.selectNextClue.bind(this),
-      space: this.flipDirection.bind(this),
-    };
-
-    if (!(action in actions)) {
+  // factored out handleAction for mobileGridControls
+  handleAction(action, shiftKey) {
+    if (!(action in this.actions)) {
       console.error('illegal action', action);
       return; // weird!
     }
-    actions[action](shiftKey);
+    this.actions[action](shiftKey);
   }
 
   handleAltKey(key, shiftKey) {

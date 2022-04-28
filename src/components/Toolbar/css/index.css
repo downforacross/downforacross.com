@@ -26,6 +26,13 @@ code {
   font-size: 14px;
 }
 
+.toolbar--list-view {
+  width: 24px;
+  height: 24px;
+  padding: 12px;
+  fill: white;
+}
+
 .toolbar--chat {
   width: 24px;
   height: 24px;
@@ -116,6 +123,10 @@ code {
 }
 
 .toolbar--pencil.on .fa-pencil {
+  color: var(--main-blue) !important;
+}
+
+.toolbar--list-view.on .fa-list {
   color: var(--main-blue) !important;
 }
 
