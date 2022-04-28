@@ -1,6 +1,6 @@
 import './css/index.css';
 import React, {Component} from 'react';
-import {MdChatBubble, MdGridOn, MdList} from 'react-icons/md';
+import {MdBorderAll, MdChatBubble, MdList} from 'react-icons/md';
 
 import Flex from 'react-flexview';
 import {Link} from 'react-router-dom';
@@ -153,7 +153,7 @@ export default class Toolbar extends Component {
     if (mobile) {
       if (listMode) {
         return (
-          <MdGridOn
+          <MdBorderAll
             onClick={this.handleToggleListView}
             className={`toolbar--list-view${listMode ? ' on' : ''}`}
           />
