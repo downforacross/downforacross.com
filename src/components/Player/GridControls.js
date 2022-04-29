@@ -20,6 +20,8 @@ export default class GridControls extends Component {
     right: this.setDirectionWithCallback('across', this.moveSelectedBy(0, 1).bind(this)).bind(this),
     forward: this.moveSelectedUsingDirection(1).bind(this),
     backward: this.moveSelectedUsingDirection(-1).bind(this),
+    home: this.moveToEdge(true).bind(this),
+    end: this.moveToEdge(false).bind(this),
     backspace: this.backspace.bind(this),
     delete: this.delete.bind(this),
     tab: this.selectNextClue.bind(this),
@@ -94,6 +96,17 @@ export default class GridControls extends Component {
     };
   }
 
+  moveToEdge(start) {
+    return () => {
+      const {selected, direction} = this.props;
+      let {r, c} = selected;
+      ({r, c} = this.grid.getEdge(r, c, direction, start));
+      if (this.grid.isInBounds(r, c)) {
+        this.setSelected({r, c});
+      }
+    };
+  }
+
   setDirectionWithCallback(direction, cbk) {
     return () => {
       if (this.props.direction !== direction) {
@@ -151,6 +164,8 @@ export default class GridControls extends Component {
       ' ': 'space',
       '[': 'backward',
       ']': 'forward',
+      Home: 'home',
+      End: 'end',
     };
 
     if (shiftKey) {
@@ -200,6 +215,8 @@ export default class GridControls extends Component {
       ' ': 'space',
       '[': 'backward',
       ']': 'forward',
+      Home: 'home',
+      End: 'end',
     };
 
     const normalModeActionKeys = {
@@ -208,6 +225,8 @@ export default class GridControls extends Component {
       k: 'up',
       l: 'right',
       x: 'delete',
+      '^': 'home',
+      '$': 'end',
     };
 
     const {onVimNormal, onVimInsert, vimInsert, onPressEnter, onPressPeriod} = this.props;

@@ -8,6 +8,8 @@ export default class ListViewControls extends GridControls {
     right: this.moveToNextCell.bind(this),
     forward: this.selectNextClue.bind(this),
     backward: this.selectPreviousClue.bind(this),
+    home: this.moveToEdge(true).bind(this),
+    end: this.moveToEdge(false).bind(this),
     backspace: this.backspace.bind(this),
     delete: this.delete.bind(this),
     tab: this.selectNextClue.bind(this),

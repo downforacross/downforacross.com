@@ -120,6 +120,30 @@ export default class GridWrapper {
     return undefined;
   }
 
+  getEdge(r, c, direction, start = true) {
+    let dr = 0;
+    let dc = 0;
+
+    if (direction === 'across') {
+      dc = -1;
+    } else {
+      dr = -1;
+    }
+    if (!start) {
+      dc = -dc;
+      dr = -dr;
+    }
+
+    do {
+      c += dc;
+      r += dr;
+    } while (this.isWriteable(r, c));
+    c -= dc;
+    r -= dr;
+
+    return {r, c};
+  }
+
   getNextEmptyCell(r, c, direction, options = {}) {
     const _r = r;
     const _c = c;
@@ -140,19 +164,7 @@ export default class GridWrapper {
     }
 
     if (!noWraparound) {
-      // move to start of word
-      do {
-        if (direction === 'across') {
-          c -= 1;
-        } else {
-          r -= 1;
-        }
-      } while (this.isWriteable(r, c));
-      if (direction === 'across') {
-        c += 1;
-      } else {
-        r += 1;
-      }
+      ({r, c} = this.getEdge(r, c, direction));
 
       // recurse but not infinitely
       const result = this.getNextEmptyCell(r, c, direction, {

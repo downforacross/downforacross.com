@@ -302,6 +302,10 @@ export default class Toolbar extends Component {
                 </td>
                 <td>Move cursor to first unfilled square of next or previous unfilled clue</td>
               </tr>
+              <tr>
+                <td><code>Home</code> OR <code>End</code></td>
+                <td>Move cursor to the beginning or end of a clue</td>
+              </tr>
             </tbody>
           </table>
         </Popup>

@@ -11,6 +11,8 @@ export default class MobileListViewControls extends MobileGridControls {
     forward: this.selectNextClue.bind(this),
     backward: this.selectPreviousClue.bind(this),
     backspace: this.backspace.bind(this),
+    home: this.moveToEdge(true).bind(this),
+    end: this.moveToEdge(false).bind(this),
     delete: this.delete.bind(this),
     tab: this.selectNextClue.bind(this),
     space: this.flipDirection.bind(this),
