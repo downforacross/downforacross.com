@@ -32,7 +32,10 @@ export default ({text = ''}) => {
   return (
     <>
       {parts.map(({text, ital}, i) => (
-        <span key={i} style={{fontStyle: ital ? 'italic' : 'inherit'}}>
+        <span key={i} style={{
+          fontStyle: ital ? 'italic' : 'inherit',
+          wordBreak: 'break-all'
+        }}>
           {decodeHtml(text)}
         </span>
       ))}
