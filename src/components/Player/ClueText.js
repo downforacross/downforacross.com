@@ -34,7 +34,7 @@ export default ({text = ''}) => {
       {parts.map(({text, ital}, i) => (
         <span key={i} style={{
           fontStyle: ital ? 'italic' : 'inherit',
-          wordBreak: 'break-all'
+          wordBreak: 'break-word'
         }}>
           {decodeHtml(text)}
         </span>
