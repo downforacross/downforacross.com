@@ -234,7 +234,7 @@ export default class Toolbar extends Component {
               Hold down the <code>Shift</code> key to enter multiple characters for rebus answers
             </li>
           </ul>
-          <h4>Keyboard Shortcuts</h4>
+          <h4>Basic Keyboard Shortcuts</h4>
           <table>
             <tbody>
               <tr>
@@ -265,23 +265,7 @@ export default class Toolbar extends Component {
               </tr>
               <tr>
                 <td>
-                  <code>[</code> and
-                  <code>]</code> OR
-                  <code>Shift</code> with arrow keys
-                </td>
-                <td>Move cursor perpendicular to current orientation without changing orientation</td>
-              </tr>
-              <tr>
-                <td>
-                  <code>Tab</code> and
-                  <code>Shift+Tab</code>
-                </td>
-                <td>Move cursor to first unfilled square of next or previous unfilled clue</td>
-              </tr>
-              <tr>
-                <td>
-                  <code>Delete</code> or
-                  <code>Backspace</code>
+                  <code>Delete</code> or <code>Backspace</code>
                 </td>
                 <td>Clear current cell</td>
               </tr>
@@ -300,6 +284,23 @@ export default class Toolbar extends Component {
                 <td>
                   Reveal <b>S</b>quare, <b>W</b>ord, or <b>P</b>uzzle
                 </td>
+              </tr>
+            </tbody>
+          </table>
+          <h4>Advanced Keyboard Shortcuts</h4>
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <code>[</code> and <code>]</code> OR <code>Shift</code> with arrow keys
+                </td>
+                <td>Move cursor perpendicular to current orientation without changing orientation</td>
+              </tr>
+              <tr>
+                <td>
+                  <code>Tab</code> and <code>Shift+Tab</code>
+                </td>
+                <td>Move cursor to first unfilled square of next or previous unfilled clue</td>
               </tr>
             </tbody>
           </table>
