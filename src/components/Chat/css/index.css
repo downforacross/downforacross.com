@@ -106,7 +106,7 @@
 
 .chat--system-message {
   color: var(--main-gray-1);
-  margin-bottom: 10px;
+  margin: 5px;
 }
 
 .chat--message--timestamp {
