@@ -81,7 +81,8 @@ psql dfac < create_game_events.sql
 
 `yarn devbackend`
 
-This command expects you to have PGDATABASE env var set and a postgres server running. See `.envrc.template`.
+This command expects you to have PGDATABASE, PGUSER, and PGPASSWORD env vars set and a postgres server running. See `.envrc.template`.  
+Copy and rename `.envrc.template` to `.envrc` to set these variables (make sure to have [DirEnv](https://direnv.net/) installed).  
 This will run a backend server on `localhost:3021`
 
 #### Run your local frontend server
@@ -89,8 +90,6 @@ This will run a backend server on `localhost:3021`
 `yarn devfrontend`
 
 This will run a frontend server on localhost:3020, that talks to your server on `localhost:3021`.
-
-Note that you can also run
 
 #### Test manually
 
