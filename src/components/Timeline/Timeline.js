@@ -71,9 +71,6 @@ class Timeline extends React.PureComponent {
 
   componentDidMount() {
     window.addEventListener('mouseup', this.handleMouseUp);
-    window.addEventListener('mousemove', (e) => {
-      console.log('window mouse', e);
-    });
   }
 
   componentWillUnmount() {
@@ -114,7 +111,6 @@ class Timeline extends React.PureComponent {
     onSetPosition(position);
     e.preventDefault();
     e.stopPropagation();
-    console.log('mouse 1', e);
   };
 
   handleMouseDown = (e) => {
@@ -138,8 +134,6 @@ class Timeline extends React.PureComponent {
   };
 
   handleMouseMove = (e) => {
-    console.log('mouse 2', e, this.down);
-
     if (!this.down) {
       return;
     }
