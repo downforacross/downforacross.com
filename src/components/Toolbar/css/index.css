@@ -126,6 +126,13 @@ code {
   color: var(--main-blue) !important;
 }
 
+.toolbar--color-attribution-toggle {
+  cursor: pointer;
+}
+.toolbar--color-attribution-toggle.on {
+  color: var(--main-blue) !important;
+}
+
 .toolbar--list-view.on .fa-list {
   color: var(--main-blue) !important;
 }

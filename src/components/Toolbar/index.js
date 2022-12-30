@@ -1,7 +1,7 @@
 import './css/index.css';
 import React, {Component} from 'react';
 import {MdBorderAll, MdChatBubble, MdList} from 'react-icons/md';
-
+import {RiPaintFill} from 'react-icons/ri';
 import Flex from 'react-flexview';
 import {Link} from 'react-router-dom';
 import swal from '@sweetalert/with-react';
@@ -130,21 +130,15 @@ export default class Toolbar extends Component {
     );
   }
 
-  renderModeMenu() {
-    const {colorAttributionMode, onToggleColorAttributionMode, vimMode, vimInsert} = this.props;
+  renderColorAttributionToggle() {
+    const {colorAttributionMode, onToggleColorAttributionMode} = this.props;
     return (
-      <ActionMenu
-        label={
-          (vimMode ? `Vim${vimInsert ? ' (Insert)' : ''}` : 'Normal') +
-          (colorAttributionMode ? ' (Color)' : '')
-        }
-        onBlur={this.handleBlur}
-        actions={{
-          Normal: this.keybind.bind(this, 'normal'),
-          Vim: this.keybind.bind(this, 'vim'),
-          'Color Attribution': onToggleColorAttributionMode,
-        }}
-      />
+      <div
+        className={`toolbar--color-attribution-toggle${colorAttributionMode ? ' on' : ''}`}
+        onClick={onToggleColorAttributionMode}
+      >
+        <RiPaintFill />
+      </div>
     );
   }
 
@@ -192,15 +186,17 @@ export default class Toolbar extends Component {
         title="Shortcut: ."
       >
         <i className="fa fa-pencil" />
-        <div className={'toolbar--pencil-color-picker-container'}>
-          <div className={'toolbar--pencil-color-picker'} onClick={this.handlePencilColorPickerClick}></div>
-          <input
-            type="color"
-            ref={(input) => (this.pencilColorPicker = input)}
-            onClick={(e) => e.stopPropagation()}
-            onChange={this.handlePencilColorPickerChange}
-          ></input>
-        </div>
+        {pencilMode && (
+          <div className={'toolbar--pencil-color-picker-container'}>
+            <div className={'toolbar--pencil-color-picker'} onClick={this.handlePencilColorPickerClick}></div>
+            <input
+              type="color"
+              ref={(input) => (this.pencilColorPicker = input)}
+              onClick={(e) => e.stopPropagation()}
+              onChange={this.handlePencilColorPickerChange}
+            ></input>
+          </div>
+        )}
       </div>
     );
   }
@@ -303,7 +299,9 @@ export default class Toolbar extends Component {
                 <td>Move cursor to first unfilled square of next or previous unfilled clue</td>
               </tr>
               <tr>
-                <td><code>Home</code> OR <code>End</code></td>
+                <td>
+                  <code>Home</code> OR <code>End</code>
+                </td>
                 <td>Move cursor to the beginning or end of a clue</td>
               </tr>
             </tbody>
@@ -386,7 +384,7 @@ export default class Toolbar extends Component {
         {solved ? null : this.renderCheckMenu()}
         {solved ? null : this.renderRevealMenu()}
         <div className="toolbar--menu reset">{this.renderResetMenu()}</div>
-        {this.renderModeMenu()}
+        {this.renderColorAttributionToggle()}
         {this.renderListViewButton()}
         {this.renderPencil()}
         {this.renderAutocheck()}
