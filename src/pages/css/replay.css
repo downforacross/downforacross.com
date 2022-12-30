@@ -13,14 +13,6 @@
   display: none;
 }
 
-.replay .scrub--container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  padding: 10px;
-  /* margin-bottom: 17.8px; */
-}
-
 .replay .scrub {
   cursor: pointer;
   user-select: none;
@@ -47,7 +39,7 @@
 .replay--control-icons {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-end;
   font-size: 35pt;
   color: var(--main-gray-1);
 }
@@ -72,4 +64,5 @@
 .scrub--autoplay {
   cursor: pointer;
   color: var(--main-blue);
+  display: flex;
 }

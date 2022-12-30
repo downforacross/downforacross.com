@@ -17,6 +17,16 @@ import {MdPlayArrow, MdPause, MdFastForward, MdFastRewind} from 'react-icons/md'
 
 const SCRUB_SPEED = 50; // 30 actions per second
 const AUTOPLAY_SPEEDS = [1, 10, 100];
+
+const formatTime = (seconds) => {
+  const hr = Math.floor(seconds / 3600);
+  const min = Math.floor((seconds - hr * 3600) / 60);
+  const sec = Math.floor(seconds - hr * 3600 - min * 60);
+  if (hr) {
+    return `${hr}:${min < 10 ? '0' : ''}${min}:${sec < 10 ? '0' : ''}${sec}`;
+  }
+  return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+};
 export default class Replay extends Component {
   constructor() {
     super();
@@ -257,37 +267,6 @@ export default class Replay extends Component {
     );
   }
 
-  renderToolbar() {
-    if (!this.game || this.state.error) {
-      return null;
-    }
-
-    const {clock} = this.game;
-
-    function pad2(num) {
-      let s = `${100}${num}`;
-      s = s.substr(s.length - 2);
-      return s;
-    }
-    const millis = clock.totalTime;
-    let secs = Math.floor(millis / 1000);
-    let mins = Math.floor(secs / 60);
-    secs %= 60;
-    const hours = Math.floor(mins / 60);
-    mins %= 60;
-    const str = `${(hours ? `${hours}:` : '') + pad2(mins)}:${pad2(secs)}`;
-
-    return (
-      <div
-        style={{
-          marginLeft: 260,
-        }}
-      >
-        {str}
-      </div>
-    );
-  }
-
   renderPlayer() {
     if (this.state.error) {
       return <div>Error loading replay</div>;
@@ -360,32 +339,31 @@ export default class Replay extends Component {
           <Timeline history={history} position={position} onSetPosition={this.handleSetPosition} />
         ) : null}
         <div className="replay--control-icons">
-          <div className="scrub--container">
-            <div
-              ref="scrubLeft"
-              className={`scrub ${left ? 'active' : ''}`}
-              onMouseDown={this.handleMouseDownLeft}
-              onMouseUp={this.handleMouseUpLeft}
-              onMouseLeave={this.handleMouseUpLeft}
-            >
-              <MdFastRewind />
-            </div>
-          </div>
+          <MdFastRewind
+            ref="scrubLeft"
+            className={`scrub ${left ? 'active' : ''}`}
+            onMouseDown={this.handleMouseDownLeft}
+            onMouseUp={this.handleMouseUpLeft}
+            onMouseLeave={this.handleMouseUpLeft}
+          />
           <div className="scrub--autoplay" onClick={this.handleToggleAutoplay}>
             {autoplayEnabled && <MdPause />}
             {!autoplayEnabled && <MdPlayArrow />}
           </div>
-          <div className="scrub--container">
-            <div
-              ref="scrubRight"
-              className={`scrub ${right ? 'active' : ''}`}
-              onMouseDown={this.handleMouseDownRight}
-              onMouseUp={this.handleMouseUpRight}
-              onMouseLeave={this.handleMouseUpRight}
-            >
-              <MdFastForward />
+          <MdFastForward
+            ref="scrubRight"
+            className={`scrub ${right ? 'active' : ''}`}
+            onMouseDown={this.handleMouseDownRight}
+            onMouseUp={this.handleMouseUpRight}
+            onMouseLeave={this.handleMouseUpRight}
+          />
+        </div>
+        <div className="replay--time">
+          {history.length > 0 && (
+            <div>
+              {formatTime(position / 1000)} / {formatTime(_.last(history).gameTimestamp / 1000)}
             </div>
-          </div>
+          )}
         </div>
         <div className="scrub--speeds">
           {AUTOPLAY_SPEEDS.map((speed) => (
@@ -437,7 +415,6 @@ export default class Replay extends Component {
             {this.renderPlayer()}
             {/* {this.renderChat()} */}
           </Flex>
-          {this.renderToolbar()}
           <div
             style={{
               zIndex: 1,
