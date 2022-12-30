@@ -178,9 +178,7 @@ export default class Replay extends Component {
       });
     }
     if (index === -1) return;
-    this.setState({
-      position: events[index].timestamp,
-    });
+    this.handleSetPosition(events[index].timestamp);
   };
 
   scrubRight = ({shift = false} = {}) => {
@@ -193,9 +191,10 @@ export default class Replay extends Component {
       });
     }
     if (index === -1) return;
-    this.setState({
-      position: events[index].timestamp,
-    });
+    this.handleSetPosition(events[index].timestamp);
+    // this.setState({
+    //   position: events[index].timestamp,
+    // });
   };
 
   renderHeader() {
