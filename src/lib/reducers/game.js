@@ -53,6 +53,7 @@ const reducers = {
       themeColor = MAIN_BLUE_3,
       // themeColor = GREENISH,
     } = params.game;
+    clock.trueTotalTime = 0;
 
     return {
       pid,
@@ -315,6 +316,7 @@ export const tick = (game, timestamp, isPause) => {
   let {
     clock = {
       totalTime: 0,
+      trueTotalTime: 0,
       lastUpdated: timestamp,
     },
   } = game;
@@ -325,6 +327,7 @@ export const tick = (game, timestamp, isPause) => {
     ...clock,
     lastUpdated: timestamp,
     totalTime: clock.totalTime + timeDiff,
+    trueTotalTime: clock.trueTotalTime + timeDiff,
     paused: isPause,
   };
   return {

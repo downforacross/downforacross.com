@@ -51,7 +51,7 @@ export default class Replay extends Component {
   recomputeHistory = () => {
     const history = [this.historyWrapper.createEvent, ...this.historyWrapper.history];
     const filteredHistory = history.filter((event) => event.type !== 'updateCursor' && event.type !== 'chat');
-    const position = this.state.position || history[0].timestamp;
+    const position = this.state.position || history[0].gameTimestamp;
     this.setState({
       history,
       filteredHistory,
@@ -171,29 +171,29 @@ export default class Replay extends Component {
   scrubLeft = ({shift = false} = {}) => {
     const {position, history, filteredHistory} = this.state;
     const events = shift ? filteredHistory : history;
-    const index = _.findLastIndex(events, (event) => event.timestamp < position);
+    const index = _.findLastIndex(events, (event) => event.gameTimestamp < position);
     if (!this.state.left) {
       this.setState({
         left: true,
       });
     }
     if (index === -1) return;
-    this.handleSetPosition(events[index].timestamp);
+    this.handleSetPosition(events[index].gameTimestamp);
   };
 
   scrubRight = ({shift = false} = {}) => {
     const {position, history, filteredHistory} = this.state;
     const events = shift ? filteredHistory : history;
-    const index = _.findIndex(events, (event) => event.timestamp > position);
+    const index = _.findIndex(events, (event) => event.gameTimestamp > position);
     if (!this.state.right) {
       this.setState({
         right: true,
       });
     }
     if (index === -1) return;
-    this.handleSetPosition(events[index].timestamp);
+    this.handleSetPosition(events[index].gameTimestamp);
     // this.setState({
-    //   position: events[index].timestamp,
+    //   position: events[index].gameTimestamp,
     // });
   };
 

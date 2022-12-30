@@ -82,14 +82,15 @@ export default class HistoryWrapper {
   }
 
   // this is used for replay
-  getSnapshotAt(timestamp) {
+  getSnapshotAt(gameTimestamp) {
     // compute the number of events that have happened
-    const index = _.sortedLastIndexBy(this.history, {timestamp}, (event) => event.timestamp);
+    const index = _.sortedLastIndexBy(this.history, {gameTimestamp}, (event) => event.gameTimestamp);
     return this.getSnapshotAtIndex(index - 1);
   }
 
   setCreateEvent(event) {
     this.createEvent = event;
+    event.gameTimestamp = 0;
     this.initializeMemo();
   }
 
@@ -110,6 +111,7 @@ export default class HistoryWrapper {
         this.memoize(index);
       }
     });
+    event.gameTimestamp = this.getSnapshotAtIndex(insertPoint).clock.trueTotalTime;
   }
 
   addOptimisticEvent(event) {

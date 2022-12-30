@@ -31,12 +31,12 @@ const TimelineBar = ({type}) => {
 // a pure arrow function component, so bars aren't re-computed every time
 const TimelineBars = pure(({history, begin, units}) => (
   <div>
-    {history.map(({timestamp, type}, i) => (
+    {history.map(({gameTimestamp, type}, i) => (
       <div
         key={i}
         className="timeline--bar"
         style={{
-          left: (timestamp - begin) * units,
+          left: (gameTimestamp - begin) * units,
         }}
       >
         <TimelineBar type={type} />
@@ -48,12 +48,12 @@ const TimelineBars = pure(({history, begin, units}) => (
 class Timeline extends React.PureComponent {
   get begin() {
     const {history} = this.props;
-    return history[0].timestamp;
+    return history[0].gameTimestamp;
   }
 
   get end() {
     const {history} = this.props;
-    return history[history.length - 1].timestamp;
+    return history[history.length - 1].gameTimestamp;
   }
 
   get units() {
