@@ -114,6 +114,7 @@ class Timeline extends React.PureComponent {
   };
 
   handleMouseDown = (e) => {
+    if (e.button) return;
     this.down = true;
     this.handleMouse(e);
   };

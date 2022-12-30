@@ -35,6 +35,7 @@ export default class Replay extends Component {
 
   setPositionToRender = _.throttle((positionToRender) => {
     this.setState({positionToRender});
+    this.refs.controls.focus();
   }, 200);
 
   get gid() {
@@ -76,6 +77,11 @@ export default class Replay extends Component {
 
     // compute it here so the grid doesn't go crazy
     this.screenWidth = window.innerWidth;
+    if (this.refs.controls) {
+      setTimeout(() => {
+        this.refs.controls.focus();
+      }, 100);
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
