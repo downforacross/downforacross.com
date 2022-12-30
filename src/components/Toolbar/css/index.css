@@ -26,6 +26,7 @@ code {
 }
 
 .toolbar--list-view {
+  cursor: pointer;
   width: 24px;
   height: 24px;
   padding: 12px;
