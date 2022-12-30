@@ -199,13 +199,13 @@ export default class MobileGridControls extends GridControls {
 
   handleRightArrowTouchEnd = (e) => {
     e.preventDefault();
-    this.handleAction('forward');
+    this.handleAction('tab');
     this.keepFocus();
   };
 
   handleLeftArrowTouchEnd = (e) => {
     e.preventDefault();
-    this.handleAction('backward');
+    this.handleAction('tab', true);
     this.keepFocus();
   };
 
