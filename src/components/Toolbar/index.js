@@ -384,7 +384,7 @@ export default class Toolbar extends Component {
         </div>
         {solved ? null : this.renderCheckMenu()}
         {solved ? null : this.renderRevealMenu()}
-        <div className="toolbar--menu reset">{this.renderResetMenu()}</div>
+        {solved ? null : <div className="toolbar--menu reset">{this.renderResetMenu()}</div>}
         {this.renderColorAttributionToggle()}
         {this.renderListViewButton()}
         {this.renderPencil()}

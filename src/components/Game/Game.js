@@ -292,7 +292,7 @@ export default class Game extends Component {
 
   renderToolbar() {
     if (!this.game) return;
-    const {clock} = this.game;
+    const {clock, solved} = this.game;
     const {mobile} = this.props;
     const {pencilMode, autocheckMode, vimMode, vimInsert, listMode} = this.state;
     const {lastUpdated: startTime, totalTime: pausedTime, paused: isPaused} = clock;
@@ -307,6 +307,7 @@ export default class Game extends Component {
         pencilMode={pencilMode}
         autocheckMode={autocheckMode}
         vimMode={vimMode}
+        solved={solved}
         vimInsert={vimInsert}
         onStartClock={this.handleStartClock}
         onPauseClock={this.handlePauseClock}

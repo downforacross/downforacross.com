@@ -222,6 +222,9 @@ const reducers = {
   },
 
   reset: (game, params) => {
+    if (game.solved) {
+      return game;
+    }
     const {scope = []} = params;
     let {grid} = game;
     const scopeGrid = getScopeGrid(grid, scope);
