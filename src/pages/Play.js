@@ -130,10 +130,7 @@ export default class Play extends Component {
                   <Timestamp time={time} />
                 </td>
                 <td>
-                  <Link to={`/game/${gid}`}>
-                    Game
-                    {gid}
-                  </Link>
+                  <Link to={`/game/${gid}`}>Game {gid}</Link>
                 </td>
               </tr>
             ))}
