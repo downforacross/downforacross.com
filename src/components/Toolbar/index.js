@@ -135,6 +135,7 @@ export default class Toolbar extends Component {
     return (
       <div
         className={`toolbar--color-attribution-toggle${colorAttributionMode ? ' on' : ''}`}
+        title="Color Attribution"
         onClick={onToggleColorAttributionMode}
       >
         <RiPaintFill />
