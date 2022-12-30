@@ -11,190 +11,10 @@ import HistoryWrapper from '../lib/wrappers/HistoryWrapper';
 import Player from '../components/Player';
 import Chat from '../components/Chat';
 import Nav from '../components/common/Nav';
-import {toArr, pure, isAncestor} from '../lib/jsUtils';
+import {Timeline} from '../components/Timeline/Timeline';
+import {toArr} from '../lib/jsUtils';
 
 const SCRUB_SPEED = 50; // 30 actions per second
-
-const TIMELINE_COLORS = {
-  updateCell: '#9999FFC0',
-  updateCursor: '#00000030',
-  reveal: '#EE0000C0',
-  check: '#EE000050',
-  updateClock: '#0000EE80',
-  chat: '#00EEEE80',
-  create: '#00000080',
-};
-const TIMELINE_BACKGROUND_COLOR = '#00000005';
-
-const TimelineBar = ({type}) => {
-  const color = TIMELINE_COLORS[type];
-  return (
-    <div
-      style={{
-        width: '100%',
-        height: '100%',
-        backgroundColor: color,
-      }}
-    />
-  );
-};
-
-// a pure arrow function component, so bars aren't re-computed every time
-const TimelineBars = pure(({history, begin, units}) => (
-  <div>
-    {history.map(({timestamp, type}, i) => (
-      <div
-        key={i}
-        style={{
-          left: (timestamp - begin) * units,
-          position: 'absolute',
-          width: 2,
-          height: 40,
-        }}
-      >
-        <TimelineBar type={type} />
-      </div>
-    ))}
-  </div>
-));
-
-class Timeline extends React.PureComponent {
-  get begin() {
-    const {history} = this.props;
-    return history[0].timestamp;
-  }
-
-  get end() {
-    const {history} = this.props;
-    return history[history.length - 1].timestamp;
-  }
-
-  get units() {
-    const length = this.end - this.begin;
-    const maxWidth = 10000;
-    const minWidth = 400;
-    return Math.min(
-      maxWidth / length,
-      Math.max(
-        0.01, // 1 second = 10 pixel
-        minWidth / length
-      )
-    );
-  }
-
-  componentDidUpdate() {
-    this.updateScroll();
-  }
-
-  renderCursor() {
-    const {position} = this.props;
-    return (
-      <div
-        ref="cursor"
-        style={{
-          position: 'absolute',
-          left: (position - this.begin) * this.units - 5,
-          top: 15,
-          backgroundColor: '#000000',
-          borderRadius: 5,
-          width: 10,
-          height: 10,
-        }}
-      />
-    );
-  }
-
-  handleMouse = (e) => {
-    const {onSetPosition} = this.props;
-    if (!this.refs.timeline) return;
-    e = e.nativeEvent;
-    let x = e.offsetX;
-    let node = e.target;
-    while (node !== this.refs.timeline) {
-      x += node.offsetLeft;
-      node = node.parentElement;
-    }
-
-    let position = x / this.units + this.begin;
-    position = Math.min(this.end, Math.max(this.begin, position));
-    onSetPosition(position);
-  };
-
-  handleMouseDown = (e) => {
-    this.down = true;
-    this.handleMouse(e);
-  };
-
-  handleMouseOut = (e) => {
-    if (!isAncestor(this.refs.timeline, e.nativeEvent.relatedTarget)) {
-      this.down = false;
-    }
-  };
-
-  handleMouseUp = () => {
-    this.down = false;
-  };
-
-  handleMouseMove = (e) => {
-    if (!this.down) {
-      return;
-    }
-
-    this.handleMouse(e);
-  };
-
-  updateScroll = _.throttle(() => {
-    if (!this.refs.scrollContainer || !this.refs.cursor || !this.refs.timeline) {
-      return;
-    }
-    const center = this.refs.cursor.offsetLeft;
-
-    // scroll minimally so that the center is visible with 5px padding
-    const padding = 5;
-    const lo = Math.min(
-      this.refs.timeline.clientWidth - this.refs.scrollContainer.clientWidth,
-      center - this.refs.scrollContainer.clientWidth + padding
-    );
-    const hi = Math.max(0, center - padding);
-
-    let scrollLeft = this.refs.scrollContainer.scrollLeft;
-    scrollLeft = Math.max(lo, Math.min(hi, scrollLeft));
-    this.refs.scrollContainer.scrollLeft = scrollLeft;
-  }, 50);
-
-  render() {
-    const {history} = this.props;
-
-    return (
-      <div
-        key="abc"
-        ref="scrollContainer"
-        style={{
-          overflowX: 'auto',
-          width: 600,
-        }}
-      >
-        <div
-          ref="timeline"
-          style={{
-            position: 'relative',
-            height: 40,
-            width: (this.end - this.begin) * this.units,
-            backgroundColor: TIMELINE_BACKGROUND_COLOR,
-            cursor: 'pointer',
-          }}
-          onMouseDown={this.handleMouseDown}
-          onMouseOut={this.handleMouseOut}
-          onMouseMove={this.handleMouseMove}
-          onMouseUp={this.handleMouseUp}
-        >
-          <TimelineBars history={history} begin={this.begin} units={this.units} />
-          {this.renderCursor()}
-        </div>
-      </div>
-    );
-  }
-}
 
 export default class Replay extends Component {
   constructor() {
@@ -210,7 +30,12 @@ export default class Replay extends Component {
 
   handleSetPosition = (position) => {
     this.setState({position});
+    this.setPositionToRender(position);
   };
+
+  setPositionToRender = _.throttle((positionToRender) => {
+    this.setState({positionToRender});
+  }, 200);
 
   get gid() {
     return this.props.match.params.gid;
@@ -218,9 +43,9 @@ export default class Replay extends Component {
 
   get game() {
     // compute the game state corresponding to current playback time
-    const {position} = this.state;
+    const {positionToRender} = this.state;
     if (!this.historyWrapper || !this.historyWrapper.ready) return null;
-    return this.historyWrapper.getSnapshotAt(position);
+    return this.historyWrapper.getSnapshotAt(positionToRender);
   }
 
   recomputeHistory = () => {
@@ -477,7 +302,7 @@ export default class Replay extends Component {
           flex: 1,
           display: 'flex',
           flexDirection: 'row',
-          alignItems: 'stretch',
+          alignItems: 'center',
           padding: 5,
           outline: 'none',
         }}
@@ -538,25 +363,25 @@ export default class Replay extends Component {
         </div>
         <div
           style={{
+            zIndex: 1,
             padding: 10,
             border: '1px solid #E2E2E2',
           }}
         >
+          <Flex style={{padding: 20}}>
+            {this.renderPlayer()}
+            {/* {this.renderChat()} */}
+          </Flex>
           {this.renderToolbar()}
           <div
-            style={
-              {
-                // flex: 1,
-              }
-            }
+            style={{
+              zIndex: 1,
+              // flex: 1,
+            }}
           >
             {this.renderControls()}
           </div>
         </div>
-        <Flex style={{padding: 20}}>
-          {this.renderPlayer()}
-          {/* {this.renderChat()} */}
-        </Flex>
         {/* Controls:
       Playback scrubber
       Playback speed toggle

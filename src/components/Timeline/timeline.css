@@ -1,0 +1,33 @@
+.timeline {
+  /* background: red;   */
+  height: 10px;
+}
+
+.timeline--cursor {
+  top: -5px;
+  background-color: #000000;
+  border-radius: 10px;
+  width: 20px;
+  height: 20px;
+}
+
+.timeline--scrollContainer {
+  height: 10px;
+  display: flex;
+}
+
+.timeline--bar {
+  position: absolute;
+  width: 2px;
+  height: 10px;
+}
+
+
+.mouse--target {
+  /* opacity: 0.1; */
+  background-color: black;
+  opacity: 0;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+}

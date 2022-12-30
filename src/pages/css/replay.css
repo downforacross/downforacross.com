@@ -18,7 +18,7 @@
   flex-direction: column;
   justify-content: space-around;
   padding: 10px;
-  margin-bottom: 17.8px;
+  /* margin-bottom: 17.8px; */
 }
 
 .replay .scrub {
