@@ -97,6 +97,9 @@ export default class Player extends Component {
         },
       });
     }
+    if (document.querySelector('.player--main--wrapper')) {
+      this.previousSize = document.querySelector('.player--main--wrapper').getBoundingClientRect().width;
+    }
   }
 
   componentWillUnmount() {
@@ -457,7 +460,12 @@ export default class Player extends Component {
 
     if (listMode) {
       return (
-        <div className="player--main--wrapper">
+        <div
+          className="player--main--wrapper"
+          style={{
+            minWidth: this.previousSize,
+          }}
+        >
           <ListViewControls
             ref="gridControls"
             onPressEnter={onPressEnter}

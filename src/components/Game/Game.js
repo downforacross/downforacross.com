@@ -299,6 +299,7 @@ export default class Game extends Component {
     return (
       <Toolbar
         v2
+        gid={this.props.gid}
         mobile={mobile}
         startTime={startTime}
         pausedTime={pausedTime}

@@ -314,6 +314,7 @@ export default class Game extends Component {
         }}
         beta={this.beta}
         id={id}
+        gid={this.state.gid}
         myColor={color}
         historyWrapper={this.historyWrapper}
         gameModel={this.gameModel}

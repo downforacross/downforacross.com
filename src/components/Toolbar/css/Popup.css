@@ -1,5 +1,5 @@
 .popup-menu {
-  font-size: 14px;
+  /* font-size: 14px; */
 }
 
 .popup-menu table {
@@ -22,6 +22,7 @@
 
 .popup-menu--content {
   position: absolute;
+  font-size: 14px;
   top: 100%;
   background-color: var(--main-gray-3);
   padding: 20px;

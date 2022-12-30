@@ -4,6 +4,7 @@ code {
 }
 
 .toolbar {
+  font-size: 20pt;
   padding: 10px 10px 8px 50px;
   min-height: 20px;
   border-top: 1px solid #e2e2e2;
@@ -102,7 +103,7 @@ code {
   height: 14px;
   position: absolute;
   z-index: 10;
-  border-radius: 3px;
+  border-radius: 14px;
   border: 1px solid black;
 }
 
@@ -112,6 +113,12 @@ code {
   opacity: 0;
   width: 14px;
   height: 14px;
+}
+
+.toolbar--replay-link {
+  width: 24px;
+  height: 24px;
+  color: inherit;
 }
 
 .toolbar--autocheck {
@@ -127,6 +134,8 @@ code {
 }
 
 .toolbar--color-attribution-toggle {
+  width: 24px;
+  height: 24px;
   cursor: pointer;
 }
 .toolbar--color-attribution-toggle.on {

@@ -1,6 +1,6 @@
 import './css/index.css';
 import React, {Component} from 'react';
-import {MdBorderAll, MdChatBubble, MdList} from 'react-icons/md';
+import {MdBorderAll, MdChatBubble, MdList, MdSlowMotionVideo} from 'react-icons/md';
 import {RiPaintFill} from 'react-icons/ri';
 import Flex from 'react-flexview';
 import {Link} from 'react-router-dom';
@@ -127,6 +127,21 @@ export default class Toolbar extends Component {
           'Puzzle and Timer': this.resetPuzzleAndTimer.bind(this),
         }}
       />
+    );
+  }
+
+  renderReplayLink() {
+    const replayLink = `/beta/replay/${this.props.gid}`;
+    return (
+      <a
+        className="toolbar--replay-link"
+        title="Open Replay"
+        href={replayLink}
+        target="_blank"
+        rel="noreferrer"
+      >
+        <MdSlowMotionVideo />
+      </a>
     );
   }
 
@@ -385,6 +400,7 @@ export default class Toolbar extends Component {
         {solved ? null : this.renderCheckMenu()}
         {solved ? null : this.renderRevealMenu()}
         {solved ? null : <div className="toolbar--menu reset">{this.renderResetMenu()}</div>}
+        {solved && this.renderReplayLink()}
         {this.renderColorAttributionToggle()}
         {this.renderListViewButton()}
         {this.renderPencil()}
