@@ -208,7 +208,7 @@ export default class Player extends Component {
   }
 
   handlePing = (r, c) => {
-    this.props.addPing({r, c});
+    this.props.addPing && this.props.addPing({r, c});
   };
 
   changeDirection() {

@@ -13,9 +13,10 @@ import Chat from '../components/Chat';
 import Nav from '../components/common/Nav';
 import {Timeline} from '../components/Timeline/Timeline';
 import {toArr} from '../lib/jsUtils';
+import {MdPlayArrow, MdPause, MdFastForward, MdFastRewind} from 'react-icons/md';
 
 const SCRUB_SPEED = 50; // 30 actions per second
-
+const AUTOPLAY_SPEEDS = [1, 10, 100];
 export default class Replay extends Component {
   constructor() {
     super();
@@ -23,14 +24,22 @@ export default class Replay extends Component {
       history: [],
       filteredHistory: [],
       position: 0,
+      positionToRender: 0,
+      autoplayEnabled: false,
+      autoplaySpeed: 10,
     };
     this.followCursor = -1;
     this.historyWrapper = null;
   }
 
-  handleSetPosition = (position) => {
+  handleSetPosition = (position, isAutoplay = false) => {
     this.setState({position});
     this.setPositionToRender(position);
+    if (!isAutoplay && this.state.autoplayEnabled) {
+      this.setState({
+        autoplayEnabled: false,
+      });
+    }
   };
 
   setPositionToRender = _.throttle((positionToRender) => {
@@ -45,6 +54,7 @@ export default class Replay extends Component {
   get game() {
     // compute the game state corresponding to current playback time
     const {positionToRender} = this.state;
+    console.log('position to render', positionToRender);
     if (!this.historyWrapper || !this.historyWrapper.ready) return null;
     return this.historyWrapper.getSnapshotAt(positionToRender);
   }
@@ -82,6 +92,24 @@ export default class Replay extends Component {
         this.refs.controls.focus();
       }, 100);
     }
+
+    this.autoplayInterval = setInterval(() => {
+      console.log('tick interval');
+      if (this.state.autoplayEnabled && this.state.history.length > 0) {
+        if (this.state.position < this.state.history[this.state.history.length - 1].gameTimestamp) {
+          this.handleSetPosition(this.state.position + 100 * this.state.autoplaySpeed, true);
+        } else {
+          console.log('autoplay ended');
+          this.setState({autoplayEnabled: false});
+        }
+      } else {
+        console.log('autoplay not enabled');
+      }
+    }, 100);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.autoplayInterval);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -162,6 +190,12 @@ export default class Replay extends Component {
       this.scrubLeft({shift});
     } else if (e.key === 'ArrowRight') {
       this.scrubRight({shift});
+    } else if (e.key === ' ') {
+      this.setState({
+        autoplayEnabled: !this.state.autoplayEnabled,
+      });
+    } else {
+      console.log(e.key);
     }
   };
 
@@ -172,6 +206,12 @@ export default class Replay extends Component {
     } else if (e.key === 'ArrowRight') {
       this.setState({right: false});
     }
+  };
+
+  handleToggleAutoplay = (e) => {
+    this.setState({
+      autoplayEnabled: !this.state.autoplayEnabled,
+    });
   };
 
   scrubLeft = ({shift = false} = {}) => {
@@ -297,7 +337,7 @@ export default class Replay extends Component {
   }
 
   renderControls() {
-    const {position, history, left, right} = this.state;
+    const {position, history, left, right, autoplayEnabled} = this.state;
 
     // renders the controls / state
     return (
@@ -306,39 +346,59 @@ export default class Replay extends Component {
         style={{
           flex: 1,
           display: 'flex',
-          flexDirection: 'row',
+          flexDirection: 'column',
           alignItems: 'center',
           padding: 5,
           outline: 'none',
+          width: 1000,
         }}
         tabIndex="1"
         onKeyDown={this.handleKeyDown}
         onKeyUp={this.handleKeyUp}
       >
-        <div className="scrub--container">
-          <div
-            ref="scrubLeft"
-            className={`scrub ${left ? 'active' : ''}`}
-            onMouseDown={this.handleMouseDownLeft}
-            onMouseUp={this.handleMouseUpLeft}
-            onMouseLeave={this.handleMouseUpLeft}
-          >
-            {'<<'}
-          </div>
-        </div>
         {history.length > 0 ? (
           <Timeline history={history} position={position} onSetPosition={this.handleSetPosition} />
         ) : null}
-        <div className="scrub--container">
-          <div
-            ref="scrubRight"
-            className={`scrub ${right ? 'active' : ''}`}
-            onMouseDown={this.handleMouseDownRight}
-            onMouseUp={this.handleMouseUpRight}
-            onMouseLeave={this.handleMouseUpRight}
-          >
-            {'>>'}
+        <div className="replay--control-icons">
+          <div className="scrub--container">
+            <div
+              ref="scrubLeft"
+              className={`scrub ${left ? 'active' : ''}`}
+              onMouseDown={this.handleMouseDownLeft}
+              onMouseUp={this.handleMouseUpLeft}
+              onMouseLeave={this.handleMouseUpLeft}
+            >
+              <MdFastRewind />
+            </div>
           </div>
+          <div className="scrub--autoplay" onClick={this.handleToggleAutoplay}>
+            {autoplayEnabled && <MdPause />}
+            {!autoplayEnabled && <MdPlayArrow />}
+          </div>
+          <div className="scrub--container">
+            <div
+              ref="scrubRight"
+              className={`scrub ${right ? 'active' : ''}`}
+              onMouseDown={this.handleMouseDownRight}
+              onMouseUp={this.handleMouseUpRight}
+              onMouseLeave={this.handleMouseUpRight}
+            >
+              <MdFastForward />
+            </div>
+          </div>
+        </div>
+        <div className="scrub--speeds">
+          {AUTOPLAY_SPEEDS.map((speed) => (
+            <div
+              className={`scrub--speed--option${speed === this.state.autoplaySpeed ? ' selected' : ''}`}
+              onClick={() => {
+                this.setState({autoplaySpeed: speed});
+              }}
+              key={speed}
+            >
+              {speed}x
+            </div>
+          ))}
         </div>
       </div>
     );

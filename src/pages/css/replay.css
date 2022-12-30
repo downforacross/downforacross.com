@@ -43,3 +43,33 @@
   font-size: 14px;
   font-weight: 500;
 }
+
+.replay--control-icons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 35pt;
+  color: var(--main-gray-1);
+}
+
+.scrub--speeds {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.scrub--speed--option {
+  font-size: 25pt;
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--main-gray-1);
+  margin-left: 10px;
+}
+.scrub--speed--option.selected {
+  color: var(--main-blue);
+}
+
+.scrub--autoplay {
+  cursor: pointer;
+  color: var(--main-blue);
+}
