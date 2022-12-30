@@ -1,6 +1,6 @@
 import {CircularProgress, makeStyles} from '@material-ui/core';
 import React, {useEffect, useState} from 'react';
-import {GameState} from '../../shared/gameEvents/types/GameState';
+import {GameState} from '../../shared/fencingGameEvents/types/GameState';
 import {GameEventsHook} from './useGameEvents';
 import {PlayerActions} from './usePlayerActions';
 

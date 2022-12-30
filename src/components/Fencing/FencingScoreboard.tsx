@@ -1,7 +1,7 @@
 import {makeStyles} from '@material-ui/core';
 import _ from 'lodash';
 import React from 'react';
-import {GameState} from '../../shared/gameEvents/types/GameState';
+import {GameState} from '../../shared/fencingGameEvents/types/GameState';
 import EditableSpan from '../common/EditableSpan';
 import './css/fencingScoreboard.css';
 

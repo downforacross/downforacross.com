@@ -1,5 +1,5 @@
 /* eslint @typescript-eslint/no-unused-vars : "warn" */
-import {GameEvent} from '../../shared/gameEvents/types/GameEvent';
+import {GameEvent} from '../../shared/fencingGameEvents/types/GameEvent';
 import {CellCoords} from '../Grid/types';
 
 export interface PlayerActions {
