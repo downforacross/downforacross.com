@@ -18,7 +18,7 @@ import {toArr} from '../lib/jsUtils';
 import Toolbar from '../components/Toolbar';
 
 const SCRUB_SPEED = 50; // 30 actions per second
-const AUTOPLAY_SPEEDS = [1, 10, 100];
+const AUTOPLAY_SPEEDS = localStorage.premium ? [1, 10, 100, 1000] : [1, 10, 100];
 
 const formatTime = (seconds) => {
   const hr = Math.floor(seconds / 3600);
