@@ -38,7 +38,7 @@ export default class Clock extends Component {
       clock += pausedTime;
     }
 
-    if (start && !this.props.isPaused) {
+    if (start && !this.props.replayMode && !this.props.isPaused) {
       // not paused
       if (stop) {
         // finished
@@ -70,6 +70,7 @@ export default class Clock extends Component {
   }
 
   get isPaused() {
+    if (this.props.replayMode) return false;
     // to this component, there's no difference between capped & paused
     return this.props.isPaused || this.isCapped;
   }

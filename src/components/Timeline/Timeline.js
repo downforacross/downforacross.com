@@ -125,10 +125,6 @@ class Timeline extends React.PureComponent {
     }
   };
 
-  handleMouseIn = (e) => {
-    // this.down = true;
-  };
-
   handleMouseUp = () => {
     this.down = false;
     this.forceUpdate();
@@ -176,7 +172,6 @@ class Timeline extends React.PureComponent {
         }}
         onMouseDown={this.handleMouseDown}
         onMouseOut={this.handleMouseOut}
-        onMouseIn={this.handleMouseIn}
         onMouseMove={this.handleMouseMove}
         onMouseUp={this.handleMouseUp}
       >

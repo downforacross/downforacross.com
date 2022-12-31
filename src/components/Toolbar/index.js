@@ -359,7 +359,16 @@ export default class Toolbar extends Component {
   }
 
   render() {
-    const {mobile, startTime, stopTime, pausedTime, onStartClock, onPauseClock, solved} = this.props;
+    const {
+      mobile,
+      startTime,
+      stopTime,
+      pausedTime,
+      onStartClock,
+      onPauseClock,
+      solved,
+      replayMode,
+    } = this.props;
 
     if (mobile) {
       return (
@@ -371,12 +380,13 @@ export default class Toolbar extends Component {
               startTime={startTime}
               stopTime={stopTime}
               pausedTime={pausedTime}
+              replayMode={replayMode}
               isPaused={this.props.isPaused || !startTime}
               onStart={onStartClock}
               onPause={onPauseClock}
             />
-            {solved ? null : this.renderCheckMenu()}
-            {solved ? null : this.renderRevealMenu()}
+            {!solved && !replayMode && this.renderCheckMenu()}
+            {!solved && !replayMode && this.renderRevealMenu()}
             {this.renderListViewButton()}
             {this.renderChatButton()}
           </Flex>
@@ -389,6 +399,7 @@ export default class Toolbar extends Component {
         <div className="toolbar--timer">
           <Clock
             v2={this.props.v2}
+            replayMode={replayMode}
             startTime={startTime}
             stopTime={stopTime}
             pausedTime={pausedTime}
@@ -397,14 +408,14 @@ export default class Toolbar extends Component {
             onPause={onPauseClock}
           />
         </div>
-        {solved ? null : this.renderCheckMenu()}
-        {solved ? null : this.renderRevealMenu()}
-        {solved ? null : <div className="toolbar--menu reset">{this.renderResetMenu()}</div>}
-        {solved && this.renderReplayLink()}
+        {!solved && !replayMode && this.renderCheckMenu()}
+        {!solved && !replayMode && this.renderRevealMenu()}
+        {!solved && !replayMode && <div className="toolbar--menu reset">{this.renderResetMenu()}</div>}
+        {solved && !replayMode && this.renderReplayLink()}
         {this.renderColorAttributionToggle()}
         {this.renderListViewButton()}
-        {this.renderPencil()}
-        {this.renderAutocheck()}
+        {!replayMode && this.renderPencil()}
+        {!solved && !replayMode && this.renderAutocheck()}
         {this.renderInfo()}
       </div>
     );

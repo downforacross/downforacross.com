@@ -4,7 +4,9 @@ import './css/replay.css';
 import React, {Component} from 'react';
 import Flex from 'react-flexview';
 import {Helmet} from 'react-helmet';
+import {MdPlayArrow, MdPause, MdFastForward, MdFastRewind} from 'react-icons/md';
 import _ from 'lodash';
+
 import {GameModel} from '../store';
 
 import HistoryWrapper from '../lib/wrappers/HistoryWrapper';
@@ -13,7 +15,7 @@ import Chat from '../components/Chat';
 import Nav from '../components/common/Nav';
 import {Timeline} from '../components/Timeline/Timeline';
 import {toArr} from '../lib/jsUtils';
-import {MdPlayArrow, MdPause, MdFastForward, MdFastRewind} from 'react-icons/md';
+import Toolbar from '../components/Toolbar';
 
 const SCRUB_SPEED = 50; // 30 actions per second
 const AUTOPLAY_SPEEDS = [1, 10, 100];
@@ -37,6 +39,8 @@ export default class Replay extends Component {
       positionToRender: 0,
       autoplayEnabled: false,
       autoplaySpeed: 10,
+      colorAttributionMode: false,
+      listMode: false,
     };
     this.followCursor = -1;
     this.historyWrapper = null;
@@ -64,7 +68,6 @@ export default class Replay extends Component {
   get game() {
     // compute the game state corresponding to current playback time
     const {positionToRender} = this.state;
-    console.log('position to render', positionToRender);
     if (!this.historyWrapper || !this.historyWrapper.ready) return null;
     return this.historyWrapper.getSnapshotAt(positionToRender);
   }
@@ -104,16 +107,12 @@ export default class Replay extends Component {
     }
 
     this.autoplayInterval = setInterval(() => {
-      console.log('tick interval');
       if (this.state.autoplayEnabled && this.state.history.length > 0) {
         if (this.state.position < this.state.history[this.state.history.length - 1].gameTimestamp) {
           this.handleSetPosition(this.state.position + 100 * this.state.autoplaySpeed, true);
         } else {
-          console.log('autoplay ended');
           this.setState({autoplayEnabled: false});
         }
-      } else {
-        console.log('autoplay not enabled');
       }
     }, 100);
   }
@@ -204,8 +203,6 @@ export default class Replay extends Component {
       this.setState({
         autoplayEnabled: !this.state.autoplayEnabled,
       });
-    } else {
-      console.log(e.key);
     }
   };
 
@@ -267,6 +264,32 @@ export default class Replay extends Component {
     );
   }
 
+  renderToolbar() {
+    if (!this.game) return;
+    const {clock, solved} = this.game;
+    const {mobile} = this.props;
+    const {totalTime} = clock;
+    return (
+      <Toolbar
+        v2
+        replayMode
+        gid={this.props.gid}
+        mobile={mobile}
+        pausedTime={totalTime}
+        colorAttributionMode={this.state.colorAttributionMode}
+        listMode={this.state.listMode}
+        onToggleColorAttributionMode={() => {
+          this.setState((prevState) => ({colorAttributionMode: !prevState.colorAttributionMode}));
+        }}
+        onToggleListView={() => {
+          this.setState((prevState) => ({
+            listMode: !prevState.listMode,
+          }));
+        }}
+      />
+    );
+  }
+
   renderPlayer() {
     if (this.state.error) {
       return <div>Error loading replay</div>;
@@ -275,7 +298,7 @@ export default class Replay extends Component {
       return <div>Loading...</div>;
     }
 
-    const {grid, circles, shades, cursors, clues, solved} = this.game;
+    const {grid, circles, shades, cursors, clues, solved, users} = this.game;
     const screenWidth = this.screenWidth;
     const cols = grid[0].length;
     const rows = grid.length;
@@ -299,6 +322,9 @@ export default class Replay extends Component {
         updateCursor={this.handleUpdateCursor}
         onPressEnter={_.noop}
         mobile={false}
+        users={users}
+        colorAttributionMode={this.state.colorAttributionMode}
+        listMode={this.state.listMode}
       />
     );
   }
@@ -404,6 +430,7 @@ export default class Replay extends Component {
         >
           {this.renderHeader()}
         </div>
+        {this.renderToolbar()}
         <div
           style={{
             zIndex: 1,
@@ -411,10 +438,7 @@ export default class Replay extends Component {
             border: '1px solid #E2E2E2',
           }}
         >
-          <Flex style={{padding: 20}}>
-            {this.renderPlayer()}
-            {/* {this.renderChat()} */}
-          </Flex>
+          <Flex style={{padding: 20}}>{this.renderPlayer()}</Flex>
           <div
             style={{
               zIndex: 1,
