@@ -47,6 +47,7 @@ export default class Replay extends Component {
   }
 
   handleSetPosition = (position, isAutoplay = false) => {
+    position = Math.min(position, this.state.history[this.state.history.length - 1].gameTimestamp);
     this.setState({position});
     this.setPositionToRender(position);
     if (!isAutoplay && this.state.autoplayEnabled) {
@@ -216,6 +217,11 @@ export default class Replay extends Component {
   };
 
   handleToggleAutoplay = (e) => {
+    const index = _.findIndex(this.state.history, (event) => event.gameTimestamp > this.state.position);
+    if (index === -1) {
+      // restart
+      this.handleSetPosition(0);
+    }
     this.setState({
       autoplayEnabled: !this.state.autoplayEnabled,
     });
