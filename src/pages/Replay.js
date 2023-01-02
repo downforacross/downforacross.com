@@ -4,7 +4,7 @@ import './css/replay.css';
 import React, {Component} from 'react';
 import Flex from 'react-flexview';
 import {Helmet} from 'react-helmet';
-import {MdPlayArrow, MdPause, MdFastForward, MdFastRewind} from 'react-icons/md';
+import {MdPlayArrow, MdPause, MdChevronLeft, MdChevronRight} from 'react-icons/md';
 import _ from 'lodash';
 
 import {GameModel} from '../store';
@@ -376,7 +376,7 @@ export default class Replay extends Component {
           />
         ) : null}
         <div className="replay--control-icons">
-          <MdFastRewind
+          <MdChevronLeft
             ref="scrubLeft"
             className={`scrub ${left ? 'active' : ''}`}
             onMouseDown={this.handleMouseDownLeft}
@@ -389,7 +389,7 @@ export default class Replay extends Component {
             {autoplayEnabled && <MdPause />}
             {!autoplayEnabled && <MdPlayArrow />}
           </div>
-          <MdFastForward
+          <MdChevronRight
             ref="scrubRight"
             className={`scrub ${right ? 'active' : ''}`}
             onMouseDown={this.handleMouseDownRight}
