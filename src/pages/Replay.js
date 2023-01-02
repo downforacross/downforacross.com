@@ -16,6 +16,7 @@ import Nav from '../components/common/Nav';
 import {Timeline} from '../components/Timeline/Timeline';
 import {isMobile, toArr} from '../lib/jsUtils';
 import Toolbar from '../components/Toolbar';
+import {Tooltip} from '@material-ui/core';
 
 const SCRUB_SPEED = 50; // 30 actions per second
 const AUTOPLAY_SPEEDS = localStorage.premium ? [1, 10, 100, 1000] : [1, 10, 100];
@@ -389,15 +390,17 @@ export default class Replay extends Component {
             {autoplayEnabled && <MdPause />}
             {!autoplayEnabled && <MdPlayArrow />}
           </div>
-          <MdChevronRight
-            ref="scrubRight"
-            className={`scrub ${right ? 'active' : ''}`}
-            onMouseDown={this.handleMouseDownRight}
-            onTouchStart={this.handleMouseDownRight}
-            onTouchEnd={this.handleMouseUpRight}
-            onMouseUp={this.handleMouseUpRight}
-            onMouseLeave={this.handleMouseUpRight}
-          />
+          <Tooltip title="Shortcut: Right Arrow">
+            <MdChevronRight
+              ref="scrubRight"
+              className={`scrub ${right ? 'active' : ''}`}
+              onMouseDown={this.handleMouseDownRight}
+              onTouchStart={this.handleMouseDownRight}
+              onTouchEnd={this.handleMouseUpRight}
+              onMouseUp={this.handleMouseUpRight}
+              onMouseLeave={this.handleMouseUpRight}
+            />
+          </Tooltip>
         </div>
         <div className="replay--time">
           {history.length > 0 && (

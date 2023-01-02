@@ -212,6 +212,7 @@ const reducers = {
               good: true,
               pencil: false,
               revealed: cell.revealed || cell.value !== solution[i][j],
+              user_id: cell.value === solution[i][j] ? cell.user_id : undefined,
             }
           : cell
       )
