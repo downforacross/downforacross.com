@@ -387,6 +387,7 @@ export default class Toolbar extends Component {
             />
             {!solved && !replayMode && this.renderCheckMenu()}
             {!solved && !replayMode && this.renderRevealMenu()}
+            {solved && !replayMode && this.renderReplayLink()}
             {this.renderListViewButton()}
             {this.renderChatButton()}
           </Flex>

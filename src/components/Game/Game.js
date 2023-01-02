@@ -244,7 +244,7 @@ export default class Game extends Component {
     };
     const cols = grid[0].length;
     const rows = grid.length;
-    const width = Math.min((35 * 15 * cols) / rows, screenWidth);
+    const width = Math.min((35 * 15 * cols) / rows, screenWidth - 20);
     const minSize = this.props.mobile ? 1 : 20;
     const size = Math.max(minSize, width / cols);
     return (

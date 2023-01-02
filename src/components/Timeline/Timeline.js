@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import {pure, isAncestor} from '../../lib/jsUtils';
+import {isMobile, pure, isAncestor} from '../../lib/jsUtils';
 import './timeline.css';
 
 const TIMELINE_COLORS = {
@@ -58,15 +58,7 @@ class Timeline extends React.PureComponent {
 
   get units() {
     const length = this.end - this.begin;
-    const maxWidth = 1000;
-    const minWidth = 400;
-    return Math.min(
-      maxWidth / length,
-      Math.max(
-        0.01, // 1 second = 10 pixel
-        minWidth / length
-      )
-    );
+    return this.props.width / length;
   }
 
   componentDidMount() {

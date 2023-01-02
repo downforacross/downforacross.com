@@ -23,7 +23,8 @@ code {
   height: 48px;
   background-color: var(--main-blue);
   justify-content: space-between;
-  font-size: 14px;
+  font-size: 14pt;
+  color: white;
 }
 
 .toolbar--list-view {
@@ -48,9 +49,13 @@ code {
   fill: white;
 }
 
-.toolbar--mobile a {
-  margin-left: 16px;
+.toolbar--mobile svg {
+  font-size: 18pt;
+}
+
+.toolbar--mobile a:first-child {
   color: white;
+  margin-left: 16px;
   text-decoration: none;
   font-weight: 600;
 }
@@ -119,6 +124,9 @@ code {
   width: 24px;
   height: 24px;
   color: inherit;
+  display:flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .toolbar--autocheck {

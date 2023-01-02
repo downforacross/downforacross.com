@@ -80,7 +80,7 @@ export default class Clock extends Component {
     if (this.isPaused) {
       onStart();
     } else {
-      onPause();
+      onPause && onPause();
     }
   }
 

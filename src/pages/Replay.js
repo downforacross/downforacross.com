@@ -14,7 +14,7 @@ import Player from '../components/Player';
 import Chat from '../components/Chat';
 import Nav from '../components/common/Nav';
 import {Timeline} from '../components/Timeline/Timeline';
-import {toArr} from '../lib/jsUtils';
+import {isMobile, toArr} from '../lib/jsUtils';
 import Toolbar from '../components/Toolbar';
 
 const SCRUB_SPEED = 50; // 30 actions per second
@@ -99,7 +99,7 @@ export default class Replay extends Component {
     this.gameModel.attach();
 
     // compute it here so the grid doesn't go crazy
-    this.screenWidth = window.innerWidth;
+    this.screenWidth = window.innerWidth - 1;
     if (this.refs.controls) {
       setTimeout(() => {
         this.refs.controls.focus();
@@ -267,14 +267,13 @@ export default class Replay extends Component {
   renderToolbar() {
     if (!this.game) return;
     const {clock, solved} = this.game;
-    const {mobile} = this.props;
     const {totalTime} = clock;
     return (
       <Toolbar
         v2
         replayMode
         gid={this.props.gid}
-        mobile={mobile}
+        mobile={isMobile()}
         pausedTime={totalTime}
         colorAttributionMode={this.state.colorAttributionMode}
         listMode={this.state.listMode}
@@ -302,7 +301,7 @@ export default class Replay extends Component {
     const screenWidth = this.screenWidth;
     const cols = grid[0].length;
     const rows = grid.length;
-    const width = Math.min((35 * 15 * cols) / rows, screenWidth);
+    const width = Math.min((35 * 15 * cols) / rows, screenWidth - 20);
     const size = width / cols;
     return (
       <Player
@@ -321,7 +320,7 @@ export default class Replay extends Component {
         updateGrid={_.noop}
         updateCursor={this.handleUpdateCursor}
         onPressEnter={_.noop}
-        mobile={false}
+        mobile={isMobile()}
         users={users}
         colorAttributionMode={this.state.colorAttributionMode}
         listMode={this.state.listMode}
@@ -343,6 +342,7 @@ export default class Replay extends Component {
 
   renderControls() {
     const {position, history, left, right, autoplayEnabled} = this.state;
+    const width = isMobile() ? this.screenWidth - 20 : 1000;
 
     // renders the controls / state
     return (
@@ -353,16 +353,21 @@ export default class Replay extends Component {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          padding: 5,
+          padding: 10,
           outline: 'none',
-          width: 1000,
+          width,
         }}
         tabIndex="1"
         onKeyDown={this.handleKeyDown}
         onKeyUp={this.handleKeyUp}
       >
         {history.length > 0 ? (
-          <Timeline history={history} position={position} onSetPosition={this.handleSetPosition} />
+          <Timeline
+            width={width}
+            history={history}
+            position={position}
+            onSetPosition={this.handleSetPosition}
+          />
         ) : null}
         <div className="replay--control-icons">
           <MdFastRewind
@@ -417,28 +422,33 @@ export default class Replay extends Component {
   render() {
     return (
       <Flex column className="replay">
-        <Nav v2 />
+        {!isMobile() && <Nav v2 />}
         <Helmet>
           <title>{`Replay ${this.gid}: ${this.getPuzzleTitle()}`}</title>
         </Helmet>
-        <div
-          style={{
-            paddingLeft: 30,
-            paddingTop: 20,
-            paddingBottom: 20,
-          }}
-        >
-          {this.renderHeader()}
-        </div>
+        {!isMobile() && (
+          <div
+            style={{
+              paddingLeft: 30,
+              paddingTop: 20,
+              paddingBottom: 20,
+            }}
+          >
+            {this.renderHeader()}
+          </div>
+        )}
         {this.renderToolbar()}
-        <div
+        <Flex
+          grow={1}
+          column
           style={{
-            zIndex: 1,
-            padding: 10,
+            padding: isMobile() ? 0 : 10,
             border: '1px solid #E2E2E2',
           }}
         >
-          <Flex style={{padding: 20}}>{this.renderPlayer()}</Flex>
+          <Flex grow={1} style={{padding: isMobile() ? 0 : 20}}>
+            {this.renderPlayer()}
+          </Flex>
           <div
             style={{
               zIndex: 1,
@@ -447,7 +457,7 @@ export default class Replay extends Component {
           >
             {this.renderControls()}
           </div>
-        </div>
+        </Flex>
         {/* Controls:
       Playback scrubber
       Playback speed toggle
