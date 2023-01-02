@@ -1,13 +1,14 @@
 import './css/index.css';
 import React, {Component} from 'react';
 import {MdBorderAll, MdChatBubble, MdList, MdSlowMotionVideo} from 'react-icons/md';
-import {RiPaintFill} from 'react-icons/ri';
+import {RiPaintFill, RiPaintLine} from 'react-icons/ri';
 import Flex from 'react-flexview';
 import {Link} from 'react-router-dom';
 import swal from '@sweetalert/with-react';
 import Clock from './Clock';
 import ActionMenu from './ActionMenu';
 import Popup from './Popup';
+import {isMobile} from '../../lib/jsUtils';
 
 export default class Toolbar extends Component {
   handleBlur = () => {
@@ -147,6 +148,17 @@ export default class Toolbar extends Component {
 
   renderColorAttributionToggle() {
     const {colorAttributionMode, onToggleColorAttributionMode} = this.props;
+    if (isMobile()) {
+      return (
+        <div
+          className={`toolbar--color-attribution-toggle`}
+          title="Color Attribution"
+          onClick={onToggleColorAttributionMode}
+        >
+          {colorAttributionMode ? <RiPaintFill /> : <RiPaintLine />}
+        </div>
+      );
+    }
     return (
       <div
         className={`toolbar--color-attribution-toggle${colorAttributionMode ? ' on' : ''}`}
@@ -388,6 +400,7 @@ export default class Toolbar extends Component {
             {!solved && !replayMode && this.renderCheckMenu()}
             {!solved && !replayMode && this.renderRevealMenu()}
             {solved && !replayMode && this.renderReplayLink()}
+            {this.renderColorAttributionToggle()}
             {this.renderListViewButton()}
             {this.renderChatButton()}
           </Flex>

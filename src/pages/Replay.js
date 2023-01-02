@@ -381,6 +381,8 @@ export default class Replay extends Component {
             className={`scrub ${left ? 'active' : ''}`}
             onMouseDown={this.handleMouseDownLeft}
             onMouseUp={this.handleMouseUpLeft}
+            onTouchStart={this.handleMouseDownLeft}
+            onTouchEnd={this.handleMouseUpLeft}
             onMouseLeave={this.handleMouseUpLeft}
           />
           <div className="scrub--autoplay" onClick={this.handleToggleAutoplay}>
@@ -391,6 +393,8 @@ export default class Replay extends Component {
             ref="scrubRight"
             className={`scrub ${right ? 'active' : ''}`}
             onMouseDown={this.handleMouseDownRight}
+            onTouchStart={this.handleMouseDownRight}
+            onTouchEnd={this.handleMouseUpRight}
             onMouseUp={this.handleMouseUpRight}
             onMouseLeave={this.handleMouseUpRight}
           />
