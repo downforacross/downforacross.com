@@ -202,9 +202,7 @@ export default class Replay extends Component {
     } else if (e.key === 'ArrowRight') {
       this.scrubRight({shift});
     } else if (e.key === ' ') {
-      this.setState({
-        autoplayEnabled: !this.state.autoplayEnabled,
-      });
+      this.handleToggleAutoplay();
     }
   };
 
@@ -217,7 +215,7 @@ export default class Replay extends Component {
     }
   };
 
-  handleToggleAutoplay = (e) => {
+  handleToggleAutoplay = () => {
     const index = _.findIndex(this.state.history, (event) => event.gameTimestamp > this.state.position);
     if (index === -1) {
       // restart
