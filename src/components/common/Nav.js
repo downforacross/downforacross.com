@@ -73,8 +73,20 @@ function showInfo() {
   });
 }
 
+function darkModePreferenceText(darkModePreference) {
+  switch (darkModePreference) {
+    case '1':
+      return 'On';
+    case '2':
+      return 'System default';
+    case '0':
+    default:
+      return 'Off';
+  }
+}
+
 export default function Nav({hidden, v2, canLogin, mobile, linkStyle, divRef}) {
-  const {toggleMolesterMoons} = useContext(GlobalContext);
+  const {darkModePreference, toggleMolesterMoons} = useContext(GlobalContext);
   if (hidden) return null; // no nav for mobile
   const user = getUser();
   const fencing = window.location.href.includes('fencing');
@@ -85,7 +97,7 @@ export default function Nav({hidden, v2, canLogin, mobile, linkStyle, divRef}) {
       </div>
       <div className="nav--right">
         <div className="molester-moon" onClick={toggleMolesterMoons}>
-          Dark Mode (beta)
+          Dark Mode (beta): {darkModePreferenceText(darkModePreference)}
         </div>
         <div className="nav--info" onClick={showInfo}>
           <i className="fa fa-info-circle" />
