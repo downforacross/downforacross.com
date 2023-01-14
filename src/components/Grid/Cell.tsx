@@ -211,6 +211,7 @@ export default class Cell extends React.Component<Props> {
       onClick,
       number,
       referenced,
+      frozen,
     } = this.props;
     if (black || isHidden) {
       return (
@@ -249,6 +250,7 @@ export default class Cell extends React.Component<Props> {
             good,
             revealed,
             pencil,
+            frozen,
           })}
           style={style}
           onClick={this.handleClick}
