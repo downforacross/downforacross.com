@@ -4,6 +4,9 @@
   font-family: courier;
   opacity: 0;
   cursor: pointer;
+  text-align: right;
+  margin-top: -10px; /* Ignore padding from parent so dark mode setting doesn't expand Nav bar */
+  margin-bottom: -10px; /* Can remove these if there's a more compact dark mode switching UI */
 }
 
 .molester-moon:hover {
@@ -12,22 +15,30 @@
 }
 
 .dark {
-  background-color: #111;
-  color: #bbb;
+  background-color: var(--dark-background);
+  color: var(--dark-primary-text);
 }
 
 .dark .nav {
-  background-color: var(--dark-blue) !important;
+  background-color: var(--dark-blue-1) !important;
 }
 
 /* Game Page */
 
 .dark .player--main--clue-bar {
-  background-color: var(--dark-blue) !important;
+  background-color: var(--dark-blue-2) !important;
+}
+
+.dark .mobile-grid-controls--clue-bar {
+  background-color: var(--dark-blue-2);
+}
+
+.dark .mobile-grid-controls--intra-clue {
+  background-color: var(--dark-blue-2);
 }
 
 .dark .player--main--left--grid {
-  color: #ccc;
+  color: var(--dark-primary-text);
 }
 
 .dark .grid--cell {
@@ -35,31 +46,65 @@
 }
 
 .dark .cell {
-  background-color: #111;
+  background-color: var(--dark-background-2);
+  color: var(--dark-primary-text);
 }
 .dark .cell.black {
-  background-color: #333;
+  background-color: var(--dark-background);
 }
 
 .dark .cell.highlighted {
-  background-color: rgb(22, 50, 114) !important;
+  background-color: var(--dark-blue-2) !important;
+}
+
+.dark .cell.referenced {
+  background-color: #80A030 !important;
+  color: white;
+}
+
+.dark .cell.frozen.highlighted {
+  background-color: #399629 !important;
+  color: white;
+}
+
+.dark .cell.referenced .cell--value{
+  color: white !important;
+}
+
+.dark .cell.pencil .cell--value {
+  color: rgba(255, 255, 255, 0.47);
+}
+
+.dark .clues--list--scroll {
+  background-color: var(--dark-background-1);
 }
 
 .dark .clues--list--scroll--clue.selected {
-  background-color: var(--dark-blue) !important;
+  background-color: var(--dark-blue-2);
 }
 
 .dark .clues--list--scroll--clue.half-selected {
-  background-color: #333;
-  border-left-color: var(--dark-blue);
+  background-color: var(--dark-background-1);
+  border-left-color: var(--dark-blue-2);
 }
 
 .dark .chat--header--title {
-  color: #ccc;
+  color: var(--dark-primary-text);
+}
+
+.dark .chat--system-message {
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .dark .clues--list--scroll {
   border-top-color: #555;
+}
+.dark .clues--list--scroll--clue.complete {
+  color: rgba(255, 255, 255, 0.47);
+}
+
+.dark .list-view--list--title {
+  background-color: var(--dark-background);
 }
 
 .dark ::-webkit-scrollbar-thumb {
@@ -67,8 +112,8 @@
 }
 
 .dark .toolbar button {
-  background-color: #111;
-  color: #ccc;
+  background-color: rgba(0, 0, 0, 0);
+  color: var(--dark-primary-text);
 }
 
 .dark .toolbar {
@@ -76,10 +121,17 @@
   border-left: none;
   border-top: none;
   border-bottom-color: #888;
+  background-color: var(--dark-background-2);
 }
+
+.dark .toolbar--mobile {
+  background-color: var(--dark-blue-1);
+}
+
 
 .dark .chat {
   border-color: #888;
+  background-color: var(--dark-background-1);
 }
 
 .dark .chat--header {
@@ -91,23 +143,28 @@
   border-right: none !important;
   border-top: none !important;
 }
-.dark .cell.selected {
-  background-color: #086c3a !important;
+.dark .cell.selected .cell--wrapper{
+  background-color: rgba(0,0,0,0.1);
 }
 
 .dark .cell.good .cell--value {
-  color: #9f9fff;
+  color: #a3baff;
+}
+
+.dark .cell.bad .cell--value {
+  color: rgb(244, 67, 54);
 }
 
 .dark .cell.revealed .cell--value {
-  color: #44cc44;
+  color: rgb(102, 187, 106);
 }
 
 .dark input {
-  background-color: #111;
-  color: #ccc;
-  border-color: #ccc;
+  background-color: var(--dark-background);
+  color: var(--dark-primary-text);
   outline: none;
+  border: solid 1px white;
+  border-radius: 2px;
 }
 
 .dark ::selection {
@@ -116,29 +173,45 @@
 
 /* Welcome Page */
 .dark .welcome {
-  background-color: #111;
-  color: #bbb;
+  background-color: var(--dark-background);
+  color: var(--dark-primary-text);
+}
+
+.dark .welcome--sidebar {
+  background-color: var(--dark-background-2);
+}
+
+.dark .welcome.mobile .welcome--searchbar--container {
+  background-color: var(--dark-blue-1);
+  border-bottom-color: var(--dark-blue-1);
 }
 
 .dark .entry--top--left {
-  color: #bbb;
+  color: var(--dark-primary-text);
 }
 
 .dark .entry {
-  color: #bbb !important;
+  color: var(--dark-primary-text);
 }
 
 .dark .file-uploader--wrapper.v2 {
-  background-color: #111;
+  background-color: rgba(0, 0, 0, 0);
 }
 
 .dark .filters .checkmark {
   background-color: transparent !important;
 }
 
-.dark .quickplay {
+.dark .entry {
+  background-color: var(--dark-background-1);
+  border-color: rgba(255,255,255,0.3);
 }
 
 :root {
-  --dark-blue: rgb(36, 79, 115);
+  --dark-blue-1: rgb(36, 79, 115);
+  --dark-blue-2: #183a60;
+  --dark-primary-text: rgba(255, 255, 255, 0.87);
+  --dark-background: #121212;
+  --dark-background-1: rgba(255, 255, 255, 0.05);
+  --dark-background-2: rgba(255, 255, 255, 0.12);
 }

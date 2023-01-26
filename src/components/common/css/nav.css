@@ -17,6 +17,7 @@
   font-weight: bold;
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .nav.mobile .nav--left {
