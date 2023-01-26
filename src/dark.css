@@ -15,8 +15,8 @@
 }
 
 .dark {
-  background-color: var(--background);
-  color: var(--primary-text);
+  background-color: var(--dark-background);
+  color: var(--dark-primary-text);
 }
 
 .dark .nav {
@@ -38,7 +38,7 @@
 }
 
 .dark .player--main--left--grid {
-  color: var(--primary-text);
+  color: var(--dark-primary-text);
 }
 
 .dark .grid--cell {
@@ -46,11 +46,11 @@
 }
 
 .dark .cell {
-  background-color: var(--background-2);
-  color: var(--primary-text);
+  background-color: var(--dark-background-2);
+  color: var(--dark-primary-text);
 }
 .dark .cell.black {
-  background-color: var(--background);
+  background-color: var(--dark-background);
 }
 
 .dark .cell.highlighted {
@@ -76,7 +76,7 @@
 }
 
 .dark .clues--list--scroll {
-  background-color: var(--background-1);
+  background-color: var(--dark-background-1);
 }
 
 .dark .clues--list--scroll--clue.selected {
@@ -84,12 +84,12 @@
 }
 
 .dark .clues--list--scroll--clue.half-selected {
-  background-color: var(--background-1);
+  background-color: var(--dark-background-1);
   border-left-color: var(--dark-blue-2);
 }
 
 .dark .chat--header--title {
-  color: var(--primary-text);
+  color: var(--dark-primary-text);
 }
 
 .dark .chat--system-message {
@@ -104,7 +104,7 @@
 }
 
 .dark .list-view--list--title {
-  background-color: var(--background);
+  background-color: var(--dark-background);
 }
 
 .dark ::-webkit-scrollbar-thumb {
@@ -113,7 +113,7 @@
 
 .dark .toolbar button {
   background-color: rgba(0, 0, 0, 0);
-  color: var(--primary-text);
+  color: var(--dark-primary-text);
 }
 
 .dark .toolbar {
@@ -121,7 +121,7 @@
   border-left: none;
   border-top: none;
   border-bottom-color: #888;
-  background-color: var(--background-2);
+  background-color: var(--dark-background-2);
 }
 
 .dark .toolbar--mobile {
@@ -131,7 +131,7 @@
 
 .dark .chat {
   border-color: #888;
-  background-color: var(--background-1);
+  background-color: var(--dark-background-1);
 }
 
 .dark .chat--header {
@@ -160,8 +160,8 @@
 }
 
 .dark input {
-  background-color: var(--background);
-  color: var(--primary-text);
+  background-color: var(--dark-background);
+  color: var(--dark-primary-text);
   outline: none;
   border: solid 1px white;
   border-radius: 2px;
@@ -173,12 +173,12 @@
 
 /* Welcome Page */
 .dark .welcome {
-  background-color: var(--background);
-  color: var(--primary-text);
+  background-color: var(--dark-background);
+  color: var(--dark-primary-text);
 }
 
 .dark .welcome--sidebar {
-  background-color: var(--background-2);
+  background-color: var(--dark-background-2);
 }
 
 .dark .welcome.mobile .welcome--searchbar--container {
@@ -187,11 +187,11 @@
 }
 
 .dark .entry--top--left {
-  color: var(--primary-text);
+  color: var(--dark-primary-text);
 }
 
 .dark .entry {
-  color: var(--primary-text);
+  color: var(--dark-primary-text);
 }
 
 .dark .file-uploader--wrapper.v2 {
@@ -203,15 +203,15 @@
 }
 
 .dark .entry {
-  background-color: var(--background-1);
+  background-color: var(--dark-background-1);
   border-color: rgba(255,255,255,0.3);
 }
 
 :root {
   --dark-blue-1: rgb(36, 79, 115);
   --dark-blue-2: #183a60;
-  --primary-text: rgba(255, 255, 255, 0.87);
-  --background: #121212;
-  --background-1: rgba(255, 255, 255, 0.05);
-  --background-2: rgba(255, 255, 255, 0.12);
+  --dark-primary-text: rgba(255, 255, 255, 0.87);
+  --dark-background: #121212;
+  --dark-background-1: rgba(255, 255, 255, 0.05);
+  --dark-background-2: rgba(255, 255, 255, 0.12);
 }
