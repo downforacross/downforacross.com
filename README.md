@@ -17,10 +17,10 @@ If you notice a bug or have a feature request, feel free to open an issue.
    `git clone https://github.com/downforacross/downforacross.com.git`
    `cd downforacross.com`
 
-3. Use node v12
+3. Use node v14
    `nvm install`
    `nvm use`
-   `nvm alias default 12` (optional)
+   `nvm alias default 14` (optional)
 
 4. Install Dependencies
    `yarn`
