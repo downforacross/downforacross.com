@@ -149,6 +149,12 @@ export default class Game extends Component {
     });
   };
 
+  handleToggleVimMode = () => {
+    this.setState((prevState) => ({
+      vimMode: !prevState.vimMode,
+    }));
+  };
+
   handleVimInsert = () => {
     this.setState({
       vimInsert: true,
@@ -188,6 +194,7 @@ export default class Game extends Component {
   };
 
   handlePressPeriod = this.handleTogglePencil;
+  handlePressColon = this.handleToggleVimMode;
 
   handlePressEnter = () => {
     this.props.onUnfocus();
@@ -274,6 +281,7 @@ export default class Game extends Component {
         addPing={this.handleAddPing}
         onPressEnter={this.handlePressEnter}
         onPressPeriod={this.handlePressPeriod}
+        onPressColon={this.handlePressColon}
         listMode={this.state.listMode}
         vimMode={this.state.vimMode}
         vimInsert={this.state.vimInsert}

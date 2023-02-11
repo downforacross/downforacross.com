@@ -111,6 +111,10 @@ export default class Editor extends Component {
     this.props.onChange();
   };
 
+  handlePressColon = () => {
+    this.props.onChange();
+  };
+
   handleChangeClue = (value) => {
     const {direction} = this.state;
     this.props.onUpdateClue(this.selectedParent.r, this.selectedParent.c, direction, value);
@@ -358,6 +362,7 @@ export default class Editor extends Component {
           onPressEnter={() => this.setState({}, this.focusClue.bind(this))}
           onPressEscape={() => this.props.onUnfocus()}
           onPressPeriod={this.handlePressPeriod}
+          onPressColon={this.handlePressColon}
           updateGrid={this.handleUpdateGrid}
           grid={this.props.grid}
           clues={this.props.clues}

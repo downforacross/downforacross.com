@@ -174,13 +174,17 @@ export default class GridControls extends Component {
       actionKeys[isAcross ? 'ArrowDown' : 'ArrowRight'] = 'forward';
     }
 
-    const {onPressEnter, onPressPeriod, onPressEscape} = this.props;
+    const {onPressEnter, onPressPeriod, onPressEscape, onPressColon} = this.props;
     if (key in actionKeys) {
       this.handleAction(actionKeys[key], shiftKey);
       return true;
     }
     if (key === '.') {
       onPressPeriod && onPressPeriod();
+      return true;
+    }
+    if (key === ':') {
+      onPressColon && onPressColon();
       return true;
     }
     if (key === 'Enter') {
@@ -229,13 +233,17 @@ export default class GridControls extends Component {
       '$': 'end',
     };
 
-    const {onVimNormal, onVimInsert, vimInsert, onPressEnter, onPressPeriod} = this.props;
+    const {onVimNormal, onVimInsert, vimInsert, onPressEnter, onPressPeriod, onPressColon} = this.props;
     if (key in actionKeys) {
       this.handleAction(actionKeys[key], shiftKey);
       return true;
     }
     if (altKey) {
       this.handleAltKey(key, shiftKey);
+      return true;
+    }
+    if (key === ':') {
+      onPressColon && onPressColon();
       return true;
     }
     if (!vimInsert) {

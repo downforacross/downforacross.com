@@ -244,6 +244,7 @@ export default class Toolbar extends Component {
   }
 
   renderInfo() {
+    const {vimMode} = this.props;
     return (
       <div className="toolbar--info">
         <Popup icon="fa-info-circle" onBlur={this.handleBlur}>
@@ -331,6 +332,17 @@ export default class Toolbar extends Component {
                   <code>Home</code> OR <code>End</code>
                 </td>
                 <td>Move cursor to the beginning or end of a clue</td>
+              </tr>
+              <tr>
+                <td>
+                  <code>:</code> (colon)
+                </td>
+                <td>
+                  Enable/Disable <code>vim</code> mode
+                </td>
+                <td>
+                  Status: <b>{vimMode ? 'On' : 'Off'}</b>
+                </td>
               </tr>
             </tbody>
           </table>
