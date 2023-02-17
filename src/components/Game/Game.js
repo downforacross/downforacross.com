@@ -344,7 +344,7 @@ export default class Game extends Component {
         >
           {this.renderPlayer()}
         </Flex>
-        {this.game.solved && !this.props.mobile && <Confetti />}
+        {this.game.solved && <Confetti />}
       </Flex>
     );
   }
