@@ -131,6 +131,24 @@ export default class Toolbar extends Component {
     );
   }
 
+  handleVimModeClick = (e) => {
+    this.props.onToggleVimMode();
+  };
+
+  renderExtrasMenu() {
+    const {vimMode} = this.props;
+    const vimModeLabel = vimMode ? 'Disable Vim Mode' : 'Enable Vim Mode';
+    return (
+      <ActionMenu
+        label="Extras"
+        onBlur={this.handleBlur}
+        actions={{
+          [vimModeLabel]: this.handleVimModeClick,
+        }}
+      />
+    );
+  }
+
   renderReplayLink() {
     const replayLink = `/beta/replay/${this.props.gid}`;
     return (
@@ -244,7 +262,6 @@ export default class Toolbar extends Component {
   }
 
   renderInfo() {
-    const {vimMode} = this.props;
     return (
       <div className="toolbar--info">
         <Popup icon="fa-info-circle" onBlur={this.handleBlur}>
@@ -332,17 +349,6 @@ export default class Toolbar extends Component {
                   <code>Home</code> OR <code>End</code>
                 </td>
                 <td>Move cursor to the beginning or end of a clue</td>
-              </tr>
-              <tr>
-                <td>
-                  <code>:</code> (colon)
-                </td>
-                <td>
-                  Enable/Disable <code>vim</code> mode
-                </td>
-                <td>
-                  Status: <b>{vimMode ? 'On' : 'Off'}</b>
-                </td>
               </tr>
             </tbody>
           </table>
@@ -437,6 +443,7 @@ export default class Toolbar extends Component {
         {!solved && !replayMode && this.renderCheckMenu()}
         {!solved && !replayMode && this.renderRevealMenu()}
         {!solved && !replayMode && <div className="toolbar--menu reset">{this.renderResetMenu()}</div>}
+        {this.renderExtrasMenu()}
         {solved && !replayMode && this.renderReplayLink()}
         {this.renderColorAttributionToggle()}
         {this.renderListViewButton()}

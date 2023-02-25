@@ -313,7 +313,6 @@ export default class Player extends Component {
       mobile,
       onPressEnter,
       onPressPeriod,
-      onPressColon,
       listMode,
       vimMode,
       vimInsert,
@@ -503,7 +502,6 @@ export default class Player extends Component {
           ref="gridControls"
           onPressEnter={onPressEnter}
           onPressPeriod={onPressPeriod}
-          onPressColon={onPressColon}
           vimMode={vimMode}
           vimInsert={vimInsert}
           onVimInsert={onVimInsert}

@@ -194,7 +194,6 @@ export default class Game extends Component {
   };
 
   handlePressPeriod = this.handleTogglePencil;
-  handlePressColon = this.handleToggleVimMode;
 
   handlePressEnter = () => {
     this.props.onUnfocus();
@@ -281,7 +280,6 @@ export default class Game extends Component {
         addPing={this.handleAddPing}
         onPressEnter={this.handlePressEnter}
         onPressPeriod={this.handlePressPeriod}
-        onPressColon={this.handlePressColon}
         listMode={this.state.listMode}
         vimMode={this.state.vimMode}
         vimInsert={this.state.vimInsert}
@@ -326,6 +324,7 @@ export default class Game extends Component {
         onReset={this.handleReset}
         onKeybind={this.handleKeybind}
         onTogglePencil={this.handleTogglePencil}
+        onToggleVimMode={this.handleToggleVimMode}
         onToggleAutocheck={this.handleToggleAutocheck}
         onToggleListView={this.handleToggleListView}
         onToggleChat={this.handleToggleChat}
