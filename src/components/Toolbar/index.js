@@ -136,7 +136,7 @@ export default class Toolbar extends Component {
   };
 
   renderExtrasMenu() {
-    const {vimMode} = this.props;
+    const {vimMode, onToggleColorAttributionMode} = this.props;
     const vimModeLabel = vimMode ? 'Disable Vim Mode' : 'Enable Vim Mode';
     return (
       <ActionMenu
@@ -144,6 +144,10 @@ export default class Toolbar extends Component {
         onBlur={this.handleBlur}
         actions={{
           [vimModeLabel]: this.handleVimModeClick,
+          'Color Attribution': onToggleColorAttributionMode,
+          'List View': this.onToggleListView,
+          Pencil: this.onTogglePencil,
+          Autocheck: this.onToggleAutocheck,
         }}
       />
     );
