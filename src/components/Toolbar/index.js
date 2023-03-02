@@ -145,9 +145,9 @@ export default class Toolbar extends Component {
         actions={{
           [vimModeLabel]: this.handleVimModeClick,
           'Color Attribution': onToggleColorAttributionMode,
-          'List View': this.onToggleListView,
-          Pencil: this.onTogglePencil,
-          Autocheck: this.onToggleAutocheck,
+          'List View': this.props.onToggleListView,
+          Pencil: this.props.onTogglePencil,
+          Autocheck: this.props.onToggleAutocheck,
         }}
       />
     );
