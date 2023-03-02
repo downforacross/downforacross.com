@@ -447,12 +447,12 @@ export default class Toolbar extends Component {
         {!solved && !replayMode && this.renderCheckMenu()}
         {!solved && !replayMode && this.renderRevealMenu()}
         {!solved && !replayMode && <div className="toolbar--menu reset">{this.renderResetMenu()}</div>}
-        {this.renderExtrasMenu()}
         {solved && !replayMode && this.renderReplayLink()}
         {this.renderColorAttributionToggle()}
         {this.renderListViewButton()}
         {!replayMode && this.renderPencil()}
         {!solved && !replayMode && this.renderAutocheck()}
+        {!replayMode() && this.renderExtrasMenu()}
         {!replayMode && this.renderInfo()}
       </div>
     );
