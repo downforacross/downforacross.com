@@ -131,6 +131,24 @@ export default class Toolbar extends Component {
     );
   }
 
+  handleVimModeClick = (e) => {
+    this.props.onToggleVimMode();
+  };
+
+  renderExtrasMenu() {
+    const {vimMode} = this.props;
+    const vimModeLabel = vimMode ? 'Disable Vim Mode' : 'Enable Vim Mode';
+    return (
+      <ActionMenu
+        label="Extras"
+        onBlur={this.handleBlur}
+        actions={{
+          [vimModeLabel]: this.handleVimModeClick,
+        }}
+      />
+    );
+  }
+
   renderReplayLink() {
     const replayLink = `/beta/replay/${this.props.gid}`;
     return (
@@ -425,6 +443,7 @@ export default class Toolbar extends Component {
         {!solved && !replayMode && this.renderCheckMenu()}
         {!solved && !replayMode && this.renderRevealMenu()}
         {!solved && !replayMode && <div className="toolbar--menu reset">{this.renderResetMenu()}</div>}
+        {this.renderExtrasMenu()}
         {solved && !replayMode && this.renderReplayLink()}
         {this.renderColorAttributionToggle()}
         {this.renderListViewButton()}

@@ -149,6 +149,12 @@ export default class Game extends Component {
     });
   };
 
+  handleToggleVimMode = () => {
+    this.setState((prevState) => ({
+      vimMode: !prevState.vimMode,
+    }));
+  };
+
   handleVimInsert = () => {
     this.setState({
       vimInsert: true,
@@ -318,6 +324,7 @@ export default class Game extends Component {
         onReset={this.handleReset}
         onKeybind={this.handleKeybind}
         onTogglePencil={this.handleTogglePencil}
+        onToggleVimMode={this.handleToggleVimMode}
         onToggleAutocheck={this.handleToggleAutocheck}
         onToggleListView={this.handleToggleListView}
         onToggleChat={this.handleToggleChat}
