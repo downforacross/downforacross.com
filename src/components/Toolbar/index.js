@@ -452,7 +452,7 @@ export default class Toolbar extends Component {
         {this.renderListViewButton()}
         {!replayMode && this.renderPencil()}
         {!solved && !replayMode && this.renderAutocheck()}
-        {!replayMode() && this.renderExtrasMenu()}
+        {!replayMode && this.renderExtrasMenu()}
         {!replayMode && this.renderInfo()}
       </div>
     );
