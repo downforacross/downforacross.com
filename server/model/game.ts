@@ -67,6 +67,7 @@ export async function addInitialGameEvent(gid: string, pid: string) {
         clock: {
           lastUpdated: 0,
           totalTime: 0,
+          trueTotalTime: 0,
           paused: true,
         },
         solved: false,
