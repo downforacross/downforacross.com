@@ -46,7 +46,7 @@ function applyClueVisibilityToGrid(vis: {across: boolean[]; down: boolean[]}, gr
   return grid.map((row) =>
     row.map((cell) => ({
       ...cell,
-      hidden: !!cell.parents && !vis.across[cell.parents!.across] && !vis.down[cell.parents!.down],
+      isHidden: !!cell.parents && !vis.across[cell.parents!.across] && !vis.down[cell.parents!.down],
     }))
   );
 }

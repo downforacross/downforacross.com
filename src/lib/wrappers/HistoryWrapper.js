@@ -111,7 +111,10 @@ export default class HistoryWrapper {
         this.memoize(index);
       }
     });
-    event.gameTimestamp = this.getSnapshotAtIndex(insertPoint).clock.trueTotalTime;
+    const snapshot = this.getSnapshotAtIndex(insertPoint);
+    if (snapshot.clock) {
+      event.gameTimestamp = snapshot.clock.trueTotalTime;
+    }
   }
 
   addOptimisticEvent(event) {
