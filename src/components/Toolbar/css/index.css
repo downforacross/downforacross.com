@@ -19,56 +19,6 @@ code {
   text-align: center;
 }
 
-.toolbar--mobile {
-  height: 48px;
-  background-color: var(--main-blue);
-  justify-content: space-between;
-  font-size: 14pt;
-  color: white;
-}
-
-.toolbar--list-view {
-  cursor: pointer;
-  width: 24px;
-  height: 24px;
-  padding: 12px;
-  fill: white;
-}
-
-.toolbar--chat {
-  width: 24px;
-  height: 24px;
-  padding: 12px;
-  fill: white;
-}
-
-.toolbar--game {
-  width: 24px;
-  height: 24px;
-  padding: 12px;
-  fill: white;
-}
-
-.toolbar--mobile svg {
-  font-size: 18pt;
-}
-
-.toolbar--mobile a:first-child {
-  color: white;
-  margin-left: 16px;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.toolbar--mobile button {
-  background-color: transparent;
-  border: none;
-  padding: 16px;
-  color: white;
-  font-size: 14px;
-  height: 48px;
-}
-
 .toolbar button {
   color: var(--main-gray-1);
   padding: 7px 10px 7px 10px;
@@ -83,11 +33,22 @@ code {
   background-color: var(--main-gray-3);
 }
 
-.toolbar--mobile .clock {
-  color: white;
-}
 .toolbar--timer {
   text-align: center;
+}
+
+.toolbar--color-attribution-toggle {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.toolbar--list-view {
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  padding: 12px;
+  fill: white;
 }
 
 .toolbar--pencil {
@@ -120,6 +81,10 @@ code {
   height: 14px;
 }
 
+.toolbar--autocheck {
+  cursor: pointer;
+}
+
 .toolbar--replay-link {
   width: 24px;
   height: 24px;
@@ -127,10 +92,6 @@ code {
   display:flex;
   justify-content: center;
   align-items: center;
-}
-
-.toolbar--autocheck {
-  cursor: pointer;
 }
 
 .toolbar--info {
@@ -141,11 +102,6 @@ code {
   color: var(--main-blue) !important;
 }
 
-.toolbar--color-attribution-toggle {
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-}
 .toolbar--color-attribution-toggle.on {
   color: var(--main-blue) !important;
 }
@@ -158,9 +114,41 @@ code {
   color: var(--main-blue) !important;
 }
 
+.toolbar--mobile {
+  height: 48px;
+  background-color: var(--main-blue);
+  justify-content: space-between;
+  font-size: 14pt;
+  color: white;
+}
+
+.toolbar--mobile a:first-child {
+  color: white;
+  margin-left: 16px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.toolbar--mobile button {
+  background-color: transparent;
+  border: none;
+  padding: 16px;
+  color: white;
+  font-size: 14px;
+  height: 48px;
+}
+
+.toolbar--mobile svg {
+  font-size: 18pt;
+}
+
 .toolbar--mobile--top {
   justify-content: space-between;
   align-items: center;
   position: relative;
   text-align: center;
+}
+
+.toolbar--mobile .clock {
+  color: white;
 }
