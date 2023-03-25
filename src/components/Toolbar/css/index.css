@@ -5,7 +5,7 @@ code {
 
 .toolbar {
   font-size: 16pt;
-  padding: 10px 10px 8px 50px;
+  padding: 15px 10px 13px 50px;
   min-height: 20px;
   border-top: 1px solid #e2e2e2;
   border-left: 1px solid #e2e2e2;
@@ -37,22 +37,11 @@ code {
   text-align: center;
 }
 
-.toolbar--color-attribution-toggle {
-  width: 24px;
-  height: 24px;
+.toolbar--color-attribution-toggle, .toolbar--list-view, .toolbar--pencil, .toolbar--autocheck {
   cursor: pointer;
-}
-
-.toolbar--list-view {
-  cursor: pointer;
-  width: 24px;
-  height: 24px;
-  padding: 12px;
-  fill: white;
 }
 
 .toolbar--pencil {
-  cursor: pointer;
   display: flex;
 }
 
@@ -79,10 +68,6 @@ code {
   opacity: 0;
   width: 14px;
   height: 14px;
-}
-
-.toolbar--autocheck {
-  cursor: pointer;
 }
 
 .toolbar--replay-link {
