@@ -166,7 +166,7 @@ export default class FileUploader extends Component {
         <div className={`file-uploader--wrapper ${v2 ? 'v2' : ''}`}>
           <div className="file-uploader--box">
             <MdFileUpload className="file-uploader--box--icon" />
-            Import .puz file
+            Import .puz or .ipuz file
           </div>
         </div>
       </Dropzone>
