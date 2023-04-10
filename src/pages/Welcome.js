@@ -18,22 +18,12 @@ const BLUE = '#6aa9f4';
 const WHITE = '#FFFFFF';
 
 export default class Welcome extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       puzzles: [],
       userHistory: {},
       pages: 0,
-      statusFilter: {
-        Complete: true,
-        'In progress': true,
-        New: true,
-      },
-      sizeFilter: {
-        Mini: true,
-        Standard: true,
-      },
-      search: '',
     };
     this.loading = false;
     this.mobile = isMobile();
@@ -142,16 +132,16 @@ export default class Welcome extends Component {
   };
 
   renderPuzzles() {
-    const {userHistory, puzzles, sizeFilter, statusFilter, search} = this.state;
+    const {userHistory, puzzles} = this.state;
     return (
       <PuzzleList
         fencing={this.props.fencing}
         puzzles={puzzles}
         uploadedPuzzles={this.uploadedPuzzles}
         userHistory={userHistory}
-        sizeFilter={sizeFilter}
-        statusFilter={statusFilter}
-        search={search}
+        sizeFilter={this.props.sizeFilter}
+        statusFilter={this.props.statusFilter}
+        search={this.props.search}
         onNextPage={this.nextPage}
         onScroll={this.handleScroll}
       />
@@ -164,26 +154,21 @@ export default class Welcome extends Component {
   };
 
   handleFilterChange = (header, name, on) => {
-    const {sizeFilter, statusFilter} = this.state;
     if (header === 'Size') {
-      this.setState({
-        sizeFilter: {
-          ...sizeFilter,
-          [name]: on,
-        },
+      this.props.setSizeFilter({
+        ...this.props.sizeFilter,
+        [name]: on,
       });
     } else if (header === 'Status') {
-      this.setState({
-        statusFilter: {
-          ...statusFilter,
-          [name]: on,
-        },
+      this.props.setStatusFilter({
+        ...this.props.statusFilter,
+        [name]: on,
       });
     }
   };
 
   updateSearch = _.debounce((search) => {
-    this.setState({search});
+    this.props.setSearch(search);
   }, 250);
 
   handleSearchInput = (e) => {
@@ -200,7 +185,9 @@ export default class Welcome extends Component {
   };
 
   renderFilters() {
-    const {sizeFilter, statusFilter} = this.state;
+    const sizeFilter = this.props.sizeFilter;
+    const statusFilter = this.props.statusFilter;
+
     const headerStyle = {
       fontWeight: 600,
       marginTop: 10,

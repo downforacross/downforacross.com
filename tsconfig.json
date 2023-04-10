@@ -1,7 +1,9 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "module": "esnext"
+    "module": "esnext",
+    "noFallthroughCasesInSwitch": true,
+    "jsx": "react-jsx"
   },
   "paths": {
     "@shared/*": [
