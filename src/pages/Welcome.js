@@ -295,7 +295,6 @@ export default class Welcome extends Component {
   };
 
   renderSearch() {
-    const {search} = this.state;
     const hAlignContent = this.mobile ? 'right' : 'left';
     const grow = this.mobile ? 0 : 1;
     return (
@@ -314,7 +313,7 @@ export default class Welcome extends Component {
             onFocus={this.handleSearchFocus}
             onBlur={this.handleSearchBlur}
             onInput={this.handleSearchInput}
-            val={search}
+            defaultValue={this.props.search}
             className="welcome--searchbar"
           />
         </Flex>
