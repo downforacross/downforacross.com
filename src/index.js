@@ -19,6 +19,7 @@ import {
   Stats,
   Room,
   Fencing,
+  WrappedWelcome,
 } from './pages';
 import GlobalContext from './lib/GlobalContext';
 
@@ -59,9 +60,9 @@ const Root = () => {
       <GlobalContext.Provider value={{toggleMolesterMoons, darkModePreference}}>
         <div className={classnames('router-wrapper', {mobile: isMobile(), dark: darkMode})}>
           <Switch>
-            <Route exact path="/" component={Welcome} />
+            <Route exact path="/" component={WrappedWelcome} />
             <Route exact path="/fencing">
-              <Welcome fencing />
+              <WrappedWelcome fencing />
             </Route>
             <Route exact path="/stats" component={Stats} />
             <Route exact path="/game/:gid" component={Game} />
