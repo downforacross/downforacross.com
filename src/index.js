@@ -73,7 +73,7 @@ const Root = () => {
             <Route exact path="/beta/replay/:gid" component={Replay} />
             <Route exact path="/replays/:pid" component={Replays} />
             <Route exact path="/replays" component={Replays} />
-            <Route exact path="/beta" component={Welcome} />
+            <Route exact path="/beta" component={WrappedWelcome} />
             <Route exact path="/beta/game/:gid" component={Game} />
             <Route exact path="/beta/battle/:bid" component={Battle} />
             <Route exact path="/beta/play/:pid" component={Play} />
