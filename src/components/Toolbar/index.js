@@ -124,7 +124,7 @@ export default class Toolbar extends Component {
         actions={{
           Square: this.reset.bind(this, 'square'),
           Word: this.reset.bind(this, 'word'),
-          Puzzle: this.reset.bind(this, 'puzzle'),
+          Puzzle: this.confirmResetPuzzle.bind(this, () => this.reset('puzzle')),
           'Puzzle and Timer': this.resetPuzzleAndTimer.bind(this),
         }}
       />
@@ -387,9 +387,24 @@ export default class Toolbar extends Component {
     this.props.onKeybind(mode);
   }
 
+  confirmResetPuzzle(callback) {
+    swal({
+      title: `Are you sure you want to reset the entire puzzle?`,
+      icon: 'warning',
+      buttons: true,
+      dangerMode: true,
+    }).then((confirmed) => {
+      if (confirmed) {
+        callback();
+      }
+    });
+  }
+
   resetPuzzleAndTimer() {
-    this.reset('puzzle');
-    this.props.onResetClock();
+    this.confirmResetPuzzle(() => {
+      this.reset('puzzle');
+      this.props.onResetClock();
+    });
   }
 
   render() {
