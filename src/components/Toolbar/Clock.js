@@ -3,6 +3,21 @@ import React, {Component} from 'react';
 import {getTime} from '../../store/firebase';
 import {MAX_CLOCK_INCREMENT} from '../../lib/timing';
 
+export const formatMilliseconds = (ms) => {
+  function pad2(num) {
+    let s = `${100}${num}`;
+    s = s.substr(s.length - 2);
+    return s;
+  }
+  let secs = Math.floor(ms / 1000);
+  let mins = Math.floor(secs / 60);
+  secs %= 60;
+  const hours = Math.floor(mins / 60);
+  mins %= 60;
+
+  return `${(hours ? `${hours}:` : '') + pad2(mins)}:${pad2(secs)}`;
+};
+
 export default class Clock extends Component {
   constructor() {
     super();
@@ -22,12 +37,6 @@ export default class Clock extends Component {
   }
 
   updateClock() {
-    function pad2(num) {
-      let s = `${100}${num}`;
-      s = s.substr(s.length - 2);
-      return s;
-    }
-
     const {pausedTime} = this.props;
     const start = this.props.startTime;
     const stop = this.props.stopTime;
@@ -50,15 +59,8 @@ export default class Clock extends Component {
       }
     }
 
-    let secs = Math.floor(clock / 1000);
-    let mins = Math.floor(secs / 60);
-    secs %= 60;
-    const hours = Math.floor(mins / 60);
-    mins %= 60;
-
-    const str = `${(hours ? `${hours}:` : '') + pad2(mins)}:${pad2(secs)}`;
     this.setState({
-      clock: str,
+      clock: formatMilliseconds(clock),
     });
   }
 
