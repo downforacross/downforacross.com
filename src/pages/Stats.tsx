@@ -66,7 +66,7 @@ const Stats: React.FC<{}> = () => {
                   <td>{avgSolveTime && formatMilliseconds(avgSolveTime)}</td>
                   <td>
                     {bestSolveTime && (
-                      <a href={`/beta/game/${bestSolveTimeGameId}`}>{formatMilliseconds(bestSolveTime)}</a>
+                      <a href={`/replay/${bestSolveTimeGameId}`}>{formatMilliseconds(bestSolveTime)}</a>
                     )}
                   </td>
                   <td>{avgCheckedSquareCount}</td>
@@ -93,7 +93,7 @@ const Stats: React.FC<{}> = () => {
               ({gameId, title, size, dateSolved, solveTime, checkedSquareCount, revealedSquareCount}) => (
                 <tr key={gameId}>
                   <td>
-                    <a href={`/beta/game/${gameId}`}>{title}</a>
+                    <a href={`/replay/${gameId}`}>{title}</a>
                     {` (${size})`}
                   </td>
                   <td>{dateSolved}</td>
