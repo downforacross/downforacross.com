@@ -85,6 +85,6 @@ export async function getPuzzleSolves(gids: string[]): Promise<SolvedPuzzleType[
     })
     .sort((a, b) => b.solved_time.utc().valueOf() - a.solved_time.utc().valueOf());
   const ms = Date.now() - startTime;
-  console.log(`getPuzzleSolves took ${ms}ms`);
+  console.log(`getPuzzleSolves took ${ms}ms for ${gids.length} gids`);
   return puzzleSolves;
 }

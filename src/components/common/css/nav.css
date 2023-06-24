@@ -24,6 +24,11 @@
   font-weight: 600;
 }
 
+.nav--right div a {
+  color: white;
+  margin-left: 40px;
+}
+
 .nav--right {
   margin-right: 10px;
   color: white;

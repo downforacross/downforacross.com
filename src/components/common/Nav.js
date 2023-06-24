@@ -103,8 +103,8 @@ export default function Nav({hidden, v2, canLogin, mobile, linkStyle, divRef}) {
         >
           Dark Mode (beta): {darkModePreferenceText(darkModePreference)}
         </div>
-        <div>
-          <a href="/stats">Stats</a>
+        <div className="nav--right stats">
+          <a href="/stats">Your stats</a>
         </div>
         <div className="nav--info" onClick={showInfo}>
           <i className="fa fa-info-circle" />

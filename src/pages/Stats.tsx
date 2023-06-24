@@ -23,8 +23,12 @@ const Stats: React.FC<{}> = () => {
 
   useEffect(() => {
     user.listUserHistory().then((history: any) => {
-      console.log(`keys: ${_.keys(history)}`);
-      fetchStats({gids: _.keys(history)}).then((s) => {
+      const recentGames = _.keys(history)
+        .filter((gid: string) => history[gid]?.solved)
+        .sort((gid: string) => history[gid]?.time)
+        .reverse()
+        .slice(0, 500);
+      fetchStats({gids: recentGames}).then((s) => {
         setStats(s);
       });
     });
