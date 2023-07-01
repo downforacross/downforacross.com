@@ -99,8 +99,8 @@
     "devfrontendprod": "REACT_APP_ENV=production REACT_APP_USE_LOCAL_SERVER=1 PORT=3020 react-scripts start",
     "devbackend": "cross-env PORT=3021 nodemon --watch server -e \"ts\" --exec \"npx ts-node -P server/tsconfig.json server/server.ts\"",
     "devbackendprod": "source .env.prod; PORT=3021 nodemon --watch server -e \"ts\" --exec \"npx ts-node -P server/tsconfig.json server/server.ts\"",
-    "servebackendprod": "while true; do env $(cat .env.prod | xargs) PORT=3021 ts-node -P server/tsconfig.json server/server.ts || true; done",
-    "servebackendstaging": "while true; do env $(cat .env.staging | xargs) PORT=4021 ts-node -P server/tsconfig.json server/server.ts || true; done",
+    "servebackendprod": "while true; do env $(cat .env.prod | xargs)  NODE_ENV=production PORT=3021 ts-node -P server/tsconfig.json server/server.ts || true; done",
+    "servebackendstaging": "while true; do env $(cat .env.staging | xargs)  NODE_ENV=production PORT=4021 ts-node -P server/tsconfig.json server/server.ts || true; done",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
