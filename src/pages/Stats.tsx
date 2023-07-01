@@ -1,110 +1,116 @@
-import React, {useEffect} from 'react';
-import {makeStyles} from '@material-ui/core/styles';
+import React, {useEffect, useState} from 'react';
 import _ from 'lodash';
-import {fetchStats, AllStats} from '../api/stats';
+import {fetchStats} from '../api/stats';
+import {ListPuzzleStatsResponse} from '../shared/types';
+import {getUser} from '../store/user';
+import Flex from 'react-flexview';
+import {Helmet} from 'react-helmet';
+import Nav from '../components/common/Nav';
+import {formatMilliseconds} from '../components/Toolbar/Clock';
+import {makeStyles} from '@material-ui/core';
 
 const useStyles = makeStyles({
-  page: {
-    padding: 16,
-  },
-  liveContainer: {
-    padding: 16,
-  },
-  timeWindowContainer: {
-    padding: 16,
-  },
   header: {
-    fontSize: '200%',
-  },
-  counts: {
-    fontWeight: 'bold',
-  },
-  table: {
-    borderCollapse: 'collapse',
-    textAlign: 'right',
+    textAlign: 'center',
   },
 });
 
 const Stats: React.FC<{}> = () => {
+  const user = getUser();
   const classes = useStyles();
-  const [allStats, setAllStats] = React.useState({} as AllStats);
+
+  const [stats, setStats] = useState<ListPuzzleStatsResponse | null>(null);
+
   useEffect(() => {
-    async function refresh() {
-      const allStats = await fetchStats();
-      setAllStats(allStats);
-    }
-    refresh();
-  }, []);
+    user.listUserHistory().then((history: any) => {
+      const recentGames = _.keys(history)
+        .filter((gid: string) => history[gid]?.solved)
+        .sort((gid: string) => history[gid]?.time)
+        .reverse()
+        .slice(0, 500);
+      fetchStats({gids: recentGames}).then((s) => {
+        setStats(s);
+      });
+    });
+  }, [user]);
+
   return (
-    <div className={classes.page}>
-      {allStats.liveStats && (
-        <div className={classes.liveContainer}>
-          <div className={classes.header}>Live Stats</div>
-          <div>
-            Server last restarted
-            {allStats.liveStats.serverStartDate}
-          </div>
-          <div>
-            {allStats.liveStats.connectionsCount}
-            {' '}
-            {allStats.liveStats.connectionsCount === 1 ? 'user' : 'users'}
-            {' '}
-            online
-          </div>
-          <div>
-            {allStats.liveStats.gamesCount} 
-            {' '}
-            {allStats.liveStats.gamesCount === 1 ? 'game' : 'games'}
-            {' '}
-            being
-            played
-          </div>
-        </div>
-      )}
-      {_.map(allStats.timeWindowStats, ({name, stats}) => (
-        <div key={name} className={classes.timeWindowContainer}>
-          <div className={classes.header}>
-            {_.capitalize(name)}
-            {' '}
-            Stats
-          </div>
-          <table className={classes.table}>
-            <tbody>
-              <tr>
-                <th>Interval</th>
-                <th>Percent Complete</th>
-                <th>Active Games</th>
-                <th>Game Events</th>
-                <th>New Connections</th>
-                <th>Bytes Received</th>
-                <th>Bytes Sent</th>
-              </tr>
-              <tr>
-                <td>Previous Interval</td>
-                <td>100%</td>
-                <td>{stats.prevCounts.activeGames}</td>
-                <td>{stats.prevCounts.gameEvents}</td>
-                <td>{stats.prevCounts.connections}</td>
-                <td>{stats.prevCounts.bytesReceived}</td>
-                <td>{stats.prevCounts.bytesSent}</td>
-              </tr>
-              <tr>
-                <td>Current Interval</td>
-                <td>
-                  {(stats.percentComplete * 100).toFixed(2)}
-                  %
-                </td>
-                <td>{stats.counts.activeGames}</td>
-                <td>{stats.counts.gameEvents}</td>
-                <td>{stats.counts.connections}</td>
-                <td>{stats.counts.bytesReceived}</td>
-                <td>{stats.counts.bytesSent}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      ))}
-    </div>
+    <Flex column className="replays">
+      <Nav hidden={false} v2 canLogin={false} divRef={null} linkStyle={null} mobile={null} />
+      <Helmet>
+        <title>Stats</title>
+      </Helmet>
+
+      <div>
+        <h2 className={classes.header}>Stats</h2>
+        <table className="main-table">
+          <tbody>
+            <tr>
+              <th>Size</th>
+              <th># puzzles solved</th>
+              <th>Avg solve time</th>
+              <th>Best solve time</th>
+              <th>Avg squares checked</th>
+              <th>Avg squares revealed</th>
+            </tr>
+            {_.map(
+              stats?.stats,
+              ({
+                size,
+                nPuzzlesSolved,
+                avgSolveTime,
+                bestSolveTime,
+                bestSolveTimeGameId,
+                avgCheckedSquareCount,
+                avgRevealedSquareCount,
+              }) => (
+                <tr key={size}>
+                  <td>{size}</td>
+                  <td>{nPuzzlesSolved}</td>
+                  <td>{avgSolveTime && formatMilliseconds(avgSolveTime)}</td>
+                  <td>
+                    {bestSolveTime && (
+                      <a href={`/replay/${bestSolveTimeGameId}`}>{formatMilliseconds(bestSolveTime)}</a>
+                    )}
+                  </td>
+                  <td>{avgCheckedSquareCount}</td>
+                  <td>{avgRevealedSquareCount}</td>
+                </tr>
+              )
+            )}
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h2 className={classes.header}>{`History (${stats?.history?.length || 0} total puzzles)`}</h2>
+        <table className="main-table">
+          <tbody>
+            <tr>
+              <th>Puzzle</th>
+              <th>Date solved</th>
+              <th>Solve time</th>
+              <th># checked squares</th>
+              <th># revealed squares</th>
+            </tr>
+            {_.map(
+              stats?.history,
+              ({gameId, title, size, dateSolved, solveTime, checkedSquareCount, revealedSquareCount}) => (
+                <tr key={gameId}>
+                  <td>
+                    <a href={`/replay/${gameId}`}>{title}</a>
+                    {` (${size})`}
+                  </td>
+                  <td>{dateSolved}</td>
+                  <td>{formatMilliseconds(solveTime)}</td>
+                  <td>{checkedSquareCount}</td>
+                  <td>{revealedSquareCount}</td>
+                </tr>
+              )
+            )}
+          </tbody>
+        </table>
+      </div>
+    </Flex>
   );
 };
 

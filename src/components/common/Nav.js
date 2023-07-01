@@ -96,12 +96,15 @@ export default function Nav({hidden, v2, canLogin, mobile, linkStyle, divRef}) {
         <Link to={fencing ? '/fencing' : '/'}>Down for a Cross</Link>
       </div>
       <div className="nav--right">
-		<div
+        <div
           className="molester-moon"
           style={darkModePreference !== '0' ? {opacity: 1} : {}}
           onClick={toggleMolesterMoons}
         >
           Dark Mode (beta): {darkModePreferenceText(darkModePreference)}
+        </div>
+        <div className="nav--right stats">
+          <a href="/stats">Your stats</a>
         </div>
         <div className="nav--info" onClick={showInfo}>
           <i className="fa fa-info-circle" />
