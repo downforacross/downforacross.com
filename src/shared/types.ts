@@ -98,7 +98,8 @@ export interface AddPuzzleRequest {
 }
 
 export interface AddPuzzleResponse {
-  pid: string;
+  pid?: string;
+  duplicatePuzzle?: string;
 }
 
 export interface ListPuzzleStatsRequest {

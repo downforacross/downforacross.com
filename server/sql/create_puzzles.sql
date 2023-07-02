@@ -33,3 +33,5 @@ CREATE INDEX puzzle_pid_numeric_desc
     ON public.puzzles USING btree
     (pid_numeric DESC NULLS LAST)
     TABLESPACE pg_default;
+
+CREATE UNIQUE INDEX unique_puzzle_content ON public.puzzles (md5(content ->> 'grid'), md5(content -> 'clues' ->> 'down'), md5(content -> 'clues' ->> 'across')) WHERE pid > '30000' AND is_public;
