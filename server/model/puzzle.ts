@@ -41,6 +41,9 @@ export async function listPuzzles(
     pid: string;
     content: PuzzleJson;
     times_solved: number;
+    down_md5: string;
+    across_md5: string;
+    grid_md5: string;
   }[]
 > {
   const startTime = Date.now();
@@ -61,7 +64,14 @@ export async function listPuzzles(
     .join('\n');
   const {rows} = await pool.query(
     `
-      SELECT pid, uploaded_at, content, times_solved
+      SELECT
+        pid,
+        uploaded_at,
+        content,
+        times_solved,
+        md5(content -> 'clues' ->> 'down') as down_md5,
+        md5(content -> 'clues' ->> 'across') as across_md5,
+        md5(content ->> 'grid') as grid_md5
       FROM puzzles
       WHERE is_public = true
       AND (content->'info'->>'type') = ANY($1)
@@ -79,6 +89,9 @@ export async function listPuzzles(
       is_public: boolean;
       content: PuzzleJson;
       times_solved: string;
+      down_md5: string;
+      across_md5: string;
+      grid_md5: string;
       // NOTE: numeric returns as string in pg-promise
       // See https://stackoverflow.com/questions/39168501/pg-promise-returns-integers-as-strings
     }) => ({

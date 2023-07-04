@@ -119,12 +119,15 @@ export interface ListPuzzleRequestFilters {
   nameOrTitleFilter: string;
 }
 
+export interface ListedPuzzle {
+  pid: string;
+  puzzleHash: string;
+  content: PuzzleJson;
+  stats: PuzzleStatsJson;
+}
+
 export interface ListPuzzleResponse {
-  puzzles: {
-    pid: string;
-    content: PuzzleJson;
-    stats: PuzzleStatsJson;
-  }[];
+  puzzles: ListedPuzzle[];
 }
 
 export interface ListPuzzleStatsResponse {
