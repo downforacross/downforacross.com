@@ -12,6 +12,7 @@ import ChatBar from './ChatBar';
 import EditableSpan from '../common/EditableSpan';
 import MobileKeyboard from '../Player/MobileKeyboard';
 import ColorPicker from './ColorPicker.tsx';
+import { decodeHtml } from '../Player/ClueText';
 
 const isEmojis = (str) => {
   const res = str.match(/[A-Za-z,.0-9!-]/g);
@@ -253,7 +254,7 @@ export default class Chat extends Component {
   }
 
   renderMessageText(text) {
-    const words = text.split(' ');
+    const words = text.split(' ').map(word => decodeHtml(word));
     const tokens = [];
     words.forEach((word) => {
       if (word.length === 0) return;
@@ -393,3 +394,4 @@ export default class Chat extends Component {
     );
   }
 }
+
