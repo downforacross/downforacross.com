@@ -1,9 +1,8 @@
 import React from 'react';
+import he from 'he';
 
 function decodeHtml(htmlText) {
-  let text = document.createElement("textarea");
-  text.innerHTML = htmlText;
-  return text.value;
+  return he.decode(htmlText);
 }
 
 export default ({text = ''}) => {
@@ -42,3 +41,4 @@ export default ({text = ''}) => {
     </>
   );
 };
+
