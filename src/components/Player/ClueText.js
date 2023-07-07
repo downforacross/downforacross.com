@@ -1,9 +1,10 @@
 import React from 'react';
+import he from 'he';
 
 function decodeHtml(htmlText) {
   let text = document.createElement("textarea");
   text.innerHTML = htmlText;
-  text = decodeURIComponent(text.value);
+  text = he.decode(text.value);
   // Add additional decoding logic here as necessary
   return text;
 }
