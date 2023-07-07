@@ -3,7 +3,9 @@ import React from 'react';
 function decodeHtml(htmlText) {
   let text = document.createElement("textarea");
   text.innerHTML = htmlText;
-  return text.value;
+  text = decodeURIComponent(text.value);
+  // Add additional decoding logic here as necessary
+  return text;
 }
 
 export default ({text = ''}) => {
@@ -42,3 +44,4 @@ export default ({text = ''}) => {
     </>
   );
 };
+
