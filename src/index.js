@@ -15,8 +15,6 @@ import {
   Play,
   Replay,
   Replays,
-  Welcome,
-  Stats,
   Room,
   Fencing,
   WrappedWelcome,
@@ -64,7 +62,7 @@ const Root = () => {
             <Route exact path="/fencing">
               <WrappedWelcome fencing />
             </Route>
-            <Route exact path="/stats" component={Stats} />
+            {/* <Route exact path="/stats" component={Stats} /> */}
             <Route exact path="/game/:gid" component={Game} />
             <Route exact path="/embed/game/:gid" component={Game} />
             <Route exact path="/room/:rid" component={Room} />
