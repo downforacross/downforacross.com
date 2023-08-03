@@ -1,6 +1,6 @@
 [Unit]
 
-Description=Downforacross Prod Server
+Description=Downforacross Staging Server
 After=network-online.target
 Wants=network-online.target
 
@@ -8,7 +8,7 @@ Wants=network-online.target
 
 WorkingDirectory=/home/ubuntu/downforacross.com
 User=ubuntu
-ExecStart=/usr/bin/yarn servebackendprod
+ExecStart=/usr/bin/yarn servebackendstaging
 Restart=always
 RestartSec=5s
 
