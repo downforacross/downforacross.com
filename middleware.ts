@@ -13,11 +13,11 @@ function isGameUrl(url) {
 export default function middleware(req: Request) {
     const url = new URL(req.url)
 
-    if (isAsset(url) || !isGameUrl(url) || !islinkExpanderBot(req.headers.get('user-agent') as string)) {
-        return new Response(null, {
-            headers: { 'x-middleware-next': '1' },
-        })
-    }
+    // if (isAsset(url) || !isGameUrl(url) || !islinkExpanderBot(req.headers.get('user-agent') as string)) {
+    //     return new Response(null, {
+    //         headers: { 'x-middleware-next': '1' },
+    //     })
+    // }
 
     return new Response(SERVER_URL, {
         // status: 307,
