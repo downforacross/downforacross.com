@@ -22,7 +22,7 @@ export default function middleware(req: Request) {
     try {
         console.log(islinkExpanderBot(req.headers['user-agent']))
     } catch (error) {
-        return new Response(error.toString(), {
+        return new Response(error.toString() + '\n' + JSON.stringify(req.headers), {
             status: 501,
         })
     }
