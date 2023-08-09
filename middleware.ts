@@ -22,9 +22,8 @@ export default function middleware(req: Request) {
     try {
         console.log(islinkExpanderBot(req.headers['user-agent']))
     } catch (error) {
-        return new Response(null, {
+        return new Response(error.toString(), {
             status: 501,
-            statusText: error.toString()
         })
     }
 
