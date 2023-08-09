@@ -18,9 +18,8 @@ function islinkExpanderBot(userAgent) {
 
 export default function middleware(req: Request) {
     const url = new URL(req.url)
-
     try {
-        console.log(islinkExpanderBot(req.headers['user-agent']))
+        console.log(islinkExpanderBot(req.headers.get('user-agent')))
     } catch (error) {
         return new Response(error.toString() + '\n' + JSON.stringify([...req.headers]), {
             status: 501,
