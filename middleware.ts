@@ -7,29 +7,45 @@ function isGameUrl(url) {
     return split.length >= 3 && split[2] === 'game'
 }
 
+const linkExpanderUserAgents = [
+    'Discordbot',
+    'Slackbot-LinkExpanding'
+]
+
+function islinkExpanderBot(userAgent) {
+    return linkExpanderUserAgents.some(ua => userAgent.includes(ua))
+}
+
 export default function middleware(req: Request) {
     const url = new URL(req.url)
 
-    if (isAsset(url) || !isGameUrl(url)) {
+    if (isAsset(url) || !isGameUrl(url) || !islinkExpanderBot(req.headers['user-agent'])) {
         return new Response(null, {
             headers: { 'x-middleware-next': '1' },
         })
     }
 
-    const oEmbedEndpoint = `${url.origin}'/api/oembed?url=${encodeURI(url.toString())}`
-    const linkHeaderContent = [
-        `<${oEmbedEndpoint}>`,
-        'rel="alternate"',
-        'type="application/json+oembed"',
-        'title="placeholder"'
-    ]
+    // const oEmbedEndpoint = `${url.origin}'/api/oembed?url=${encodeURI(url.toString())}`
+    // const linkHeaderContent = [
+    //     `<${oEmbedEndpoint}>`,
+    //     'rel="alternate"',
+    //     'type="application/json+oembed"',
+    //     'title="placeholder"'
+    // ]
 
-    console.log(linkHeaderContent)
+    // console.log(linkHeaderContent)
+
+    // return new Response(null, {
+    //     headers: {
+    //         'x-middleware-next': '1',
+    //         'Link': linkHeaderContent.join('; '),
+    //     },
+    // })
 
     return new Response(null, {
+        status: 307,
         headers: {
-            'x-middleware-next': '1',
-            'Link': linkHeaderContent.join('; '),
+            'Location': 'https://www.google.com', // Testing UA-based redirects
         },
     })
-}
+}   
