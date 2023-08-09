@@ -19,7 +19,8 @@ function islinkExpanderBot(userAgent) {
 export default function middleware(req: Request) {
     const url = new URL(req.url)
 
-    if (isAsset(url) || !isGameUrl(url) || !islinkExpanderBot(req.headers['user-agent'])) {
+    // if (isAsset(url) || !isGameUrl(url) || !islinkExpanderBot(req.headers['user-agent'])) {
+    if (isAsset(url) || !isGameUrl(url)) {
         return new Response(null, {
             headers: { 'x-middleware-next': '1' },
         })
