@@ -1,0 +1,16 @@
+[Unit]
+
+Description=Downforacross Staging Server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+
+WorkingDirectory=/home/ubuntu/downforacross.com
+User=ubuntu
+ExecStart=/usr/bin/yarn servebackendstaging
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
