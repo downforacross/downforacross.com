@@ -38,7 +38,7 @@ router.get('/', async (req, res) => {
 
     // Messenger only supports title + thumbnail, so cram everything into the title property if Messenger
     const titlePropContent = isFBMessengerCrawler(ua)
-        ? `${info.title} | ${info.author} | ${info.description}`
+        ? [info.title, info.author, info.description].filter(Boolean).join(' | ')
         : info.title
 
     // https://ogp.me
