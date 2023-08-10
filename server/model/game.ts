@@ -13,6 +13,18 @@ export async function getGameEvents(gid: string) {
   return events;
 }
 
+export async function getGameInfo(gid: string) {
+  const res = await pool.query('SELECT event_payload FROM game_events WHERE gid=$1 AND event_type=\'create\'', [gid]);
+  if (res.rowCount != 1) {
+    console.log(`Could not find info for game ${gid}`);
+    return {}
+  }
+
+  const info = res.rows[0].event_payload.params.game.info;
+  console.log(`${gid} game info: ${JSON.stringify(info)}`);
+  return info;
+}
+
 export interface GameEvent {
   user?: string; // always null actually
   timestamp: number;
