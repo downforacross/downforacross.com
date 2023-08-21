@@ -185,3 +185,9 @@ export async function recordSolve(pid: string, gid: string, timeToSolve: number)
     client.release();
   }
 }
+
+export async function getPuzzleInfo(pid: string) {
+  const puzzle = await getPuzzle(pid);
+  const {info = {}} = puzzle;
+  return info;
+}
