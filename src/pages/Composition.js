@@ -162,6 +162,7 @@ export default class Composition extends Component {
 
   handleExportClick = () => {
     const byteArray = format().fromComposition(this.composition).toPuz();
+
     downloadBlob(byteArray, 'download.puz');
   };
 
@@ -258,6 +259,10 @@ export default class Composition extends Component {
   }
 
   renderChatHeader() {
+    if (!this.compositionModel || !this.compositionModel.attached) {
+      return;
+    }
+
     const {title, author} = this.composition.info;
 
     return (
@@ -301,6 +306,7 @@ export default class Composition extends Component {
         <Nav v2 hidden={this.state.mobile} />
         <Flex style={style} grow={1}>
           <Flex column shrink={0}>
+            {this.renderChatHeader()}
             {this.renderEditor()}
           </Flex>
           <Flex column>
