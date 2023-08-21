@@ -138,9 +138,9 @@ export default class Game extends Component {
     this.props.onChange();
   };
 
-  handleReset = (scopeString) => {
+  handleReset = (scopeString, force = false) => {
     const scope = this.scope(scopeString);
-    this.props.gameModel.reset(scope);
+    this.props.gameModel.reset(scope, force);
   };
 
   handleKeybind = (mode) => {
@@ -306,6 +306,7 @@ export default class Game extends Component {
       <Toolbar
         v2
         gid={this.props.gid}
+        pid={this.game.pid}
         mobile={mobile}
         startTime={startTime}
         pausedTime={pausedTime}
