@@ -148,6 +148,23 @@ export default class Toolbar extends Component {
           'List View': this.props.onToggleListView,
           Pencil: this.props.onTogglePencil,
           Autocheck: this.props.onToggleAutocheck,
+          'Create new game link': () => window.open(`/beta/play/${this.props.pid}?new=1`, '_blank'),
+        }}
+      />
+    );
+  }
+
+  renderPlayAgainLink() {
+    return (
+      <ActionMenu
+        label="Play Again"
+        onBlur={this.handleBlur}
+        actions={{
+          'Reset this game': this.confirmResetPuzzle.bind(this, () => {
+            this.reset('puzzle', true);
+            this.props.onResetClock();
+          }),
+          'Create new game link': () => window.open(`/beta/play/${this.props.pid}?new=1`, '_blank'),
         }}
       />
     );
@@ -379,8 +396,8 @@ export default class Toolbar extends Component {
     });
   }
 
-  reset(scopeString) {
-    this.props.onReset(scopeString);
+  reset(scopeString, force = false) {
+    this.props.onReset(scopeString, force);
   }
 
   keybind(mode) {
@@ -468,6 +485,7 @@ export default class Toolbar extends Component {
         {!replayMode && this.renderPencil()}
         {!solved && !replayMode && this.renderAutocheck()}
         {!replayMode && this.renderExtrasMenu()}
+        {solved && !replayMode && this.renderPlayAgainLink()}
         {!replayMode && this.renderInfo()}
       </div>
     );
