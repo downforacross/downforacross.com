@@ -8,7 +8,7 @@ Wants=network-online.target
 
 WorkingDirectory=/home/ubuntu/downforacross.com
 User=ubuntu
-ExecStart=/usr/bin/yarn servebackendstaging
+ExecStart=/usr/bin/yarn --ignore-engines servebackendstaging
 Restart=always
 RestartSec=5s
 
