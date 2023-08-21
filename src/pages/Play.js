@@ -41,7 +41,11 @@ export default class Play extends Component {
   }
 
   get is_fencing() {
-    return !!querystring.parse(this.props.location.search.slice(1)).fencing;
+    return !!this.query.fencing;
+  }
+
+  get is_new() {
+    return !!this.query.new;
   }
 
   componentDidUpdate() {
@@ -50,7 +54,7 @@ export default class Play extends Component {
     }
 
     const {games} = this;
-    const shouldAutocreate = !this.state.creating && (!games || (games && games.length === 0));
+    const shouldAutocreate = !this.state.creating && (!games || (games && games.length === 0) || this.is_new);
     if (shouldAutocreate) {
       this.create();
       return;

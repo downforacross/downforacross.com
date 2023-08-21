@@ -224,7 +224,7 @@ const reducers = {
   },
 
   reset: (game, params) => {
-    if (game.solved) {
+    if (game.solved && !params.force) {
       return game;
     }
     const {scope = []} = params;

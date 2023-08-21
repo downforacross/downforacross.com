@@ -304,12 +304,13 @@ export default class Game extends EventEmitter {
     });
   }
 
-  reset(scope) {
+  reset(scope, force) {
     this.addEvent({
       timestamp: SERVER_TIME,
       type: 'reset',
       params: {
         scope,
+        force,
       },
     });
   }
