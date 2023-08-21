@@ -19,8 +19,7 @@ export default function middleware(req: Request) {
 
   if (
     isAsset(url) ||
-    !isPlayUrl(url) ||
-    !isGameUrl(url) ||
+    (!isPlayUrl(url) && !isGameUrl(url)) ||
     !islinkExpanderBot(req.headers.get('user-agent') as string)
   ) {
     return new Response(null, {
