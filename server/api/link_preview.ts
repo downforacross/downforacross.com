@@ -23,9 +23,12 @@ router.get('/', async (req, res) => {
   if (url.pathname.split('/')[2] === 'game') {
     const gid = url.pathname.split('/')[3];
     info = (await getGameInfo(gid)) as InfoJson;
-  } else {
+  } else if (url.pathname.split('/')[2] === 'play') {
     const pid = url.pathname.split('/')[3];
     info = (await getPuzzleInfo(pid)) as InfoJson;
+  } else {
+    res.sendStatus(400);
+    return;
   }
 
   if (_.isEmpty(info)) {
