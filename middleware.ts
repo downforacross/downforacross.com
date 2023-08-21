@@ -28,6 +28,8 @@ export default function middleware(req: Request) {
     });
   }
 
+  console.log('crawler detected', req.headers.get('user-agent'));
+  console.log(`returning link preview from https://api.foracross.com/api/link_preview?url=${url}`);
   // crawled by link expander bot, so redirect to link preview endpoint for this game URL
   return new Response(null, {
     status: 307,
