@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": "^14.0.0"
+    "node": "^18.0.0"
   },
   "dependencies": {
     "@material-ui/core": "^4.9.14",
@@ -94,14 +94,14 @@
     "ts-node": "^9.1.1"
   },
   "scripts": {
-    "start": "cross-env PORT=3020 react-scripts start",
-    "devfrontend": "cross-env REACT_APP_USE_LOCAL_SERVER=1 PORT=3020 react-scripts start",
-    "devfrontendprod": "REACT_APP_ENV=production REACT_APP_USE_LOCAL_SERVER=1 PORT=3020 react-scripts start",
+    "start": "NODE_OPTIONS=--openssl-legacy-provider cross-env PORT=3020 react-scripts start",
+    "devfrontend": "NODE_OPTIONS=--openssl-legacy-provider cross-env REACT_APP_USE_LOCAL_SERVER=1 PORT=3020 react-scripts start",
+    "devfrontendprod": "NODE_OPTIONS=--openssl-legacy-provider REACT_APP_ENV=production REACT_APP_USE_LOCAL_SERVER=1 PORT=3020 react-scripts start",
     "devbackend": "cross-env PORT=3021 nodemon --watch server -e \"ts\" --exec \"npx ts-node -P server/tsconfig.json server/server.ts\"",
     "devbackendprod": "source .env.prod; PORT=3021 nodemon --watch server -e \"ts\" --exec \"npx ts-node -P server/tsconfig.json server/server.ts\"",
     "servebackendprod": "while true; do env $(cat .env.prod | xargs)  NODE_ENV=production PORT=3021 ts-node -P server/tsconfig.json server/server.ts || true; done",
     "servebackendstaging": "while true; do env $(cat .env.staging | xargs)  NODE_ENV=production PORT=4021 ts-node -P server/tsconfig.json server/server.ts || true; done",
-    "build": "react-scripts build",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
