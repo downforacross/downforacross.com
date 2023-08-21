@@ -35,7 +35,7 @@ const f = () => ({
     const grid = compositionGrid.map((row) =>
       row.map(({value, pencil}) => ({
         black: value === '.',
-        value: value === '.' ? '' : value,
+        value: value === '.' ? '' : value || ' ',
         pencil,
         number: null,
       }))
@@ -99,7 +99,6 @@ const intermediate = ({info, grid, clues, extras}) => {
         clues,
         circles: extras.circles,
       }),
-
     toComposition: () => ({
       // TODO
     }),
