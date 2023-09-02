@@ -137,3 +137,7 @@ code {
 .toolbar--mobile .clock {
   color: white;
 }
+
+.toolbar--mobile .toolbar--expand:last-child {
+  margin-right: 16px;
+}
