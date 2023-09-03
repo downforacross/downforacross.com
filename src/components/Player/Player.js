@@ -313,7 +313,7 @@ export default class Player extends Component {
       return null;
     }
 
-    // map from displayName to number of squares solved by that user
+    // map from user_id to number of squares solved by that user
     const counts = {};
     this.props.grid.forEach((row) => {
       row.forEach((cell) => {
