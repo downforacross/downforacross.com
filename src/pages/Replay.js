@@ -269,42 +269,6 @@ export default class Replay extends Component {
     );
   }
 
-  renderStats() {
-    if (!this.game || this.state.error) {
-      return null;
-    }
-
-    const {grid, users} = this.game;
-
-    // map from displayName to number of squares solved by that user
-    const stats = {};
-    grid.forEach((row) => {
-      row.forEach((cell) => {
-        const name = users[cell.user_id]?.displayName;
-        if (cell.user_id) {
-          stats[name] = (stats[name] || 0) + 1;
-        }
-      });
-    });
-
-    if (Object.keys(stats).length === 0) {
-      return null;
-    }
-
-    return (
-      <div>
-        <strong>Squares filled by user</strong>
-        {Object.entries(stats)
-          .sort((x) => x[1])
-          .map(([name, count]) => (
-            <div>
-              {name} - {count}
-            </div>
-          ))}
-      </div>
-    );
-  }
-
   renderToolbar() {
     if (!this.game) return;
     const {clock, solved} = this.game;
@@ -504,7 +468,6 @@ export default class Replay extends Component {
           >
             {this.renderControls()}
           </div>
-          <div>{this.renderStats()}</div>
         </Flex>
         {/* Controls:
       Playback scrubber

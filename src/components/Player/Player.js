@@ -308,6 +308,39 @@ export default class Player extends Component {
     );
   };
 
+  renderColorAttributionCounts() {
+    if (!this.props.colorAttributionMode || this.state.error) {
+      return null;
+    }
+
+    // map from displayName to number of squares solved by that user
+    const counts = {};
+    this.props.grid.forEach((row) => {
+      row.forEach((cell) => {
+        if (cell.user_id) {
+          counts[cell.user_id] = (counts[cell.user_id] || 0) + 1;
+        }
+      });
+    });
+
+    if (Object.keys(counts).length === 0) {
+      return null;
+    }
+
+    return (
+      <div style={{marginTop: 24}}>
+        <strong>Squares filled by user</strong>
+        {Object.entries(counts)
+          .sort((x) => x[1])
+          .map(([userId, count]) => (
+            <div style={{color: this.props.users[userId]?.color}}>
+              {this.props.users[userId]?.displayName} - {count}
+            </div>
+          ))}
+      </div>
+    );
+  }
+
   render() {
     const {
       mobile,
@@ -425,6 +458,7 @@ export default class Player extends Component {
                 </div>
               </div>
             </MobileListViewControls>
+            {this.renderColorAttributionCounts()}
           </div>
         );
       }
@@ -454,6 +488,7 @@ export default class Player extends Component {
               </div>
             </div>
           </MobileGridControls>
+          {this.renderColorAttributionCounts()}
         </div>
       );
     }
@@ -492,6 +527,7 @@ export default class Player extends Component {
               </div>
             </div>
           </ListViewControls>
+          {this.renderColorAttributionCounts()}
         </div>
       );
     }
@@ -554,6 +590,7 @@ export default class Player extends Component {
             </div>
           </div>
         )}
+        {this.renderColorAttributionCounts()}
       </div>
     );
   }
