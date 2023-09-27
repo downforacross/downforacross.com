@@ -331,7 +331,7 @@ export default class Player extends Component {
       <div style={{marginTop: 24}}>
         <strong>Squares filled by user</strong>
         {Object.entries(counts)
-          .sort((x) => x[1])
+          .sort(([, count]) => parseInt(count, 10))
           .map(([userId, count]) => (
             <div style={{color: this.props.users[userId]?.color}}>
               {this.props.users[userId]?.displayName} - {count}
