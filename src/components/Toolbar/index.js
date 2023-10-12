@@ -1,6 +1,7 @@
 import './css/index.css';
 import React, {Component} from 'react';
 import {MdBorderAll, MdChatBubble, MdList, MdSlowMotionVideo} from 'react-icons/md';
+import {AiOutlineMenuFold, AiOutlineMenuUnfold} from 'react-icons/ai';
 import {RiPaintFill, RiPaintLine} from 'react-icons/ri';
 import Flex from 'react-flexview';
 import {Link} from 'react-router-dom';
@@ -59,6 +60,11 @@ export default class Toolbar extends Component {
   handleToggleChat = (e) => {
     e.preventDefault();
     this.props.onToggleChat();
+  };
+
+  handleToggleExpandMenu = (e) => {
+    e.preventDefault();
+    this.props.onToggleExpandMenu();
   };
 
   renderClockControl() {
@@ -241,6 +247,15 @@ export default class Toolbar extends Component {
 
   renderChatButton() {
     return <MdChatBubble onClick={this.handleToggleChat} className="toolbar--chat" />;
+  }
+
+  renderExpandMenuButton() {
+    const {expandMenu} = this.props;
+    return expandMenu ? (
+      <AiOutlineMenuFold onClick={this.handleToggleExpandMenu} className="toolbar--expand" />
+    ) : (
+      <AiOutlineMenuUnfold onClick={this.handleToggleExpandMenu} className="toolbar--expand" />
+    );
   }
 
   renderPencil() {
@@ -434,6 +449,7 @@ export default class Toolbar extends Component {
       onPauseClock,
       solved,
       replayMode,
+      expandMenu,
     } = this.props;
 
     if (mobile) {
@@ -441,22 +457,30 @@ export default class Toolbar extends Component {
         <Flex className="toolbar--mobile" vAlignContent="center">
           <Flex className="toolbar--mobile--top" grow={1} vAlignContent="center">
             <Link to="/">DFAC</Link>{' '}
-            <Clock
-              v2={this.props.v2}
-              startTime={startTime}
-              stopTime={stopTime}
-              pausedTime={pausedTime}
-              replayMode={replayMode}
-              isPaused={this.props.isPaused || !startTime}
-              onStart={onStartClock}
-              onPause={onPauseClock}
-            />
-            {!solved && !replayMode && this.renderCheckMenu()}
-            {!solved && !replayMode && this.renderRevealMenu()}
-            {solved && !replayMode && this.renderReplayLink()}
-            {this.renderColorAttributionToggle()}
-            {this.renderListViewButton()}
-            {this.renderChatButton()}
+            {!expandMenu ? (
+              <>
+                <Clock
+                  v2={this.props.v2}
+                  startTime={startTime}
+                  stopTime={stopTime}
+                  pausedTime={pausedTime}
+                  replayMode={replayMode}
+                  isPaused={this.props.isPaused || !startTime}
+                  onStart={onStartClock}
+                  onPause={onPauseClock}
+                />
+                {!solved && !replayMode && this.renderCheckMenu()}
+                {!solved && !replayMode && this.renderRevealMenu()}
+                {solved && !replayMode && this.renderReplayLink()}
+              </>
+            ) : (
+              <>
+                {this.renderColorAttributionToggle()}
+                {this.renderListViewButton()}
+                {this.renderChatButton()}
+              </>
+            )}
+            {this.renderExpandMenuButton()}
           </Flex>
         </Flex>
       );

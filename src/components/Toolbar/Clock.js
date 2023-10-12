@@ -30,6 +30,7 @@ export default class Clock extends Component {
   componentDidMount() {
     if (this.intvl) clearInterval(this.intvl);
     this.intvl = setInterval(this.updateClock.bind(this), 1000);
+    this.updateClock();
   }
 
   componentWillUnmount() {

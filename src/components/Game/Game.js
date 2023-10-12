@@ -23,6 +23,7 @@ export default class Game extends Component {
       vimMode: false,
       vimInsert: false,
       colorAttributionMode: false,
+      expandMenu: false,
     };
   }
 
@@ -189,6 +190,12 @@ export default class Game extends Component {
     this.props.onToggleChat();
   };
 
+  handleToggleExpandMenu = () => {
+    this.setState((prevState) => ({
+      expandMenu: !prevState.expandMenu,
+    }));
+  };
+
   handleRefocus = () => {
     this.focus();
   };
@@ -300,7 +307,7 @@ export default class Game extends Component {
     if (!this.game) return;
     const {clock, solved} = this.game;
     const {mobile} = this.props;
-    const {pencilMode, autocheckMode, vimMode, vimInsert, listMode} = this.state;
+    const {pencilMode, autocheckMode, vimMode, vimInsert, listMode, expandMenu} = this.state;
     const {lastUpdated: startTime, totalTime: pausedTime, paused: isPaused} = clock;
     return (
       <Toolbar
@@ -312,6 +319,7 @@ export default class Game extends Component {
         pausedTime={pausedTime}
         isPaused={isPaused}
         listMode={listMode}
+        expandMenu={expandMenu}
         pencilMode={pencilMode}
         autocheckMode={autocheckMode}
         vimMode={vimMode}
@@ -329,6 +337,7 @@ export default class Game extends Component {
         onToggleAutocheck={this.handleToggleAutocheck}
         onToggleListView={this.handleToggleListView}
         onToggleChat={this.handleToggleChat}
+        onToggleExpandMenu={this.handleToggleExpandMenu}
         colorAttributionMode={this.state.colorAttributionMode}
         onToggleColorAttributionMode={() => {
           this.setState((prevState) => ({colorAttributionMode: !prevState.colorAttributionMode}));
