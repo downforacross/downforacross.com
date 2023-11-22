@@ -18,6 +18,8 @@ import {isMobile, rand_color} from '../lib/jsUtils';
 import * as powerupLib from '../lib/powerups';
 import {recordSolve} from '../api/puzzle.ts';
 
+import nameGenerator from '../lib/nameGenerator';
+
 export default class Game extends Component {
   constructor(props) {
     super(props);
@@ -35,6 +37,11 @@ export default class Game extends Component {
         mobile: isMobile(),
       });
     });
+    this.initialUsername = localStorage.getItem(this.usernameKey) || nameGenerator();
+  }
+
+  get usernameKey() {
+    return `username_${window.location.href}`;
   }
 
   // lifecycle stuff
@@ -160,6 +167,7 @@ export default class Game extends Component {
 
   componentDidMount() {
     this.initializeGame();
+    this.handleUpdateDisplayName(this.user.id, this.initialUsername);
   }
 
   componentWillUnmount() {
@@ -366,6 +374,7 @@ export default class Game extends Component {
         opponentData={this.opponentGame && this.opponentGame.chat}
         bid={this.state.bid}
         updateSeenChatMessage={this.updateSeenChatMessage}
+        initialUsername={this.initialUsername}
       />
     );
   }
