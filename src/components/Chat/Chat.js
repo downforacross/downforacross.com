@@ -21,21 +21,25 @@ const isEmojis = (str) => {
 export default class Chat extends Component {
   constructor() {
     super();
-    const username = localStorage.getItem(this.usernameKey) || nameGenerator();
+    // We'll set the username state when we mount the component.
     this.state = {
-      username,
+      username: '',
     };
     this.chatBar = React.createRef();
     this.usernameInput = React.createRef();
   }
 
   componentDidMount() {
+    let username = this.props.initialUsername;
     const battleName = localStorage.getItem(`battle_${this.props.bid}`);
     // HACK
-    if (battleName && !localStorage.getItem(this.usernameKey)) {
+    if (battleName && !username) {
+      username = battleName;
       this.setState({username: battleName});
+    } else {
+      this.setState({username});
     }
-    this.handleUpdateDisplayName(this.state.username);
+    this.handleUpdateDisplayName(username);
   }
 
   get usernameKey() {
