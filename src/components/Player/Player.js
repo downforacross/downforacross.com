@@ -349,8 +349,11 @@ export default class Player extends Component {
       listMode,
       vimMode,
       vimInsert,
+      vimCommand,
       onVimNormal,
       onVimInsert,
+      onVimCommand,
+      onVimCommandBuffer,
       grid,
       clues,
       circles,
@@ -507,8 +510,11 @@ export default class Player extends Component {
             onPressPeriod={onPressPeriod}
             vimMode={vimMode}
             vimInsert={vimInsert}
+            vimCommand={vimCommand}
             onVimInsert={onVimInsert}
             onVimNormal={onVimNormal}
+            onVimCommand={onVimCommand}
+            onVimCommandBuffer={onVimCommandBuffer}
             selected={selected}
             direction={direction}
             onSetDirection={this._setDirection}
@@ -540,8 +546,11 @@ export default class Player extends Component {
           onPressPeriod={onPressPeriod}
           vimMode={vimMode}
           vimInsert={vimInsert}
+          vimCommand={vimCommand}
           onVimInsert={onVimInsert}
           onVimNormal={onVimNormal}
+          onVimCommand={onVimCommand}
+          onVimCommandBuffer={onVimCommandBuffer}
           selected={selected}
           direction={direction}
           onSetDirection={this._setDirection}

@@ -24,6 +24,8 @@ export default class Game extends Component {
       screenWidth: 0,
       vimMode: false,
       vimInsert: false,
+      vimCommand: false,
+      vimCommandBuffer: [],
       colorAttributionMode: false,
       expandMenu: false,
     };
@@ -168,9 +170,20 @@ export default class Game extends Component {
     });
   };
 
+  handleVimCommand = () => {
+    this.setState({
+      vimCommand: true,
+    });
+  };
+
+  handleVimCommandBuffer = (key) => {
+    this.state.vimCommandBuffer.push(key);
+  };
+
   handleVimNormal = () => {
     this.setState({
       vimInsert: false,
+      vimCommand: false,
     });
   };
 
@@ -209,7 +222,26 @@ export default class Game extends Component {
   handlePressPeriod = this.handleTogglePencil;
 
   handlePressEnter = () => {
-    this.props.onUnfocus();
+    if (this.state.vimCommand) {
+      let str = '';
+      while (this.state.vimCommandBuffer.length > 0) {
+        str += this.state.vimCommandBuffer.shift();
+      }
+      const regex = /^\d+(a|d)*$/;
+      if (regex.test(str)) {
+        let dir = 'across';
+        const int = parseInt(str);
+        if (str.endsWith('d')) {
+          dir = 'down';
+        }
+        this.player.selectClue(dir, int);
+      }
+      this.setState({
+        vimCommand: false,
+      });
+    } else {
+      this.props.onUnfocus();
+    }
   };
 
   focus() {
@@ -296,8 +328,11 @@ export default class Game extends Component {
         listMode={this.state.listMode}
         vimMode={this.state.vimMode}
         vimInsert={this.state.vimInsert}
+        vimCommand={this.state.vimCommand}
         onVimInsert={this.handleVimInsert}
         onVimNormal={this.handleVimNormal}
+        onVimCommand={this.handleVimCommand}
+        onVimCommandBuffer={this.handleVimCommandBuffer}
         colorAttributionMode={this.state.colorAttributionMode}
         mobile={mobile}
         pickups={this.props.pickups}
@@ -313,7 +348,7 @@ export default class Game extends Component {
     if (!this.game) return;
     const {clock, solved} = this.game;
     const {mobile} = this.props;
-    const {pencilMode, autocheckMode, vimMode, vimInsert, listMode, expandMenu} = this.state;
+    const {pencilMode, autocheckMode, vimMode, vimInsert, vimCommand, listMode, expandMenu} = this.state;
     const {lastUpdated: startTime, totalTime: pausedTime, paused: isPaused} = clock;
     return (
       <Toolbar
@@ -331,6 +366,7 @@ export default class Game extends Component {
         vimMode={vimMode}
         solved={solved}
         vimInsert={vimInsert}
+        vimCommand={vimCommand}
         onStartClock={this.handleStartClock}
         onPauseClock={this.handlePauseClock}
         onResetClock={this.handleResetClock}
