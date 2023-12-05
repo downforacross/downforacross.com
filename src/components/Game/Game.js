@@ -34,7 +34,12 @@ export default class Game extends Component {
 
   componentDidMount() {
     const screenWidth = window.innerWidth - 1; // this is important for mobile to fit on screen
-    const vimMode = JSON.parse(localStorage.getItem(vimModeKey)) || false;
+    let vimMode = false;
+    try {
+      vimMode = JSON.parse(localStorage.getItem(vimModeKey)) || false;
+    } catch (e) {
+      console.error('Failed to parse local storage vim mode!');
+    }
     // with body { overflow: hidden }, it should disable swipe-to-scroll on iOS safari)
     this.setState({
       screenWidth,
