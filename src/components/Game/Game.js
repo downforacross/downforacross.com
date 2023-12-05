@@ -12,6 +12,7 @@ import {toArr} from '../../lib/jsUtils';
 import {toHex, darken, GREENISH} from '../../lib/colors';
 
 const vimModeKey = 'vim-mode';
+const vimModeRegex = /^\d+(a|d)*$/;
 
 // component for gameplay -- incl. grid/clues & toolbar
 export default class Game extends Component {
@@ -184,6 +185,7 @@ export default class Game extends Component {
     this.setState({
       vimInsert: false,
       vimCommand: false,
+      vimCommandBuffer: [],
     });
   };
 
@@ -222,17 +224,14 @@ export default class Game extends Component {
   handlePressPeriod = this.handleTogglePencil;
 
   handlePressEnter = () => {
+    // Handle vim command buffer
     if (this.state.vimCommand) {
       const buffer = [...this.state.vimCommandBuffer];
-      let str = '';
-      while (buffer.length > 0) {
-        str += buffer.shift();
-      }
-      const regex = /^\d+(a|d)*$/;
-      if (regex.test(str)) {
+      const vimCommandStr = buffer.join('');
+      if (vimModeRegex.test(vimCommandStr)) {
         let dir = 'across';
-        const int = parseInt(str);
-        if (str.endsWith('d')) {
+        const int = parseInt(vimCommandStr);
+        if (vimCommandStr.endsWith('d')) {
           dir = 'down';
         }
         this.player.selectClue(dir, int);
