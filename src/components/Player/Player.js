@@ -350,6 +350,7 @@ export default class Player extends Component {
       vimMode,
       vimInsert,
       vimCommand,
+      vimCommandBuffer,
       onVimNormal,
       onVimInsert,
       onVimCommand,
@@ -577,6 +578,12 @@ export default class Player extends Component {
               <div className={`player--main--left--grid${frozen ? ' frozen' : ''} blurable`}>
                 <Grid ref="grid" {...gridProps} />
               </div>
+              {vimMode && (
+                <div className="player--main--vim-bar">
+                  {vimCommand && ':'}
+                  {vimCommandBuffer}
+                </div>
+              )}
             </div>
 
             <div className="player--main--clues">

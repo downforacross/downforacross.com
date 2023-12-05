@@ -177,7 +177,7 @@ export default class Game extends Component {
   };
 
   handleVimCommandBuffer = (key) => {
-    this.state.vimCommandBuffer.push(key);
+    this.setState({vimCommandBuffer: [...this.state.vimCommandBuffer, key]});
   };
 
   handleVimNormal = () => {
@@ -223,9 +223,10 @@ export default class Game extends Component {
 
   handlePressEnter = () => {
     if (this.state.vimCommand) {
+      const buffer = [...this.state.vimCommandBuffer];
       let str = '';
-      while (this.state.vimCommandBuffer.length > 0) {
-        str += this.state.vimCommandBuffer.shift();
+      while (buffer.length > 0) {
+        str += buffer.shift();
       }
       const regex = /^\d+(a|d)*$/;
       if (regex.test(str)) {
@@ -238,6 +239,7 @@ export default class Game extends Component {
       }
       this.setState({
         vimCommand: false,
+        vimCommandBuffer: [],
       });
     } else {
       this.props.onUnfocus();
@@ -329,6 +331,7 @@ export default class Game extends Component {
         vimMode={this.state.vimMode}
         vimInsert={this.state.vimInsert}
         vimCommand={this.state.vimCommand}
+        vimCommandBuffer={this.state.vimCommandBuffer}
         onVimInsert={this.handleVimInsert}
         onVimNormal={this.handleVimNormal}
         onVimCommand={this.handleVimCommand}

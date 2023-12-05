@@ -51,10 +51,10 @@
 .player--main--left {
   display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 
 .player--main--left--grid {
-  margin-top: 10px;
   position: relative;
   color: #444;
 }
@@ -67,6 +67,16 @@
 
 .player--main--clues {
   display: flex;
+}
+
+.player--main--vim-bar {
+  background-color: var(--main-blue-3);
+  padding: 10px 10px 10px 10px;
+  display: flex;
+  font-size: 15px;
+  /* width: 486px; */
+  height: 20px;
+  align-items: stretch;
 }
 
 .player--mobile--wrapper {
