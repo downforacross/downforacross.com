@@ -11,6 +11,8 @@ import Toolbar from '../Toolbar';
 import {toArr} from '../../lib/jsUtils';
 import {toHex, darken, GREENISH} from '../../lib/colors';
 
+const vimModeKey = 'vim-mode';
+
 // component for gameplay -- incl. grid/clues & toolbar
 export default class Game extends Component {
   constructor() {
@@ -29,9 +31,16 @@ export default class Game extends Component {
 
   componentDidMount() {
     const screenWidth = window.innerWidth - 1; // this is important for mobile to fit on screen
+    let vimMode = false;
+    try {
+      vimMode = JSON.parse(localStorage.getItem(vimModeKey)) || false;
+    } catch (e) {
+      console.error('Failed to parse local storage vim mode!');
+    }
     // with body { overflow: hidden }, it should disable swipe-to-scroll on iOS safari)
     this.setState({
       screenWidth,
+      vimMode,
     });
     this.componentDidUpdate({});
   }
@@ -151,9 +160,11 @@ export default class Game extends Component {
   };
 
   handleToggleVimMode = () => {
-    this.setState((prevState) => ({
-      vimMode: !prevState.vimMode,
-    }));
+    this.setState((prevState) => {
+      const newVimMode = !prevState.vimMode;
+      localStorage.setItem(vimModeKey, JSON.stringify(newVimMode));
+      return {vimMode: newVimMode};
+    });
   };
 
   handleVimInsert = () => {
