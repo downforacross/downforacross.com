@@ -1,4 +1,6 @@
-## downforacross
+[![built with Codeium](https://codeium.com/badges/main)](https://codeium.com/badges/main)
+
+## downforacross 
 
 Downforacross is an online website for sharing crosswords and playing collaboratively with friends in real time.
 
