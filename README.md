@@ -39,7 +39,7 @@ To run Downforacross with Docker, you will need to build the Docker image and st
    `docker-compose up`
    This will start both the application and the database services.
 
-5. Run frontend server
+3. Run frontend server
    `yarn start`
 
    Alternatively, if you are using Docker, you can access the application on your local machine at:
