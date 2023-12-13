@@ -1,3 +1,5 @@
+![Downforacross Logo](assets/image.png)
+
 [![built with Codeium](https://codeium.com/badges/main)](https://codeium.com/?repo_name=downforacross/downforacross.com
 )
 
