@@ -14,4 +14,4 @@ RUN yarn install && yarn test
 
 
 # Set the command to start the application
-CMD [ "node", "server/server.ts" ]
+CMD [ "yarn", "start" ]
