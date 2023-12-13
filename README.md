@@ -42,6 +42,11 @@ To run Downforacross with Docker, you will need to build the Docker image and st
 3. Run frontend server
    `yarn start`
 
+4. Run the server:
+   `docker exec -it <container_id> yarn start`
+
+   Replace `<container_id>` with the ID of the Docker container where the application is running.
+
    Alternatively, if you are using Docker, you can access the application on your local machine at:
 
    `http://localhost:3000/`
