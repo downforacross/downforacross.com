@@ -7,8 +7,8 @@ WORKDIR /usr/src/app
 # Copy the application code into the Docker image
 COPY . .
 
-# Install the application dependencies
-RUN yarn install
+# Install the application dependencies and run the test suite
+RUN yarn install && yarn test
 
 # Run the script to set up the database
 
