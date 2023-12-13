@@ -11,6 +11,9 @@ COPY . .
 RUN yarn install && yarn test
 
 # Run the script to set up the database
+# Placeholder command for database setup
+# TODO: Replace with actual database setup script
+RUN yarn run setup-db
 
 
 # Set the command to start the application
