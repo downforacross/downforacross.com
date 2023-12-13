@@ -14,10 +14,10 @@ services:
   db:
     image: postgres:latest
     environment:
-      POSTGRES_DB: dfac
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: downforacross_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - ./data/db:/var/lib/postgresql/data
 volumes:
   db-data:
