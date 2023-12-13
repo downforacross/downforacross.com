@@ -67,6 +67,14 @@ Developing for mobile web:
 - https://reactjs.org/tutorial/tutorial.html (intro to react)
 - https://www.messenger.com/t/steven.hao.14 (helpline)
 
+##### Running Tests with Docker
+
+To run the application's tests within the Docker environment, you can use the following command:
+
+   `docker exec -it <container_id> yarn test`
+
+Replace `<container_id>` with the ID of the Docker container where the application is running.
+
 ##### Configuration
 
 The Docker setup can be configured using environment variables in your `docker-compose.yml` file. Make sure to set the appropriate values for the database settings and any other necessary configuration to match your local setup.
