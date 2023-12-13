@@ -41,15 +41,17 @@ To run Downforacross with Docker, you will need to build the Docker image and st
    `docker-compose up`
    This will start both the application and the database services.
 
-3. Run frontend server
-   `yarn start`
+~~3. Run frontend server
+   `yarn start`~~
+
+   After starting the services with `docker-compose up`, the application's frontend and server will be running in their respective containers. You do not need to start them separately.
 
 4. Run the server:
    `docker exec -it <container_id> yarn start`
 
    Replace `<container_id>` with the ID of the Docker container where the application is running.
 
-   Alternatively, if you are using Docker, you can access the application on your local machine at:
+   This command will automatically run the frontend server as part of the Docker container's startup process. There is no need to manually run `yarn start` for the frontend. You can access the application on your local machine at:
 
    `http://localhost:3000/`
 
@@ -78,11 +80,22 @@ Developing for mobile web:
 
 To run the application's tests within the Docker environment, you can use the following command:
 
-   `docker exec -it <container_id> yarn test`
+   `docker-compose exec app yarn test`
 
-Replace `<container_id>` with the ID of the Docker container where the application is running.
+This command will execute tests in the application's container. Ensure that the Docker container for the application is running before executing this command.
 
 ##### Configuration
 
-The Docker setup can be configured using environment variables in your `docker-compose.yml` file. Make sure to set the appropriate values for the database settings and any other necessary configuration to match your local setup.
+The Docker setup can be configured using environment variables in your `docker-compose.yml` file. Here's an example snippet to set the environment variables for the database:
+
+```yaml
+services:
+  db:
+    environment:
+      POSTGRES_DB: downforacross_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+```
+
+Adjust the `POSTGRES_DB`, `POSTGRES_USER`, and `POSTGRES_PASSWORD` to match your local setup. Additional environment variables can be added as needed for further configuration.
 - https://discord.gg/KjPHFw8 (community discord)
