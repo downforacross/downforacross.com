@@ -11,8 +11,7 @@ COPY . .
 RUN yarn install
 
 # Run the script to set up the database
-RUN chmod +x ./server/create_fresh_dbs.sh
-RUN ./server/create_fresh_dbs.sh
+
 
 # Set the command to start the application
 CMD [ "node", "server/server.ts" ]
