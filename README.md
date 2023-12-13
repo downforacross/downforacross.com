@@ -28,8 +28,23 @@ If you notice a bug or have a feature request, feel free to open an issue.
 4. Install Dependencies
    `yarn`
 
+### Running with Docker
+
+To run Downforacross with Docker, you will need to build the Docker image and start the services. Here's how to do it:
+
+1. Build the Docker image:
+   `docker build -t downforacross .`
+
+2. Start the services:
+   `docker-compose up`
+   This will start both the application and the database services.
+
 5. Run frontend server
    `yarn start`
+
+   Alternatively, if you are using Docker, you can access the application on your local machine at:
+
+   `http://localhost:3000/`
 
 ### Contributing
 
@@ -51,4 +66,8 @@ Developing for mobile web:
 - https://firebase.google.com/docs/database/web/start (intro to firebase realtime database)
 - https://reactjs.org/tutorial/tutorial.html (intro to react)
 - https://www.messenger.com/t/steven.hao.14 (helpline)
+
+##### Configuration
+
+The Docker setup can be configured using environment variables in your `docker-compose.yml` file. Make sure to set the appropriate values for the database settings and any other necessary configuration to match your local setup.
 - https://discord.gg/KjPHFw8 (community discord)
