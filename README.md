@@ -38,6 +38,19 @@ See the `Getting Started` section for instructions on setting up.
 
 Join the [discord](https://discord.gg/KjPHFw8) for discussion.
 
+### Running with Docker
+
+To build and run the Docker container for downforacross, follow these steps:
+
+1. Build the Docker image:
+   ```bash
+docker build -t downforacross .
+   ```
+2. Run the Docker container:
+   ```bash
+docker run -p 3000:3000 downforacross
+   ```
+
 ### Tips
 
 Developing for mobile web:
