@@ -1,37 +1,32 @@
-import React, {Component} from 'react';
+import React from 'react';
 
-export default class ClueText extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showClueLengths: false,
-    };
+function decodeHtml(htmlText) {
+  let text = document.createElement('textarea');
+  text.innerHTML = htmlText;
+  let decodedText = text.value;
+
+  // Check if the text should be italicized and remove double quotes from the start and end if they encase the entire string
+  if (shouldItalicize(decodedText)) {
+    decodedText = decodedText.replace(/^"(.*)"$/, '$1');
   }
 
-  decodeHtml(htmlText) {
-    let text = document.createElement('textarea');
-    text.innerHTML = htmlText;
-    let decodedText = text.value;
+  return decodedText;
+}
 
-    // Check if the text should be italicized and remove double quotes from the start and end if they encase the entire string
-    if (this.shouldItalicize(decodedText)) {
-      decodedText = decodedText.replace(/^"(.*)"$/, '$1');
-    }
+function shouldItalicize(text) {
+  const doubleQuotePattern = /^"{2}.*"{2}$/;
+  return doubleQuotePattern.test(text);
+}
 
-    return decodedText;
-  }
-
-  shouldItalicize(text) {
-    const quotePattern = /"([^"]*)"/g;
-    let matches = text.match(quotePattern);
-    return matches && matches.length === 2;
-  }
-
-  render() {
-    let text = this.props.text || ''; // Use text from props
-    const isItalic = this.shouldItalicize(text);
-    const parts = [];
-
+export default ({text = ''}) => {
+  const isItalic = shouldItalicize(text);
+  const parts = [];
+  if (shouldItalicize(text)) {
+    parts.push({
+      text: text,
+      ital: true,
+    });
+  } else {
     while (text.length > 0) {
       const s = text.indexOf('<i>');
       const e = text.indexOf('</i>');
@@ -53,21 +48,21 @@ export default class ClueText extends Component {
         text = '';
       }
     }
-
-    return (
-      <>
-        {parts.map(({text, ital}, i) => (
-          <span
-            key={i}
-            style={{
-              fontStyle: ital || isItalic ? 'italic' : 'inherit',
-              wordBreak: 'break-word',
-            }}
-          >
-            {this.decodeHtml(text)}
-          </span>
-        ))}
-      </>
-    );
   }
-}
+
+  return (
+    <>
+      {parts.map(({text, ital}, i) => (
+        <span
+          key={i}
+          style={{
+            fontStyle: ital ? 'italic' : 'inherit',
+            wordBreak: 'break-word',
+          }}
+        >
+          {decodeHtml(text)}
+        </span>
+      ))}
+    </>
+  );
+};
