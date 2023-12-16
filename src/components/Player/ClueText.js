@@ -3,7 +3,7 @@ import React from 'react';
 function decodeHtml(htmlText) {
   let text = document.createElement("textarea");
   text.innerHTML = htmlText;
-  return text.value;
+  return decodeURIComponent(escape(text.value));
 }
 
 export default ({text = ''}) => {
@@ -42,3 +42,8 @@ export default ({text = ''}) => {
     </>
   );
 };
+
+test('decodeHtml', () => {
+  expect(decodeHtml('TrÃ¨s')).toBe('Très');
+  expect(decodeHtml('vis-Ã -vis')).toBe('vis-à-vis');
+});
