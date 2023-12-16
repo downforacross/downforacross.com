@@ -1,6 +1,6 @@
 import './css/clues.css';
 import React, {Component} from 'react';
-import Clue from './ClueText';
+import ClueText from './ClueText';
 
 export default class Clues extends Component {
   constructor() {
@@ -61,13 +61,10 @@ export default class Clues extends Component {
                       >
                         <div className="clues--list--scroll--clue--number">{i}</div>
                         <div className="clues--list--scroll--clue--text">
-                          <Clue text={clue} />
+                          <ClueText text={clue} />
                           {showClueLengths ? (
                             <span className="clues--list--scroll--clue--hint">
-                              {'  '}
-                              (
-                              {clueLengths[dir][i]}
-                              )
+                              {'  '}({clueLengths[dir][i]})
                             </span>
                           ) : null}
                         </div>
