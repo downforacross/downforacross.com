@@ -11,7 +11,16 @@ import ActionMenu from './ActionMenu';
 import Popup from './Popup';
 import {isMobile} from '../../lib/jsUtils';
 
+const pencilColorKey = 'pencil-color';
+
 export default class Toolbar extends Component {
+  componentDidMount() {
+    document.documentElement.style.setProperty(
+      '--pencil-color',
+      localStorage.getItem(pencilColorKey) || '#888888'
+    );
+  }
+
   handleBlur = () => {
     this.props.onRefocus();
   };
@@ -44,7 +53,9 @@ export default class Toolbar extends Component {
   };
 
   handlePencilColorPickerChange = (e) => {
-    document.documentElement.style.setProperty('--pencil-color', e.target.value);
+    const color = e.target.value;
+    document.documentElement.style.setProperty('--pencil-color', color);
+    localStorage.setItem(pencilColorKey, color);
   };
 
   handleAutocheckClick = (e) => {
