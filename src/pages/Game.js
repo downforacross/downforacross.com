@@ -37,7 +37,15 @@ export default class Game extends Component {
         mobile: isMobile(),
       });
     });
-    this.initialUsername = localStorage.getItem(this.usernameKey) || nameGenerator();
+    this.initialUsername =
+      localStorage.getItem(this.usernameKey) !== null
+        ? // If localStorage has a username for this game use that, if not
+          // check if there's a default username, if there is none, use the
+          // name generator
+          localStorage.getItem(this.usernameKey)
+        : localStorage.getItem('username_default') !== null
+        ? localStorage.getItem('username_default')
+        : nameGenerator();
   }
 
   get usernameKey() {
@@ -220,6 +228,7 @@ export default class Game extends Component {
     return `user_color`;
   }
 
+  //TODO (jackz): this is how color is persisted
   get userColor() {
     const color =
       this.game.users[this.props.id]?.color || localStorage.getItem(this.userColorKey) || rand_color();
