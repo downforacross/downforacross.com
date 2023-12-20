@@ -52,3 +52,7 @@ Developing for mobile web:
 - https://reactjs.org/tutorial/tutorial.html (intro to react)
 - https://www.messenger.com/t/steven.hao.14 (helpline)
 - https://discord.gg/KjPHFw8 (community discord)
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=downforacross/downforacross.com&type=Date)](https://star-history.com/#downforacross/downforacross.com&Date)
