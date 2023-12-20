@@ -7,7 +7,7 @@ import {Link} from 'react-router-dom';
 import {MdClose} from 'react-icons/md';
 import Emoji from '../common/Emoji';
 import * as emojiLib from '../../lib/emoji';
-import nameGenerator from '../../lib/nameGenerator';
+import nameGenerator, {isFromNameGenerator} from '../../lib/nameGenerator';
 import ChatBar from './ChatBar';
 import EditableSpan from '../common/EditableSpan';
 import MobileKeyboard from '../Player/MobileKeyboard';
@@ -61,6 +61,14 @@ export default class Chat extends Component {
     this.props.onUpdateDisplayName(id, username);
     this.setState({username});
     localStorage.setItem(this.usernameKey, username);
+    // Check if localStorage has username_default, if not set it to the last
+    // updated name
+    if (
+      localStorage.getItem('username_default') != localStorage.getItem(this.usernameKey) &&
+      !isFromNameGenerator(username)
+    ) {
+      localStorage.setItem('username_default', username);
+    }
   };
 
   handleUpdateColor = (color) => {
