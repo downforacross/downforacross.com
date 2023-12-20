@@ -41,6 +41,24 @@ const adjectives = rawAdjectiveList.split(',').map(sanitize).filter(adjFilter);
 const positiveAdjectives = positiveAdjectiveList.split('\n').map(sanitize).filter(adjFilter);
 const nouns = rawNounList.split('\n').map(sanitize).filter(nounFilter);
 
+export function isFromNameGenerator(name) {
+  if (typeof name !== 'string' || name.length > 20) {
+    return false;
+  }
+
+  const parts = name.split(' ');
+  if (parts.length !== 2) {
+    return false;
+  }
+
+  const [adjective, noun] = parts;
+
+  const adjectiveExists = adjectives.includes(adjective) || positiveAdjectives.includes(adjective);
+  const nounExists = nouns.includes(noun);
+
+  return adjectiveExists && nounExists;
+}
+
 export default function nameGenerator() {
   function f() {
     const adj = Math.random() < 0.9 ? sample(positiveAdjectives) : sample(adjectives);
