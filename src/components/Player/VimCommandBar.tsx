@@ -2,10 +2,11 @@ import React from 'react';
 
 interface VimCommandBarProps {
   isVimCommandMode: boolean;
+  onVimCommand: () => void;
   onEnter: (command: string) => void;
 }
 
-export const VimCommandBar: React.FC<VimCommandBarProps> = ({isVimCommandMode, onEnter}) => {
+export const VimCommandBar: React.FC<VimCommandBarProps> = ({isVimCommandMode, onVimCommand, onEnter}) => {
   const [command, setCommand] = React.useState('');
   const inputRef = React.useRef<HTMLInputElement | null>(null);
 
@@ -15,6 +16,11 @@ export const VimCommandBar: React.FC<VimCommandBarProps> = ({isVimCommandMode, o
       setCommand('');
       onEnter(command);
     }
+  };
+
+  const handleBlur: React.FocusEventHandler<HTMLElement> = (e) => {
+    setCommand('');
+    onVimCommand();
   };
 
   React.useEffect(() => {
@@ -31,6 +37,7 @@ export const VimCommandBar: React.FC<VimCommandBarProps> = ({isVimCommandMode, o
         type="text"
         value={command}
         onChange={(e) => setCommand(e.target.value)}
+        onBlur={handleBlur}
         disabled={!isVimCommandMode}
         onKeyDown={handleKeydown}
       />

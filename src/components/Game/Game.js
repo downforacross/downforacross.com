@@ -176,9 +176,9 @@ export default class Game extends Component {
   };
 
   handleVimCommand = () => {
-    this.setState({
-      vimCommand: true,
-    });
+    this.setState((prevState) => ({
+      vimCommand: !prevState.vimCommand,
+    }));
   };
 
   handleVimNormal = () => {
