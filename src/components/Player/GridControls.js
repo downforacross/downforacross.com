@@ -4,7 +4,6 @@ import './css/gridControls.css';
 import React, {Component} from 'react';
 
 import GridObject from '../../lib/wrappers/GridWrapper';
-import {GridControlContext} from './GridControlContext';
 
 function safe_while(condition, step, cap = 500) {
   while (condition() && cap >= 0) {
@@ -407,14 +406,6 @@ export default class GridControls extends Component {
     this.refs.gridControls.focus();
   }
 
-  addKeyDownListener(listener) {
-    this.refs.gridControls.addEventListener('keydown', listener);
-  }
-
-  removeKeyDownListener(listener) {
-    this.refs.gridControls.removeEventListener('keydown', listener);
-  }
-
   render() {
     return (
       <div
@@ -423,14 +414,7 @@ export default class GridControls extends Component {
         tabIndex="1"
         onKeyDown={this.handleKeyDown.bind(this)}
       >
-        <GridControlContext.Provider
-          value={{
-            addKeyDownListener: this.addKeyDownListener,
-            removeKeyDownListener: this.removeKeyDownListener,
-          }}
-        >
-          <div className="grid--content">{this.props.children}</div>
-        </GridControlContext.Provider>
+        <div className="grid--content">{this.props.children}</div>
       </div>
     );
   }
