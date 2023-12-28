@@ -580,6 +580,7 @@ export default class Player extends Component {
                   isVimCommandMode={this.props.vimCommand}
                   onVimCommand={this.props.onVimCommand}
                   onEnter={this.props.onVimCommandPressEnter}
+                  onEscape={this.props.onVimCommandPressEscape}
                 />
               )}
             </div>

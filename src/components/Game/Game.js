@@ -217,9 +217,6 @@ export default class Game extends Component {
   };
 
   handleRefocus = () => {
-    this.setState({
-      vimCommand: false,
-    });
     this.focus();
   };
 
@@ -238,7 +235,6 @@ export default class Game extends Component {
   };
 
   handlePressEnter = () => {
-    // Handle vim command buffer
     this.props.onUnfocus();
   };
 
@@ -331,6 +327,7 @@ export default class Game extends Component {
         onVimNormal={this.handleVimNormal}
         onVimCommand={this.handleVimCommand}
         onVimCommandPressEnter={this.handleVimCommandPressEnter}
+        onVimCommandPressEscape={this.handleRefocus}
         colorAttributionMode={this.state.colorAttributionMode}
         mobile={mobile}
         pickups={this.props.pickups}

@@ -4,9 +4,15 @@ interface VimCommandBarProps {
   isVimCommandMode: boolean;
   onVimCommand: () => void;
   onEnter: (command: string) => void;
+  onEscape: () => void;
 }
 
-export const VimCommandBar: React.FC<VimCommandBarProps> = ({isVimCommandMode, onVimCommand, onEnter}) => {
+export const VimCommandBar: React.FC<VimCommandBarProps> = ({
+  isVimCommandMode,
+  onVimCommand,
+  onEnter,
+  onEscape,
+}) => {
   const [command, setCommand] = React.useState('');
   const inputRef = React.useRef<HTMLInputElement | null>(null);
 
@@ -15,12 +21,15 @@ export const VimCommandBar: React.FC<VimCommandBarProps> = ({isVimCommandMode, o
     if (e.key === 'Enter') {
       setCommand('');
       onEnter(command);
+    } else if (e.key == 'Escape') {
+      setCommand('');
+      onEscape();
     }
   };
 
   const handleBlur: React.FocusEventHandler<HTMLElement> = (e) => {
     setCommand('');
-    onVimCommand();
+    isVimCommandMode && onVimCommand();
   };
 
   React.useEffect(() => {
