@@ -19,6 +19,7 @@ import ConnectionStats from './ConnectionStats';
 
 import {lightenHsl} from '../../lib/colors';
 import * as gameUtils from '../../lib/gameUtils';
+import {VimCommandBar} from './VimCommandBar';
 
 const CURSOR_TIMEOUT = 60000;
 const PING_TIMEOUT = 10000;
@@ -350,11 +351,9 @@ export default class Player extends Component {
       vimMode,
       vimInsert,
       vimCommand,
-      vimCommandBuffer,
       onVimNormal,
       onVimInsert,
       onVimCommand,
-      onVimCommandBuffer,
       grid,
       clues,
       circles,
@@ -515,7 +514,6 @@ export default class Player extends Component {
             onVimInsert={onVimInsert}
             onVimNormal={onVimNormal}
             onVimCommand={onVimCommand}
-            onVimCommandBuffer={onVimCommandBuffer}
             selected={selected}
             direction={direction}
             onSetDirection={this._setDirection}
@@ -551,7 +549,6 @@ export default class Player extends Component {
           onVimInsert={onVimInsert}
           onVimNormal={onVimNormal}
           onVimCommand={onVimCommand}
-          onVimCommandBuffer={onVimCommandBuffer}
           selected={selected}
           direction={direction}
           onSetDirection={this._setDirection}
@@ -579,10 +576,10 @@ export default class Player extends Component {
                 <Grid ref="grid" {...gridProps} />
               </div>
               {vimMode && (
-                <div className="player--main--vim-bar">
-                  {vimCommand && ':'}
-                  {vimCommandBuffer}
-                </div>
+                <VimCommandBar
+                  isVimCommandMode={this.props.vimCommand}
+                  onEnter={this.props.onVimCommandPressEnter}
+                />
               )}
             </div>
 

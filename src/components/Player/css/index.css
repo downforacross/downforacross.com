@@ -79,6 +79,15 @@
   align-items: stretch;
 }
 
+.player--main--vim-bar--input {
+  background-color: transparent;
+  border: none;
+}
+
+.player--main--vim-bar--input:focus {
+  outline: none;
+}
+
 .player--mobile--wrapper {
   display: flex;
   flex: 1;

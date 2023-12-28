@@ -4,6 +4,7 @@ import './css/gridControls.css';
 import React, {Component} from 'react';
 
 import GridObject from '../../lib/wrappers/GridWrapper';
+import {GridControlContext} from './GridControlContext';
 
 function safe_while(condition, step, cap = 500) {
   while (condition() && cap >= 0) {
@@ -237,7 +238,6 @@ export default class GridControls extends Component {
       vimInsert,
       onVimCommand,
       vimCommand,
-      onVimCommandBuffer,
       onPressEnter,
       onPressPeriod,
     } = this.props;
@@ -272,8 +272,6 @@ export default class GridControls extends Component {
       return true;
     } else if (key === 'Escape') {
       onVimNormal && onVimNormal();
-    } else if (vimCommand) {
-      onVimCommandBuffer && onVimCommandBuffer(key);
     } else if (vimInsert && !this.props.frozen) {
       const letter = key.toUpperCase();
       if (this.validLetter(letter)) {
@@ -409,6 +407,14 @@ export default class GridControls extends Component {
     this.refs.gridControls.focus();
   }
 
+  addKeyDownListener(listener) {
+    this.refs.gridControls.addEventListener('keydown', listener);
+  }
+
+  removeKeyDownListener(listener) {
+    this.refs.gridControls.removeEventListener('keydown', listener);
+  }
+
   render() {
     return (
       <div
@@ -417,7 +423,14 @@ export default class GridControls extends Component {
         tabIndex="1"
         onKeyDown={this.handleKeyDown.bind(this)}
       >
-        <div className="grid--content">{this.props.children}</div>
+        <GridControlContext.Provider
+          value={{
+            addKeyDownListener: this.addKeyDownListener,
+            removeKeyDownListener: this.removeKeyDownListener,
+          }}
+        >
+          <div className="grid--content">{this.props.children}</div>
+        </GridControlContext.Provider>
       </div>
     );
   }

@@ -26,7 +26,6 @@ export default class Game extends Component {
       vimMode: false,
       vimInsert: false,
       vimCommand: false,
-      vimCommandBuffer: [],
       colorAttributionMode: false,
       expandMenu: false,
     };
@@ -182,15 +181,10 @@ export default class Game extends Component {
     });
   };
 
-  handleVimCommandBuffer = (key) => {
-    this.setState({vimCommandBuffer: [...this.state.vimCommandBuffer, key]});
-  };
-
   handleVimNormal = () => {
     this.setState({
       vimInsert: false,
       vimCommand: false,
-      vimCommandBuffer: [],
     });
   };
 
@@ -223,31 +217,29 @@ export default class Game extends Component {
   };
 
   handleRefocus = () => {
+    this.setState({
+      vimCommand: false,
+    });
     this.focus();
   };
 
   handlePressPeriod = this.handleTogglePencil;
 
+  handleVimCommandPressEnter = (command) => {
+    if (vimModeRegex.test(command)) {
+      let dir = 'across';
+      const int = parseInt(command, 10);
+      if (command.endsWith('d')) {
+        dir = 'down';
+      }
+      this.player.selectClue(dir, int);
+    }
+    this.handleRefocus();
+  };
+
   handlePressEnter = () => {
     // Handle vim command buffer
-    if (this.state.vimCommand) {
-      const buffer = [...this.state.vimCommandBuffer];
-      const vimCommandStr = buffer.join('');
-      if (vimModeRegex.test(vimCommandStr)) {
-        let dir = 'across';
-        const int = parseInt(vimCommandStr);
-        if (vimCommandStr.endsWith('d')) {
-          dir = 'down';
-        }
-        this.player.selectClue(dir, int);
-      }
-      this.setState({
-        vimCommand: false,
-        vimCommandBuffer: [],
-      });
-    } else {
-      this.props.onUnfocus();
-    }
+    this.props.onUnfocus();
   };
 
   focus() {
@@ -335,11 +327,10 @@ export default class Game extends Component {
         vimMode={this.state.vimMode}
         vimInsert={this.state.vimInsert}
         vimCommand={this.state.vimCommand}
-        vimCommandBuffer={this.state.vimCommandBuffer}
         onVimInsert={this.handleVimInsert}
         onVimNormal={this.handleVimNormal}
         onVimCommand={this.handleVimCommand}
-        onVimCommandBuffer={this.handleVimCommandBuffer}
+        onVimCommandPressEnter={this.handleVimCommandPressEnter}
         colorAttributionMode={this.state.colorAttributionMode}
         mobile={mobile}
         pickups={this.props.pickups}
