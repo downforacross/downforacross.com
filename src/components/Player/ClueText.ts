@@ -65,8 +65,8 @@ export default ({ text = '' }): JSX.Element => {
     return createElement('i', {}, text.slice(1, -1))
   }
 
-  // fast path for text with no HTML
-  if (!text.includes('<')) return createElement('span', {}, text)
+  // fast path for text with no HTML and no entities
+  if (!text.match(/[<>]|&[^;]+;/)) return createElement('span', {}, text)
 
   // otherwise, parse HTML and render allowed elements
   const allowed = ['em', 'strong', 'u', 'i', 'b', 'sup', 'sub']
