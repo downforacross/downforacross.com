@@ -267,6 +267,10 @@ export default class Game extends Component {
     this.gameComponent && this.gameComponent.focus();
   };
 
+  handleSelectClue = (direction, number) => {
+    this.gameComponent.handleSelectClue(direction, number);
+  };
+
   handleUpdate = _.debounce(
     () => {
       this.forceUpdate();
@@ -379,6 +383,7 @@ export default class Game extends Component {
         onUpdateColor={this.handleUpdateColor}
         onUnfocus={this.handleUnfocusChat}
         onToggleChat={this.handleToggleChat}
+        onSelectClue={this.handleSelectClue}
         mobile={mobile}
         opponentData={this.opponentGame && this.opponentGame.chat}
         bid={this.state.bid}
