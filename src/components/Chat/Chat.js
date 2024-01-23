@@ -334,12 +334,12 @@ export default class Chat extends Component {
       return defaultPattern;
     }
 
-    let isAcross = clueref[2][0] === 'a';
-    let clues = isAcross ? this.props.game.clues['across'] : this.props.game.clues['down'];
+    const isAcross = clueref[2][0] === 'a';
+    const clues = isAcross ? this.props.game.clues['across'] : this.props.game.clues['down'];
 
-    if (clueNumber >= 0 && clueNumber < clues.length && clues[clueNumber] !== null) {
-      let handleClick = () => {
-        let directionStr = isAcross ? 'across' : 'down';
+    if (clueNumber >= 0 && clueNumber < clues.length && clues[clueNumber] !== undefined) {
+      const handleClick = () => {
+        const directionStr = isAcross ? 'across' : 'down';
         this.props.onSelectClue(directionStr, clueNumber);
       };
 
