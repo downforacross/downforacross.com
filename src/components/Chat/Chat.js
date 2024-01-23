@@ -334,7 +334,8 @@ export default class Chat extends Component {
       return defaultPattern;
     }
 
-    const isAcross = clueref[2][0] === 'a';
+    const directionFirstChar = clueref[2][0];
+    const isAcross = directionFirstChar == 'a' || directionFirstChar == 'A';
     const clues = isAcross ? this.props.game.clues['across'] : this.props.game.clues['down'];
 
     if (clueNumber >= 0 && clueNumber < clues.length && clues[clueNumber] !== undefined) {
