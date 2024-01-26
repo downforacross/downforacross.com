@@ -5,33 +5,25 @@ import {MdRadioButtonUnchecked, MdCheckCircle} from 'react-icons/md';
 import {GiCrossedSwords} from 'react-icons/gi';
 import {Link} from 'react-router-dom';
 
+interface EntryPuzzle {
+  pid: string;
+  status: 'started' | 'solved';
+}
+
 export interface EntryProps {
   info: {
     type: string;
   };
   title: string;
   author: string;
-  pid: string;
-  status: 'started' | 'solved' | undefined;
-  stats: {
-    numSolves?: number;
-    solves?: Array<any>;
-  };
+  representativeId: string;
+  numSolves?: number;
+  aggregateStatus: 'started' | 'solved' | undefined;
   fencing?: boolean;
+  puzzles: EntryPuzzle[];
 }
 
 export default class Entry extends Component<EntryProps> {
-  handleClick = () => {
-    /*
-    this.setState({
-      expanded: !this.state.expanded,
-    });
-    this.props.onPlay(this.props.pid);
-    */
-  };
-
-  handleMouseLeave = () => {};
-
   get size() {
     const {type} = this.props.info;
     if (type === 'Daily Puzzle') {
@@ -44,17 +36,22 @@ export default class Entry extends Component<EntryProps> {
   }
 
   render() {
-    const {title, author, pid, status, stats, fencing} = this.props;
-    const numSolvesOld = _.size(stats?.solves || []);
-    const numSolves = numSolvesOld + (stats?.numSolves || 0);
+    const {title, author, representativeId, aggregateStatus, puzzles, fencing, numSolves} = this.props;
     const displayName = _.compact([author.trim(), this.size]).join(' | ');
-    return (
+
+    // we link parts of the entry to avoid nesting <a> elements
+    const linkify = (content: any, style: {color?: string} = {}) => (
       <Link
-        to={`/beta/play/${pid}${fencing ? '?fencing=1' : ''}`}
-        style={{textDecoration: 'none', color: 'initial'}}
+        to={`/beta/play/${representativeId}${fencing ? '?fencing=1' : ''}`}
+        style={{textDecoration: 'none', overflow: 'hidden', ...style}}
       >
-        <Flex className="entry" column onClick={this.handleClick} onMouseLeave={this.handleMouseLeave}>
-          <Flex className="entry--top--left">
+        {content}
+      </Link>
+    );
+    return (
+      <Flex className="entry" column>
+        <Flex className="entry--top--left">
+          {linkify(
             <Flex grow={0}>
               <p
                 style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden'}}
@@ -63,28 +60,58 @@ export default class Entry extends Component<EntryProps> {
                 {displayName}
               </p>
             </Flex>
-            <Flex>
-              {status === 'started' && <MdRadioButtonUnchecked className="entry--icon" />}
-              {status === 'solved' && <MdCheckCircle className="entry--icon" />}
-              {status !== 'started' && status !== 'solved' && fencing && (
-                <GiCrossedSwords className="entry--icon fencing" />
-              )}
-            </Flex>
-          </Flex>
-          <Flex className="entry--main">
-            <Flex grow={0}>
-              <p style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden'}} title={title}>
-                {title}
-              </p>
-            </Flex>
-          </Flex>
-          <Flex className="entry--details">
-            <p>
-              Solved {numSolves} {numSolves === 1 ? 'time' : 'times'}
-            </p>
+          )}
+          <Flex>
+            {puzzles.map((p) => {
+              return (
+                <span key={p.pid}>
+                  {p.status === 'started' && (
+                    <Link
+                      to={`/beta/play/${p.pid}${fencing ? '?fencing=1' : ''}`}
+                      style={{textDecoration: 'none', color: 'initial'}}
+                    >
+                      <MdRadioButtonUnchecked className="entry--icon" />
+                    </Link>
+                  )}
+                  {p.status === 'solved' && (
+                    <Link
+                      to={`/beta/play/${p.pid}${fencing ? '?fencing=1' : ''}`}
+                      style={{textDecoration: 'none', color: 'initial'}}
+                    >
+                      <MdCheckCircle className="entry--icon" />
+                    </Link>
+                  )}
+                  {p.status !== 'started' && p.status !== 'solved' && fencing && (
+                    <Link
+                      to={`/beta/play/${p.pid}${fencing ? '?fencing=1' : ''}`}
+                      style={{textDecoration: 'none', color: 'initial'}}
+                    >
+                      <GiCrossedSwords className="entry--icon fencing" />
+                    </Link>
+                  )}
+                </span>
+              );
+            })}
           </Flex>
         </Flex>
-      </Link>
+        {linkify(
+          <>
+            <Flex className="entry--main">
+              <Flex grow={0}>
+                <p style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden'}} title={title}>
+                  {title}
+                </p>
+              </Flex>
+            </Flex>
+            <Flex className="entry--details">
+              <p>
+                Solved {numSolves} {numSolves === 1 ? 'time' : 'times'}
+              </p>
+            </Flex>
+          </>,
+          {color: 'initial'}
+        )}
+      </Flex>
     );
   }
 }
