@@ -98,13 +98,8 @@ export default class Game extends Component {
     const {id, myColor} = this.props;
     const {pencilMode} = this.state;
     const {autocheckMode} = this.state;
-    if (autocheckMode) {
-      this.gameModel.updateCellAutocheck(r, c, id, myColor, pencilMode, value);
-    } else {
-      this.gameModel.updateCell(r, c, id, myColor, pencilMode, value);
-    }
+    this.gameModel.updateCell(r, c, id, myColor, pencilMode, value, autocheckMode);
     this.props.onChange({isEdit: true});
-
     this.props.battleModel && this.props.battleModel.checkPickups(r, c, this.rawGame, this.props.team);
   };
 

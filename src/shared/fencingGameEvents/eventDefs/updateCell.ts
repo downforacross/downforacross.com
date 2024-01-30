@@ -5,6 +5,7 @@ import {EventDef} from '../types/EventDef';
 export interface UpdateCellEvent {
   cell: CellCoords;
   value: string;
+  autocheck: boolean;
   id: string;
 }
 

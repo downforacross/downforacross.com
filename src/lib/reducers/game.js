@@ -171,10 +171,21 @@ const reducers = {
         }),
       });
     }
-    return {
+
+    var newGame = {
       ...game,
       grid,
     };
+
+    if (params.autocheck === true) {
+      var checkParams = {
+        scope: [params.cell],
+      };
+
+      newGame = reducers.check(newGame, checkParams);
+    }
+
+    return newGame;
   },
 
   check: (game, params) => {

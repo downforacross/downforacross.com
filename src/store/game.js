@@ -192,7 +192,7 @@ export default class Game extends EventEmitter {
     this.puzzleModel.attach();
   }
 
-  updateCell(r, c, id, color, pencil, value) {
+  updateCell(r, c, id, color, pencil, value, autocheck) {
     this.addEvent({
       timestamp: SERVER_TIME,
       type: 'updateCell',
@@ -202,27 +202,7 @@ export default class Game extends EventEmitter {
         color,
         pencil,
         id,
-      },
-    });
-  }
-
-  updateCellAutocheck(r, c, id, color, pencil, value) {
-    this.addEvent({
-      timestamp: SERVER_TIME,
-      type: 'updateCell',
-      params: {
-        cell: {r, c},
-        value,
-        color,
-        pencil,
-        id,
-      },
-    });
-    this.addEvent({
-      timestamp: SERVER_TIME,
-      type: 'check',
-      params: {
-        scope: [{r, c}],
+        autocheck,
       },
     });
   }
