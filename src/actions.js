@@ -74,14 +74,6 @@ const actions = {
       cbk(cid);
     });
   },
-
-  makePrivate: (pid) => {
-    db.ref(`puzzlelist/${pid}/private`).set(true);
-  },
-
-  makePublic: (pid) => {
-    db.ref(`puzzlelist/${pid}/private`).set(false);
-  },
 };
 
 export {db, disconnect};
