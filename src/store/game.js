@@ -1,13 +1,12 @@
-import EventEmitter from 'events';
-import io from 'socket.io-client';
 import Promise from 'bluebird';
-import * as uuid from 'uuid';
+import EventEmitter from 'events';
 import _ from 'lodash';
-import {getSocket} from '../sockets/getSocket';
-import {emitAsync} from '../sockets/emitAsync';
-import {db, SERVER_TIME} from './firebase';
-import Puzzle from './puzzle';
+import io from 'socket.io-client';
+import * as uuid from 'uuid';
 import * as colors from '../lib/colors';
+import {emitAsync} from '../sockets/emitAsync';
+import {getSocket} from '../sockets/getSocket';
+import {db, SERVER_TIME} from './firebase';
 
 Promise.promisifyAll(io);
 
@@ -171,25 +170,6 @@ export default class Game extends EventEmitter {
 
   detach() {
     this.eventsRef.off('child_added');
-  }
-
-  subscribeToPuzzle() {
-    if (!this.createEvent) return;
-    const {pid} = this.createEvent.params;
-    if (!pid) return;
-    this.puzzleModel = new Puzzle(`/puzzle/${pid}`, pid);
-    this.puzzleModel.on('ready', () => {
-      const event = {
-        ...this.createEvent,
-        params: {
-          ...this.createEvent.params,
-          game: this.puzzleModel.toGame(),
-        },
-      };
-      this.createEvent = event;
-      this.emit('createEvent', event);
-    });
-    this.puzzleModel.attach();
   }
 
   updateCell(r, c, id, color, pencil, value) {

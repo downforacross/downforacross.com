@@ -57,7 +57,7 @@ export async function addGameEvent(gid: string, event: GameEvent) {
 
 export async function addInitialGameEvent(gid: string, pid: string) {
   const puzzle = await getPuzzle(pid);
-  // console.log('got puzzle', puzzle);
+  console.log('got puzzle', puzzle);
   const {info = {}, grid: solution = [['']], circles = []} = puzzle;
 
   const gridObject = makeGrid(solution);
