@@ -14,10 +14,12 @@ export async function getGameEvents(gid: string) {
 }
 
 export async function getGameInfo(gid: string) {
-  const res = await pool.query('SELECT event_payload FROM game_events WHERE gid=$1 AND event_type=\'create\'', [gid]);
+  const res = await pool.query("SELECT event_payload FROM game_events WHERE gid=$1 AND event_type='create'", [
+    gid,
+  ]);
   if (res.rowCount != 1) {
     console.log(`Could not find info for game ${gid}`);
-    return {}
+    return {};
   }
 
   const info = res.rows[0].event_payload.params.game.info;
@@ -55,7 +57,7 @@ export async function addGameEvent(gid: string, event: GameEvent) {
 
 export async function addInitialGameEvent(gid: string, pid: string) {
   const puzzle = await getPuzzle(pid);
-  console.log('got puzzle', puzzle);
+  // console.log('got puzzle', puzzle);
   const {info = {}, grid: solution = [['']], circles = []} = puzzle;
 
   const gridObject = makeGrid(solution);
