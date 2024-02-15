@@ -51,9 +51,9 @@ Important: If you aren't making changes to `server/server.js`, you don't need to
 #### Run your local db
 
 1. Install postgres
-   (mac) `brew install postgres`
+   (mac) `brew install postgresql`
 2. Run postgres
-   (mac) `brew services start postgres`
+   (mac) `brew services start postgresql`
 
 #### Initialize your local db:
 

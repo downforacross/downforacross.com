@@ -1,8 +1,9 @@
 import {gameWords} from './lib/names';
 import {makeGrid} from './lib/gameUtils';
-import firebase, {getTime} from './store/firebase';
+import firebase from './store/firebase';
 // eslint-disable-next-line import/no-cycle
 import {GameModel, PuzzleModel} from './store';
+import {incrementGid, incrementPid} from './api/counters';
 
 // for interfacing with firebase
 
@@ -11,61 +12,17 @@ function disconnect() {
   // no-op for now
 }
 
-function setPuzzle(pid, puzzle) {
-  const {info, private: private_ = false} = puzzle;
-  const {title, author} = info;
-  db.ref(`puzzlelist/${pid}`).set({
-    pid,
-    info,
-    title,
-    private: private_,
-    author,
-    importedTime: getTime(),
-    stats: {
-      solves: {},
-      numSolves: 0,
-    },
-  });
-  db.ref(`puzzle/${pid}`).set({
-    ...puzzle,
-    pid,
-  });
-}
-
 const actions = {
-  updatePuzzle: (pid, puzzle) => {
-    setPuzzle(pid, puzzle);
-  },
   // puzzle: { title, type, grid, clues }
-  createPuzzle: (puzzle, cbk) => {
-    db.ref('counters').transaction(
-      (counters) => {
-        const pid = ((counters && counters.pid) || 0) + 1;
-        return {...counters, pid};
-      },
-      (err, success, snapshot) => {
-        const pid = snapshot.child('pid').val();
-        setPuzzle(pid, puzzle);
-        cbk && cbk(pid);
-      }
-    );
+  createPuzzle: async (puzzle, cbk) => {
+    const {pid} = await incrementPid();
+    cbk && cbk(pid);
   },
 
-  getNextGid: (cbk) => {
-    db.ref('counters').transaction(
-      (counters) => {
-        const gid = (counters && counters.gid) || 0;
-        return {
-          ...counters,
-          gid: gid + 1,
-        };
-      },
-      (error, committed, snapshot) => {
-        const gid = snapshot.child('gid').val();
-        const word = gameWords[Math.floor(Math.random() * gameWords.length)];
-        cbk(`${gid}-${word}`);
-      }
-    );
+  getNextGid: async (cbk) => {
+    const {gid} = await incrementGid();
+    const word = gameWords[Math.floor(Math.random() * gameWords.length)];
+    cbk(`${gid}-${word}`);
   },
 
   getNextBid: (cbk) => {
@@ -116,14 +73,6 @@ const actions = {
     db.ref(`composition/${cid}`).set(composition, () => {
       cbk(cid);
     });
-  },
-
-  makePrivate: (pid) => {
-    db.ref(`puzzlelist/${pid}/private`).set(true);
-  },
-
-  makePublic: (pid) => {
-    db.ref(`puzzlelist/${pid}/private`).set(false);
   },
 };
 

@@ -9,3 +9,4 @@ psql -a "${1}" < sql/create_game_events.sql
 psql -a "${1}" < sql/create_puzzles.sql
 psql -a "${1}" < sql/create_room_events.sql
 psql -a "${1}" < sql/create_puzzle_solves.sql
+psql -a "${1}" < sql/create_id_counters.sql

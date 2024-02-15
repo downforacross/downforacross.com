@@ -6,7 +6,7 @@ import {Link} from 'react-router-dom';
 
 import Nav from '../components/common/Nav';
 import actions from '../actions';
-import {getUser, GameModel, PuzzleModel, BattleModel} from '../store';
+import {getUser, BattleModel} from '../store';
 import redirect from '../lib/redirect';
 import {createGame} from '../api/create_game';
 
