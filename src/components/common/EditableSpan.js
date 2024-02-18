@@ -2,6 +2,7 @@ import './css/editableSpan.css';
 import React, {PureComponent} from 'react';
 import _ from 'lodash';
 import Caret from '../../lib/caret';
+import { sanitizeInput } from '../../utils/sanitizeInput';
 
 export default class EditableSpan extends PureComponent {
   constructor() {
