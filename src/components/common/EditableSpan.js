@@ -49,7 +49,6 @@ export default class EditableSpan extends PureComponent {
     let result = value;
     const nbsp = String.fromCharCode('160');
     while (result.indexOf(' ') !== -1) {
-import { sanitizeInput } from '../../utils/sanitizeInput';
       result = result.replace(' ', nbsp);
     }
     return result;
