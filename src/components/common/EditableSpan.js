@@ -49,7 +49,7 @@ export default class EditableSpan extends PureComponent {
     let result = value;
     const nbsp = String.fromCharCode('160');
     while (result.indexOf(' ') !== -1) {
-      result = result.replace(' ', nbsp);
+      result = result.replaceAll(' ', nbsp);
     }
     return result;
   }
