@@ -164,3 +164,15 @@ export interface RecordSolveRequest {
 export interface RecordSolveResponse {}
 
 export type CellCoords = {r: number; c: number};
+
+export interface IncrementGidRequest {}
+
+export interface IncrementGidResponse {
+  gid: string;
+}
+
+export interface IncrementPidRequest {}
+
+export interface IncrementPidResponse {
+  pid: string;
+}
