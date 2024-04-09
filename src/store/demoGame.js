@@ -135,6 +135,4 @@ export default class DemoGame extends Game {
     };
     this.events.push(s);
   }
-
-  subscribeToPuzzle() {}
 }
