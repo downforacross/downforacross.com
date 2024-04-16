@@ -64,7 +64,7 @@ export default class Chat extends Component {
     // Check if localStorage has username_default, if not set it to the last
     // updated name
     if (
-      localStorage.getItem('username_default') != localStorage.getItem(this.usernameKey) &&
+      localStorage.getItem('username_default') !== localStorage.getItem(this.usernameKey) &&
       !isFromNameGenerator(username)
     ) {
       localStorage.setItem('username_default', username);

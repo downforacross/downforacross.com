@@ -1,4 +1,3 @@
-import {getTime} from '../../../store/firebase';
 import {EventDef} from '../types/EventDef';
 
 export interface StartEvent {}
