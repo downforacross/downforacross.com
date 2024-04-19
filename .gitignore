@@ -33,3 +33,5 @@ backfills/*.json
 .env.staging
 
 .vercel
+
+*storybook.log
