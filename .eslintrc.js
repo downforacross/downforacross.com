@@ -4,7 +4,13 @@ module.exports = {
     es6: true,
     node: true,
   },
-  extends: ['plugin:react/recommended', 'airbnb-typescript', 'prettier', 'prettier/@typescript-eslint'],
+  extends: [
+    'plugin:react/recommended',
+    'airbnb-typescript',
+    'prettier',
+    'prettier/@typescript-eslint',
+    'plugin:storybook/recommended',
+  ],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
