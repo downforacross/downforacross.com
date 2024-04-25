@@ -2,6 +2,7 @@ import './css/editableSpan.css';
 import React, {PureComponent} from 'react';
 import _ from 'lodash';
 import Caret from '../../lib/caret';
+import { sanitizeInput } from '../../utils/sanitizeInput';
 
 export default class EditableSpan extends PureComponent {
   constructor() {
@@ -48,7 +49,7 @@ export default class EditableSpan extends PureComponent {
     let result = value;
     const nbsp = String.fromCharCode('160');
     while (result.indexOf(' ') !== -1) {
-      result = result.replace(' ', nbsp);
+      result = result.replaceAll(' ', nbsp);
     }
     return result;
   }
@@ -69,7 +70,7 @@ export default class EditableSpan extends PureComponent {
     if (this.props.hidden) return;
     if (this.text === val) return;
     // set text while retaining cursor position
-    this.span.current.innerHTML = val;
+    this.span.current.innerHTML = sanitizeInput(val);
   }
 
   handleFocus = () => {
