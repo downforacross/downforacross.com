@@ -12,6 +12,7 @@ import ChatBar from './ChatBar';
 import EditableSpan from '../common/EditableSpan';
 import MobileKeyboard from '../Player/MobileKeyboard';
 import ColorPicker from './ColorPicker.tsx';
+import {formatMilliseconds} from '../Toolbar/Clock';
 
 const isEmojis = (str) => {
   const res = str.match(/[A-Za-z,.0-9!-]/g);
@@ -409,7 +410,8 @@ export default class Chat extends Component {
               <div className="chat--message chat--system-message">
                 <div>
                   <i id="shareText">
-                    Congratulations! You solved the puzzle in <b>{'0:33'}</b>. Click the copy icon to share
+                    Congratulations! You solved the puzzle in{' '}
+                    <b>{formatMilliseconds(this.props.game.clock.totalTime)}</b>. Click the copy icon to share
                     your score.
                     <wbr />
                   </i>
