@@ -415,19 +415,15 @@ export default class Chat extends Component {
             </div>
             {this.props.game.solved && (
               <div className="chat--message chat--system-message">
-                <div>
+                <div className="copyText" onClick={this.handleShareScoreClick}>
                   <i id="shareText">
                     Congratulations! You solved the puzzle in{' '}
-                    <b>{formatMilliseconds(this.props.game.clock.totalTime)}</b>. Click the copy icon to share
-                    your score.
+                    <b>{formatMilliseconds(this.props.game.clock.totalTime)}</b>. Click here to share your
+                    score.
                     <wbr />
                   </i>
 
-                  <i
-                    className="fa fa-clone copyButton"
-                    title="Copy to Clipboard"
-                    onClick={this.handleShareScoreClick}
-                  />
+                  <i className="fa fa-clone copyButton" title="Copy to Clipboard" />
                 </div>
               </div>
             )}
