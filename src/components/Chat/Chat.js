@@ -104,6 +104,16 @@ export default class Chat extends Component {
     link.classList.add('flashBlue');
   };
 
+  handleShareScoreClick = () => {
+    // TODO
+    const text = '';
+    navigator.clipboard.writeText(text);
+    let link = document.getElementById('shareText');
+    link.classList.remove('flashBlue');
+    void link.offsetWidth;
+    link.classList.add('flashBlue');
+  };
+
   focus = () => {
     const chatBar = this.chatBar.current;
     if (chatBar) {
@@ -395,6 +405,23 @@ export default class Chat extends Component {
                 />
               </div>
             </div>
+            {this.props.game.solved && (
+              <div className="chat--message chat--system-message">
+                <div>
+                  <i id="shareText">
+                    Congratulations! You solved the puzzle in <b>{'0:33'}</b>. Click the copy icon to share
+                    your score.
+                    <wbr />
+                  </i>
+
+                  <i
+                    className="fa fa-clone copyButton"
+                    title="Copy to Clipboard"
+                    onClick={this.handleShareScoreClick}
+                  />
+                </div>
+              </div>
+            )}
             {messages.map((message, i) => (
               <div key={i}>{this.renderMessage(message)}</div>
             ))}
