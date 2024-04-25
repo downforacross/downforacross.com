@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import {isMobile, pure, isAncestor} from '../../lib/jsUtils';
+import {pure, isAncestor} from '../../lib/jsUtils';
 import './timeline.css';
 
 const TIMELINE_COLORS = {
