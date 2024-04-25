@@ -12,6 +12,7 @@ import ChatBar from './ChatBar';
 import EditableSpan from '../common/EditableSpan';
 import MobileKeyboard from '../Player/MobileKeyboard';
 import ColorPicker from './ColorPicker.tsx';
+import {formatMilliseconds} from '../Toolbar/Clock';
 
 const isEmojis = (str) => {
   const res = str.match(/[A-Za-z,.0-9!-]/g);
@@ -64,7 +65,7 @@ export default class Chat extends Component {
     // Check if localStorage has username_default, if not set it to the last
     // updated name
     if (
-      localStorage.getItem('username_default') != localStorage.getItem(this.usernameKey) &&
+      localStorage.getItem('username_default') !== localStorage.getItem(this.usernameKey) &&
       !isFromNameGenerator(username)
     ) {
       localStorage.setItem('username_default', username);
@@ -91,14 +92,29 @@ export default class Chat extends Component {
     this.props.onToggleChat();
   };
 
+  get serverUrl() {
+    return `${window.location.protocol}//${window.location.host}`;
+  }
+
   get url() {
-    return `${window.location.protocol}//${window.location.host}/beta${this.props.path}`;
+    return `${this.serverUrl}/beta${this.props.path}`;
   }
 
   handleCopyClick = () => {
     navigator.clipboard.writeText(this.url);
     // `${window.location.host}/beta${this.props.path}`);
     let link = document.getElementById('pathText');
+    link.classList.remove('flashBlue');
+    void link.offsetWidth;
+    link.classList.add('flashBlue');
+  };
+
+  handleShareScoreClick = () => {
+    const text = `I solved ${this.props.game.info.title} in ${formatMilliseconds(
+      this.props.game.clock.totalTime
+    )}!\n\n${this.serverUrl}/beta/play/${this.props.game.pid}`;
+    navigator.clipboard.writeText(text);
+    let link = document.getElementById('shareText');
     link.classList.remove('flashBlue');
     void link.offsetWidth;
     link.classList.add('flashBlue');
@@ -395,6 +411,24 @@ export default class Chat extends Component {
                 />
               </div>
             </div>
+            {this.props.game.solved && (
+              <div className="chat--message chat--system-message">
+                <div>
+                  <i id="shareText">
+                    Congratulations! You solved the puzzle in{' '}
+                    <b>{formatMilliseconds(this.props.game.clock.totalTime)}</b>. Click the copy icon to share
+                    your score.
+                    <wbr />
+                  </i>
+
+                  <i
+                    className="fa fa-clone copyButton"
+                    title="Copy to Clipboard"
+                    onClick={this.handleShareScoreClick}
+                  />
+                </div>
+              </div>
+            )}
             {messages.map((message, i) => (
               <div key={i}>{this.renderMessage(message)}</div>
             ))}
