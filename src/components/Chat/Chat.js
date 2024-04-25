@@ -110,9 +110,11 @@ export default class Chat extends Component {
   };
 
   handleShareScoreClick = () => {
-    const text = `I solved ${this.props.game.info.title} in ${formatMilliseconds(
-      this.props.game.clock.totalTime
-    )}!\n\n${this.serverUrl}/beta/play/${this.props.game.pid}`;
+    const text = `${Object.keys(this.props.users).length > 1 ? 'We' : 'I'} solved ${
+      this.props.game.info.title
+    } in ${formatMilliseconds(this.props.game.clock.totalTime)}!\n\n${this.serverUrl}/beta/play/${
+      this.props.game.pid
+    }`;
     navigator.clipboard.writeText(text);
     let link = document.getElementById('shareText');
     link.classList.remove('flashBlue');
