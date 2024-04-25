@@ -92,8 +92,12 @@ export default class Chat extends Component {
     this.props.onToggleChat();
   };
 
+  get serverUrl() {
+    return `${window.location.protocol}//${window.location.host}`;
+  }
+
   get url() {
-    return `${window.location.protocol}//${window.location.host}/beta${this.props.path}`;
+    return `${this.serverUrl}/beta${this.props.path}`;
   }
 
   handleCopyClick = () => {
@@ -106,8 +110,9 @@ export default class Chat extends Component {
   };
 
   handleShareScoreClick = () => {
-    // TODO
-    const text = '';
+    const text = `I solved ${this.props.game.info.title} in ${formatMilliseconds(
+      this.props.game.clock.totalTime
+    )}!\n\n${this.serverUrl}/beta/play/${this.props.game.pid}`;
     navigator.clipboard.writeText(text);
     let link = document.getElementById('shareText');
     link.classList.remove('flashBlue');
