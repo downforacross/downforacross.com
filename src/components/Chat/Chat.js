@@ -110,9 +110,11 @@ export default class Chat extends Component {
   };
 
   handleShareScoreClick = () => {
-    const text = `I solved ${this.props.game.info.title} in ${formatMilliseconds(
-      this.props.game.clock.totalTime
-    )}!\n\n${this.serverUrl}/beta/play/${this.props.game.pid}`;
+    const text = `${Object.keys(this.props.users).length > 1 ? 'We' : 'I'} solved ${
+      this.props.game.info.title
+    } in ${formatMilliseconds(this.props.game.clock.totalTime)}!\n\n${this.serverUrl}/beta/play/${
+      this.props.game.pid
+    }`;
     navigator.clipboard.writeText(text);
     let link = document.getElementById('shareText');
     link.classList.remove('flashBlue');
@@ -413,19 +415,15 @@ export default class Chat extends Component {
             </div>
             {this.props.game.solved && (
               <div className="chat--message chat--system-message">
-                <div>
+                <div className="copyText" onClick={this.handleShareScoreClick}>
                   <i id="shareText">
                     Congratulations! You solved the puzzle in{' '}
-                    <b>{formatMilliseconds(this.props.game.clock.totalTime)}</b>. Click the copy icon to share
-                    your score.
+                    <b>{formatMilliseconds(this.props.game.clock.totalTime)}</b>. Click here to share your
+                    score.
                     <wbr />
                   </i>
 
-                  <i
-                    className="fa fa-clone copyButton"
-                    title="Copy to Clipboard"
-                    onClick={this.handleShareScoreClick}
-                  />
+                  <i className="fa fa-clone copyButton" title="Copy to Clipboard" />
                 </div>
               </div>
             )}
