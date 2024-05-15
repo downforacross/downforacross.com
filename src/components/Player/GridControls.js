@@ -13,6 +13,11 @@ function safe_while(condition, step, cap = 500) {
 }
 
 export default class GridControls extends Component {
+  constructor() {
+    super();
+    this.inputRef = React.createRef();
+  }
+
   actions = {
     left: this.setDirectionWithCallback('across', this.moveSelectedBy(0, -1).bind(this)).bind(this),
     up: this.setDirectionWithCallback('down', this.moveSelectedBy(-1, 0).bind(this)).bind(this),
@@ -226,7 +231,7 @@ export default class GridControls extends Component {
       l: 'right',
       x: 'delete',
       '^': 'home',
-      '$': 'end',
+      $: 'end',
     };
 
     const {onVimNormal, onVimInsert, vimInsert, onPressEnter, onPressPeriod} = this.props;
@@ -268,12 +273,17 @@ export default class GridControls extends Component {
     }
   };
 
+  handleClick(ev) {
+    ev.preventDefault();
+    this.focus();
+  }
+
   // takes in a Keyboard Event
   handleKeyDown(ev) {
     const {vimMode} = this.props;
     const _handleKeyDown = vimMode ? this._handleKeyDownVim : this._handleKeyDown;
 
-    if (ev.target.tagName === 'INPUT' || ev.metaKey || ev.ctrlKey) {
+    if (ev.target !== this.inputRef && (ev.tagName === 'INPUT' || ev.metaKey || ev.ctrlKey)) {
       return;
     }
     if (_handleKeyDown(ev.key, ev.shiftKey, ev.altKey)) {
@@ -391,18 +401,36 @@ export default class GridControls extends Component {
   }
 
   focus() {
-    this.refs.gridControls.focus();
+    this.inputRef.current.focus();
   }
 
   render() {
+    const gridProps = {
+      style: {
+        // Disable double-tap-to-zoom as it delays clicks by up to 300ms (to see if it becomes a double-tap)
+        touchAction: 'manipulation',
+      },
+    };
+    const inputProps = {
+      style: {
+        opacity: 0,
+        width: 0,
+        height: 0,
+      },
+      autoComplete: 'none',
+      autoCapitalize: 'none',
+    };
     return (
       <div
         ref="gridControls"
         className="grid-controls"
         tabIndex="1"
+        onClick={this.handleClick.bind(this)}
         onKeyDown={this.handleKeyDown.bind(this)}
+        {...gridProps}
       >
         <div className="grid--content">{this.props.children}</div>
+        <input tabIndex={-1} name="grid" ref={this.inputRef} {...inputProps} />
       </div>
     );
   }
