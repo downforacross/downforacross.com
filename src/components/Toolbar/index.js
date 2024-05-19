@@ -488,6 +488,7 @@ export default class Toolbar extends Component {
               <>
                 {this.renderColorAttributionToggle()}
                 {this.renderListViewButton()}
+                {this.renderAutocheck()}
                 {this.renderChatButton()}
               </>
             )}
