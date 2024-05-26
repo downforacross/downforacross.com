@@ -3,7 +3,7 @@
   position: relative;
 }
 
-.grid-controls:focus .grid--content .blurable {
+.grid-controls:focus-within .grid--content .blurable {
   opacity: 1;
 }
 
