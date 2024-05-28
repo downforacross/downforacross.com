@@ -401,7 +401,7 @@ export default class GridControls extends Component {
   }
 
   focus() {
-    this.inputRef.current.focus();
+    this.inputRef.current.focus({preventScroll: true});
   }
 
   render() {
