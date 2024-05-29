@@ -58,10 +58,12 @@ export default class GridControls extends Component {
   }
 
   selectClue(direction, number) {
-    this.setDirection(direction);
     const clueRoot = this.grid.getCellByNumber(number);
-    const firstEmptyCell = this.grid.getNextEmptyCell(clueRoot.r, clueRoot.c, direction);
-    this.setSelected(firstEmptyCell || clueRoot);
+    if (clueRoot) {
+      this.setDirection(direction);
+      const firstEmptyCell = this.grid.getNextEmptyCell(clueRoot.r, clueRoot.c, direction);
+      this.setSelected(firstEmptyCell || clueRoot);
+    }
   }
 
   isSelectable(r, c) {
@@ -234,7 +236,15 @@ export default class GridControls extends Component {
       $: 'end',
     };
 
-    const {onVimNormal, onVimInsert, vimInsert, onPressEnter, onPressPeriod} = this.props;
+    const {
+      onVimNormal,
+      onVimInsert,
+      vimInsert,
+      onVimCommand,
+      vimCommand,
+      onPressEnter,
+      onPressPeriod,
+    } = this.props;
     if (key in actionKeys) {
       this.handleAction(actionKeys[key], shiftKey);
       return true;
@@ -243,7 +253,7 @@ export default class GridControls extends Component {
       this.handleAltKey(key, shiftKey);
       return true;
     }
-    if (!vimInsert) {
+    if (!vimInsert && !vimCommand) {
       if (key in normalModeActionKeys) {
         this.handleAction(normalModeActionKeys[key], shiftKey);
       } else if (key === 'w') {
@@ -255,6 +265,8 @@ export default class GridControls extends Component {
       } else if (key === 's') {
         this.delete();
         onVimInsert && onVimInsert();
+      } else if (key === ':') {
+        onVimCommand && onVimCommand();
       }
     } else if (key === '.') {
       onPressPeriod && onPressPeriod();
