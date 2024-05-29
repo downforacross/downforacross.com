@@ -92,9 +92,30 @@ export default class Upload extends Component {
     return null;
   };
 
-  renderUploadSuccessModal = () => {
+  renderUploadSuccessModal = (response) => {
     swal.close();
-    if (!this.state.recentUnlistedPid) {
+    if (response.duplicatePuzzle) {
+      const url = `/beta/play/${response.duplicatePuzzle}`;
+      swal({
+        title: 'This puzzle already exists!',
+        icon: 'error',
+        content: (
+          <div className="swal-text swal-text--no-margin swal-text--text-align-center">
+            <p style={{marginTop: 10, marginBottom: 10}}>
+              Play the puzzle <a href={url}>here</a>
+            </p>
+          </div>
+        ),
+      });
+      // Shouldn't actually encounter this case, but just in case
+    } else if (!response.pid) {
+      this.props.onCreate && this.props.onCreate();
+      swal({
+        title: "Couldn't upload puzzle",
+        icon: 'error',
+        text: 'Encountered an error when uploading the puzzle.',
+      });
+    } else if (!this.state.recentUnlistedPid) {
       this.props.onCreate && this.props.onCreate();
       swal({
         title: 'Upload Success!',

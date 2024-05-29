@@ -134,6 +134,29 @@ export async function addPuzzle(puzzle: PuzzleJson, isPublic = false, pid?: stri
   return pid;
 }
 
+export async function getMatchingPuzzle(puzzle: PuzzleJson): Promise<string | undefined> {
+  const {rows} = await pool.query(
+    // Uses the same minimum pid as the unique index so that the index is consulted
+    `
+    SELECT
+      pid
+    FROM puzzles
+    WHERE pid > '30000'
+          AND is_public
+          AND md5(content -> 'clues' ->> 'down') = md5(($2::jsonb) ->> 'down')
+          AND md5(content -> 'clues' ->> 'across') = md5(($2::jsonb) ->> 'across')
+          AND md5(content ->> 'grid') = md5(($1::jsonb)::text)
+    ORDER BY pid DESC
+    LIMIT 1
+  `,
+    [JSON.stringify(puzzle.grid), puzzle.clues]
+  );
+  if (rows.length > 0) {
+    return rows[0].pid;
+  }
+  return undefined;
+}
+
 async function isGidAlreadySolved(gid: string) {
   // Note: This gate makes use of the assumption "one pid per gid";
   // The unique index on (pid, gid) is more strict than this
