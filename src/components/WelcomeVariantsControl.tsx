@@ -20,7 +20,7 @@ export const WelcomeVariantsControl: React.FC<{
             friends in real time.
             <br />
             <br />
-            Correctly fill in cells correctly before the other team to unlock more clues and explore the grid.
+            Quickly fill in cells correctly before the other team to unlock more clues and explore the grid.
             <br />
             <br />
             <span style={{fontSize: '75%', color: 'gray'}}>
