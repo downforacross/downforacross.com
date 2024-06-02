@@ -432,12 +432,26 @@ export default class MobileGridControls extends GridControls {
     }
   };
 
+  /**
+   * There are hidden input boxes on the page, this handler listens for changes and then relays the inferred
+   * user input to the crossword grid. The input box has a well-defined initial state that we always reset to:
+   * It has a value of "$", and the cursor is always at the end.
+   *
+   * By comparing with this initial state, we can infer what the user did, i.e. if the new value is "$a" they
+   * input the letter "a", if the new value is "", then they did a backspace.
+   */
   handleInputChange = (e) => {
-    let input = e.target.value;
+    const textArea = e.target;
+    let input = textArea.value;
     this.setState({dbgstr: `INPUT IS [${input}]`});
 
     if (input === '') {
       this.backspace();
+
+      // On some devices, the cursor gets stuck at position 0, even after the input box resets its value to "$".
+      // To counter that, wait until after the render and then set it to the end. Use a direct reference to the
+      // input in the timeout closure; the event is not reliable, nor is this.inputRef.
+      setTimeout(() => (textArea.selectionStart = textArea.value.length));
       return;
     }
 
@@ -476,7 +490,7 @@ export default class MobileGridControls extends GridControls {
 
   renderMobileInputs() {
     const inputProps = {
-      value: '$',
+      value: '$', // This resets the input to contain just "$" on every render.
       type: 'email',
       style: {
         opacity: 0,
