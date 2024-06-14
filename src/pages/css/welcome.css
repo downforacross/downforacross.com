@@ -112,7 +112,6 @@
 }
 
 .entry {
-  cursor: pointer;
   white-space: nowrap;
   position: relative;
   border: 1px solid silver;
@@ -127,6 +126,13 @@
 
 .mobile .entry {
   width: 80vw;
+}
+
+.entry--top--left > a {
+  font-size: 15px;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.7);
+  justify-content: space-between;
 }
 
 .entry--top--left {

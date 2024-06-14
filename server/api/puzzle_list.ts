@@ -24,6 +24,7 @@ router.get<{}, ListPuzzleResponse>('/', async (req, res, next) => {
   const puzzles = rawPuzzleList.map((puzzle) => ({
     pid: puzzle.pid,
     content: puzzle.content,
+    puzzleHash: `${puzzle.down_md5}-${puzzle.across_md5}-${puzzle.grid_md5}`,
     stats: {numSolves: puzzle.times_solved},
   }));
   res.json({
