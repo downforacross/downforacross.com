@@ -3,9 +3,6 @@ import defaultPack from './emojiPacks/default';
 import pricklyPear from './emojiPacks/pricklyPear.json';
 import custom from './emojiPacks/custom';
 import partyParrot from './emojiPacks/partyParrot';
-import joku from './emojiPacks/joku';
-import sugarCubs from './emojiPacks/sugarCubs';
-import bun from './emojiPacks/bun';
 import yoyo from './emojiPacks/yoyo';
 
 // spread in reverse-order of priority, in case of name collisions
@@ -13,9 +10,6 @@ const allEmojiData = {
   ...defaultPack,
   ...partyParrot,
   ...pricklyPear,
-  ...joku,
-  ...sugarCubs,
-  ...bun,
   ...yoyo,
   ...custom,
 };
