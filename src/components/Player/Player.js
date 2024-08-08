@@ -578,6 +578,7 @@ export default class Player extends Component {
               {vimMode && (
                 <VimCommandBar
                   isVimCommandMode={this.props.vimCommand}
+                  isVimInsertMode={this.props.vimInsert}
                   onVimCommand={this.props.onVimCommand}
                   onEnter={this.props.onVimCommandPressEnter}
                   onEscape={this.props.onVimCommandPressEscape}

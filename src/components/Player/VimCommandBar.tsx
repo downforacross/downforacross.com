@@ -2,6 +2,7 @@ import React from 'react';
 
 interface VimCommandBarProps {
   isVimCommandMode: boolean;
+  isVimInsertMode: boolean;
   onVimCommand: () => void;
   onEnter: (command: string) => void;
   onEscape: () => void;
@@ -9,6 +10,7 @@ interface VimCommandBarProps {
 
 export const VimCommandBar: React.FC<VimCommandBarProps> = ({
   isVimCommandMode,
+  isVimInsertMode,
   onVimCommand,
   onEnter,
   onEscape,
@@ -21,7 +23,7 @@ export const VimCommandBar: React.FC<VimCommandBarProps> = ({
     if (e.key === 'Enter') {
       setCommand('');
       onEnter(command);
-    } else if (e.key == 'Escape') {
+    } else if (e.key === 'Escape') {
       setCommand('');
       onEscape();
     }
@@ -40,16 +42,19 @@ export const VimCommandBar: React.FC<VimCommandBarProps> = ({
 
   return (
     <div className="player--main--vim-bar">
-      <input
-        className="player--main--vim-bar--input"
-        ref={inputRef}
-        type="text"
-        value={command}
-        onChange={(e) => setCommand(e.target.value)}
-        onBlur={handleBlur}
-        disabled={!isVimCommandMode}
-        onKeyDown={handleKeydown}
-      />
+      {isVimInsertMode && <>-- INSERT --</>}
+      {isVimCommandMode && (
+        <input
+          className="player--main--vim-bar--input"
+          ref={inputRef}
+          type="text"
+          value={command}
+          onChange={(e) => setCommand(e.target.value)}
+          onBlur={handleBlur}
+          disabled={!isVimCommandMode}
+          onKeyDown={handleKeydown}
+        />
+      )}
     </div>
   );
 };
