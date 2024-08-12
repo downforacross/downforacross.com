@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import React from 'react';
 import MobileGridControls from './MobileGridControls';
 
 export default class MobileListViewControls extends MobileGridControls {

@@ -10,17 +10,6 @@ import PUZtoJSON from '../../lib/converter/PUZtoJSON';
 import iPUZtoJSON from '../../lib/converter/iPUZtoJSON';
 import fileTypeGuesser from '../../lib/fileTypeGuesser';
 
-class InvalidFileTypeError extends Error {
-  constructor(fileType) {
-    const title = `Invalid .${fileType} file`;
-    super(title);
-    this.errorType = 'InvalidFileTypeError';
-    this.errorTitle = title;
-    this.errorText = `The uploaded file is not a valid .${fileType} file.`;
-    this.errorIcon = 'warning';
-  }
-}
-
 class UnknownFileTypeError extends Error {
   constructor(fileType) {
     const title = `Unknown file type: .${fileType}`;

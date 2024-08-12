@@ -216,6 +216,10 @@ export default class Game extends Component {
     this.player && this.player.focus();
   }
 
+  handleSelectClue(direction, number) {
+    this.player.selectClue(direction, number);
+  }
+
   renderPlayer() {
     const {id, myColor, mobile, beta} = this.props;
     if (!this.game) {

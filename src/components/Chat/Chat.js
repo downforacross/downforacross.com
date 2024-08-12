@@ -12,6 +12,7 @@ import ChatBar from './ChatBar';
 import EditableSpan from '../common/EditableSpan';
 import MobileKeyboard from '../Player/MobileKeyboard';
 import ColorPicker from './ColorPicker.tsx';
+import {formatMilliseconds} from '../Toolbar/Clock';
 
 const isEmojis = (str) => {
   const res = str.match(/[A-Za-z,.0-9!-]/g);
@@ -64,7 +65,7 @@ export default class Chat extends Component {
     // Check if localStorage has username_default, if not set it to the last
     // updated name
     if (
-      localStorage.getItem('username_default') != localStorage.getItem(this.usernameKey) &&
+      localStorage.getItem('username_default') !== localStorage.getItem(this.usernameKey) &&
       !isFromNameGenerator(username)
     ) {
       localStorage.setItem('username_default', username);
@@ -91,14 +92,31 @@ export default class Chat extends Component {
     this.props.onToggleChat();
   };
 
+  get serverUrl() {
+    return `${window.location.protocol}//${window.location.host}`;
+  }
+
   get url() {
-    return `${window.location.protocol}//${window.location.host}/beta${this.props.path}`;
+    return `${this.serverUrl}/beta${this.props.path}`;
   }
 
   handleCopyClick = () => {
     navigator.clipboard.writeText(this.url);
     // `${window.location.host}/beta${this.props.path}`);
     let link = document.getElementById('pathText');
+    link.classList.remove('flashBlue');
+    void link.offsetWidth;
+    link.classList.add('flashBlue');
+  };
+
+  handleShareScoreClick = () => {
+    const text = `${Object.keys(this.props.users).length > 1 ? 'We' : 'I'} solved ${
+      this.props.game.info.title
+    } in ${formatMilliseconds(this.props.game.clock.totalTime)}!\n\n${this.serverUrl}/beta/play/${
+      this.props.game.pid
+    }`;
+    navigator.clipboard.writeText(text);
+    let link = document.getElementById('shareText');
     link.classList.remove('flashBlue');
     void link.offsetWidth;
     link.classList.add('flashBlue');
@@ -282,11 +300,12 @@ export default class Chat extends Component {
       }
 
       if (word.startsWith('@')) {
-        const pattern = word.substring(1);
-        if (pattern.match(/^\d+-?\s?(a(cross)?|d(own)?)$/i)) {
+        let pattern = word;
+        let clueref = pattern.match(/^@(\d+)-?\s?(a(?:cross)?|d(?:own)?)$/i);
+        if (clueref) {
           tokens.push({
             type: 'clueref',
-            data: `@${pattern}`,
+            data: clueref,
           });
           return;
         }
@@ -310,7 +329,7 @@ export default class Chat extends Component {
             {token.type === 'emoji' ? (
               <Emoji emoji={token.data} big={bigEmoji} />
             ) : token.type === 'clueref' ? (
-              token.data // for now, don't do anything special to cluerefs
+              this.renderClueRef(token.data)
             ) : (
               token.data
             )}
@@ -319,6 +338,34 @@ export default class Chat extends Component {
         ))}
       </span>
     );
+  }
+
+  // clueref is in the format [pattern, number, a(cross) | d(own)]
+  renderClueRef(clueref) {
+    const defaultPattern = clueref[0];
+
+    let clueNumber;
+    try {
+      clueNumber = parseInt(clueref[1]);
+    } catch (e) {
+      // not in a valid format, so just return the pattern
+      return defaultPattern;
+    }
+
+    const directionFirstChar = clueref[2][0];
+    const isAcross = directionFirstChar == 'a' || directionFirstChar == 'A';
+    const clues = isAcross ? this.props.game.clues['across'] : this.props.game.clues['down'];
+
+    if (clueNumber >= 0 && clueNumber < clues.length && clues[clueNumber] !== undefined) {
+      const handleClick = () => {
+        const directionStr = isAcross ? 'across' : 'down';
+        this.props.onSelectClue(directionStr, clueNumber);
+      };
+
+      return <button onClick={handleClick}> {defaultPattern} </button>;
+    } else {
+      return defaultPattern;
+    }
   }
 
   renderMessage(message) {
@@ -395,6 +442,20 @@ export default class Chat extends Component {
                 />
               </div>
             </div>
+            {this.props.game.solved && (
+              <div className="chat--message chat--system-message">
+                <div className="copyText" onClick={this.handleShareScoreClick}>
+                  <i id="shareText">
+                    Congratulations! You solved the puzzle in{' '}
+                    <b>{formatMilliseconds(this.props.game.clock.totalTime)}</b>. Click here to share your
+                    score.
+                    <wbr />
+                  </i>
+
+                  <i className="fa fa-clone copyButton" title="Copy to Clipboard" />
+                </div>
+              </div>
+            )}
             {messages.map((message, i) => (
               <div key={i}>{this.renderMessage(message)}</div>
             ))}

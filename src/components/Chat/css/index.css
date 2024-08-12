@@ -171,6 +171,10 @@
   filter: brightness(70%);
 }
 
+.copyText:hover {
+  cursor: pointer;
+}
+
 .flashBlue {
   animation: flash-blue-keyframes 0.5s;
 }

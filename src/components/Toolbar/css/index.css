@@ -99,6 +99,13 @@ code {
   color: var(--main-blue) !important;
 }
 
+.toolbar--mobile .toolbar--autocheck {
+  color: var(--main-gray-2);
+}
+.toolbar--mobile .toolbar--autocheck.on .fa-check-square {
+  color: white !important;
+}
+
 .toolbar--mobile {
   height: 48px;
   background-color: var(--main-blue);

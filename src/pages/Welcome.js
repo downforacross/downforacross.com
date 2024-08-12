@@ -9,7 +9,7 @@ import _ from 'lodash';
 import classnames from 'classnames';
 import Nav from '../components/common/Nav';
 import Upload from '../components/Upload';
-import {getUser, PuzzlelistModel} from '../store';
+import {getUser} from '../store';
 import PuzzleList from '../components/PuzzleList';
 import {WelcomeVariantsControl} from '../components/WelcomeVariantsControl';
 import {isMobile, colorAverage} from '../lib/jsUtils';
@@ -21,9 +21,7 @@ export default class Welcome extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      puzzles: [],
       userHistory: {},
-      pages: 0,
     };
     this.loading = false;
     this.mobile = isMobile();
@@ -33,7 +31,6 @@ export default class Welcome extends Component {
   }
 
   componentDidMount() {
-    this.initializePuzzlelist();
     this.initializeUser();
     this.navHeight = this.nav.current.getBoundingClientRect().height;
   }
@@ -53,38 +50,9 @@ export default class Welcome extends Component {
     this.user.onAuth(this.handleAuth);
   }
 
-  get done() {
-    const {pages, puzzles} = this.state;
-    return puzzles.length < pages * this.puzzleList.pageSize;
-  }
-
   get showingSidebar() {
     // eventually, allow mobile to toggle sidebar
     return !this.mobile;
-  }
-
-  nextPage = () => {
-    if (this.loading || this.done) {
-      return;
-    }
-    this.loading = true;
-    const nextPages = this.state.pages * 2 + 1; // double the number of pages loaded every time
-    this.puzzleList.getPages(nextPages, (page) => {
-      this.setState(
-        {
-          puzzles: page,
-          pages: nextPages,
-        },
-        () => {
-          this.loading = false;
-        }
-      );
-    });
-  };
-
-  initializePuzzlelist() {
-    this.puzzleList = new PuzzlelistModel();
-    this.nextPage();
   }
 
   get navStyle() {
@@ -132,24 +100,21 @@ export default class Welcome extends Component {
   };
 
   renderPuzzles() {
-    const {userHistory, puzzles} = this.state;
+    const {userHistory} = this.state;
     return (
       <PuzzleList
         fencing={this.props.fencing}
-        puzzles={puzzles}
         uploadedPuzzles={this.uploadedPuzzles}
         userHistory={userHistory}
         sizeFilter={this.props.sizeFilter}
         statusFilter={this.props.statusFilter}
         search={this.props.search}
-        onNextPage={this.nextPage}
         onScroll={this.handleScroll}
       />
     );
   }
 
   handleCreatePuzzle = () => {
-    this.nextPage();
     this.uploadedPuzzles += 1;
   };
 
