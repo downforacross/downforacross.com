@@ -416,6 +416,7 @@ export default class Player extends Component {
       onChangeDirection: this._changeDirection,
       pickups,
       frozen,
+      clues,
     };
 
     const clueProps = {
@@ -573,7 +574,7 @@ export default class Player extends Component {
               </div>
 
               <div className={`player--main--left--grid${frozen ? ' frozen' : ''} blurable`}>
-                <Grid ref="grid" {...gridProps} />
+                <Grid ref="grid" {...gridProps} clues={clues} />
               </div>
               {vimMode && (
                 <VimCommandBar
