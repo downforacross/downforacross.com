@@ -19,6 +19,7 @@ import ConnectionStats from './ConnectionStats';
 
 import {lightenHsl} from '../../lib/colors';
 import * as gameUtils from '../../lib/gameUtils';
+import {VimCommandBar} from './VimCommandBar';
 
 const CURSOR_TIMEOUT = 60000;
 const PING_TIMEOUT = 10000;
@@ -349,8 +350,10 @@ export default class Player extends Component {
       listMode,
       vimMode,
       vimInsert,
+      vimCommand,
       onVimNormal,
       onVimInsert,
+      onVimCommand,
       grid,
       clues,
       circles,
@@ -507,8 +510,10 @@ export default class Player extends Component {
             onPressPeriod={onPressPeriod}
             vimMode={vimMode}
             vimInsert={vimInsert}
+            vimCommand={vimCommand}
             onVimInsert={onVimInsert}
             onVimNormal={onVimNormal}
+            onVimCommand={onVimCommand}
             selected={selected}
             direction={direction}
             onSetDirection={this._setDirection}
@@ -540,8 +545,10 @@ export default class Player extends Component {
           onPressPeriod={onPressPeriod}
           vimMode={vimMode}
           vimInsert={vimInsert}
+          vimCommand={vimCommand}
           onVimInsert={onVimInsert}
           onVimNormal={onVimNormal}
+          onVimCommand={onVimCommand}
           selected={selected}
           direction={direction}
           onSetDirection={this._setDirection}
@@ -568,6 +575,15 @@ export default class Player extends Component {
               <div className={`player--main--left--grid${frozen ? ' frozen' : ''} blurable`}>
                 <Grid ref="grid" {...gridProps} />
               </div>
+              {vimMode && (
+                <VimCommandBar
+                  isVimCommandMode={this.props.vimCommand}
+                  isVimInsertMode={this.props.vimInsert}
+                  onVimCommand={this.props.onVimCommand}
+                  onEnter={this.props.onVimCommandPressEnter}
+                  onEscape={this.props.onVimCommandPressEscape}
+                />
+              )}
             </div>
 
             <div className="player--main--clues">
