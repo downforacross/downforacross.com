@@ -164,38 +164,6 @@ export default class Chat extends Component {
       </Flex>
     );
   }
-  
-  renderMobileChat() {
-    return (
-      <div className="chat-overlay">
-        <div className="chat-header">
-          <div>Chat</div>
-          <div className="chat-close-button" onClick={this.handleToggleChat}>
-            <MdClose />
-          </div>
-        </div>
-        <div className="chat-messages">
-          {this.renderChatHeader()}
-          {this.renderChatSubheader()}
-          <div
-            ref={(el) => {
-              if (el) {
-                el.scrollTop = el.scrollHeight;
-              }
-            }}
-            className="chat--messages"
-          >
-            {this.props.data.messages && this.props.data.messages.map((message, i) => (
-              <div key={i}>{this.renderMessage(message)}</div>
-            ))}
-          </div>
-        </div>
-        <div className="chat-input-area">
-          {this.renderChatBar()}
-        </div>
-      </div>
-    );
-  }
 
   renderFencingOptions() {
     const fencingUrl = `/fencing/${this.props.gid}`;
@@ -443,15 +411,10 @@ export default class Chat extends Component {
 
   render() {
     const messages = this.mergeMessages(this.props.data, this.props.opponentData);
-    
-    if (this.props.mobile && this.props.chatOpen) {
-      return this.renderMobileChat();
-    }
-    
     return (
       <Flex column grow={1}>
         {this.renderToolbar()}
-        <div className={`chat ${this.props.mobile ? 'mobile' : ''}`}>
+        <div className="chat">
           {this.renderChatHeader()}
           {this.renderChatSubheader()}
           <div
