@@ -34,8 +34,6 @@ export default class EditableSpan extends PureComponent {
         this.caret.startPosition = snapshot.start;
       }
       if (snapshot.focused) this.focus();
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({caret: this.text.length});
     }
   }
 
@@ -86,24 +84,6 @@ export default class EditableSpan extends PureComponent {
     return new Caret(this.span.current && this.span.current.childNodes[0]);
   }
 
-  handleKeyDownMobile = (key) => {
-    const {caret} = this.state;
-    let newCaret = caret;
-    if (key === '{enter}') {
-      this.props.onPressEnter && this.props.onPressEnter();
-      return;
-    }
-    if (key === '{del}') {
-      this.text = this.text.substring(0, caret - 1) + this.text.substring(caret);
-      newCaret = caret - 1;
-    } else {
-      this.text = this.text.substring(0, caret) + key + this.text.substring(caret);
-      newCaret = caret + 1;
-    }
-    this.props.onChange(this.text);
-    this.setState({caret: newCaret});
-  };
-
   handleKeyDown = (e) => {
     if (e.key === 'Tab') {
       return;
@@ -139,7 +119,10 @@ export default class EditableSpan extends PureComponent {
           style={style}
           className={`editable-span ${this.props.className || ''}`}
           ref={this.span}
-          contentEditable={this.props.mobile ? undefined : true}
+          contentEditable
+          role="textbox"
+          aria-label="Editable text"
+          tabIndex={0}
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}
           onKeyDown={this.handleKeyDown}
