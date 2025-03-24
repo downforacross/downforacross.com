@@ -19,6 +19,19 @@ const isEmojis = (str) => {
   return !res;
 };
 
+const isSameMinute = (timestamp1, timestamp2) => {
+  const date1 = new Date(timestamp1);
+  const date2 = new Date(timestamp2);
+
+  return (
+    date1.getFullYear() === date2.getFullYear() &&
+    date1.getMonth() === date2.getMonth() &&
+    date1.getDate() === date2.getDate() &&
+    date1.getHours() === date2.getHours() &&
+    date1.getMinutes() === date2.getMinutes()
+  );
+};
+
 export default class Chat extends Component {
   constructor() {
     super();
@@ -275,13 +288,13 @@ export default class Chat extends Component {
       color,
     };
     return (
-      <span className="chat--message--sender" style={style}>
-        {name}:
-      </span>
+      <div className="chat--message--sender" style={style}>
+        {name}
+      </div>
     );
   }
 
-  renderMessageText(text) {
+  renderMessageText(text, isSender) {
     const words = text.split(' ');
     const tokens = [];
     words.forEach((word) => {
@@ -322,7 +335,7 @@ export default class Chat extends Component {
 
     const bigEmoji = tokens.length <= 3 && _.every(tokens, (token) => token.type === 'emoji');
     return (
-      <span className="chat--message--text">
+      <div className={`chat--message--text ${isSender ? 'chat--message--sent' : 'chat--message--received'}`}>
         {tokens.map((token, i) => (
           <React.Fragment key={i}>
             {token.type === 'emoji' ? (
@@ -335,7 +348,7 @@ export default class Chat extends Component {
             {token.type !== 'emoji' && ' '}
           </React.Fragment>
         ))}
-      </span>
+      </div>
     );
   }
 
@@ -367,19 +380,16 @@ export default class Chat extends Component {
     }
   }
 
-  renderMessage(message) {
-    const {text, senderId: id, isOpponent, timestamp} = message;
+  renderMessage(message, change) {
+    const {text, senderId: id, timestamp} = message;
     const big = text.length <= 10 && isEmojis(text);
-    const color = this.getMessageColor(id, isOpponent);
-    const users = this.props.users;
+    const isSender = id === this.props.id;
 
     return (
-      <div className={`chat--message${big ? ' big' : ''}`}>
-        <div className="chat--message--content">
-          {this.renderMessageSender(users[id]?.displayName ?? 'Unknown', color)}
-          {this.renderMessageText(message.text)}
+      <div className={`chat--message--text--container ${isSender ? 'chat--message--right' : ''}`}>
+        <div className={`chat--message${big ? ' big' : ''}`}>
+          <div className={`chat--message--content`}>{this.renderMessageText(message.text, isSender)}</div>
         </div>
-        <div className="chat--message--timestamp">{this.renderMessageTimestamp(timestamp)}</div>
       </div>
     );
   }
@@ -455,9 +465,34 @@ export default class Chat extends Component {
                 </div>
               </div>
             )}
-            {messages.map((message, i) => (
-              <div key={i}>{this.renderMessage(message)}</div>
-            ))}
+            {messages.map((message, i) => {
+              const {senderId: id, timestamp} = message;
+
+              const prevSenderId = i > 0 ? messages[i - 1].senderId : null;
+              const nextSenderId = i < messages.length - 1 ? messages[i + 1].senderId : null;
+              const nextTimestamp = i < messages.length - 1 ? messages[i + 1].timestamp : null;
+
+              const isLastInMinuteGroup = !isSameMinute(nextTimestamp, timestamp);
+              const differentNextSender = nextSenderId !== id;
+
+              const displayTime = isLastInMinuteGroup || differentNextSender;
+
+              const color = this.getMessageColor(id);
+              const users = this.props.users;
+              const isSameSender = prevSenderId === id;
+
+              return (
+                <div className="chat--message--container" key={i}>
+                  <div className={`chat--extra--left ${this.props.id === id ? 'chat--extra--right' : ''}`}>
+                    {!isSameSender && this.renderMessageSender(users[id]?.displayName ?? 'Unknown', color)}
+                  </div>
+                  <div>{this.renderMessage(message, isSameSender)}</div>
+                  <div className={`chat--extra--left ${this.props.id === id ? 'chat--extra--right' : ''}`}>
+                    {displayTime && this.renderMessageTimestamp(timestamp)}
+                  </div>
+                </div>
+              );
+            })}
           </div>
           {this.renderChatBar()}
         </div>
