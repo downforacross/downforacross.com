@@ -119,6 +119,10 @@ function isAncestor(a, b) {
 }
 
 function isMobile() {
+  if (typeof window !== 'undefined' && window.innerWidth < 600) {
+    return true;
+  }
+  
   if (navigator.userAgent.match(/Tablet|iPad/i)) {
     // do tablet stuff
     return true;
