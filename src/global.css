@@ -1,0 +1,38 @@
+/* Global resets for mobile app feel */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overscroll-behavior: none;        /* Prevent bounce scroll on mobile */
+  -webkit-overflow-scrolling: none; /* Disable momentum scroll outside content */
+}
+
+#root {
+  height: 100%;
+}
+
+body {
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  font-family: sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+@media (max-width: 600px) {
+  body {
+    font-size: 16px;
+  }
+}
+
+/* Dark mode considerations */
+body.dark-mode .toolbar--mobile { 
+  background: #222; 
+  color: #fff; 
+}
+body.dark-mode .toolbar--mobile-menu { 
+  background: #333; 
+  color: #fff; 
+}

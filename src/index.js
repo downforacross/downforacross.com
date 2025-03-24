@@ -23,6 +23,7 @@ import GlobalContext from './lib/GlobalContext';
 
 import './style.css';
 import './dark.css';
+import './global.css';
 
 const darkModeLocalStorageKey = 'dark_mode_preference';
 

@@ -1,0 +1,13 @@
+/* Styles for clue list component */
+.mobile-grid-controls--clue-list-overlay .mobile-grid-controls--clue-list-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.mobile-grid-controls--clue-list-content {
+  padding-bottom: 80px; /* Ensure bottom clues are visible when scrolling */
+}
+
+.mobile-grid-controls--clue-item-text {
+  flex: 1;
+}
