@@ -34,8 +34,6 @@ export default class EditableSpan extends PureComponent {
         this.caret.startPosition = snapshot.start;
       }
       if (snapshot.focused) this.focus();
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({caret: this.text.length});
     }
   }
 
