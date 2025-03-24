@@ -220,8 +220,6 @@ export default class Chat extends Component {
         <EditableSpan
           ref={this.usernameInput}
           className="chat--username--input"
-          // even when on mobile, we always want this to be editable
-          mobile={false}
           value={this.state.username}
           onChange={this.handleUpdateDisplayName}
           onBlur={this.handleBlur}
