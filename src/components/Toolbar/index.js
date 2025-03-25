@@ -229,18 +229,11 @@ export default class Toolbar extends Component {
   renderListViewButton() {
     const {listMode, mobile} = this.props;
     if (mobile) {
-      if (listMode) {
-        return (
-          <MdBorderAll
-            onClick={this.handleToggleListView}
-            className={`toolbar--list-view${listMode ? ' on' : ''}`}
-          />
-        );
-      }
       return (
         <MdList
           onClick={this.handleToggleListView}
           className={`toolbar--list-view${listMode ? ' on' : ''}`}
+          title="Clue List"
         />
       );
     }

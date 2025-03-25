@@ -91,18 +91,27 @@
 .player--mobile--wrapper {
   display: flex;
   flex: 1;
+  flex-direction: column;
+  margin-top: 48px; /* Account for fixed toolbar */
+  height: calc(100vh - 48px);
+  overflow: hidden;
 }
 
 .player--mobile {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  overflow-y: auto;
+  padding-bottom: 200px; /* Space for keyboard */
 }
 
 .player--mobile--grid {
   display: flex;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .player--mobile--list-view {
