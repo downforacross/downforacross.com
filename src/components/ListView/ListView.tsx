@@ -63,7 +63,7 @@ const ListView: React.FC<ListViewProps> = (props) => {
       }
       prevSelectedRef.current = selectedClue;
     }
-  }); // Run after every render to check for selection changes
+  }, [props.clues, props.isClueSelected]); // Only run when clues or selection state changes
 
   const isSelected = (r: number, c: number, dir: 'across' | 'down' = props.direction) =>
     r === props.selected.r && c === props.selected.c && dir === props.direction;
@@ -189,15 +189,16 @@ const ListView: React.FC<ListViewProps> = (props) => {
           <div className="list-view--list" key={i}>
             <div className="list-view--list--title">{dir.toUpperCase()}</div>
             {clues[dir].map(
-              (clue, i) =>
+              (clue, clueIndex) =>
                 clue && (
+                  // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
                   <div
                     className="list-view--list--clue"
-                    key={i}
-                    ref={props.isClueSelected(dir, i) ? selectedClueRef : null}
-                    onClick={() => props.selectClue(dir, i)}
+                    key={clue}
+                    ref={props.isClueSelected(dir, clueIndex) ? selectedClueRef : null}
+                    onClick={() => props.selectClue(dir, clueIndex)}
                   >
-                    <div className="list-view--list--clue--number">{i}</div>
+                    <div className="list-view--list--clue--number">{clueIndex}</div>
                     <div className="list-view--list--clue--text">
                       <Clue text={clue} />
                     </div>
@@ -206,15 +207,15 @@ const ListView: React.FC<ListViewProps> = (props) => {
                       <table className={`grid ${sizeClass}`}>
                         <tbody>
                           <RerenderBoundary
-                            name={`${dir} clue ${i}`}
-                            key={i}
-                            hash={hashGridRow(cluesCells[dir][i], {
+                            name={`${dir} clue ${clueIndex}`}
+                            key={`${dir}-${clue}`}
+                            hash={hashGridRow(cluesCells[dir][clueIndex], {
                               ...props.cellStyle,
                               size: props.size,
                             })}
                           >
                             <tr>
-                              {cluesCells[dir][i].map((cellProps) => (
+                              {cluesCells[dir][clueIndex].map((cellProps) => (
                                 <td
                                   key={`${cellProps.r}_${cellProps.c}`}
                                   className="grid--cell"
@@ -226,6 +227,7 @@ const ListView: React.FC<ListViewProps> = (props) => {
                                   }}
                                 >
                                   <Cell
+                                    // eslint-disable-next-line react/jsx-props-no-spreading
                                     {...cellProps}
                                     onClick={(r, c) => handleClick(r, c, dir)}
                                     onContextMenu={handleRightClick}
