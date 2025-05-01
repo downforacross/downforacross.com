@@ -48,7 +48,7 @@ export function colorAverage(hex1, hex2, weight) {
 if (typeof window !== 'undefined') {
   window.requestIdleCallback =
     window.requestIdleCallback ||
-    function(cb) {
+    function (cb) {
       const start = Date.now();
       return setTimeout(() => {
         cb({
@@ -62,7 +62,7 @@ if (typeof window !== 'undefined') {
 
   window.cancelIdleCallback =
     window.cancelIdleCallback ||
-    function(id) {
+    function (id) {
       clearTimeout(id);
     };
 }
@@ -119,6 +119,10 @@ function isAncestor(a, b) {
 }
 
 function isMobile() {
+  if (typeof window !== 'undefined' && window.innerWidth < 600) {
+    return true;
+  }
+
   if (navigator.userAgent.match(/Tablet|iPad/i)) {
     // do tablet stuff
     return true;

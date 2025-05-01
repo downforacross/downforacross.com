@@ -7,6 +7,7 @@ import {MdKeyboardArrowLeft, MdKeyboardArrowRight} from 'react-icons/md';
 import classnames from 'classnames';
 import _ from 'lodash';
 import Clue from './ClueText';
+import ClueList from './ClueList';
 import GridControls from './GridControls';
 import GridObject from '../../lib/wrappers/GridWrapper';
 import * as gameUtils from '../../lib/gameUtils';
@@ -21,6 +22,8 @@ export default class MobileGridControls extends GridControls {
       anchors: [],
       transform: {scale: 1, translateX: 0, translateY: 0},
       dbgstr: undefined,
+      showClueList: false,
+      showKeyboard: true,
     };
     this.prvInput = '';
     this.inputRef = React.createRef();
@@ -407,6 +410,7 @@ export default class MobileGridControls extends GridControls {
   focusKeyboard() {
     this.inputRef.current.selectionStart = this.inputRef.current.selectionEnd = this.inputRef.current.value.length;
     this.inputRef.current.focus();
+    this.setState({showKeyboard: true});
   }
 
   keepFocus = () => {
@@ -525,14 +529,82 @@ export default class MobileGridControls extends GridControls {
     );
   }
 
+  toggleClueList = () => {
+    this.setState((state) => ({showClueList: !state.showClueList}));
+  };
+
+  handleSelectClue = (direction, number) => {
+    this.props.onSetDirection(direction);
+    const grid = this.grid;
+    const clueRoot = grid.getCellByNumber(number);
+    if (clueRoot) {
+      this.props.onSetSelected(clueRoot);
+    }
+  };
+
+  renderOnscreenKeyboard() {
+    if (!this.state.showKeyboard) return null;
+
+    return (
+      <div className="onscreen-keyboard">
+        {'QWERTYUIOP'.split('').map((letter) => (
+          <button key={letter} className="key-btn" onClick={() => this.handleKeyClick(letter)}>
+            {letter}
+          </button>
+        ))}
+        {'ASDFGHJKL'.split('').map((letter) => (
+          <button key={letter} className="key-btn" onClick={() => this.handleKeyClick(letter)}>
+            {letter}
+          </button>
+        ))}
+        {'ZXCVBNM'.split('').map((letter) => (
+          <button key={letter} className="key-btn" onClick={() => this.handleKeyClick(letter)}>
+            {letter}
+          </button>
+        ))}
+        <button className="key-btn wide" onClick={this.handleBackspaceClick}>
+          ⌫
+        </button>
+        <button className="key-btn wide" onClick={this.handleToggleDirection}>
+          ↕︎
+        </button>
+      </div>
+    );
+  }
+
+  handleKeyClick = (letter) => {
+    this.typeLetter(letter, false, {nextClueIfFilled: true});
+  };
+
+  handleBackspaceClick = () => {
+    this.backspace();
+  };
+
+  handleToggleDirection = () => {
+    this.flipDirection();
+  };
+
   render() {
+    const {showClueList} = this.state;
+
     return (
       // eslint-disable-next-line react/no-string-refs
       <div ref="gridControls" className="mobile-grid-controls">
         {this.renderClueBar()}
-        {this.renderGridContent()}
+        <div className="grid-wrapper">{this.renderGridContent()}</div>
         {this.renderMobileInputs()}
-        {/* {this.renderMobileKeyboard()} */}
+        {this.renderOnscreenKeyboard()}
+        {showClueList && (
+          <ClueList
+            clues={this.props.clues}
+            selected={{
+              direction: this.props.direction,
+              number: this.getSelectedClueNumber(),
+            }}
+            onSelectClue={this.handleSelectClue}
+            onClose={this.toggleClueList}
+          />
+        )}
         {this.props.enableDebug && (this.state.dbgstr || 'No message')}
       </div>
     );
