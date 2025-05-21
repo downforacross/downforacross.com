@@ -53,10 +53,17 @@ export const FencingScoreboard: React.FC<{
   );
 
   // Determine if the game is complete and which team won
+  // should be able to handle ties with any number of teams
   const isGameComplete = props.gameState.game?.grid.every((row) =>
     row.every((cell) => cell.good || cell.black)
   );
-  const winningTeam = isGameComplete ? _.maxBy(_.values(props.gameState.teams), 'score') : null;
+  const winningTeams = isGameComplete
+    ? (() => {
+        const teams = _.values(props.gameState.teams).filter(Boolean);
+        const maxScore = _.maxBy(teams, 'score')?.score;
+        return teams.filter((team) => team?.score === maxScore);
+      })()
+    : null;
 
   const teamData = _.keys(props.gameState.teams).map((teamId) => ({
     team: props.gameState.teams[teamId]!,
@@ -91,9 +98,6 @@ export const FencingScoreboard: React.FC<{
               {team.name}
             </span>
           )}
-          {isGameComplete && winningTeam?.id === team.id && (
-            <span className={classes.winIndicator}>🏆 Winner!</span>
-          )}
           {currentUser?.teamId === team.id && spectateButton}
           {currentUser?.teamId === 0 && (
             <button
@@ -103,6 +107,9 @@ export const FencingScoreboard: React.FC<{
             >
               Join Team
             </button>
+          )}
+          {isGameComplete && winningTeams?.some((winner) => winner?.id === team.id) && (
+            <span className={classes.winIndicator}>{winningTeams.length > 1 ? '🤝 Tie!' : '🏆 Winner!'}</span>
           )}
         </span>
       ),
