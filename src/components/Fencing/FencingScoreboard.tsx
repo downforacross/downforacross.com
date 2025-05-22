@@ -26,6 +26,11 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'space-between',
   },
+  winIndicator: {
+    marginLeft: 8,
+    color: '#4CAF50',
+    fontWeight: 'bold',
+  },
 });
 export const FencingScoreboard: React.FC<{
   gameState: GameState;
@@ -46,6 +51,20 @@ export const FencingScoreboard: React.FC<{
       Leave Team
     </button>
   );
+
+  // Determine if the game is complete and which team won
+  // should be able to handle ties with any number of teams
+  const isGameComplete = props.gameState.game?.grid.every((row) =>
+    row.every((cell) => cell.good || cell.black)
+  );
+  const winningTeams = isGameComplete
+    ? (() => {
+        const teams = _.values(props.gameState.teams).filter(Boolean);
+        const maxScore = _.maxBy(teams, 'score')?.score;
+        return teams.filter((team) => team?.score === maxScore);
+      })()
+    : null;
+
   const teamData = _.keys(props.gameState.teams).map((teamId) => ({
     team: props.gameState.teams[teamId]!,
     users: _.values(props.gameState.users).filter((user) => String(user.teamId) === teamId),
@@ -88,6 +107,9 @@ export const FencingScoreboard: React.FC<{
             >
               Join Team
             </button>
+          )}
+          {isGameComplete && winningTeams?.some((winner) => winner?.id === team.id) && (
+            <span className={classes.winIndicator}>{winningTeams.length > 1 ? '🤝 Tie!' : '🏆 Winner!'}</span>
           )}
         </span>
       ),
