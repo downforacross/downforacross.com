@@ -36,6 +36,9 @@ export interface GridProps {
   editMode: boolean;
   frozen: boolean;
 
+  // Clue lookup
+  clues: {across: string[]; down: string[]}; //figure out type
+
   // callbacks
   onChangeDirection(): void;
   onSetSelected(cellCoords: CellCoords): void;
@@ -119,7 +122,31 @@ export default class Grid extends React.PureComponent<GridProps> {
   };
 
   handleRightClick = (r: number, c: number) => {
-    this.props.onPing && this.props.onPing(r, c);
+    const {direction} = this.props;
+    const clueNumber = this.grid.getParent(r, c, direction);
+    const answer = this.grid.isWordRevealed(direction, clueNumber);
+    const clue = this.props.clues[direction][clueNumber];
+    if (answer !== '') {
+      window.open(`https://www.google.com/search?q=${answer}+${clue}`, '_blank');
+      window.focus();
+    } else {
+      this.props.onPing && this.props.onPing(r, c);
+    }
+  };
+
+  lookUpWordMeaning = (r: number, c: number) => {
+    const {direction} = this.props;
+    const clueNumber = this.grid.getParent(r, c, direction);
+    const answer = this.grid.isWordRevealed(direction);
+    const clue = '';
+
+    if (answer !== '') {
+      window.open(
+        `https://www.google.com/search?q=${answer},
+        '_blank`
+      );
+      window.focus();
+    }
   };
 
   getAllSquares() {

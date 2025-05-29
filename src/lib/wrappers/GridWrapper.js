@@ -148,7 +148,6 @@ export default class GridWrapper {
     const _r = r;
     const _c = c;
     let {noWraparound = false, skipFirst = false} = options;
-
     while (this.isWriteable(r, c)) {
       if (!this.isFilled(r, c)) {
         if (!skipFirst) {
@@ -183,6 +182,31 @@ export default class GridWrapper {
   isWordFilled(direction, number) {
     const clueRoot = this.getCellByNumber(number);
     return !this.hasEmptyCells(clueRoot.r, clueRoot.c, direction);
+  }
+
+  getRevealedWord(r, c, direction, answer = '') {
+    while (this.isWriteable(r, c)) {
+      if (!this.isFilled(r, c)) {
+        return '';
+      }
+      if (this.isRevealed(r, c)) {
+        answer += this.grid[r][c].value;
+      } else {
+        return '';
+      }
+      if (direction === 'across') {
+        c += 1;
+      } else {
+        r += 1;
+      }
+    }
+    return answer;
+  }
+
+  isWordRevealed(direction, number) {
+    if (number === 0) return '';
+    const clueRoot = this.getCellByNumber(number);
+    return this.getRevealedWord(clueRoot.r, clueRoot.c, direction);
   }
 
   getNextClue(clueNumber, direction, clues, backwards, parallel) {
@@ -278,6 +302,10 @@ export default class GridWrapper {
 
   isWhite(r, c) {
     return !this.grid[r][c].black;
+  }
+
+  isRevealed(r, c) {
+    return this.grid[r][c].revealed;
   }
 
   isWriteable(r, c) {
