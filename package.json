@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": "^18.0.0"
+    "node": ">=18.0.0"
   },
   "dependencies": {
     "@material-ui/core": "^4.9.14",
+    "@supabase/supabase-js": "^2.49.8",
     "@sweetalert/with-react": "^0.1.1",
     "@types/jest": "^25.2.1",
     "@types/lodash": "^4.14.150",
@@ -24,6 +25,7 @@
     "clsx": "^1.1.0",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
+    "date-fns": "^4.1.0",
     "express": "^4.17.1",
     "firebase": "^7.8.1",
     "firebase-admin": "^8.9.2",
