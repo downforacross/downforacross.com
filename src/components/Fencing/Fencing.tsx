@@ -22,6 +22,7 @@ import {getStartingCursorPosition} from '../../shared/fencingGameEvents/eventDef
 import Nav from '../common/Nav';
 import Chat from '../Chat';
 import {FencingCountdown} from './FencingCountdown';
+import Confetti from '../Game/Confetti.js';
 
 function subscribeToGameEvents(
   socket: SocketIOClient.Socket | undefined,
@@ -283,6 +284,7 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
           )}
         </Flex>
       </Flex>
+      {isGameComplete && <Confetti />}
     </Flex>
   );
 };
