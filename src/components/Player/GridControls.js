@@ -46,15 +46,24 @@ export default class GridControls extends Component {
   }
 
   selectNextClue(backwards, parallel = false) {
-    const {direction, clueNumber} = this.grid.getNextClue(
-      this.getSelectedClueNumber(),
-      this.props.direction,
-      this.props.clues,
-      backwards,
-      parallel
-    );
+    let currentClueNumber = this.getSelectedClueNumber();
+    let currentDirection = this.props.direction;
+    const trySelectNextClue = () => {
+      const {direction, clueNumber} = this.grid.getNextClue(
+        currentClueNumber,
+        currentDirection,
+        this.props.clues,
+        backwards,
+        parallel
+      );
+      currentClueNumber = clueNumber;
+      currentDirection = direction;
+    };
+    const hasSelectableCells = () => this.isClueSelectable(currentDirection, currentClueNumber);
 
-    this.selectClue(direction, clueNumber);
+    trySelectNextClue();
+    safe_while(() => !hasSelectableCells(), trySelectNextClue);
+    this.selectClue(currentDirection, currentClueNumber);
   }
 
   selectClue(direction, number) {
@@ -62,12 +71,40 @@ export default class GridControls extends Component {
     if (clueRoot) {
       this.setDirection(direction);
       const firstEmptyCell = this.grid.getNextEmptyCell(clueRoot.r, clueRoot.c, direction);
-      this.setSelected(firstEmptyCell || clueRoot);
+      let targetCell = firstEmptyCell || clueRoot;
+      // if not selectable
+      while (targetCell && !this.isSelectable(targetCell.r, targetCell.c)) {
+        const nextCell = this.grid.getNextCell(targetCell.r, targetCell.c, direction);
+        if (!nextCell) break;
+        targetCell = nextCell;
+      }
+      if (targetCell && this.isSelectable(targetCell.r, targetCell.c)) {
+        this.setSelected(targetCell);
+      }
     }
   }
 
   isSelectable(r, c) {
-    return this.props.editMode || this.grid.isWhite(r, c);
+    return (this.props.editMode || this.grid.isWhite(r, c)) && !this.props.grid[r][c].isHidden;
+  }
+
+  isClueSelectable(direction, clueNumber) {
+    const clueRoot = this.grid.getCellByNumber(clueNumber);
+    if (!clueRoot) return false;
+    // check if any cell is selectable
+    let {r, c} = clueRoot;
+    while (
+      this.grid.isInBounds(r, c) &&
+      this.grid.isWhite(r, c) &&
+      this.grid.getParent(r, c, direction) === clueNumber
+    ) {
+      if (this.isSelectable(r, c)) {
+        return true;
+      }
+      if (direction === 'across') c++;
+      else r++;
+    }
+    return false;
   }
 
   flipDirection() {
