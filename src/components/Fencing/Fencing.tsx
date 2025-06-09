@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import * as uuid from 'uuid';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useUpdateEffect} from 'react-use';
 import {Helmet} from 'react-helmet';
 import Flex from 'react-flexview';
@@ -103,7 +103,22 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
 
   const id = getUser().id;
   const teamId = gameState.users[id]?.teamId;
+  const isGameComplete =
+    gameState.game?.grid.every((row) => row.every((cell) => cell.good || cell.black)) ?? false;
+  const [hasRevealedAll, setHasRevealedAll] = useState(false);
 
+  // for revealing all cells on game completion
+  // separate from useUpdateEffect bc we want it to work when you join an already-completed game
+  useEffect(() => {
+    if (isGameComplete && !hasRevealedAll && gameState.loaded && gameState.started) {
+      console.log('Game complete, revealing all clues for all teams...');
+      sendEvent({
+        type: 'revealAllClues',
+        params: {},
+      });
+      setHasRevealedAll(true);
+    }
+  }, [isGameComplete, hasRevealedAll, gameState.loaded, gameState.started]);
   useUpdateEffect(() => {
     if (isInitialized) {
       console.log('initializing for the first time', id, teamId);
@@ -215,6 +230,7 @@ export const Fencing: React.FC<{gid: string}> = (props) => {
       changeTeamName={changeTeamName}
       joinTeam={joinTeam}
       spectate={spectate}
+      isGameComplete={isGameComplete}
     />
   );
   return (
