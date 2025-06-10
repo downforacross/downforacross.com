@@ -388,6 +388,10 @@ export default class GridControls extends Component {
   }
 
   typeLetter(letter, isRebus, {nextClueIfFilled} = {}) {
+    const {r, c} = this.props.selected;
+    if (!this.isSelectable(r, c)) {
+      return; // don't type in hidden/non-selectable cells
+    }
     if (this.props.beta) {
       return this.typeLetterSync(letter, isRebus, {nextClueIfFilled});
     }
