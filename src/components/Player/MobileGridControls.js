@@ -44,12 +44,15 @@ export default class MobileGridControls extends GridControls {
     // default scale already fits screen width; no need to zoom out further
     scale = Math.max(1, scale);
 
-    const PADDING = size * scale; // px
+    // this shouldn't go larger than half a tile (scaled) for now; the min X/Y
+    // calculations don't work when the difference between the usable size and
+    // grid size are positive, but smaller than PADDING
+    const PADDING = (size / 2) * scale; // px
 
     const usableWidth = visualViewport.width;
     const gridWidth = this.grid.cols * size * scale;
-    const minX = usableWidth - gridWidth;
-    const maxX = 0;
+    const minX = Math.min(0, usableWidth - gridWidth - PADDING);
+    const maxX = PADDING;
     translateX = Math.min(Math.max(translateX, minX), maxX);
 
     const usableHeight = visualViewport.height - rect.y;
