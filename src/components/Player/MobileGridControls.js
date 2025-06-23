@@ -39,17 +39,26 @@ export default class MobileGridControls extends GridControls {
 
     const rect = this.zoomContainer.current.getBoundingClientRect();
     let {scale, translateX, translateY} = this.state.transform;
-    if (scale < 1) scale = 1;
-    const minTranslateX = -rect.width * (scale - 1);
-    const maxTranslateX = 0;
-    const minTranslateY = translateY; // never auto-pan back up, because iOS soft keyboard is insane
-    // https://blog.opendigerati.com/the-eccentric-ways-of-ios-safari-with-the-keyboard-b5aa3f34228d
-    const maxTranslateY = 0;
-    translateX = _.clamp(translateX, minTranslateX, maxTranslateX);
-    translateY = _.clamp(translateY, minTranslateY, maxTranslateY);
+    const {selected, size} = this.props;
+
+    // default scale already fits screen width; no need to zoom out further
+    scale = Math.max(1, scale);
+
+    const PADDING = size * scale; // px
+
+    const usableWidth = visualViewport.width;
+    const gridWidth = this.grid.cols * size * scale;
+    const minX = usableWidth - gridWidth;
+    const maxX = 0;
+    translateX = Math.min(Math.max(translateX, minX), maxX);
+
+    const usableHeight = visualViewport.height - rect.y;
+    const gridHeight = this.grid.rows * size * scale;
+    const minY = Math.min(0, usableHeight - gridHeight - PADDING);
+    const maxY = PADDING;
+    translateY = Math.min(Math.max(translateY, minY), maxY);
 
     if (fitCurrentClue) {
-      const {selected, size} = this.props;
       const posX = selected.c * size;
       const posY = selected.r * size;
       const paddingX = (rect.width - this.grid.cols * size) / 2;
