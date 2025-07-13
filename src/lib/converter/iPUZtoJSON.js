@@ -26,7 +26,7 @@ export default function iPUZtoJSON(readerResult) {
     type: grid.length > 10 ? 'Daily Puzzle' : 'Mini Puzzle',
     title: jsonFromReader.title || '',
     author: jsonFromReader.author || '',
-    description: jsonFromReader.description || '',
+    description: jsonFromReader.notes || '',
   };
   const circles = [];
   const shades = [];
