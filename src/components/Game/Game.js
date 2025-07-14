@@ -22,7 +22,6 @@ export default class Game extends Component {
       listMode: false,
       pencilMode: false,
       autocheckMode: false,
-      screenWidth: 0,
       vimMode: false,
       vimInsert: false,
       vimCommand: false,
@@ -32,7 +31,6 @@ export default class Game extends Component {
   }
 
   componentDidMount() {
-    const screenWidth = window.innerWidth - 1; // this is important for mobile to fit on screen
     let vimMode = false;
     try {
       vimMode = JSON.parse(localStorage.getItem(vimModeKey)) || false;
@@ -41,7 +39,6 @@ export default class Game extends Component {
     }
     // with body { overflow: hidden }, it should disable swipe-to-scroll on iOS safari)
     this.setState({
-      screenWidth,
       vimMode,
     });
     this.componentDidUpdate({});
@@ -267,7 +264,7 @@ export default class Game extends Component {
       clues[dirToHide] = _.assign([], clues[dirToHide]).map((val) => val && '-');
     }
     const opponentGrid = this.opponentGame && this.opponentGame.grid;
-    const {screenWidth} = this.state;
+    const screenWidth = window.innerWidth - 1; // this is important for mobile to fit on screen
     const themeStyles = {
       clueBarStyle: {
         backgroundColor: toHex(themeColor),

@@ -1,12 +1,19 @@
 import './css/mobileGridControls.css';
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import Flex from 'react-flexview';
 import {MdKeyboardArrowLeft, MdKeyboardArrowRight} from 'react-icons/md';
 import _ from 'lodash';
 import Clue from './ClueText';
 import GridControls from './GridControls';
 import GridObject from '../../lib/wrappers/GridWrapper';
+
+const RunOnce = ({effect}) => {
+  useEffect(() => {
+    effect();
+  }, []);
+  return null;
+};
 
 export default class MobileGridControls extends GridControls {
   constructor() {
@@ -80,6 +87,18 @@ export default class MobileGridControls extends GridControls {
       },
       lastFitOnScreen: Date.now(),
     });
+  }
+
+  centerGridX() {
+    let {scale, translateX, translateY} = this.state.transform;
+    const usableWidth = visualViewport.width;
+    // this.props.size can't be trusted; Player.updateSize will soon recalculate
+    // it using this formula
+    const size = Math.floor(usableWidth / this.grid.cols);
+    const gridWidth = this.grid.cols * size;
+    translateX = (usableWidth - gridWidth) / 2;
+    translateY = translateX;
+    this.setState({transform: {scale, translateX, translateY}});
   }
 
   handleClueBarTouchEnd = (e) => {
@@ -448,6 +467,7 @@ export default class MobileGridControls extends GridControls {
         {this.renderMobileInputs()}
         {/* {this.renderMobileKeyboard()} */}
         {this.props.enableDebug && (this.state.dbgstr || 'No message')}
+        <RunOnce effect={this.centerGridX.bind(this)} />
       </div>
     );
   }
