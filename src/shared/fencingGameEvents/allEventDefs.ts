@@ -6,6 +6,7 @@ import updateCursor from './eventDefs/updateCursor';
 import updateCell from './eventDefs/updateCell';
 import check from './eventDefs/check';
 import reveal from './eventDefs/reveal';
+import revealAllClues from './eventDefs/revealAllClues';
 import startGame from './eventDefs/startGame';
 import sendChatMessage from './eventDefs/sendChatMessage';
 
@@ -18,6 +19,7 @@ export default {
   updateCell,
   check,
   reveal,
+  revealAllClues,
   startGame,
   sendChatMessage,
 };

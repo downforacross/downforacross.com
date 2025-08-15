@@ -280,8 +280,12 @@ export default class GridWrapper {
     return !this.grid[r][c].black;
   }
 
+  isHidden(r, c) {
+    return this.grid[r][c].isHidden;
+  }
+
   isWriteable(r, c) {
-    return this.isInBounds(r, c) && this.isWhite(r, c);
+    return this.isInBounds(r, c) && this.isWhite(r, c) && !this.isHidden(r, c);
   }
 
   getParent(r, c, direction) {

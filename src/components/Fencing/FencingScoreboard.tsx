@@ -39,6 +39,7 @@ export const FencingScoreboard: React.FC<{
   spectate(): void;
   changeName(newName: string): void;
   changeTeamName(newName: string): void;
+  isGameComplete: boolean;
 }> = (props) => {
   const classes = useStyles();
   // TODO buttons need to be icons / dropdown menu once team names are editable
@@ -54,10 +55,7 @@ export const FencingScoreboard: React.FC<{
 
   // Determine if the game is complete and which team won
   // should be able to handle ties with any number of teams
-  const isGameComplete = props.gameState.game?.grid.every((row) =>
-    row.every((cell) => cell.good || cell.black)
-  );
-  const winningTeams = isGameComplete
+  const winningTeams = props.isGameComplete
     ? (() => {
         const teams = _.values(props.gameState.teams).filter(Boolean);
         const maxScore = _.maxBy(teams, 'score')?.score;
@@ -108,7 +106,7 @@ export const FencingScoreboard: React.FC<{
               Join Team
             </button>
           )}
-          {isGameComplete && winningTeams?.some((winner) => winner?.id === team.id) && (
+          {props.isGameComplete && winningTeams?.some((winner) => winner?.id === team.id) && (
             <span className={classes.winIndicator}>{winningTeams.length > 1 ? '🤝 Tie!' : '🏆 Winner!'}</span>
           )}
         </span>
