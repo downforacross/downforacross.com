@@ -80,3 +80,67 @@
   display: flex;
   align-items: center;
 }
+
+/* Clue list overlay */
+.mobile-grid-controls--clue-list-overlay {
+  position: fixed;
+  top: 48px; /* below toolbar */
+  left: 0;
+  width: 100%;
+  height: calc(100% - 48px);
+  background: white;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.mobile-grid-controls--clue-list-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  background: var(--main-blue-3);
+}
+
+.mobile-grid-controls--clue-list-close {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.mobile-grid-controls--clue-list-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 10px;
+}
+
+.mobile-grid-controls--clue-section {
+  margin: 10px 0;
+}
+
+.mobile-grid-controls--clue-section-header {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.mobile-grid-controls--clue-item {
+  padding: 8px 5px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+}
+
+.mobile-grid-controls--clue-item.active {
+  background-color: var(--main-blue-3);
+}
+
+.mobile-grid-controls--clue-item-number {
+  font-weight: bold;
+  margin-right: 10px;
+  min-width: 30px;
+}
+
+/* Grid wrapper for scrolling above keyboard */
+.grid-wrapper {
+  padding-bottom: 200px; /* space for keyboard */
+  overflow-y: auto;
+}
