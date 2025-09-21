@@ -309,7 +309,7 @@ export default class Welcome extends Component {
             divRef={this.nav}
           />
         </div>
-        <Flex grow={1} basis={1}>
+        <Flex grow={1} basis={1} style={{minHeight: '100%'}}>
           {this.showingSidebar && (
             <Flex className="welcome--sidebar" column shrink={0} style={{justifyContent: 'space-between'}}>
               {this.renderFilters()}
