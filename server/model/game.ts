@@ -52,7 +52,7 @@ export async function addGameEvent(gid: string, event: GameEvent) {
     [gid, event.user, new Date(event.timestamp).toISOString(), event.type, event]
   );
   const ms = Date.now() - startTime;
-  console.log(`addGameEvent(${gid}, ${event.type}) took ${ms}ms`);
+  //console.log(`addGameEvent(${gid}, ${event.type}) took ${ms}ms`);
 }
 
 export async function addInitialGameEvent(gid: string, pid: string) {
